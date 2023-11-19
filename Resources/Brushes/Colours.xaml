@@ -16,7 +16,8 @@
     <SolidColorBrush x:Key="SecondaryColour">#00A4FF</SolidColorBrush>
     
         <!-- White Accent 01 -->
-        <SolidColorBrush x:Key="AccentColor">#EAF1E7</SolidColorBrush>
+        <SolidColorBrush x:Key="AccentColour">#EAF1E7</SolidColorBrush>
+        <SolidColorBrush x:Key="HOVERAccentColour">#EAF1E7</SolidColorBrush>
 
         <!-- ERSO -->
         <SolidColorBrush x:Key="postIT_ERROR">#FF0000</SolidColorBrush>
