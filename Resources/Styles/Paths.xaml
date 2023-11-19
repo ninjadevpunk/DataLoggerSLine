@@ -46,30 +46,23 @@
     
     
     <!-- SECONDARY Create ICON -->
-    <Style x:Key="SECONDARYCreateICON" TargetType="Path">
-        <Setter Property="Height" Value="20"/>
-        <Setter Property="Width" Value="20"/>
-        <Setter Property="Margin" Value="0 0 10 0"/>
+    <Style x:Key="SECONDARYCreateICON" TargetType="Path" BasedOn="{StaticResource PRIMARYCreateICON}">
         <Setter Property="Fill" Value="{DynamicResource PrimaryColour}"/>
-        <Setter Property="Data" Value="M16.5 7.625H10.875V2C10.875 1.30977 10.3152 0.75 9.625 0.75H8.375C7.68477 0.75 7.125 1.30977 7.125 2V7.625H1.5C0.809766 7.625 0.25 8.18477 0.25 8.875V10.125C0.25 10.8152 0.809766 11.375 1.5 11.375H7.125V17C7.125 17.6902 7.68477 18.25 8.375 18.25H9.625C10.3152 18.25 10.875 17.6902 10.875 17V11.375H16.5C17.1902 11.375 17.75 10.8152 17.75 10.125V8.875C17.75 8.18477 17.1902 7.625 16.5 7.625Z"/>
     </Style>
 
     <!--#region SECONDARY REPORT ICON -->
         
         
-    <Style x:Key="SECONDARYReportICON1" TargetType="Path">
+    <Style x:Key="SECONDARYReportICON1" TargetType="Path" BasedOn="{StaticResource PRIMARYReportICON1}">
         <Setter Property="Fill" Value="{DynamicResource PrimaryColour}"/>
-        <Setter Property="Data" Value="M16 0.75H4V3.25H16V0.75Z"/>
     </Style>
 
-    <Style x:Key="SECONDARYReportICON2" TargetType="Path">
-        <Setter Property="Fill" Value="{DynamicResource PrimaryColour}"/>
-        <Setter Property="Data" Value="M19.25 4.75H0.75C0.335781 4.75 0 5.08578 0 5.5V14.5C0 14.9142 0.335781 15.25 0.75 15.25H2.5V10.25H17.5V15.25H19.25C19.6642 15.25 20 14.9142 20 14.5V5.5C20 5.08578 19.6642 4.75 19.25 4.75ZM3.5 8.5C2.94859 8.5 2.5 8.05141 2.5 7.5C2.5 6.94859 2.94859 6.5 3.5 6.5C4.05145 6.5 4.5 6.94859 4.5 7.5C4.4998 8.05148 4.05121 8.5 3.5 8.5ZM6.5 8.5C5.94859 8.5 5.5 8.05141 5.5 7.5C5.5 6.94859 5.94859 6.5 6.5 6.5C7.05145 6.5 7.5 6.94859 7.5 7.5C7.4998 8.05148 7.05121 8.5 6.5 8.5Z"/>
+    <Style x:Key="SECONDARYReportICON2" TargetType="Path" BasedOn="{StaticResource PRIMARYReportICON2}">
+        <Setter Property="Fill" Value="{DynamicResource PrimaryColour}"/>        
     </Style>
 
-    <Style x:Key="SECONDARYReportICON3" TargetType="Path">
+    <Style x:Key="SECONDARYReportICON3" TargetType="Path" BasedOn="{StaticResource PRIMARYReportICON3}">
         <Setter Property="Fill" Value="{DynamicResource PrimaryColour}"/>
-        <Setter Property="Data" Value="M4 11.75V20.25H16V11.75H4ZM13 18.25H6V16.75H13V18.25ZM14 15.25H6V13.75H14V15.25Z"/>
     </Style>
     
     
@@ -85,16 +78,14 @@
     
     <!--#endregion-->
 
+    
 
     <!--#region ACTION BUTTON Paths -->
     
     
     
     <!-- ACTION Create ICON -->
-    <Style x:Key="ACTIONCreateICON" TargetType="Path">
-        <Setter Property="Height" Value="20"/>
-        <Setter Property="Width" Value="20"/>
-        <Setter Property="Margin" Value="0 0 10 0"/>
+    <Style x:Key="ACTIONCreateICON" TargetType="Path" BasedOn="{StaticResource PRIMARYCreateICON}">
         <Setter Property="Fill" Value="{DynamicResource BLACK}"/>
     </Style>
 
@@ -131,4 +122,6 @@
     
     <!--#endregion-->
 
+    
+    
 </ResourceDictionary>
