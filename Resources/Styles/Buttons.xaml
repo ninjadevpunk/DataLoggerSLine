@@ -34,9 +34,7 @@
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
-    </Style>
-
-    
+    </Style>    
     
     <!-- PRIMARY CREATE -->
     <Style x:Key="PRIMARYCreate" TargetType="Button" BasedOn="{StaticResource PRIMARY}">
@@ -98,8 +96,7 @@
     <!--#endregion-->
 
 
-
-
+    
     <!--#region SECONDARY BUTTONS -->
     
     
@@ -245,6 +242,7 @@
     
     <!--#endregion-->
 
+    
 
     <!--#region ACTION BUTTONS -->
     
@@ -421,5 +419,8 @@
     
     
     <!--#endregion-->
+    
+    
+    
 
 </ResourceDictionary>
