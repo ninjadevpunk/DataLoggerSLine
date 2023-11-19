@@ -2,51 +2,51 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
     
     <!-- NORMAL COLOURS -->
-    <Color x:Key="BLACK">#000000</Color>
-    <Color x:Key="WHITE">#FFFFFF</Color>
-    <Color x:Key="GREEN">#009900</Color>
-    <Color x:Key="YELLOW">#FFF500</Color>
-    <Color x:Key="RED">#FF0000</Color>
-    <Color x:Key="SILVER">#C0C0C0</Color>
+    <SolidColorBrush x:Key="BLACK">#000000</SolidColorBrush>
+    <SolidColorBrush x:Key="WHITE">#FFFFFF</SolidColorBrush>
+    <SolidColorBrush x:Key="GREEN">#009900</SolidColorBrush>
+    <SolidColorBrush x:Key="YELLOW">#FFF500</SolidColorBrush>
+    <SolidColorBrush x:Key="RED">#FF0000</SolidColorBrush>
+    <SolidColorBrush x:Key="SILVER">#C0C0C0</SolidColorBrush>
     
     
     <!-- BRAND COLOURS -->
-    <Color x:Key="PrimaryColor">#009900</Color>
-    <Color x:Key="[HOVER] PrimaryColor">#00B200</Color>
-    <Color x:Key="SecondaryColour">#00A4FF</Color>
+    <SolidColorBrush x:Key="PrimaryColour">#009900</SolidColorBrush>
+    <SolidColorBrush x:Key="HOVERPrimaryColour">#00B200</SolidColorBrush>
+    <SolidColorBrush x:Key="SecondaryColour">#00A4FF</SolidColorBrush>
     
         <!-- White Accent 01 -->
-        <Color x:Key="AccentColor">#EAF1E7</Color>
+        <SolidColorBrush x:Key="AccentColor">#EAF1E7</SolidColorBrush>
 
         <!-- ERSO -->
-        <Color x:Key="postIT_ERROR">#FF0000</Color>
-        <Color x:Key="postIT_SOLUTION">#00D322</Color>
-        <Color x:Key="postIT_SUGGESTION">#FF00F5</Color>
-        <Color x:Key="postIT_COMMENT">#FFF500</Color>
+        <SolidColorBrush x:Key="postIT_ERROR">#FF0000</SolidColorBrush>
+        <SolidColorBrush x:Key="postIT_SOLUTION">#00D322</SolidColorBrush>
+        <SolidColorBrush x:Key="postIT_SUGGESTION">#FF00F5</SolidColorBrush>
+        <SolidColorBrush x:Key="postIT_COMMENT">#FFF500</SolidColorBrush>
 
 
     <!-- THEME COLOURS - LIGHT -->
         <!-- Menu -->
-    <Color x:Key="PANEL WHITE">#DED9E0</Color>
-    <Color x:Key="[SELECTED] MAIN MENU item">#009900</Color>
-    <Color x:Key="MAIN MENU item">#00000000</Color>
-    <Color x:Key="[SELECTED] sub MENU item">#018A01</Color>
-    <Color x:Key="sub MENU item">#EAF1E7</Color>
+    <SolidColorBrush x:Key="PANELWHITE">#DED9E0</SolidColorBrush>
+    <SolidColorBrush x:Key="SELECTEDMainMenuItem">#009900</SolidColorBrush>
+    <SolidColorBrush x:Key="MainMenuItem">#000000</SolidColorBrush>
+    <SolidColorBrush x:Key="SELECTEDSubMenuItem">#018A01</SolidColorBrush>
+    <SolidColorBrush x:Key="subMenuItem">#EAF1E7</SolidColorBrush>
 
         <!-- List -->
-    <Color x:Key="[SELECTED] LIST item">#EAF1E7</Color>
-    <Color x:Key="LIST item">#C5CCC4</Color>
+    <SolidColorBrush x:Key="SELECTEDListItem">#EAF1E7</SolidColorBrush>
+    <SolidColorBrush x:Key="ListItem">#C5CCC4</SolidColorBrush>
         
         <!-- Others -->
-    <Color x:Key="icon COLOUR Accent 01">#AAAAAA</Color>
-    <Color x:Key="icon COLOUR Accent 02">#656565</Color>
-    <Color x:Key="context MENU item SEPARATOR">#9BB292</Color>
-    <Color x:Key="STROKE">#B3B3B3</Color>
-    <Color x:Key="PLACEHOLDER TEXT">#B3808080</Color>
-    <Color x:Key="TOOLBAR">#DAE0D7</Color>
-    <Color x:Key="[SELECTED] TOOLBUTTON">#F3FAF0</Color>
-    <Color x:Key="White Accent 02">#DAE0D7</Color>
-    <Color x:Key="SCROLLBAR">#5A5A5A</Color>
+    <SolidColorBrush x:Key="iconCOLOURAccent01">#AAAAAA</SolidColorBrush>
+    <SolidColorBrush x:Key="iconCOLOURAccent02">#656565</SolidColorBrush>
+    <SolidColorBrush x:Key="contextMENUItemSEPARATOR">#9BB292</SolidColorBrush>
+    <SolidColorBrush x:Key="STROKE">#B3B3B3</SolidColorBrush>
+    <SolidColorBrush x:Key="PlaceholderText">#B3808080</SolidColorBrush>
+    <SolidColorBrush x:Key="TOOLBAR">#DAE0D7</SolidColorBrush>
+    <SolidColorBrush x:Key="SELECTEDToolbutton">#F3FAF0</SolidColorBrush>
+    <SolidColorBrush x:Key="WhiteAccent02">#DAE0D7</SolidColorBrush>
+    <SolidColorBrush x:Key="SCROLLBAR">#5A5A5A</SolidColorBrush>
 
 
     <!-- THEME COLOURS - DARK (for Data Logger 1.4) -->
