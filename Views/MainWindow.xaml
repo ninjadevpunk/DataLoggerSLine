@@ -6,7 +6,26 @@
         xmlns:local="clr-namespace:Data_Logger_1._3"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
+    
     <Grid>
 
+
+        <!--#region HEADINGS -->
+        <StackPanel Visibility="Collapsed">
+            <TextBlock Style="{StaticResource HEADING1}" Text="HEADING 1"/>
+            <TextBlock Style="{StaticResource HEADING2}" Text="HEADING 1"/>
+            <TextBlock Style="{StaticResource HEADING3}" Text="HEADING 1"/>
+            <TextBlock Style="{StaticResource HEADING4}" Text="HEADING 1"/>
+            <TextBlock Style="{StaticResource HEADING5}" Text="HEADING 1"/>
+            <TextBlock Style="{StaticResource HEADING6}" Text="HEADING 1"/>
+        </StackPanel>
+        <!--#endregion-->
+        
+        
+        
+        <!-- BUTTONS -->
+        <Button Style="{StaticResource SECONDARYCreate}">
+            <TextBlock Text="Action" Style="{StaticResource text_button01}"/>
+        </Button>
     </Grid>
 </Window>
