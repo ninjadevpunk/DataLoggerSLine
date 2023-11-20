@@ -26,5 +26,16 @@ namespace Data_Logger_1._3.Views
             this.Left = newLeft;
             this.Top = newTop;
         }
+
+        private void on_MINIMISE_clicked(object sender, RoutedEventArgs e)
+        {
+            WindowState = WindowState.Minimized;
+        }
+
+        private void on_CLOSE_clicked(object sender, RoutedEventArgs e)
+        {
+            // Close the entire application
+            Application.Current.Shutdown();
+        }
     }
 }
