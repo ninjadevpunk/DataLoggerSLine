@@ -88,7 +88,58 @@
         <Setter Property="HorizontalAlignment" Value="Center"/>
         <Setter Property="VerticalAlignment" Value="Center"/>
     </Style>
+    
+    <!-- #region PLACEHOLDERS -->
 
+    <Style x:Key="text_login_PLACEHOLDER" TargetType="TextBlock">
+        <Setter Property="Foreground" Value="{DynamicResource PlaceholderText}"/>
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="FontFamily" Value="{StaticResource Red Hat Display}"/>
+        <Setter Property="FontSize" Value="13"/>
+        <Setter Property="Padding" Value="12 0"/>
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="TextAlignment" Value="Right" />
+    </Style>    
+    <!-- #endregion -->
+    
+    <!-- #region LINKS-->
+
+    <Style x:Key="text_LINK01" TargetType="TextBlock">
+        <Setter Property="FontFamily" Value="{DynamicResource Red Hat Display}"/>
+        <Setter Property="FontSize" Value="13"/>
+        <Setter Property="TextDecorations" Value="Underline"/>
+        <Setter Property="Foreground" Value="{DynamicResource GREEN}"/>
+        <Setter Property="VerticalAlignment" Value="Center"/>
+        <Setter Property="Cursor" Value="Hand"/>
+    </Style>
+    <!-- #endregion -->
+
+    <!-- #region LABELS -->
+
+
+    <Style x:Key="text_LABEL01" TargetType="TextBlock">
+        <Setter Property="FontFamily" Value="{DynamicResource Red Hat Display}"/>
+        <Setter Property="FontSize" Value="13"/>
+        <Setter Property="FontWeight" Value="SemiBold"/>
+        <Setter Property="VerticalAlignment" Value="Center"/>
+        <Setter Property="TextAlignment" Value="Center"/>
+    </Style>
+
+    <Style x:Key="text_LABEL02" TargetType="TextBlock" BasedOn="{StaticResource text_LABEL01}">
+        <Setter Property="FontWeight" Value="Medium"/>
+    </Style>
+
+    <Style x:Key="text_LABEL03" TargetType="TextBlock" BasedOn="{StaticResource text_LABEL01}">
+        <Setter Property="FontWeight" Value="Regular"/>
+    </Style>
+
+
+
+
+
+
+    <!-- #endregion -->
 
 
 </ResourceDictionary>
