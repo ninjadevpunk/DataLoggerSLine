@@ -10,6 +10,9 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Assets\login\alexandru-acea--WBYxmW4yuw-unsplash.jpg" />
+    <None Remove="Assets\login\ayo-ogunseinde-sibVwORYqs0-unsplash.jpg" />
+    <None Remove="Assets\login\user.png" />
     <None Remove="Fonts\Red Hat Display.ttf" />
     <None Remove="Fonts\Zekton Bold Italic.ttf" />
     <None Remove="Fonts\Zekton Bold.ttf" />
@@ -25,8 +28,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Assets\" />
-    <Folder Include="Components\" />
     <Folder Include="Commands\" />
     <Folder Include="Converters\" />
     <Folder Include="Services\" />
@@ -37,6 +38,11 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Resource Include="Assets\login\alexandru-acea--WBYxmW4yuw-unsplash.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Assets\login\ayo-ogunseinde-sibVwORYqs0-unsplash.jpg" />
+    <Resource Include="Assets\login\user.png" />
     <Resource Include="Fonts\Red Hat Display.ttf">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
