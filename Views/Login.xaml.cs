@@ -1,16 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
+﻿using System.Windows;
 
 namespace Data_Logger_1._3.Views
 {
@@ -22,6 +10,21 @@ namespace Data_Logger_1._3.Views
         public Login()
         {
             InitializeComponent();
+        }
+
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            // Calculate the new left position to center the window horizontally
+            double windowWidth = this.Width;
+            double newLeft = (SystemParameters.PrimaryScreenWidth - windowWidth) / 2.0;
+
+            // Calculate the new top position to center the window vertically
+            double windowHeight = this.Height;
+            double newTop = (SystemParameters.PrimaryScreenHeight - windowHeight) / 2.0;
+
+            // Set the new left and top positions
+            this.Left = newLeft;
+            this.Top = newTop;
         }
     }
 }

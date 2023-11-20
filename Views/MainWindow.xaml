@@ -24,7 +24,7 @@
         
         
         <!-- BUTTONS -->
-        <Button Style="{StaticResource SECONDARYCreate}">
+        <Button Style="{StaticResource ACTIONCreate}">
             <TextBlock Text="Action" Style="{StaticResource text_button01}"/>
         </Button>
     </Grid>

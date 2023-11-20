@@ -4,9 +4,36 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Data_Logger_1._3.Views"
+        AllowsTransparency="True"
+        Background="Transparent"
         mc:Ignorable="d"
-        Title="Login" Height="450" Width="800">
-    <Grid>
+        Title="Login" Height="899" Width="1089"
+        WindowStyle="None"
+        Loaded="Window_Loaded"
+        >
+    <Window.Template>
+        <ControlTemplate TargetType="Window">
+            <Border Background="{DynamicResource WHITE}" CornerRadius="3"
+                Margin="0"
+                Padding="0"
+                >
+                <ContentPresenter HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+            </Border>
+        </ControlTemplate>
+    </Window.Template>
+    <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="10 0">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="auto"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="auto"/>
+        </Grid.ColumnDefinitions>
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="auto" />
+        </Grid.RowDefinitions>
+        
         
     </Grid>
 </Window>

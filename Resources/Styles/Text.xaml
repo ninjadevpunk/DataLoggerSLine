@@ -1,10 +1,6 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
-
-    <!-- FONTS -->
-    
-    
     
 
     <!--#region HEADINGS -->
@@ -45,27 +41,43 @@
 
     
     <!-- Minor Heading 1 -->
-    <Style x:Key="minorHEADING1" TargetType="TextBlock" BasedOn="{StaticResource HEADING6}">
+    <Style x:Key="text_minorHEADING1" TargetType="TextBlock" BasedOn="{StaticResource HEADING6}">
     </Style>
     
     <!-- Minor Heading 2 -->
-    <Style x:Key="minHEADING2" TargetType="TextBlock" BasedOn="{StaticResource minorHEADING1}">
+    <Style x:Key="text_minHEADING2" TargetType="TextBlock" BasedOn="{StaticResource text_minorHEADING1}">
         <Setter Property="FontSize" Value="13"/>
     </Style>
     
     <!-- LOGO SPLASH SCREEN -->
-    <Style x:Key="logoSPLASHscreen" TargetType="TextBlock">
-        <Setter Property="FontFamily" Value="{StaticResource Zekton}"/>
-        <Setter Property="FontWeight" Value="Regular"/>
+    <Style x:Key="text_logoSPLASHscreen" TargetType="TextBlock">
+        <Setter Property="FontFamily" Value="{StaticResource ZektonRg}"/>
         <Setter Property="FontSize" Value="20"/>
+        <Setter Property="FontStyle" Value="Normal"/>
+        <Setter Property="Margin" Value="0 20"/>
         <Setter Property="Foreground" Value="{DynamicResource PrimaryColour}"/>
     </Style>
     
+    <!-- VERSION -->
+    <Style x:Key="text_VERSION" TargetType="TextBlock">
+        <Setter Property="FontFamily" Value="{StaticResource Zekton Light}"/>
+        <Setter Property="Foreground" Value="{DynamicResource BLACK}"/>
+        <Setter Property="FontWeight" Value="Regular"/>
+        <Setter Property="FontSize" Value="13"/>
+        <Setter Property="HorizontalAlignment" Value="Center"/>
+        <Setter Property="VerticalAlignment" Value="Center"/>
+    </Style>
+    
     <!-- PROGRESS BAR VALUE -->
-    <Style x:Key="progressVALUE" TargetType="TextBlock">
+    <Style x:Key="text_progressVALUE" TargetType="TextBlock">
         <Setter Property="FontFamily" Value="{StaticResource Red Hat Display}"/>
+        <Setter Property="Foreground" Value="{DynamicResource PrimaryColour}"/>
         <Setter Property="FontWeight" Value="Bold"/>
         <Setter Property="FontSize" Value="13"/>
+        <Setter Property="HorizontalAlignment" Value="Stretch"/>
+        <Setter Property="VerticalAlignment" Value="Center"/>
+        <Setter Property="TextAlignment" Value="Center"/>
+        <Setter Property="Width" Value="40"/>
     </Style>
 
     <!-- ALL BUTTON TEXT -->
@@ -76,6 +88,7 @@
         <Setter Property="HorizontalAlignment" Value="Center"/>
         <Setter Property="VerticalAlignment" Value="Center"/>
     </Style>
+
 
 
 </ResourceDictionary>
