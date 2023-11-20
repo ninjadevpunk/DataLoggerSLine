@@ -3,6 +3,8 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:local="clr-namespace:Data_Logger_1._3"
              StartupUri="Views/MainWindow.xaml">
+             ShutdownMode="OnMainWindowClose"
+             >
     <Application.Resources>
         
         <ResourceDictionary>
@@ -19,6 +21,7 @@
                     <ResourceDictionary Source="Resources/Styles/Text.xaml"/>
                     <ResourceDictionary Source="Resources/Styles/InputText.xaml"/>
                     <ResourceDictionary Source="Resources/Styles/Paths.xaml"/>
+                    <ResourceDictionary Source="Resources/Styles/Images.xaml"/>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
 
