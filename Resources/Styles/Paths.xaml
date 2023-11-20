@@ -122,6 +122,45 @@
     
     <!--#endregion-->
 
+
+    <!--#region LOGO Path -->
     
     
+    
+    
+    <Style x:Key="pathLOGO1" TargetType="Path">
+        <Setter Property="Fill" Value="{DynamicResource PrimaryColour}"/>
+        <Setter Property="Data" Value="M24.0428 3.05176e-05H12.4971L9.4034 11.5458H20.9491L24.0428 3.05176e-05Z"/>
+    </Style>
+
+    <Style x:Key="pathLOGO2" TargetType="Path">
+        <Setter Property="Fill" Value="{DynamicResource PrimaryColour}"/>
+        <Setter Property="Data" Value="M37.3201 3.05176e-05H25.7744L22.6807 11.5458H34.2265L37.3201 3.05176e-05Z"/>
+    </Style>
+
+    <Style x:Key="pathLOGO3" TargetType="Path">
+        <Setter Property="Fill" Value="{DynamicResource PrimaryColour}"/>
+        <Setter Property="Data" Value="M39.9998 13.8549H28.4541L25.3604 25.4006H36.9062L39.9998 13.8549Z"/>
+    </Style>
+
+    <Style x:Key="pathLOGO4" TargetType="Path">
+        <Setter Property="Fill" Value="{DynamicResource PrimaryColour}"/>
+        <Setter Property="Data" Value="M36.7415 26.5551H25.1958L22.1021 38.1008H33.6479L36.7415 26.5551Z"/>
+    </Style>
+
+    <Style x:Key="pathLOGO5" TargetType="Path">
+        <Setter Property="Fill" Value="{DynamicResource PrimaryColour}"/>
+        <Setter Property="Data" Value="M17.8983 13.8549H6.35254L3.25887 25.4006H14.8046L17.8983 13.8549Z"/>
+    </Style>
+
+    <Style x:Key="pathLOGO6" TargetType="Path">
+        <Setter Property="Fill" Value="{DynamicResource PrimaryColour}"/>
+        <Setter Property="Data" Value="M14.6395 26.5551H3.09375L8.32385e-05 38.1008H11.5458L14.6395 26.5551Z"/>
+    </Style>
+    
+    
+    
+    
+    <!--#endregion-->
+
 </ResourceDictionary>
