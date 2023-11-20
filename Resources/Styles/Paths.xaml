@@ -151,10 +151,84 @@
         <Setter Property="Fill" Value="{DynamicResource PrimaryColour}"/>
         <Setter Property="Data" Value="M14.6395 26.5551H3.09375L8.32385e-05 38.1008H11.5458L14.6395 26.5551Z"/>
     </Style>
-    
-    
-    
-    
+
+
+    <!--#region GOOGLE LOGIN Paths -->
+    <Style x:Key="GOOGLE_ICON1" TargetType="Path">
+        <Setter Property="Fill" Value="#FBBC05"/>
+        <Setter Property="Data" Value="M3.87269 9.74215C3.87269 9.17055 3.96763 8.62255 4.13707 8.10855L1.17126 5.84375C0.59324 7.01735 0.267578 8.33975 0.267578 9.74215C0.267578 11.1433 0.592839 12.4649 1.17006 13.6377L4.13426 11.3685C3.96643 10.8569 3.87269 10.3109 3.87269 9.74215Z"/>
+    </Style>
+
+    <Style x:Key="GOOGLE_ICON2" TargetType="Path">
+        <Setter Property="Fill" Value="#EB4335"/>
+        <Setter Property="Data" Value="M9.0802 4.54214C10.322 4.54214 11.4436 4.98214 12.3248 5.70214L14.8884 3.14214C13.3262 1.78214 11.3234 0.942139 9.0802 0.942139C5.59766 0.942139 2.60462 2.93374 1.17139 5.84374L4.13719 8.10854C4.82056 6.03414 6.76853 4.54214 9.0802 4.54214Z"/>
+    </Style>
+
+    <Style x:Key="GOOGLE_ICON3" TargetType="Path">
+        <Setter Property="Fill" Value="#34A853"/>
+        <Setter Property="Data" Value="M9.0802 14.9421C6.76853 14.9421 4.82056 13.4501 4.13719 11.3757L1.17139 13.6401C2.60462 16.5505 5.59766 18.5421 9.0802 18.5421C11.2297 18.5421 13.2818 17.7789 14.8219 16.3489L12.0068 14.1725C11.2124 14.6729 10.2122 14.9421 9.0802 14.9421Z"/>
+    </Style>
+
+    <Style x:Key="GOOGLE_ICON4" TargetType="Path">
+        <Setter Property="Fill" Value="#4285F4"/>
+        <Setter Property="Data" Value="M17.492 9.74215C17.492 9.22215 17.4119 8.66215 17.2917 8.14215H9.08008V11.5422H13.8068C13.5704 12.7014 12.9271 13.5926 12.0066 14.1726L14.8218 16.349C16.4397 14.8474 17.492 12.6106 17.492 9.74215Z"/>
+    </Style>
     <!--#endregion-->
 
+    <!-- MICROSOFT LOGIN -->
+    <Style x:Key="MS_ICON1" TargetType="Path">
+        <Setter Property="Fill" Value="#F35325"/>
+        <Setter Property="Data" Value="M1.125 1.93713H8.4375V9.24963H1.125V1.93713Z"/>
+    </Style>
+
+    <Style x:Key="MS_ICON2" TargetType="Path">
+        <Setter Property="Fill" Value="#81BC06"/>
+        <Setter Property="Data" Value="M9.5625 1.93713H16.875V9.24963H9.5625V1.93713Z"/>
+    </Style>
+
+    <Style x:Key="MS_ICON3" TargetType="Path">
+        <Setter Property="Fill" Value="#05A6F0"/>
+        <Setter Property="Data" Value="M1.125 10.3746H8.4375V17.6871H1.125V10.3746Z"/>
+    </Style>
+
+    <Style x:Key="MS_ICON4" TargetType="Path">
+        <Setter Property="Fill" Value="#FFBA08"/>
+        <Setter Property="Data" Value="M9.5625 10.3746H16.875V17.6871H9.5625V10.3746Z"/>
+    </Style>
+
+
+    <!--#endregion-->
+
+    
+    <!-- #region ACCOUNT Paths -->
+
+    <Style x:Key="path_USER" TargetType="Path">
+        <Setter Property="Fill" Value="{DynamicResource BLACK}"/>
+        <Setter Property="Height" Value="20.07"/>
+        <Setter Property="Width" Value="20"/>
+        <Setter Property="HorizontalAlignment" Value="Center"/>
+        <Setter Property="VerticalAlignment" Value="Center"/>
+        <Setter Property="Data" Value="M9.69693 0.662649C4.80431 0.92025 2.25496 6.63014 5.32728 10.4497C8.2408 14.0718 14.0711 13.102 15.6515 8.73235C17.113 4.69178 13.9737 0.437421 9.69693 0.662649ZM8.4159 14.7293C3.44578 14.9289 1.05384 16.2288 0.0729009 19.2632C-0.16015 19.984 0.181393 20.5971 0.871458 20.6968C1.10102 20.73 18.9364 20.73 19.146 20.6969C19.8362 20.5877 20.1708 19.9374 19.9135 19.2054C18.6716 15.672 15.5176 14.4442 8.4159 14.7293Z"/>
+    </Style>
+    
+    <!-- #endregion -->
+    
+    
+    <!-- CLOSE BUTTON Path -->
+    <Style x:Key="button_CLOSE" TargetType="Path">
+        <Setter Property="Fill" Value="{DynamicResource iconCOLOURAccent01}"/>
+        <Setter Property="Height" Value="20"/>
+        <Setter Property="Width" Value="20"/>
+        <Setter Property="Data" Value="M11.446 10L20 18.1467L18.553 19.5238L10 11.3771L1.44601 19.5238L0 18.1467L8.553 10L0 1.85333L1.44601 0.476191L10 8.62286L18.553 0.476191L20 1.85333L11.446 10Z"/>
+    </Style>
+    
+    
+
+    <!-- MINIMIZE BUTTON Path -->
+    <Style x:Key="button_MINIMISE" TargetType="Path">
+        <Setter Property="Fill" Value="{DynamicResource iconCOLOURAccent01}"/>
+        <Setter Property="Height" Value="20"/>
+        <Setter Property="Width" Value="20"/>
+        <Setter Property="Data" Value="M19.2306 18.6538C19.2306 18.9615 18.9614 19.2308 18.6537 19.2308H1.34597C1.03827 19.2308 0.769043 18.9615 0.769043 18.6538V17.5C0.769043 17.1923 1.03827 16.9231 1.34597 16.9231H18.6537C18.9614 16.9231 19.2306 17.1923 19.2306 17.5V18.6538Z"/>
+    </Style>
 </ResourceDictionary>
