@@ -2,11 +2,19 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
 
+    <!--#region BUTTONS -->
+    
+    
+    
+    
+    
+    
+    
     <!--#region PRIMARY BUTTONS -->
-    
-    
-    
-    
+
+
+
+
     <!-- PRIMARY BUTTON -->
     <Style x:Key="PRIMARY" TargetType="Button">
         <Setter Property="Background" Value="{DynamicResource PrimaryColour}" />
@@ -34,8 +42,8 @@
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
-    </Style>    
-    
+    </Style>
+
     <!-- PRIMARY CREATE -->
     <Style x:Key="PRIMARYCreate" TargetType="Button" BasedOn="{StaticResource PRIMARY}">
         <Setter Property="Template">
@@ -90,17 +98,17 @@
             </Setter.Value>
         </Setter>
     </Style>
-    
-    
-    
+
+
+
     <!--#endregion-->
 
 
-    
+
     <!--#region SECONDARY BUTTONS -->
-    
-    
-    
+
+
+
     <!-- SECONDARY BUTTON -->
     <Style x:Key="SECONDARY" TargetType="Button">
         <Setter Property="Background" Value="{DynamicResource WHITE}" />
@@ -236,19 +244,19 @@
             </Trigger>
         </Style.Triggers>
     </Style>
-    
-    
-    
-    
+
+
+
+
     <!--#endregion-->
 
-    
+
 
     <!--#region ACTION BUTTONS -->
-    
-    
-    
-    
+
+
+
+
     <!-- ACTION BUTTON -->
     <Style x:Key="ACTION" TargetType="Button">
         <Setter Property="Background" Value="{DynamicResource AccentColour}" />
@@ -414,13 +422,173 @@
             </Setter.Value>
         </Setter>
     </Style>
+
+
+
+
+    <!--#endregion-->
+    
+    
+    <!--#region API BUTTONS -->
+
+
+    <!-- GOOGLE BUTTON -->
+    <Style x:Key="button_API_GOOGLE" TargetType="Button">
+        <Setter Property="Background" Value="{DynamicResource WHITE}" />
+        <Setter Property="Foreground" Value="{DynamicResource BLACK}" />
+        <Setter Property="Height" Value="35" />
+        <Setter Property="BorderThickness" Value="0.6" />
+        <Setter Property="BorderBrush" Value="{DynamicResource STROKE}" />
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type ButtonBase}">
+                    <Border x:Name="border" Background="{TemplateBinding Background}"
+                      BorderBrush="{TemplateBinding BorderBrush}"
+                      BorderThickness="{TemplateBinding BorderThickness}"
+                      Padding="{TemplateBinding Padding}"
+                      CornerRadius="3">
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+                            <Grid Height="20" Width="20" Margin="0 0 10 0">
+                                <Path x:Name="GOOGLE_ICON1" Style="{DynamicResource GOOGLE_ICON1}"/>
+                                <Path x:Name="GOOGLE_ICON2" Style="{DynamicResource GOOGLE_ICON2}"/>
+                                <Path x:Name="GOOGLE_ICON3" Style="{DynamicResource GOOGLE_ICON3}"/>
+                                <Path x:Name="GOOGLE_ICON4" Style="{DynamicResource GOOGLE_ICON4}"/>
+                            </Grid>
+                            <TextBlock Style="{DynamicResource text_LABEL02}" Text="Continue with Google"/>
+                        </StackPanel>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="true">
+                            <Setter Property="Background" TargetName="border" Value="{DynamicResource WhiteAccent02}"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+
+    <!-- MICROSOFT BUTTON -->
+    <Style x:Key="button_API_MICROSOFT" TargetType="Button">
+        <Setter Property="Background" Value="{DynamicResource WHITE}" />
+        <Setter Property="Foreground" Value="{DynamicResource BLACK}" />
+        <Setter Property="Height" Value="35" />
+        <Setter Property="BorderThickness" Value="0.6" />
+        <Setter Property="BorderBrush" Value="{DynamicResource STROKE}" />
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type ButtonBase}">
+                    <Border x:Name="border" Background="{TemplateBinding Background}"
+                  BorderBrush="{TemplateBinding BorderBrush}"
+                  BorderThickness="{TemplateBinding BorderThickness}"
+                  Padding="{TemplateBinding Padding}"
+                  CornerRadius="3">
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+                            <Grid Height="20" Width="20" Margin="0 0 10 0">
+                                <Path x:Name="MS_ICON1" Style="{DynamicResource MS_ICON1}"/>
+                                <Path x:Name="MS_ICON2" Style="{DynamicResource MS_ICON2}"/>
+                                <Path x:Name="MS_ICON3" Style="{DynamicResource MS_ICON3}"/>
+                                <Path x:Name="MS_ICON4" Style="{DynamicResource MS_ICON4}"/>
+                            </Grid>
+                            <TextBlock Style="{DynamicResource text_LABEL02}" Text="Continue with Microsoft"/>
+                        </StackPanel>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="true">
+                            <Setter Property="Background" TargetName="border" Value="{DynamicResource WhiteAccent02}"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!--#region TITLE BAR BUTTONS -->
+
+
+    <Style x:Key="FocusVisual">
+        <Setter Property="Control.Template">
+            <Setter.Value>
+                <ControlTemplate>
+                    <Rectangle Margin="2" StrokeDashArray="1 2" Stroke="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}" SnapsToDevicePixels="true" StrokeThickness="1"/>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    <SolidColorBrush x:Key="Button.Disabled.Background" Color="#FFF4F4F4"/>
+    <SolidColorBrush x:Key="Button.Disabled.Border" Color="#FFADB2B5"/>
+    <SolidColorBrush x:Key="Button.Disabled.Foreground" Color="#FF838383"/>
+    <Style x:Key="button_TITLE_bar" TargetType="{x:Type Button}">
+        <Setter Property="FocusVisualStyle" Value="{StaticResource FocusVisual}"/>
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource WhiteAccent02}"/>
+        <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}"/>
+        <Setter Property="BorderThickness" Value="0"/>
+        <Setter Property="HorizontalContentAlignment" Value="Center"/>
+        <Setter Property="VerticalContentAlignment" Value="Center"/>
+        <Setter Property="Padding" Value="10"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type Button}">
+                    <Border x:Name="border" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" SnapsToDevicePixels="true">
+                        <ContentPresenter x:Name="contentPresenter" Focusable="False" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" Margin="{TemplateBinding Padding}" RecognizesAccessKey="True" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsDefaulted" Value="true">
+                            <Setter Property="BorderBrush" TargetName="border" Value="{DynamicResource {x:Static SystemColors.HighlightBrushKey}}"/>
+                        </Trigger>
+                        <Trigger Property="IsMouseOver" Value="true">
+                            <Setter Property="Background" TargetName="border" Value="{DynamicResource AccentColour}"/>
+                            <Setter Property="BorderBrush" TargetName="border" Value="{DynamicResource AccentColour}"/>
+                        </Trigger>
+                        <Trigger Property="IsPressed" Value="true">
+                            <Setter Property="Background" TargetName="border" Value="{DynamicResource WhiteAccent02}"/>
+                            <Setter Property="BorderBrush" TargetName="border" Value="{DynamicResource WhiteAccent02}"/>
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="false">
+                            <Setter Property="Background" TargetName="border" Value="{StaticResource Button.Disabled.Background}"/>
+                            <Setter Property="BorderBrush" TargetName="border" Value="{StaticResource Button.Disabled.Border}"/>
+                            <Setter Property="TextElement.Foreground" TargetName="contentPresenter" Value="{StaticResource Button.Disabled.Foreground}"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+
+
+
+    <!--#endregion-->
+
+    <!--#endregion-->
+    
+    
     
     
     
     
     <!--#endregion-->
+
+
     
     
     
+    <!-- #region TOGGLE BUTTONS -->
+    
+    
+    <!-- #endregion -->
+
+    
+    
+    
+    
+    <!-- #region RADIO BUTTONS -->
+
+
+    <!-- #endregion -->
+
 
 </ResourceDictionary>
