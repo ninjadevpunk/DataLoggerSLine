@@ -40,14 +40,14 @@
         <!-- NAVIGATION ARROWS -->
         <StackPanel Orientation="Horizontal" Grid.Column="1" Grid.Row="0"
                     HorizontalAlignment="Left"
-              Margin="15"
-              >
+                    Margin="15"
+                    >
             <Button x:Name="button_BACK" Style="{DynamicResource button_TITLE_bar}"
                     Margin="0 0 10 0"
                     Padding="20"
                     IsEnabled="{Binding ViewModel.IsButtonBackEnabled}"
                     Click="on_BACK_clicked"
-                    >
+            >
                 <Path x:Name="icon_BACK" Style="{DynamicResource path_ARROW_BACK}"
                       Fill="{Binding ViewModel.IconBackFill}"
                       />
@@ -58,43 +58,43 @@
                     Padding="20"
                     IsEnabled="{Binding ViewModel.IsButtonForwardEnabled}"
                     Click="on_FORWARD_clicked">
-
-            
+                
+                
                 <Path x:Name="icon_FORWARD"  Style="{DynamicResource path_ARROW_FORWARD}"
                       Fill="{Binding ViewModel.IconForwardFill}"
-               />
-
-
+                      />
+            
+            
             </Button>
-            </StackPanel>
+        </StackPanel>
 
         <!-- TITLE BAR -->
         <StackPanel Orientation="Horizontal" Grid.Column="3" Grid.Row="0"
-                           HorizontalAlignment="Right"
+                    HorizontalAlignment="Right"
                     Margin="15"
-                  >
+                    >
             <Button x:Name="button_MINIMISE" Style="{DynamicResource button_TITLE_bar}"
-                           Margin="0 0 10 0"
+                    Margin="0 0 10 0"
                     Click="on_MINIMISE_clicked"
-                        >
+                    >
                 <Path Style="{DynamicResource path_MINIMISE}" />
-                </Button>
-            
+            </Button>
+
             <Button x:Name="button_CLOSE" Style="{DynamicResource button_TITLE_bar}"
                     Click="on_CLOSE_clicked">
                 <Path Style="{DynamicResource path_CLOSE}" />
             </Button>
         </StackPanel>
-            
+        
 
         <!-- LEFT IMAGE -->
         <Border Grid.Column="0" Grid.RowSpan="3" Style="{DynamicResource image_wallpaper}"
-                  >
+               >
             <Border.Background>
                 <ImageBrush ImageSource="/Assets/login/alexandru-acea--WBYxmW4yuw-unsplash.jpg" Stretch="UniformToFill"/>
             </Border.Background>
         </Border>
-            
+
         <!-- LOGIN -->
         <Frame x:Name="frame_LOGIN" Style="{DynamicResource FrameStyle1}" Grid.Column="2" Grid.Row="1"
                NavigationUIVisibility="Hidden"
@@ -102,21 +102,21 @@
                Navigated="on_Navigation"        
                HorizontalAlignment="Stretch"
                VerticalAlignment="Stretch"
-            />
+               />
 
 
 
 
 
 
-        
-        
-        
-        
-        
-        
-        
-        
+
+
+
+
+
+
+
+
         <!-- VERSION -->
         <TextBlock Margin="10" Grid.Column="3" Grid.Row="2"
                    HorizontalAlignment="Right"
