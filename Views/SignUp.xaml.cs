@@ -1,16 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
+﻿using System.Windows;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 
 namespace Data_Logger_1._3.Views
 {
@@ -22,6 +11,72 @@ namespace Data_Logger_1._3.Views
         public SignUp()
         {
             InitializeComponent();
+        }
+
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            // Calculate the new left position to center the window horizontally
+            double windowWidth = this.Width;
+            double newLeft = (SystemParameters.PrimaryScreenWidth - windowWidth) / 2.0;
+
+            // Calculate the new top position to center the window vertically
+            double windowHeight = this.Height;
+            double newTop = (SystemParameters.PrimaryScreenHeight - windowHeight) / 2.0;
+
+            // Set the new left and top positions
+            this.Left = newLeft;
+            this.Top = newTop;
+        }
+
+        private void on_LOGIN_clicked(object sender, MouseButtonEventArgs e)
+        {
+
+            try
+            {
+
+                // Open SignUp window
+                Login loginWindow = new();
+                loginWindow.Show();
+
+                var signupWindow = Window.GetWindow(this) as SignUp;
+
+                // Close the current window
+                signupWindow.Close();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"An error occurred: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        private void on_MINIMISE_clicked(object sender, RoutedEventArgs e)
+        {
+            WindowState = WindowState.Minimized;
+        }
+
+        private void on_CLOSE_clicked(object sender, RoutedEventArgs e)
+        {
+            // Close the entire application
+            Application.Current.Shutdown();
         }
     }
 }
