@@ -455,7 +455,7 @@
                                 <Path x:Name="GOOGLE_ICON3" Style="{DynamicResource GOOGLE_ICON3}"/>
                                 <Path x:Name="GOOGLE_ICON4" Style="{DynamicResource GOOGLE_ICON4}"/>
                             </Grid>
-                            <TextBlock Style="{DynamicResource text_LABEL02}" Text="Continue with Google"/>
+                            <TextBlock Style="{DynamicResource text_LABEL02}" Text="Continue with Google" Width="150"/>
                         </StackPanel>
                     </Border>
                     <ControlTemplate.Triggers>
@@ -492,7 +492,7 @@
                                 <Path x:Name="MS_ICON3" Style="{DynamicResource MS_ICON3}"/>
                                 <Path x:Name="MS_ICON4" Style="{DynamicResource MS_ICON4}"/>
                             </Grid>
-                            <TextBlock Style="{DynamicResource text_LABEL02}" Text="Continue with Microsoft"/>
+                            <TextBlock Style="{DynamicResource text_LABEL02}" Text="Continue with Microsoft" Width="150"/>
                         </StackPanel>
                     </Border>
                     <ControlTemplate.Triggers>
@@ -505,6 +505,14 @@
         </Setter>
     </Style>
 
+
+
+
+
+
+    <!--#endregion-->
+    
+    
     <!--#region TITLE BAR BUTTONS -->
 
 
@@ -548,8 +556,8 @@
                             <Setter Property="BorderBrush" TargetName="border" Value="{DynamicResource WhiteAccent02}"/>
                         </Trigger>
                         <Trigger Property="IsEnabled" Value="false">
-                            <Setter Property="Background" TargetName="border" Value="{StaticResource Button.Disabled.Background}"/>
-                            <Setter Property="BorderBrush" TargetName="border" Value="{StaticResource Button.Disabled.Border}"/>
+                            <Setter Property="Background" TargetName="border" Value="Transparent"/>
+                            <Setter Property="BorderBrush" TargetName="border" Value="Transparent"/>
                             <Setter Property="TextElement.Foreground" TargetName="contentPresenter" Value="{StaticResource Button.Disabled.Foreground}"/>
                         </Trigger>
                     </ControlTemplate.Triggers>
@@ -562,14 +570,50 @@
 
 
     <!--#endregion-->
+    
+    
+    <!-- DISPLAY PIC BUTTON -->
 
-    <!--#endregion-->
-    
-    
-    
-    
-    
-    
+    <Style x:Key="button_DP" TargetType="Button">
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Foreground" Value="{DynamicResource BLACK}" />
+        <Setter Property="BorderThickness" Value="0.6" />
+        <Setter Property="BorderBrush" Value="{DynamicResource PlaceholderText}" />
+        <Setter Property="Width" Value="50" />
+        <Setter Property="Height" Value="50" />
+        <Setter Property="HorizontalAlignment" Value="Center"/>
+        <Setter Property="VerticalAlignment" Value="Center"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type ButtonBase}">
+                    <Border x:Name="border" Background="{TemplateBinding Background}"
+                     BorderBrush="{TemplateBinding BorderBrush}"
+                     BorderThickness="{TemplateBinding BorderThickness}"
+                     CornerRadius="3">
+                        <Grid>
+                            <Path x:Name="path_USER" Style="{DynamicResource path_USER}" />
+                            <Path x:Name="ACTIONCreateICON" Style="{DynamicResource ACTIONCreateICON}"
+                                  Margin="0"
+                                  Visibility="Collapsed"
+                                  />
+                            <ContentPresenter />
+                        </Grid>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="true">
+                            <Setter Property="Background" TargetName="border" Value="{DynamicResource AccentColour}"/>
+                            <Setter Property="Visibility" TargetName="ACTIONCreateICON" Value="Visible"/>
+                            <Setter Property="Visibility" TargetName="path_USER" Value="Collapsed"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+
+
+
     <!--#endregion-->
 
 
