@@ -215,7 +215,7 @@
     
     
     <!-- CLOSE BUTTON Path -->
-    <Style x:Key="button_CLOSE" TargetType="Path">
+    <Style x:Key="path_CLOSE" TargetType="Path">
         <Setter Property="Fill" Value="{DynamicResource iconCOLOURAccent01}"/>
         <Setter Property="Height" Value="20"/>
         <Setter Property="Width" Value="20"/>
@@ -225,10 +225,18 @@
     
 
     <!-- MINIMIZE BUTTON Path -->
-    <Style x:Key="button_MINIMISE" TargetType="Path">
-        <Setter Property="Fill" Value="{DynamicResource iconCOLOURAccent01}"/>
-        <Setter Property="Height" Value="20"/>
-        <Setter Property="Width" Value="20"/>
+    <Style x:Key="path_MINIMISE" TargetType="Path" BasedOn="{StaticResource path_CLOSE}">
         <Setter Property="Data" Value="M19.2306 18.6538C19.2306 18.9615 18.9614 19.2308 18.6537 19.2308H1.34597C1.03827 19.2308 0.769043 18.9615 0.769043 18.6538V17.5C0.769043 17.1923 1.03827 16.9231 1.34597 16.9231H18.6537C18.9614 16.9231 19.2306 17.1923 19.2306 17.5V18.6538Z"/>
+    </Style>
+    
+    <!-- ARROW BACK Path -->
+    <Style x:Key="path_ARROW_BACK" TargetType="Path">
+        <Setter Property="Fill" Value="{DynamicResource iconCOLOURAccent02}"/>
+        <Setter Property="Data" Value="M13.975 19.7188L15.7402 17.9536L7.78523 9.99869L15.7402 2.04374L13.9724 0.275969L4.24969 9.99869L13.975 19.7188Z"/>
+    </Style>
+
+    <!-- ARROW BACK Path -->
+    <Style x:Key="path_ARROW_FORWARD" TargetType="Path" BasedOn="{StaticResource path_ARROW_BACK}">
+        <Setter Property="Data" Value="M7.0243 19.7187L5.26007 17.9545L13.215 9.99956L5.26007 2.04461L7.02783 0.276838L16.7506 9.99956L7.0243 19.7187Z"/>
     </Style>
 </ResourceDictionary>
