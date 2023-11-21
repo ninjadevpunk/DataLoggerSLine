@@ -12,6 +12,7 @@
   <ItemGroup>
     <None Remove="Assets\login\alexandru-acea--WBYxmW4yuw-unsplash.jpg" />
     <None Remove="Assets\login\ayo-ogunseinde-sibVwORYqs0-unsplash.jpg" />
+    <None Remove="Assets\login\national-cancer-institute-uVnRa6mOLOM-unsplash.jpg" />
     <None Remove="Assets\login\user.png" />
     <None Remove="Fonts\Red Hat Display.ttf" />
     <None Remove="Fonts\Zekton Bold Italic.ttf" />
@@ -41,8 +42,15 @@
     <Resource Include="Assets\login\alexandru-acea--WBYxmW4yuw-unsplash.jpg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
-    <Resource Include="Assets\login\ayo-ogunseinde-sibVwORYqs0-unsplash.jpg" />
-    <Resource Include="Assets\login\user.png" />
+    <Resource Include="Assets\login\ayo-ogunseinde-sibVwORYqs0-unsplash.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Assets\login\national-cancer-institute-uVnRa6mOLOM-unsplash.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Assets\login\user.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
     <Resource Include="Fonts\Red Hat Display.ttf">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
@@ -56,6 +64,18 @@
     <Resource Include="Fonts\Zekton.ttf" />
     <Resource Include="Resources\Brushes\Colours.xaml" />
     <Resource Include="Resources\Styles\Buttons.xaml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Assets\login\attribution\Ayo Ogunseinde.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Assets\login\attribution\National Cancer Institute.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Assets\login\attribution\Photo by a href=httpsunsplash.com%40a.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>
