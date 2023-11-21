@@ -1,0 +1,166 @@
+﻿<Page x:Class="Data_Logger_1._3.Views.loginPage01"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:Data_Logger_1._3.Views" xmlns:components="clr-namespace:Data_Logger_1._3.Components"
+      mc:Ignorable="d" 
+      HorizontalAlignment="Stretch"
+      VerticalAlignment="Stretch"
+      d:Background="{DynamicResource WHITE}"
+      Title="Login Page">
+
+    <StackPanel  Margin="10"
+            Orientation="Vertical"
+            VerticalAlignment="Stretch"
+            HorizontalAlignment="Stretch"
+            Height="758"
+            >
+
+        <!-- DISPLAY PICTURE (Not Editable) -->
+        <Grid Margin="0 30">
+            <Border x:Name="image_USER"
+                   Style="{DynamicResource image_displayPic}"
+                   Visibility="Visible"
+       />
+            <Path Style="{DynamicResource path_USER}" />
+
+
+
+        </Grid>
+
+        <!--#region Data Logger LOGO -->
+
+        <StackPanel Margin="0 10" Orientation="Horizontal" HorizontalAlignment="Center"
+    VerticalAlignment="Center"
+    Grid.Column="1">
+
+
+
+            <Grid Margin="20 0" HorizontalAlignment="Center" Height="38.1" Width="40">
+                <Path Style="{DynamicResource pathLOGO1}"/>
+                <Path Style="{DynamicResource pathLOGO2}"/>
+                <Path Style="{DynamicResource pathLOGO3}"/>
+                <Path Style="{DynamicResource pathLOGO4}"/>
+                <Path Style="{DynamicResource pathLOGO5}"/>
+                <Path Style="{DynamicResource pathLOGO6}"/>
+            </Grid>
+
+            <TextBlock Text="DATA LOGGER" Style="{DynamicResource text_logoSPLASHscreen}"/>
+        </StackPanel>
+
+        <!--#endregion-->
+
+        <!-- HEADING -->
+        <Grid Margin="0 30">
+            <TextBlock Style="{DynamicResource HEADING5}"
+                   Text="LOGIN"
+                   HorizontalAlignment="Right"
+                   VerticalAlignment="Center"
+                   />
+        </Grid>
+
+        <!-- FIELDS -->
+        <Grid Margin="0 5">
+            <components:PlainInputField x:Name="inputText_USER"
+            HorizontalAlignment="Stretch"
+            VerticalAlignment="Center"
+            />
+        </Grid>
+
+        <Grid Margin="0 5">
+            <components:PlainInputField x:Name="inputText_PASSWORD"
+                    HorizontalAlignment="Stretch"
+                    VerticalAlignment="Center"
+                    />
+        </Grid>
+
+        <Grid Height="50"
+          Margin="0 5"
+          HorizontalAlignment="Stretch"
+          >
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+
+            <TextBlock Grid.Column="0" x:Name="link_FORGOTPASSWORD" Style="{DynamicResource text_LINK01}"
+                   Text="Forgot Password"
+                   Margin="0 0 10 0"
+                   HorizontalAlignment="Left"
+                   MouseDown="on_FORGOTPASSWORD_clicked"                       
+                   />
+
+            <Button Grid.Column="1" x:Name="button_LOGIN" Style="{DynamicResource PRIMARY}"
+                HorizontalAlignment="Right"
+                >
+                <TextBlock Style="{DynamicResource text_button01}"
+                       Text="OK"
+                       />
+            </Button>
+        </Grid>
+
+        <Grid Height="35"
+          Margin="0 5"
+          >
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <TextBlock Grid.Column="0" Text="Don't have an account? Sign up " Style="{DynamicResource text_LABEL01}" 
+                   TextAlignment="Right"
+                   />
+            <TextBlock x:Name="link_SIGNUP" Grid.Column="1" Style="{DynamicResource text_LINK01}"
+                       Text="here"
+                       FontWeight="SemiBold"
+                       MouseDown="on_SIGNUP_clicked"
+                       />
+        </Grid>
+
+        <Grid Height="35"
+          Margin="0 5"
+          >
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <!-- Left Line -->
+                <ColumnDefinition Width="80"/>
+                <!-- TextBlock -->
+                <ColumnDefinition Width="*"/>
+                <!-- Right Line -->
+            </Grid.ColumnDefinitions>
+
+            <Line Grid.Column="0"
+              VerticalAlignment="Center"
+              X1="0" Y1="0" X2="200" Y2="0"
+              Stroke="{DynamicResource BLACK}"/>
+            <TextBlock Grid.Column="1" Text="OR" Style="{DynamicResource text_LABEL03}"
+                   HorizontalAlignment="Center"
+                   VerticalAlignment="Center"
+                   />
+            <Line Grid.Column="2"
+              VerticalAlignment="Center"
+              X1="200" Y1="0" X2="0" Y2="0"
+              Stroke="{DynamicResource BLACK}"/>
+        </Grid>
+
+        <Grid Height="35"
+          Margin="0 5"
+          >
+            <Button x:Name="button_GOOGLE_login" Style="{DynamicResource button_API_GOOGLE}"
+                />
+        </Grid>
+
+        <Grid Height="35"
+          Margin="0 5"
+          >
+            <Button x:Name="button_MS_login" Style="{DynamicResource button_API_MICROSOFT}"
+    />
+        </Grid>
+
+
+
+
+
+
+    </StackPanel>
+</Page>
