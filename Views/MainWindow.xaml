@@ -3,12 +3,39 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:Data_Logger_1._3"
+        xmlns:local="clr-namespace:Data_Logger_1._3" xmlns:components="clr-namespace:Data_Logger_1._3.Components"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
-    
-    <Grid>
+        AllowsTransparency="True"
+        Background="Transparent"
+        WindowStyle="None"
+        Title="MainWindow" Height="899" Width="1394"
+        Loaded="on_MainWindow_Loaded"
+        >
 
+    <Window.Template>
+        <ControlTemplate TargetType="Window">
+            <Border Background="{DynamicResource WHITE}"
+                    CornerRadius="3"
+                    Margin="0"
+                    Padding="0"
+                    >
+                <ContentPresenter HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+            </Border>
+        </ControlTemplate>
+    </Window.Template>
+
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="249"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="206"/>
+        </Grid.ColumnDefinitions>
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="50"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
 
         <!--#region HEADINGS -->
         <StackPanel Visibility="Collapsed">
@@ -20,12 +47,398 @@
             <TextBlock Style="{StaticResource HEADING6}" Text="HEADING 1"/>
         </StackPanel>
         <!--#endregion-->
-        
-        
-        
-        <!-- BUTTONS -->
+
+        <!--<RadioButton Style="{DynamicResource radio_MENU_ITEM}" HorizontalAlignment="Right"  VerticalAlignment="Top"
+                     Height="80
+                     "/>
+
+        --><!-- BUTTONS --><!--
         <Button Style="{StaticResource ACTIONCreate}">
             <TextBlock Text="Action" Style="{StaticResource text_button01}"/>
-        </Button>
+        </Button>-->
+
+        <Border Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="3" Background="{DynamicResource WHITE}"
+                CornerRadius="2 2 0 0"
+                Visibility="Collapsed"
+                />
+
+        <!-- NAVIGATION ARROWS -->
+        <StackPanel Orientation="Horizontal" Grid.Column="2" Grid.Row="1"
+                    HorizontalAlignment="Right"
+                    Margin="0 10"
+                    >
+            <Button x:Name="button_BACK" Style="{DynamicResource button_TITLE_bar}"
+                    Margin="20 10"
+                    Height="35"
+                    Width="35"
+                    >
+                <Path x:Name="icon_BACK" Style="{DynamicResource path_ARROW_BACK}"
+                      Fill="{DynamicResource iconCOLOURAccent01}"
+                      />
+
+            </Button>
+
+            <Button x:Name="button_FORWARD" Style="{DynamicResource button_TITLE_bar}"
+                    Margin="20 10"
+                    Height="35"
+                    Width="35"
+                    >
+
+
+                <Path x:Name="icon_FORWARD"  Style="{DynamicResource path_ARROW_FORWARD}"
+                      Fill="{DynamicResource iconCOLOURAccent01}"
+                      />
+
+
+            </Button>
+        </StackPanel>
+
+        <!-- TITLE BAR -->
+        <Border x:Name="customTITLEBar_MAINWINDOW" Grid.Column="1" Grid.Row="0" Grid.ColumnSpan="2"
+                Background="{DynamicResource WHITE}"
+                HorizontalAlignment="Stretch"
+                CornerRadius="0 3 0 0"
+                MouseLeftButtonDown="on_customTitleBar_pressed"
+                >
+            
+            
+            <StackPanel Orientation="Horizontal" 
+            HorizontalAlignment="Right"
+            VerticalAlignment="Center"
+            Margin="5"
+            
+            >
+
+                <!-- MINIMISE -->
+                <Button x:Name="button_MINIMISE" Style="{DynamicResource button_TITLE_bar}"
+            Margin="0 5 10 5"
+            Click="on_MINIMISE_clicked"
+            >
+                    <Path Style="{DynamicResource path_MINIMISE}" />
+                </Button>
+
+                <!-- MAX -->
+                <Button x:Name="button_MAXIMISE" Style="{DynamicResource button_TITLE_bar}"
+            Margin="0 5 10 5"
+            Click="on_MAXIMISE_clicked"
+            >
+                    <Grid>
+                        <Path Style="{DynamicResource path_MAXIMISE1}" />
+                        <Path Style="{DynamicResource path_MAXIMISE2}" />
+                    </Grid>
+
+                </Button>
+
+                <!-- CLOSE -->
+                <Button x:Name="button_CLOSE" Style="{DynamicResource button_TITLE_bar}"
+            Click="on_CLOSE_clicked">
+                    <Path Style="{DynamicResource path_CLOSE}" />
+                </Button>
+
+
+            </StackPanel>
+        </Border>
+
+
+
+
+
+
+
+
+
+
+        <!-- PANEL -->
+        <Border x:Name="panel" Grid.Column="0" Grid.Row="0" Grid.RowSpan="3" Background="{DynamicResource PANELWHITE}"
+                CornerRadius="3 0 0 3"
+                >
+
+            <Grid HorizontalAlignment="Stretch"
+                  VerticalAlignment="Stretch"
+                  Margin="0 40"
+                  >
+
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="50"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="2*"/>
+                    <RowDefinition Height="auto"/>
+                </Grid.RowDefinitions>
+
+                <!-- LOGO -->
+                <Grid Grid.Row="0" Height="60" HorizontalAlignment="Center">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="auto"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <Grid Grid.Column="0" Margin="10 0"
+                          HorizontalAlignment="Center"
+                          VerticalAlignment="Center"
+                          Height="26" Width="26">
+                        <Path Style="{DynamicResource path_PANEL_logo1}"/>
+                        <Path Style="{DynamicResource path_PANEL_logo2}"/>
+                        <Path Style="{DynamicResource path_PANEL_logo3}"/>
+                        <Path Style="{DynamicResource path_PANEL_logo4}"/>
+                        <Path Style="{DynamicResource path_PANEL_logo5}"/>
+                        <Path Style="{DynamicResource path_PANEL_logo6}"/>
+                    </Grid>
+
+                    <TextBlock Grid.Column="1" Style="{DynamicResource text_logoTEXT02}"
+                               />
+                </Grid>
+
+
+
+
+
+
+
+
+
+
+
+                <Grid Grid.Row="1" Height="50" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                <!-- #region MENU ITEMS -->
+                <components:MENURadioButton Grid.Row="2" x:Name="radio_CODING"
+                                            MENUIcon="{DynamicResource path_CODING}"
+                                            Category="CODING"
+                                            Checked="True"
+                                            Crew="Menu"
+                                            />
+
+                <!--#region CODING SUB MENU -->
+
+                <StackPanel Grid.Row="3" x:Name="STACK_CODING">
+
+                    <!-- Qt -->
+                    <components:SubMENURadioButton x:Name="radio_Qt"
+                                                   SubMENUIcon="{DynamicResource path_Qt}"
+                                                   SubCategory="Qt"
+                                                   SubChecked="True"
+                                                   SubCrew="CODING_SubMenu"
+                                                   />
+
+                    <!-- Android Studio -->
+                    <components:SubMENURadioButton x:Name="radio_Android"
+                                                   SubMENUIcon="{DynamicResource path_AS}"
+                                                   SubCategory="Android Studio"
+                                                   SubChecked="False"
+                                                   SubCrew="CODING_SubMenu"
+                                                   />
+
+                    <!-- Generic CODE Logs -->
+                    <components:SubMENURadioButton x:Name="radio_VS"
+                                                   SubMENUIcon="{DynamicResource path_VS}"
+                                                   SubCategory="Generic"
+                                                   SubChecked="False"
+                                                   SubCrew="CODING_SubMenu"
+                                                   />
+
+                </StackPanel>
+
+
+
+
+                <!--#endregion-->
+
+
+
+
+                <!-- GRAPHICS -->
+                <components:MENURadioButton Grid.Row="4" x:Name="radio_GRAPHICS"
+                            MENUIcon="{DynamicResource path_GRAPHICS}"
+                            Category="GRAPHICS"
+                            Checked="False"
+                            Crew="Menu"
+                            />
+
+                <!-- FILM -->
+                <components:MENURadioButton Grid.Row="5" x:Name="radio_FILM"
+                    MENUIcon="{DynamicResource path_FILM}"
+                    Category="FILM"
+                    Checked="False"
+                    Crew="Menu"
+                    />
+
+                <!-- NOTES -->
+                <components:MENURadioButton Grid.Row="6" x:Name="radio_NOTES"
+                    MENUIcon="{DynamicResource path_NOTES}"
+                    Category="NOTES"
+                    Checked="False"
+                    Crew="Menu"
+                    />
+
+
+
+                <!--#region NOTES SUB MENU -->
+
+                <StackPanel Grid.Row="7" x:Name="STACK_NOTES" Height="0">
+
+                    <!-- FREE FORM NOTES -->
+                    <components:SubMENURadioButton x:Name="radio_FREE_NOTES"
+                                   SubMENUIcon="{DynamicResource path_FREE_NOTES}"
+                                   SubCategory="Create Notes"
+                                   SubChecked="False"
+                                   SubCrew="NOTES_SubMenu"
+                                   />
+
+                    <!-- CHECKLIST -->
+                    <components:SubMENURadioButton x:Name="radio_CHECKLIST"
+                                    SubMENUIcon="{DynamicResource path_CHECKLIST}"
+                                    SubCategory="Create Checklist"
+                                    SubChecked="False"
+                                    SubCrew="NOTES_SubMenu"
+                                    />
+
+                    <!-- OTHER -->
+                    <components:SubMENURadioButton x:Name="radio_OTHER"
+                                    SubMENUIcon="{DynamicResource path_OTHER}"
+                                    SubCategory="Other"
+                                    SubChecked="False"
+                                    SubCrew="NOTES_SubMenu"
+                                    />
+
+                </StackPanel>
+
+
+
+
+                <!--#endregion-->
+
+
+
+
+                <!--#endregion-->
+
+
+                <Grid Grid.Row="8" Height="106" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                <!-- #region SUPPORT -->
+                <Grid Grid.Row="9" Height="84">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <StackPanel Orientation="Horizontal"
+                                HorizontalAlignment="Center"
+                                Margin="0"
+                                >
+
+                        <!-- ACCOUNT -->
+                        <Button Grid.Column="0"  x:Name="button_ACCOUNT" Style="{DynamicResource button_SUPPORT}"
+                                >
+                            <Path Style="{DynamicResource path_USER}"
+                                  />
+                        </Button>
+
+
+                        <!-- HELP -->
+                        <Button Grid.Column="0" x:Name="button_HELP" Style="{DynamicResource button_SUPPORT}"
+                                >
+                            <Path Style="{DynamicResource path_HELP}"
+                                 />
+                        </Button>
+
+                        <!-- FEEDBACK -->
+                        <Button Grid.Column="0" x:Name="button_FEEDBACK" Style="{DynamicResource button_SUPPORT}"
+                                >
+                            <Path Style="{DynamicResource path_FEEDBACK}"
+                                />
+                        </Button>
+
+                        <!-- SETTINGS -->
+                        <Button Grid.Column="0" x:Name="button_SETTINGS" Style="{DynamicResource button_SUPPORT}"
+                                >
+                            <Path Style="{DynamicResource path_SETTINGS}"
+                                />
+                        </Button>
+                    </StackPanel>
+
+
+
+                </Grid>
+
+                <!--#endregion-->
+
+
+
+            </Grid>
+
+        </Border>
+        
+        
+        <!-- APP NAVIGATOR -->
+        <Frame Grid.Column="1" Grid.Row="0" Grid.RowSpan="3" x:Name="frame_MAINWINDOW"
+               NavigationUIVisibility="Hidden"
+               Source="/Views/LogPages/CodingQtPage.xaml"
+               HorizontalAlignment="Stretch"
+               VerticalAlignment="Stretch"
+               />
+
+        <StackPanel Grid.Column="2" Grid.Row="2" Orientation="Vertical"
+                    Margin="0 0 78 0"
+                    >
+            <!-- CREATE LOG BUTTON -->
+            <Button x:Name="button_CREATE" Style="{DynamicResource PRIMARYCreate}"
+        VerticalAlignment="Top"
+        HorizontalAlignment="Center"
+        Margin="0 70 0 0"
+        >
+                <TextBlock Style="{DynamicResource text_button01}"
+               Text="Create Log"
+               />
+            </Button>
+
+            <!-- CREATE REPORT BUTTON -->
+            <Button x:Name="button_REPORT" Style="{DynamicResource SECONDARYReport}"
+                    VerticalAlignment="Top"
+                    HorizontalAlignment="Center"
+                    Margin="0 20"
+                    >
+                <TextBlock Style="{DynamicResource text_button01}"
+                           Text="Report"
+                           />
+            </Button>
+        </StackPanel>
+
     </Grid>
 </Window>
