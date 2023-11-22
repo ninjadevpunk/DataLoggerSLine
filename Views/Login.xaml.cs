@@ -37,6 +37,18 @@ namespace Data_Logger_1._3.Views
             this.Top = newTop;
         }
 
+
+
+
+
+
+
+
+
+
+
+
+
         private void on_MINIMISE_clicked(object sender, RoutedEventArgs e)
         {
             WindowState = WindowState.Minimized;
