@@ -11,6 +11,7 @@
         WindowStyle="None"
         Loaded="Window_Loaded"
         >
+    
     <Window.Template>
         <ControlTemplate TargetType="Window">
             <Border Background="{DynamicResource WHITE}" CornerRadius="3"
@@ -102,14 +103,14 @@
 
 
         <StackPanel Grid.Column="1" Grid.Row="1" Margin="10"
-        Orientation="Vertical"
-        VerticalAlignment="Stretch"
-        HorizontalAlignment="Stretch"
-        Height="758"
-        >
+            Orientation="Vertical"
+            VerticalAlignment="Stretch"
+            HorizontalAlignment="Stretch"
+            Height="758"
+            >
 
             <!-- DISPLAY PICTURE (Editable) -->
-            <Grid Margin="0 30">
+            <Grid Margin="0 10">
                 <Button x:Name="button_USER"
                         Style="{DynamicResource button_DP}"
                         />
@@ -122,8 +123,8 @@
             <!--#region Data Logger LOGO -->
 
             <StackPanel Margin="0 10" Orientation="Horizontal" HorizontalAlignment="Center"
-VerticalAlignment="Center"
-Grid.Column="1">
+                VerticalAlignment="Center"
+                Grid.Column="1">
 
 
 
@@ -142,7 +143,7 @@ Grid.Column="1">
             <!--#endregion-->
 
             <!-- HEADING -->
-            <Grid Margin="0 30 0 5">
+            <Grid Margin="0 10 0 5">
                 <TextBlock Style="{DynamicResource HEADING5}"
                Text="SIGN UP"
                HorizontalAlignment="Left"
@@ -151,20 +152,23 @@ Grid.Column="1">
             </Grid>
 
             <Grid Height="35"
-Margin="0 5"
->
+                Margin="0 5"
+                >
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="auto" />
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
+                
+                
+                
                 <TextBlock Grid.Column="0" Text="Already have an account? Login " Style="{DynamicResource text_LABEL01}" 
-         TextAlignment="Left"
-         />
+                    TextAlignment="Left"
+                    />
                 <TextBlock x:Name="link_LOGIN" Grid.Column="1" Style="{DynamicResource text_LINK01}"
-             Text="here"
-             FontWeight="SemiBold"
-             MouseDown="on_LOGIN_clicked"
-             />
+                    Text="here"
+                    FontWeight="SemiBold"
+                    MouseDown="on_LOGIN_clicked"
+                    />
             </Grid>
 
             <!-- FIELDS -->
@@ -190,7 +194,7 @@ Margin="0 5"
                 
             </Grid>
 
-            <!-- PASSWORD -->
+                <!-- PASSWORD -->
             <Grid Margin="0 5">
                 <components:PlainInputField x:Name="inputText_PASSWORD"
                 HorizontalAlignment="Stretch"
@@ -198,7 +202,7 @@ Margin="0 5"
                 />
             </Grid>
 
-            <!-- EMAIL -->
+                <!-- EMAIL -->
             <Grid Margin="0 5">
                 <components:PlainInputField x:Name="inputText_EMAIL"
                     HorizontalAlignment="Stretch"
@@ -206,27 +210,75 @@ Margin="0 5"
                     />
             </Grid>
 
-            <!-- EMPLOYEE? -->
+                <!-- EMPLOYEE? -->
             <Grid Margin="0 5">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="auto" />
+                </Grid.ColumnDefinitions>
                 
+                <TextBlock Grid.Column="0" Style="{DynamicResource text_LABEL01}"
+                           Text="Company Employee"
+                           TextAlignment="Left"
+                           Padding="10 0"
+                           />
+
+                <Grid Grid.Column="1"
+                      HorizontalAlignment="Right"
+                      VerticalAlignment="Center"
+                      Margin="10"
+                      >
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+
+                    
+                    <!-- YES -->
+                    <TextBlock Grid.Column="0" Style="{DynamicResource text_LABEL02}"
+                               Text="Yes"
+                               Margin="5 0"
+                               />
+                    <CheckBox Grid.Column="1" Style="{DynamicResource check_SIGNUP}" x:Name="checkBox_YES"
+                              IsChecked="True"
+                              Margin="0 0 10 0"
+                              />
+                    
+                    
+                    <!-- NO -->
+                    <TextBlock Grid.Column="2" Style="{DynamicResource text_LABEL02}"
+                        Text="No"
+                        Margin="5 0"
+                        />
+                    <CheckBox Grid.Column="3" Style="{DynamicResource check_SIGNUP}" x:Name="checkBox_NO"
+          
+                        Background="{DynamicResource iconCOLOURAccent01}"
+                        Foreground="{DynamicResource WHITE}"
+                        IsChecked="False"
+                        />
+                </Grid>
             </Grid>
 
-            <!-- NAME OF COMPANY -->
+                <!-- NAME OF COMPANY -->
             <Grid Margin="0 5">
                 <components:PlainInputField x:Name="inputText_COMPANY"
-        HorizontalAlignment="Stretch"
-        VerticalAlignment="Center"
-        />
+                    HorizontalAlignment="Stretch"
+                    VerticalAlignment="Center"
+                    />
             </Grid>
 
-            <!-- COMPANY ADDRESS -->
+                <!-- COMPANY ADDRESS -->
             <Grid Margin="0 5">
                 <components:PlainInputField x:Name="inputText_COMPANY_ADDRESS"
-        HorizontalAlignment="Stretch"
-        VerticalAlignment="Center"
-        />
+                    HorizontalAlignment="Stretch"
+                    VerticalAlignment="Center"
+                    />
             </Grid>
 
+            
+            <!-- OK BUTTON-->
             <Grid Height="50"
                   Margin="0 5"
                   HorizontalAlignment="Stretch"
@@ -242,8 +294,8 @@ Margin="0 5"
 
 
             <Grid Height="35"
-      Margin="0 5"
-      >
+                Margin="0 5"
+                >
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"/>
                     <!-- Left Line -->
@@ -254,31 +306,31 @@ Margin="0 5"
                 </Grid.ColumnDefinitions>
 
                 <Line Grid.Column="0"
-          VerticalAlignment="Center"
-          X1="0" Y1="0" X2="200" Y2="0"
-          Stroke="{DynamicResource BLACK}"/>
+                    VerticalAlignment="Center"
+                    X1="0" Y1="0" X2="200" Y2="0"
+                    Stroke="{DynamicResource BLACK}"/>
                 <TextBlock Grid.Column="1" Text="OR" Style="{DynamicResource text_LABEL03}"
-               HorizontalAlignment="Center"
-               VerticalAlignment="Center"
-               />
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    />
                 <Line Grid.Column="2"
-          VerticalAlignment="Center"
-          X1="200" Y1="0" X2="0" Y2="0"
-          Stroke="{DynamicResource BLACK}"/>
+                    VerticalAlignment="Center"
+                    X1="200" Y1="0" X2="0" Y2="0"
+                    Stroke="{DynamicResource BLACK}"/>
             </Grid>
 
             <Grid Height="35"
-      Margin="0 5"
-      >
+                Margin="0 5"
+                >
                 <Button x:Name="button_GOOGLE_login" Style="{DynamicResource button_API_GOOGLE}"
-            />
+                    />
             </Grid>
 
             <Grid Height="35"
-      Margin="0 5"
-      >
+                Margin="0 5"
+                >
                 <Button x:Name="button_MS_login" Style="{DynamicResource button_API_MICROSOFT}"
-/>
+                    />
             </Grid>
 
 
