@@ -30,11 +30,13 @@
         <!-- Menu -->
     <SolidColorBrush x:Key="PANELWHITE">#DED9E0</SolidColorBrush>
     <SolidColorBrush x:Key="SELECTEDMainMenuItem">#009900</SolidColorBrush>
+    <SolidColorBrush x:Key="HOVERMainMenuItem">#00B200</SolidColorBrush>
     <SolidColorBrush x:Key="MainMenuItem">#000000</SolidColorBrush>
     <SolidColorBrush x:Key="SELECTEDSubMenuItem">#018A01</SolidColorBrush>
     <SolidColorBrush x:Key="subMenuItem">#EAF1E7</SolidColorBrush>
+    <SolidColorBrush x:Key="HOVERSubMenuItem">#656565</SolidColorBrush>
 
-        <!-- List -->
+    <!-- List -->
     <SolidColorBrush x:Key="SELECTEDListItem">#EAF1E7</SolidColorBrush>
     <SolidColorBrush x:Key="ListItem">#C5CCC4</SolidColorBrush>
         
