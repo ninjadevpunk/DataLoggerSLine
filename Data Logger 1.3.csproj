@@ -2,14 +2,16 @@
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>net8.0-windows</TargetFramework>
+    <TargetFramework>net8.0-windows7.0</TargetFramework>
     <RootNamespace>Data_Logger_1._3</RootNamespace>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <UseWPF>true</UseWPF>
+    <ApplicationIcon>Data Logger 1.3 logo icon.ico</ApplicationIcon>
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Assets\Data Logger 1.3 logo icon.ico" />
     <None Remove="Assets\login\alexandru-acea--WBYxmW4yuw-unsplash.jpg" />
     <None Remove="Assets\login\ayo-ogunseinde-sibVwORYqs0-unsplash.jpg" />
     <None Remove="Assets\login\national-cancer-institute-uVnRa6mOLOM-unsplash.jpg" />
@@ -29,6 +31,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Content Include="Data Logger 1.3 logo icon.ico" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Folder Include="Commands\" />
     <Folder Include="Converters\" />
     <Folder Include="Services\" />
@@ -39,6 +45,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Resource Include="Assets\Data Logger 1.3 logo icon.ico">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
     <Resource Include="Assets\login\alexandru-acea--WBYxmW4yuw-unsplash.jpg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
@@ -76,6 +85,15 @@
     <None Update="Assets\login\attribution\Photo by a href=httpsunsplash.com%40a.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="Views\SignUp.xaml">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Page>
+    <Page Update="Views\Splashscreen.xaml">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Page>
   </ItemGroup>
 
 </Project>
