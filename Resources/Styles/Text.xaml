@@ -36,9 +36,43 @@
     <Style x:Key="HEADING6" TargetType="TextBlock" BasedOn="{StaticResource HEADING1}">
         <Setter Property="FontSize" Value="16"/>
     </Style>
-    
+
+
+    <!-- SUB HEADING -->
+    <Style x:Key="text_SUB HEADING1" TargetType="TextBlock">
+        <Setter Property="FontFamily" Value="{StaticResource Red Hat Display}"/>
+        <Setter Property="FontWeight" Value="SemiBold"/>
+        <Setter Property="FontSize" Value="16"/>
+    </Style>
+
     <!--#endregion-->
 
+    
+    <!--#region LOGO TEXT -->
+
+
+    <Style x:Key="text_logoTEXT02" TargetType="TextBlock">
+        <Setter Property="Foreground" Value="{DynamicResource BLACK}"/>
+        <Setter Property="FontFamily" Value="{DynamicResource ZektonRg}"/>
+        <Setter Property="FontSize" Value="16"/>
+        <Setter Property="FontWeight" Value="Regular"/>
+        <Setter Property="FontStyle" Value="Normal"/>
+        <Setter Property="HorizontalAlignment" Value="Left"/>
+        <Setter Property="VerticalAlignment" Value="Center"/>
+        <Setter Property="Text" Value="DATA LOGGER"/>
+    </Style>
+    
+    
+    
+    
+    
+    
+    
+    
+    <!--#endregion-->
+    
+    
+    
     
     <!-- Minor Heading 1 -->
     <Style x:Key="text_minorHEADING1" TargetType="TextBlock" BasedOn="{StaticResource HEADING6}">
@@ -51,9 +85,10 @@
     
     <!-- LOGO SPLASH SCREEN -->
     <Style x:Key="text_logoSPLASHscreen" TargetType="TextBlock">
-        <Setter Property="FontFamily" Value="{StaticResource ZektonRg}"/>
+        <Setter Property="FontFamily" Value="{StaticResource Zekton}"/>
         <Setter Property="FontSize" Value="20"/>
         <Setter Property="FontStyle" Value="Normal"/>
+        <Setter Property="FontWeight" Value="Bold"/>
         <Setter Property="Margin" Value="0 20"/>
         <Setter Property="Foreground" Value="{DynamicResource PrimaryColour}"/>
     </Style>
@@ -140,6 +175,30 @@
 
 
     <!-- #endregion -->
+    
+    
+    
+    <!-- MENU TEXT -->
+    <Style x:Key="text_MENU" TargetType="TextBlock">
+        <Setter Property="Foreground" Value="{DynamicResource BLACK}"/>
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="FontFamily" Value="{StaticResource Red Hat Display}"/>
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="FontWeight" Value="Bold"/>
+        <Setter Property="Padding" Value="10 0"/>
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="TextAlignment" Value="Left" />
+    </Style>
 
+    <Style x:Key="text_SUBMENU BOLD" TargetType="TextBlock" BasedOn="{StaticResource text_MENU}">
+        <Setter Property="Foreground" Value="{DynamicResource BLACK}"/>
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="FontWeight" Value="Bold"/>
+    </Style>
+
+    <Style x:Key="text_SUBMENU" TargetType="TextBlock" BasedOn="{StaticResource text_SUBMENU BOLD}">
+        <Setter Property="FontWeight" Value="SemiBold"/>
+    </Style>
 
 </ResourceDictionary>
