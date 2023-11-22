@@ -43,25 +43,22 @@
                     Margin="15"
                     >
             <Button x:Name="button_BACK" Style="{DynamicResource button_TITLE_bar}"
-                    Margin="0 0 10 0"
-                    Padding="20"
                     IsEnabled="{Binding ViewModel.IsButtonBackEnabled}"
                     Click="on_BACK_clicked"
             >
                 <Path x:Name="icon_BACK" Style="{DynamicResource path_ARROW_BACK}"
-                      Fill="{Binding ViewModel.IconBackFill}"
+                      Fill="{Binding IconBackFill}"
                       />
 
             </Button>
 
             <Button x:Name="button_FORWARD" Style="{DynamicResource button_TITLE_bar}"
-                    Padding="20"
                     IsEnabled="{Binding ViewModel.IsButtonForwardEnabled}"
                     Click="on_FORWARD_clicked">
                 
                 
                 <Path x:Name="icon_FORWARD"  Style="{DynamicResource path_ARROW_FORWARD}"
-                      Fill="{Binding ViewModel.IconForwardFill}"
+                      Fill="{Binding IconForwardFill}"
                       />
             
             
@@ -70,22 +67,29 @@
 
         <!-- TITLE BAR -->
         <StackPanel Orientation="Horizontal" Grid.Column="3" Grid.Row="0"
-                    HorizontalAlignment="Right"
-                    Margin="15"
-                    >
+            HorizontalAlignment="Right"
+            VerticalAlignment="Center"
+            Margin="5"
+            
+            >
+
+            <!-- MINIMISE -->
             <Button x:Name="button_MINIMISE" Style="{DynamicResource button_TITLE_bar}"
-                    Margin="0 0 10 0"
-                    Click="on_MINIMISE_clicked"
-                    >
+            Margin="0 5 10 5"
+            Click="on_MINIMISE_clicked"
+            >
                 <Path Style="{DynamicResource path_MINIMISE}" />
             </Button>
 
+            <!-- CLOSE -->
             <Button x:Name="button_CLOSE" Style="{DynamicResource button_TITLE_bar}"
-                    Click="on_CLOSE_clicked">
+            Click="on_CLOSE_clicked">
                 <Path Style="{DynamicResource path_CLOSE}" />
             </Button>
+
+
         </StackPanel>
-        
+
 
         <!-- LEFT IMAGE -->
         <Border Grid.Column="0" Grid.RowSpan="3" Style="{DynamicResource image_wallpaper}"
