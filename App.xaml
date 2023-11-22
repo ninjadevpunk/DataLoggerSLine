@@ -23,6 +23,8 @@
                     <ResourceDictionary Source="Resources/Styles/InputText.xaml"/>
                     <ResourceDictionary Source="Resources/Styles/Paths.xaml"/>
                     <ResourceDictionary Source="Resources/Styles/Images.xaml"/>
+                    <ResourceDictionary Source="Resources/Styles/CheckBoxes.xaml"/>
+                
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
 
