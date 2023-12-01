@@ -35,7 +35,10 @@ namespace Data_Logger_1._3.Views
                 var loginWindow = Window.GetWindow(this) as Login;
 
                 // Close the current window
-                loginWindow.Close();
+                if(loginWindow != null)
+                {
+                    loginWindow.Close();
+                }
             }
             catch (Exception ex)
             {

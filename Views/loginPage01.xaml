@@ -63,16 +63,23 @@
         <!-- FIELDS -->
         <Grid Margin="0 5">
             <components:PlainInputField x:Name="inputText_USER"
-            HorizontalAlignment="Stretch"
-            VerticalAlignment="Center"
-            />
+                                        HorizontalAlignment="Stretch"
+                                        VerticalAlignment="Center"
+                                        PlaceholderText="Username"
+                                        UserTextBoxStyle="{DynamicResource inputText_LOGIN}"
+                                        UserTextBlockStyle="{DynamicResource text_login_PLACEHOLDER}"
+                                        UserInput="{Binding}"
+                                        Aligned="Left"
+                                        />
         </Grid>
 
         <Grid Margin="0 5">
-            <components:PlainInputField x:Name="inputText_PASSWORD"
-                    HorizontalAlignment="Stretch"
-                    VerticalAlignment="Center"
-                    />
+            <components:PasswordField x:Name="inputText_PASSWORD"
+                                      HorizontalAlignment="Stretch"
+                                      VerticalAlignment="Center"
+                                      Placeholder="Password"
+                                      UserInput="{Binding}"
+                                      />
         </Grid>
 
         <Grid Height="50"
