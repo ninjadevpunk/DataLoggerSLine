@@ -24,6 +24,8 @@
                     <ResourceDictionary Source="Resources/Styles/Paths.xaml"/>
                     <ResourceDictionary Source="Resources/Styles/Images.xaml"/>
                     <ResourceDictionary Source="Resources/Styles/CheckBoxes.xaml"/>
+                    <ResourceDictionary Source="Resources/Styles/Lists.xaml"/>
+                    <ResourceDictionary Source="Resources/Styles/DatePickers.xaml"/>
                 
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
