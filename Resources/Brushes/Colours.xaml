@@ -37,10 +37,16 @@
     <SolidColorBrush x:Key="HOVERSubMenuItem">#656565</SolidColorBrush>
 
     <!-- List -->
-    <SolidColorBrush x:Key="SELECTEDListItem">#EAF1E7</SolidColorBrush>
-    <SolidColorBrush x:Key="ListItem">#C5CCC4</SolidColorBrush>
-        
-        <!-- Others -->
+    <SolidColorBrush x:Key="SELECTEDListItem">#C5CCC4</SolidColorBrush>
+    <SolidColorBrush x:Key="ListItem">#EAF1E7</SolidColorBrush>
+    
+    <!-- Time Edit -->
+    <SolidColorBrush x:Key="TimeEdit">#E0E0E0</SolidColorBrush>
+    
+    <!-- Calendar -->
+    <SolidColorBrush x:Key="CalendarBackground" Color="#A0A0A0"/>
+
+    <!-- Others -->
     <SolidColorBrush x:Key="iconCOLOURAccent01">#AAAAAA</SolidColorBrush>
     <SolidColorBrush x:Key="iconCOLOURAccent02">#656565</SolidColorBrush>
     <SolidColorBrush x:Key="contextMENUItemSEPARATOR">#9BB292</SolidColorBrush>
@@ -50,9 +56,69 @@
     <SolidColorBrush x:Key="SELECTEDToolbutton">#F3FAF0</SolidColorBrush>
     <SolidColorBrush x:Key="WhiteAccent02">#DAE0D7</SolidColorBrush>
     <SolidColorBrush x:Key="SCROLLBAR">#5A5A5A</SolidColorBrush>
+    <SolidColorBrush x:Key="Highlighter01">#BB01FF01</SolidColorBrush>
 
+    <!-- PRE-MADE -->
+    <SolidColorBrush x:Key="ComboBox.Static.Background" Color="Transparent"/>
+    <SolidColorBrush x:Key="ComboBox.Static.Border" Color="#FFACACAC"/>
+    <SolidColorBrush x:Key="ComboBox.Static.Glyph" Color="#000000"/>
+    <SolidColorBrush x:Key="ComboBox.Static.Editable.Background" Color="Transparent"/>
+    <SolidColorBrush x:Key="ComboBox.Static.Editable.Border" Color="#FFABADB3"/>
+    <SolidColorBrush x:Key="ComboBox.Static.Editable.Button.Background" Color="Transparent"/>
+    <SolidColorBrush x:Key="ComboBox.Static.Editable.Button.Border" Color="Transparent"/>
+    <SolidColorBrush x:Key="ComboBox.MouseOver.Background" Color="Transparent"/>
+    <SolidColorBrush x:Key="ComboBox.MouseOver.Border" Color="#00FF00"/>
+    <SolidColorBrush x:Key="ComboBox.MouseOver.Glyph" Color="#00FF00"/>
+    <SolidColorBrush x:Key="ComboBox.MouseOver.Editable.Background" Color="Transparent"/>
+    <SolidColorBrush x:Key="ComboBox.MouseOver.Editable.Border" Color="#00FF00"/>
+    <SolidColorBrush x:Key="ComboBox.MouseOver.Editable.Button.Background" Color="Transparent"/>
+    <SolidColorBrush x:Key="ComboBox.Pressed.Background" Color="Transparent"/>
+    <SolidColorBrush x:Key="ComboBox.MouseOver.Editable.Button.Border" Color="Transparent"/>
+    <SolidColorBrush x:Key="ComboBox.Pressed.Border" Color="#00FF00"/>
+    <SolidColorBrush x:Key="ComboBox.Pressed.Glyph" Color="#FF000000"/>
+    <SolidColorBrush x:Key="ComboBox.Pressed.Editable.Background" Color="Transparent"/>
+    <SolidColorBrush x:Key="ComboBox.Pressed.Editable.Border" Color="#00FF00"/>
+    <SolidColorBrush x:Key="ComboBox.Pressed.Editable.Button.Background" Color="Transparent"/>
+    <SolidColorBrush x:Key="ComboBox.Pressed.Editable.Button.Border" Color="#FF569DE5"/>
+    <SolidColorBrush x:Key="ComboBox.Disabled.Background" Color="#FFF0F0F0"/>
+    <SolidColorBrush x:Key="ComboBox.Disabled.Border" Color="#FFD9D9D9"/>
+    <SolidColorBrush x:Key="ComboBox.Disabled.Glyph" Color="#FFBFBFBF"/>
+    <SolidColorBrush x:Key="ComboBox.Disabled.Editable.Background" Color="#FFFFFFFF"/>
+    <SolidColorBrush x:Key="ComboBox.Disabled.Editable.Border" Color="#FFBFBFBF"/>
+    <SolidColorBrush x:Key="ComboBox.Disabled.Editable.Button.Background" Color="Transparent"/>
+    <SolidColorBrush x:Key="ComboBox.Disabled.Editable.Button.Border" Color="Transparent"/>
+
+
+
+    <SolidColorBrush x:Key="ComboBoxItem.ItemsviewHover.Background" Color="#00FF00"/>
+    <SolidColorBrush x:Key="ComboBoxItem.ItemsviewHover.Border" Color="Transparent"/>
+    <SolidColorBrush x:Key="ComboBoxItem.ItemsviewSelected.Background" Color="#00AA00"/>
+    <SolidColorBrush x:Key="ComboBoxItem.ItemsviewSelected.Border" Color="Transparent"/>
+    <SolidColorBrush x:Key="ComboBoxItem.ItemsviewSelectedHover.Background" Color="#C0C0C0"/>
+    <SolidColorBrush x:Key="ComboBoxItem.ItemsviewSelectedHover.Border" Color="Transparent"/>
+    <SolidColorBrush x:Key="ComboBoxItem.ItemsviewSelectedNoFocus.Background" Color="#3DDADADA"/>
+    <SolidColorBrush x:Key="ComboBoxItem.ItemsviewSelectedNoFocus.Border" Color="Transparent"/>
+    <SolidColorBrush x:Key="ComboBoxItem.ItemsviewFocus.Border" Color="#808080"/>
+    <SolidColorBrush x:Key="ComboBoxItem.ItemsviewHoverFocus.Background" Color="#D0D0D0"/>
+    <SolidColorBrush x:Key="ComboBoxItem.ItemsviewHoverFocus.Border" Color="Transparent"/>
+
+
+    <SolidColorBrush x:Key="Button.MouseOver.Background" Color="#E0E0E0"/>
+    <SolidColorBrush x:Key="Button.Pressed.Background" Color="#A0A0A0"/>
+    <SolidColorBrush x:Key="Button.Disabled.Background" Color="#FFF4F4F4"/>
+    <SolidColorBrush x:Key="Button.Disabled.Foreground" Color="#FF838383"/>
+    <SolidColorBrush x:Key="Button.Disabled.Border" Color="#FFADB2B5"/>
+    
+    
+    <SolidColorBrush x:Key="TextBox.MouseOver.Border" Color="#FF7EB4EA"/>
+    <SolidColorBrush x:Key="TextBox.Focus.Border" Color="#A0A0A0"/>
+
+    <SolidColorBrush x:Key="DisabledBrush" Color="#A5FFFFFF"/>
+    
+    <SolidColorBrush x:Key="WatermarkBrush" Color="#FFAAAAAA"/>
 
     <!-- THEME COLOURS - DARK (for Data Logger 1.4) -->
-        
-    
+
+    <SolidColorBrush x:Key="PANEL">#21261F</SolidColorBrush>
+
 </ResourceDictionary>
