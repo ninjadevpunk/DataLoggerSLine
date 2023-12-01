@@ -6,6 +6,7 @@
              xmlns:local="clr-namespace:Data_Logger_1._3.Components"
              mc:Ignorable="d" 
              d:DesignHeight="34" d:DesignWidth="430"
+             x:Name="control_INPUT_plain"
              >
     <Border CornerRadius="2"
             Background="{DynamicResource WHITE}"
@@ -13,13 +14,17 @@
             >
         <Grid>
             <!-- Placeholder Text here-->
-            <TextBlock x:Name="text_PlaceholderText" Style="{DynamicResource text_login_PLACEHOLDER}"
-                       Text="Placeholder text"
+            <TextBlock x:Name="text_PlaceholderText" Style="{Binding UserTextBlockStyle, ElementName=control_INPUT_plain}"
+                       Text="{Binding PlaceholderText, ElementName=control_INPUT_plain}"
+                       TextAlignment="{Binding Aligned, ElementName=control_INPUT_plain}"
                        />
-            
+
             <!-- User Input here -->
-            <TextBox x:Name="inputText_text" Style="{DynamicResource inputText_login}"
-                     
+            <TextBox x:Name="inputText_text" Style="{Binding UserTextBoxStyle, ElementName=control_INPUT_plain}"
+                     Text="{Binding UserInput, ElementName=control_INPUT_plain}"
+                     TextAlignment="{Binding Aligned, ElementName=control_INPUT_plain}"
+                     TextChanged="on_inputText_text_changed"
+                     LostFocus="on_inputText_lostFocus"
                      />
         </Grid>
     </Border>
