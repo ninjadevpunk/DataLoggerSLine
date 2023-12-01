@@ -4,9 +4,52 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:Data_Logger_1._3.Components"
-             mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
+             mc:Ignorable="d"
+             Width="120"
+             x:Name="control_SPINNER"
+             >
+
+    <UserControl.Resources>
+
+        
+
+        
+
+        <!-- TEXTBOX TEMPLATE -->
+        
+    </UserControl.Resources>
+    
     <Grid>
-            
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="2*"/>
+            <ColumnDefinition Width="auto"/>
+        </Grid.ColumnDefinitions>
+
+        <TextBox x:Name="spinner_NUMBERS" Grid.Column="0"
+             Text="{Binding Number, ElementName=control_SPINNER, UpdateSourceTrigger=PropertyChanged}"
+             Style="{StaticResource text_SPINNER}"
+             TextChanged="on_SPINNER_textChanged"
+             LostFocus="on_SPINNER_lostFocus"
+             MouseWheel="on_SPINNER_rotate"
+             PreviewMouseWheel="on_SPINNER_rotate"
+             />
+
+        <Grid Grid.Column="1"
+                VerticalAlignment="Center"
+                HorizontalAlignment="Center"
+              Margin="5 0"
+                >
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="auto"/>
+            </Grid.RowDefinitions>
+
+            <Button Grid.Row="0" x:Name="button_INCREMENT" Style="{StaticResource button_SPINNER_UP}" 
+                Click="on_INCREMENT_click"
+                />
+            <Button Grid.Row="1" x:Name="button_DECREMENT" Style="{StaticResource button_SPINNER_DOWN}"
+                Click="on_DECREMENT_click"
+                />
+        </Grid>
     </Grid>
 </UserControl>
