@@ -135,7 +135,32 @@
         <Setter Property="HorizontalAlignment" Value="Stretch" />
         <Setter Property="VerticalAlignment" Value="Center" />
         <Setter Property="TextAlignment" Value="Right" />
-    </Style>    
+    </Style>
+
+    <Style x:Key="text_PROJECT_Placeholder" TargetType="TextBlock">
+        <Setter Property="FontFamily" Value="{DynamicResource Red Hat Display}"/>
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="Foreground" Value="{DynamicResource PlaceholderText}"/>
+        <Setter Property="FontSize" Value="13"/>
+        <Setter Property="FontWeight" Value="Bold"/>
+        <Setter Property="Height" Value="17"/>
+        <Setter Property="Padding" Value="12 0 10 0"/>
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="TextAlignment" Value="Left"/>
+    </Style>
+
+
+    <Style x:Key="text_APP_Placeholder" TargetType="TextBlock" BasedOn="{StaticResource text_PROJECT_Placeholder}">
+        <Setter Property="FontWeight" Value="SemiBold"/>
+        <Setter Property="FontStyle" Value="Italic"/>
+    </Style>
+
+    <Style x:Key="text_Placeholder" TargetType="TextBlock" BasedOn="{StaticResource text_PROJECT_Placeholder}">
+        <Setter Property="FontWeight" Value="Medium"/>
+    </Style>
+
+
     <!-- #endregion -->
     
     <!-- #region LINKS-->
@@ -169,12 +194,32 @@
         <Setter Property="FontWeight" Value="Regular"/>
     </Style>
 
+    <Style x:Key="text_LIST_LABEL_HEADING" TargetType="TextBlock" BasedOn="{StaticResource text_LABEL01}">
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="FontWeight" Value="Bold"/>
+        <Setter Property="TextWrapping" Value="NoWrap"/>
+        <Setter Property="TextTrimming" Value="WordEllipsis"/>
+    </Style>
 
+    <Style x:Key="text_LIST_LABEL_DATE" TargetType="TextBlock" BasedOn="{StaticResource text_LIST_LABEL_HEADING}">
+        <Setter Property="FontWeight" Value="SemiBold"/>
+        <Setter Property="TextTrimming" Value="CharacterEllipsis"/>
+    </Style>
+    
+    <Style x:Key="text_LIST_LABEL_ERSO" TargetType="TextBlock" BasedOn="{StaticResource text_LABEL01}">
+        <Setter Property="FontWeight" Value="Bold"/>
+    </Style>
+
+    <Style x:Key="text_LIST_LABEL_CONTENT" TargetType="TextBlock" BasedOn="{StaticResource text_LIST_LABEL_HEADING}">
+        <Setter Property="FontWeight" Value="Regular"/>
+        <Setter Property="TextWrapping" Value="Wrap"/>
+    </Style>
 
 
 
 
     <!-- #endregion -->
+    
     
     
     
