@@ -120,7 +120,7 @@
         <Setter Property="FontStyle" Value="Italic"/>
     </Style>
 
-    <Style x:Key="inputText" TargetType="TextBox" BasedOn="{StaticResource inputText_LOGIN}">
+    <Style x:Key="inputText" TargetType="TextBox" BasedOn="{StaticResource inputText_PROJECT}">
         <Setter Property="FontWeight" Value="Regular"/>
     </Style>
 
