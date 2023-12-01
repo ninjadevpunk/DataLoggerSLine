@@ -3,12 +3,289 @@
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-      xmlns:local="clr-namespace:Data_Logger_1._3.Views.Dialogs"
-      mc:Ignorable="d" 
-      d:DesignHeight="450" d:DesignWidth="800"
+      xmlns:local="clr-namespace:Data_Logger_1._3.Views.Dialogs" xmlns:components="clr-namespace:Data_Logger_1._3.Components"
+      mc:Ignorable="d"
+      HorizontalAlignment="Stretch"
+      VerticalAlignment="Stretch"
+      d:Background="{DynamicResource WHITE}"
+      d:Width="1145"
       Title="LoggerCreatePage">
 
-    <Grid>
-        
-    </Grid>
+    <Border Padding="40 60"
+            >
+        <Grid
+              
+              >
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="50"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <!-- #region LOG FIELDS SIDE -->
+
+
+            <Grid Margin="20 10 0 10">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="30" />
+                    <RowDefinition Height="25" />
+                    <RowDefinition Height="45" />
+                    <RowDefinition Height="505" />
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+
+
+                <!-- HEADING -->
+                <TextBlock Grid.Column="0" Grid.Row="0" Style="{DynamicResource HEADING5}"
+                   Text="CREATE LOG"
+                   />
+
+                <TextBlock Grid.Column="0" Grid.Row="1" x:Name="text_LOG_CATEGORY" Style="{DynamicResource text_SUB HEADING1}"
+                   Text="coding log"
+                   />
+
+                <!--#region INPUT FIELDS -->
+                <StackPanel Grid.Row="3" VerticalAlignment="Stretch"
+                    >
+                    <!-- AUTHOR -->
+                    <Grid>
+                        <Border />
+
+                        <TextBlock Text="{Binding}" />
+                    </Grid>
+
+
+                    <!-- PROJECT -->
+                    <components:ComboBoxInputField x:Name="inputText_PROJECT"
+                                                   PlaceholderText="PROJECT NAME"
+                                                   UserTextBoxStyle="{DynamicResource inputText_PROJECT}"
+                                                   UserTextBlockStyle="{DynamicResource text_PROJECT_Placeholder}"
+                                                   UserComboInput="{Binding}"
+                                                   />
+
+                    <!-- APPLICATION -->
+                    <components:ComboBoxInputField x:Name="inputText_APP"
+                                                   PlaceholderText="Application Name"
+                                                   UserTextBoxStyle="{DynamicResource inputText_APP}"
+                                                   UserTextBlockStyle="{DynamicResource text_APP_Placeholder}"
+                                                   UserComboInput="{Binding}"
+                                                   />
+
+                    <!-- #region DATE START -->
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="10" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="10" />
+                            <ColumnDefinition Width="93" />
+                        </Grid.ColumnDefinitions>
+
+                        <!-- DATE -->
+                        <components:DateInputField Grid.Column="0" x:Name="dateEdit_START"
+                                                   />
+                        
+                        <!-- TIME -->
+                        <components:TimeInputField Grid.Column="2" x:Name="timeEdit_START"/>
+
+                        <!-- CURRENT DAYTIME-->
+                        <Button x:Name="button_START" Style="{DynamicResource ACTIONCurrentDate}" Grid.Column="4">
+                            <TextBlock Style="{DynamicResource text_button01}" 
+                                       Text="Current"
+                                       />
+                        </Button>
+                    </Grid>
+                    
+                    <!--#endregion-->
+
+
+                    <!-- #region DATE END -->
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="10" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="10" />
+                            <ColumnDefinition Width="93" />
+                        </Grid.ColumnDefinitions>
+
+                        <!-- DATE -->
+                        <components:DateInputField Grid.Column="0" x:Name="dateEdit_END"
+                                                   />
+                                                                                    
+                        <!-- TIME -->                                               
+                        <components:TimeInputField Grid.Column="2" x:Name="timeEdit_END"/>
+
+                        <!-- CURRENT DAYTIME-->
+                        <Button x:Name="button_END" Style="{DynamicResource ACTIONCurrentDate}" Grid.Column="4">
+                            <TextBlock Style="{DynamicResource text_button01}"
+                                       Text="Current"
+                                       />
+                        </Button>
+                    </Grid>
+                    
+                    <!--#endregion-->
+
+                    
+                    <!-- OUTPUT -->
+                    <components:ComboBoxInputField x:Name="inputText_OUTPUT"
+                                                   PlaceholderText="Output"
+                                                   UserTextBoxStyle="{DynamicResource inputText}"
+                                                   UserTextBlockStyle="{DynamicResource text_Placeholder}"
+                                                   UserComboInput="{Binding}"
+                                                   />
+                    
+                    <!-- TYPE -->
+                    <components:ComboBoxInputField x:Name="inputText_TYPE"
+                                                   PlaceholderText="Type"
+                                                   UserTextBoxStyle="{DynamicResource inputText}"
+                                                   UserTextBlockStyle="{DynamicResource text_Placeholder}"
+                                                   UserComboInput="{Binding}"
+                                                   />
+
+                    <!-- LOG VARIED FIELDS -->
+                    <Frame x:Name="frame_VARIATIONS" />
+
+                </StackPanel>
+                <!--#endregion-->
+
+
+
+
+
+                <Border Grid.Row="4"
+                        Padding="10 5"
+                        HorizontalAlignment="Stretch">
+                    <Button x:Name="button_SAVE" Style="{DynamicResource SECONDARY}"
+                            HorizontalAlignment="Right"
+                            >
+                        <TextBlock Style="{DynamicResource text_button01}"
+                                   Text="Save"
+                                   />
+                    </Button>
+                </Border>
+
+
+                <Border Grid.Row="5"
+                        Padding="10 5"
+                        HorizontalAlignment="Stretch"
+                        >
+                    <Button x:Name="button_ANNOTATE" Style="{DynamicResource PRIMARY}"
+                            HorizontalAlignment="Right"
+                            >
+                        <TextBlock Style="{DynamicResource text_button01}"
+                                   Text="Annotate"
+                                   />
+                    </Button>
+                </Border>
+
+
+
+
+            </Grid>
+
+
+
+
+            <!--#endregion-->
+
+
+
+            <!-- #region POST ITS SIDE -->
+
+            <Grid Grid.Column="2" Margin="0 10 20 10"
+                  HorizontalAlignment="Stretch"
+                  >
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="30" />
+                    <RowDefinition Height="25" />
+                    <RowDefinition Height="45" />
+                    <RowDefinition Height="505" />
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+
+
+                <!-- HEADING -->
+                <TextBlock Grid.Column="0" Grid.Row="0" Style="{DynamicResource HEADING5}"
+                           Text="23 LOGS CACHED"
+                           />
+
+
+                <!--#region LIST OF POST ITS -->
+
+                <StackPanel Grid.Row="3" Orientation="Vertical"
+                            HorizontalAlignment="Stretch"
+                            VerticalAlignment="Stretch"
+                            >
+                    
+                    <!-- TOOLBAR -->
+                    <ToolBar x:Name="tool_POST_IT_LIST"
+                             Height="30"
+                             BorderThickness="0"                             
+                             >
+                        
+                    </ToolBar>
+                    
+                    
+                    <!-- POST ITS -->
+                    <ListView 
+                              HorizontalAlignment="Stretch"
+                              VerticalAlignment="Stretch"
+                              >
+                        <ListViewItem IsSelected="True">Item 1</ListViewItem>
+                        <ListViewItem>Item 1</ListViewItem>
+                        <ListViewItem>Item 1</ListViewItem>
+                        <ListViewItem>Item 1</ListViewItem>
+                        <ListViewItem>Item 1</ListViewItem>
+                        <ListViewItem>Item 1</ListViewItem>
+                    </ListView>
+
+
+
+
+
+
+
+
+                </StackPanel>
+
+
+
+                <!--#endregion-->
+
+
+                <!-- ADD POST IT -->
+
+                <Border Grid.Row="5"
+            Padding="10 5"
+            HorizontalAlignment="Stretch"
+            >
+                    <Button x:Name="button_POST_IT" Style="{DynamicResource ACTIONCreate}"
+                HorizontalAlignment="Right"
+                >
+                        <TextBlock Style="{DynamicResource text_button01}"
+                       Text="Add Note"
+                       />
+                    </Button>
+                </Border>
+
+
+
+
+            </Grid>
+
+
+
+
+
+
+            <!--#endregion-->
+
+
+        </Grid>
+    </Border>
 </Page>
