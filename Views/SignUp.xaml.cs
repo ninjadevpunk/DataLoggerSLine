@@ -41,7 +41,10 @@ namespace Data_Logger_1._3.Views
                 var signupWindow = Window.GetWindow(this) as SignUp;
 
                 // Close the current window
-                signupWindow.Close();
+                if (signupWindow != null)
+                {
+                    signupWindow.Close();
+                }
             }
             catch (Exception ex)
             {
