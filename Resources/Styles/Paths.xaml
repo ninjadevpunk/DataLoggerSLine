@@ -477,8 +477,16 @@
     
     <!--#endregion-->
     
-    
-    
+    <!-- #region ELLIPSES -->
+
+
+    <Style x:Key="ellipse_ERSO" TargetType="Ellipse">
+        <Setter Property="Height" Value="12"/>
+        <Setter Property="Width" Value="12"/>
+    </Style>
+
+
+    <!--#endregion-->
     
     
 </ResourceDictionary>
