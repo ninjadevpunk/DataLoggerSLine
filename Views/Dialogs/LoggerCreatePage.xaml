@@ -9,13 +9,12 @@
       VerticalAlignment="Stretch"
       d:Background="{DynamicResource WHITE}"
       d:Width="1145"
-      Title="LoggerCreatePage">
+      Title="Logger">
 
     <Border Padding="40 60"
             >
-        <Grid
-              
-              >
+        <Grid>
+            
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="50"/>
@@ -50,11 +49,30 @@
                 <StackPanel Grid.Row="3" VerticalAlignment="Stretch"
                     >
                     <!-- AUTHOR -->
-                    <Grid>
-                        <Border />
+                    <Border Padding="20 2"
+                            Height="30">
+                        <Grid>
 
-                        <TextBlock Text="{Binding}" />
-                    </Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="auto"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            
+                            <Border x:Name="image_USER" Style="{DynamicResource image_displayPic}"
+                                    BorderThickness="0"
+                                    Height="20"
+                                    Width="20"
+                                    HorizontalAlignment="Left"/>
+                            <Path Style="{DynamicResource path_AUTHOR}"
+                                  />
+
+                            <TextBlock Grid.Column="1" Style="{DynamicResource text_Placeholder}"
+                                       Text="Joe Soap"
+                                       Foreground="{DynamicResource BLACK}"
+                                       HorizontalAlignment="Left"
+                                       />
+                        </Grid>
+                    </Border>
 
 
                     <!-- PROJECT -->
@@ -213,36 +231,59 @@
                 <TextBlock Grid.Column="0" Grid.Row="0" Style="{DynamicResource HEADING5}"
                            Text="23 LOGS CACHED"
                            />
-
+                
+                <!-- FIREBASE STATUS -->
+                <StackPanel Orientation="Horizontal"
+                            HorizontalAlignment="Right"
+                            VerticalAlignment="Center"
+                            >
+                    <Ellipse x:Name="ellipse_FIREBASE_CONNECTION" Style="{DynamicResource ellipse_FIREBASE_CONNECTION}"
+                             Fill="{DynamicResource GREEN}"
+                             VerticalAlignment="Center"
+                             />
+                    <TextBlock x:Name="text_FIREBASE_CONNECTION" Style="{DynamicResource text_minorHEADING1}"
+                               Text="Connected"
+                               Padding="10 0"
+                               />
+                </StackPanel>
 
                 <!--#region LIST OF POST ITS -->
 
-                <StackPanel Grid.Row="3" Orientation="Vertical"
-                            HorizontalAlignment="Stretch"
-                            VerticalAlignment="Stretch"
-                            >
-                    
-                    <!-- TOOLBAR -->
-                    <ToolBar x:Name="tool_POST_IT_LIST"
-                             Height="30"
-                             BorderThickness="0"                             
-                             >
-                        
-                    </ToolBar>
-                    
-                    
-                    <!-- POST ITS -->
-                    <ListView 
-                              HorizontalAlignment="Stretch"
-                              VerticalAlignment="Stretch"
-                              >
-                        <ListViewItem IsSelected="True">Item 1</ListViewItem>
-                        <ListViewItem>Item 1</ListViewItem>
-                        <ListViewItem>Item 1</ListViewItem>
-                        <ListViewItem>Item 1</ListViewItem>
-                        <ListViewItem>Item 1</ListViewItem>
-                        <ListViewItem>Item 1</ListViewItem>
-                    </ListView>
+                <Border Grid.Row="3"
+                        CornerRadius="3"
+                        HorizontalAlignment="Stretch"
+                        Padding="0"
+                        >
+                    <StackPanel Orientation="Vertical"
+                                HorizontalAlignment="Stretch"
+                                VerticalAlignment="Stretch"
+                                >
+
+                        <!-- TOOLBAR -->
+                        <ToolBar Style="{DynamicResource toolbar_POSTITS}" x:Name="tool_POST_IT_LIST"
+                                 Height="30"
+                                 BorderThickness="0"
+                                 >
+                            <Button x:Name="toolbutton_DELETE" Style="{DynamicResource toolbutton_DELETE}"
+                                    HorizontalAlignment="Left"
+                                    />                       
+
+                        </ToolBar>
+
+
+                        <!-- POST ITS -->
+                        <ListView Style="{DynamicResource listView_POSTITS}"
+                                  ItemsSource="{Binding}"
+                                  >
+                            <ListViewItem></ListViewItem>
+                            <ListViewItem></ListViewItem>
+                            <ListViewItem></ListViewItem>
+                            <ListViewItem></ListViewItem>
+                            <ListViewItem></ListViewItem>
+                            <ListViewItem></ListViewItem>
+                            <ListViewItem></ListViewItem>
+                            <ListViewItem></ListViewItem>
+                        </ListView>
 
 
 
@@ -251,7 +292,8 @@
 
 
 
-                </StackPanel>
+                    </StackPanel>
+                </Border>
 
 
 

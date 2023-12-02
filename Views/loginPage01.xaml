@@ -21,8 +21,8 @@
         <Grid Margin="0 10">
             <Border x:Name="image_USER"
                    Style="{DynamicResource image_displayPic}"
-                   Visibility="Visible"
-       />
+                   Visibility="Visible"/>
+            
             <Path Style="{DynamicResource path_USER}" />
 
 

@@ -11,5 +11,6 @@ namespace Data_Logger_1._3.Views.Dialogs
         {
             InitializeComponent();
         }
+
     }
 }
