@@ -16,13 +16,18 @@ using System.Windows.Shapes;
 namespace Data_Logger_1._3.Views.LogPages
 {
     /// <summary>
-    /// Interaction logic for FlexiLOGPage.xaml
+    /// Interaction logic for LogCachePage.xaml
     /// </summary>
-    public partial class FlexiLOGPage : Page
+    public partial class LogCachePage : Page
     {
-        public FlexiLOGPage()
+        public LogCachePage()
         {
             InitializeComponent();
+        }
+
+        private void ListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+
         }
     }
 }
