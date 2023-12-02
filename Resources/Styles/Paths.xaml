@@ -219,16 +219,7 @@
     
     
     
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
+
     
     <!--#region LOGO Path -->
     
@@ -351,6 +342,13 @@
         <Setter Property="Data" Value="M9.69693 0.662649C4.80431 0.92025 2.25496 6.63014 5.32728 10.4497C8.2408 14.0718 14.0711 13.102 15.6515 8.73235C17.113 4.69178 13.9737 0.437421 9.69693 0.662649ZM8.4159 14.7293C3.44578 14.9289 1.05384 16.2288 0.0729009 19.2632C-0.16015 19.984 0.181393 20.5971 0.871458 20.6968C1.10102 20.73 18.9364 20.73 19.146 20.6969C19.8362 20.5877 20.1708 19.9374 19.9135 19.2054C18.6716 15.672 15.5176 14.4442 8.4159 14.7293Z"/>
     </Style>
 
+    <Style x:Key="path_AUTHOR" TargetType="Path" BasedOn="{StaticResource path_USER}">
+        <Setter Property="Height" Value="20"/>
+        <Setter Property="Width" Value="20"/>
+        <Setter Property="HorizontalAlignment" Value="Left"/>
+        <Setter Property="Data" Value="M9.746 1.6723C5.68055 1.88635 3.5622 6.6309 6.1151 9.8047C8.53605 12.8144 13.3807 12.0086 14.6939 8.3777C15.9083 5.02025 13.2998 1.48515 9.746 1.6723ZM8.68155 13.3608C4.5517 13.5266 2.56415 14.6067 1.74905 17.1282C1.5554 17.7271 1.8392 18.2365 2.4126 18.3194C2.60335 18.3469 17.4234 18.347 17.5976 18.3194C18.1711 18.2287 18.4492 17.6883 18.2353 17.0801C17.2034 14.1441 14.5826 13.1238 8.68155 13.3608Z"/>
+    </Style>
+
     <Style x:Key="path_HELP" TargetType="Path" BasedOn="{StaticResource path_USER}">
         <Setter Property="Height" Value="20"/>
         <Setter Property="HorizontalAlignment" Value="Center"/>
@@ -375,6 +373,24 @@
     </Style>
 
     <!-- #endregion -->
+    
+    
+    <!--#region TOOLBAR Paths -->
+
+    <Style x:Key="path_TOOLBUTTON_delete" TargetType="Path">
+        <Setter Property="Height" Value="16"/>
+        <Setter Property="Width" Value="14"/>
+        <Setter Property="Data" Value="M1 14.5C1 14.8978 1.15804 15.2794 1.43934 15.5607C1.72064 15.842 2.10218 16 2.5 16H11.5C11.8978 16 12.2794 15.842 12.5607 15.5607C12.842 15.2794 13 14.8978 13 14.5V4.00001H1V14.5ZM9.5 6.50001C9.5 6.3674 9.55268 6.24022 9.64645 6.14645C9.74021 6.05268 9.86739 6.00001 10 6.00001C10.1326 6.00001 10.2598 6.05268 10.3536 6.14645C10.4473 6.24022 10.5 6.3674 10.5 6.50001V13.5C10.5 13.6326 10.4473 13.7598 10.3536 13.8536C10.2598 13.9473 10.1326 14 10 14C9.86739 14 9.74021 13.9473 9.64645 13.8536C9.55268 13.7598 9.5 13.6326 9.5 13.5V6.50001ZM6.5 6.50001C6.5 6.3674 6.55268 6.24022 6.64645 6.14645C6.74021 6.05268 6.86739 6.00001 7 6.00001C7.13261 6.00001 7.25979 6.05268 7.35355 6.14645C7.44732 6.24022 7.5 6.3674 7.5 6.50001V13.5C7.5 13.6326 7.44732 13.7598 7.35355 13.8536C7.25979 13.9473 7.13261 14 7 14C6.86739 14 6.74021 13.9473 6.64645 13.8536C6.55268 13.7598 6.5 13.6326 6.5 13.5V6.50001ZM3.5 6.50001C3.5 6.3674 3.55268 6.24022 3.64645 6.14645C3.74021 6.05268 3.86739 6.00001 4 6.00001C4.13261 6.00001 4.25979 6.05268 4.35355 6.14645C4.44732 6.24022 4.5 6.3674 4.5 6.50001V13.5C4.5 13.6326 4.44732 13.7598 4.35355 13.8536C4.25979 13.9473 4.13261 14 4 14C3.86739 14 3.74021 13.9473 3.64645 13.8536C3.55268 13.7598 3.5 13.6326 3.5 13.5V6.50001ZM13.5 1.00001H9.75L9.45625 0.41563C9.39402 0.290697 9.29817 0.185606 9.17947 0.11218C9.06078 0.0387537 8.92395 -9.46239e-05 8.78438 5.47897e-06H5.2125C5.07324 -0.00052985 4.93665 0.0381736 4.81838 0.111682C4.7001 0.18519 4.60492 0.290529 4.54375 0.41563L4.25 1.00001H0.5C0.367392 1.00001 0.240215 1.05268 0.146447 1.14645C0.0526784 1.24022 0 1.3674 0 1.50001L0 2.50001C0 2.63261 0.0526784 2.75979 0.146447 2.85356C0.240215 2.94733 0.367392 3.00001 0.5 3.00001H13.5C13.6326 3.00001 13.7598 2.94733 13.8536 2.85356C13.9473 2.75979 14 2.63261 14 2.50001V1.50001C14 1.3674 13.9473 1.24022 13.8536 1.14645C13.7598 1.05268 13.6326 1.00001 13.5 1.00001Z"/>
+        <Setter Property="Fill" Value="{DynamicResource iconCOLOURAccent01}"/>
+    </Style>
+    
+    
+    
+    
+    
+    
+    
+    <!--#endregion-->
     
     
     <!-- CLOSE BUTTON Path -->
@@ -421,16 +437,16 @@
 
     <!-- ARROW BACK Path -->
     <Style x:Key="path_ARROW_BACK" TargetType="Path">
-        <Setter Property="Height" Value="27"/>
-        <Setter Property="Width" Value="27"/>
+        <Setter Property="Height" Value="20"/>
+        <Setter Property="Width" Value="20"/>
         <Setter Property="Stretch" Value="Uniform"/>
         <Setter Property="Fill" Value="{DynamicResource iconCOLOURAccent02}"/>
-        <Setter Property="Data" Value="M16.2539 29.5782L18.9017 26.9305L6.96922 14.998L18.9017 3.0656L16.25 0.413952L1.66592 14.998L16.2539 29.5782Z"/>
+        <Setter Property="Data" Value="M13.975 19.7188L15.7402 17.9536L7.78523 9.99869L15.7402 2.04374L13.9724 0.275969L4.24969 9.99869L13.975 19.7188Z"/>
     </Style>
 
     <!-- ARROW FORWARD Path -->
     <Style x:Key="path_ARROW_FORWARD" TargetType="Path" BasedOn="{StaticResource path_ARROW_BACK}">
-        <Setter Property="Data" Value="M16.2446 29.5781L13.5982 26.9318L25.5307 14.9993L13.5982 3.06691L16.2499 0.415257L30.834 14.9993L16.2446 29.5781Z"/>
+        <Setter Property="Data" Value="M7.0243 19.7187L5.26007 17.9545L13.215 9.99956L5.26007 2.04461L7.02783 0.276838L16.7506 9.99956L7.0243 19.7187Z"/>
     </Style>
     
     <!-- DROP DOWN ARROW -->
@@ -477,12 +493,22 @@
     
     <!--#endregion-->
     
+    
+    
     <!-- #region ELLIPSES -->
 
 
     <Style x:Key="ellipse_ERSO" TargetType="Ellipse">
         <Setter Property="Height" Value="12"/>
         <Setter Property="Width" Value="12"/>
+    </Style>
+
+    <Style x:Key="ellipse_FIREBASE_CONNECTION" TargetType="Ellipse" BasedOn="{StaticResource ellipse_ERSO}">
+    </Style>
+
+    <Style x:Key="ellipse_LIST_ERSO" TargetType="Ellipse">
+        <Setter Property="Height" Value="15"/>
+        <Setter Property="Width" Value="15"/>
     </Style>
 
 
