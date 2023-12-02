@@ -45,6 +45,10 @@
     
     <!-- Calendar -->
     <SolidColorBrush x:Key="CalendarBackground" Color="#A0A0A0"/>
+    
+    <!-- TOOLBAR-->
+    <SolidColorBrush x:Key="TOOLBAR">#DAE0D7</SolidColorBrush>
+    <SolidColorBrush x:Key="ToolbarItem">#656565</SolidColorBrush>
 
     <!-- Others -->
     <SolidColorBrush x:Key="iconCOLOURAccent01">#AAAAAA</SolidColorBrush>
@@ -52,7 +56,6 @@
     <SolidColorBrush x:Key="contextMENUItemSEPARATOR">#9BB292</SolidColorBrush>
     <SolidColorBrush x:Key="STROKE">#B3B3B3</SolidColorBrush>
     <SolidColorBrush x:Key="PlaceholderText">#B3808080</SolidColorBrush>
-    <SolidColorBrush x:Key="TOOLBAR">#DAE0D7</SolidColorBrush>
     <SolidColorBrush x:Key="SELECTEDToolbutton">#F3FAF0</SolidColorBrush>
     <SolidColorBrush x:Key="WhiteAccent02">#DAE0D7</SolidColorBrush>
     <SolidColorBrush x:Key="SCROLLBAR">#5A5A5A</SolidColorBrush>
