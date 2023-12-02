@@ -10,6 +10,7 @@
         <Setter Property="FontFamily" Value="{StaticResource Red Hat Display}"/>
         <Setter Property="FontWeight" Value="Bold"/>
         <Setter Property="FontSize" Value="56"/>
+        <Setter Property="VerticalAlignment" Value="Center"/>
     </Style>
 
     <!-- HEADING 2 -->
@@ -212,8 +213,9 @@
     </Style>
 
     <Style x:Key="text_LIST_LABEL_CONTENT" TargetType="TextBlock" BasedOn="{StaticResource text_LIST_LABEL_HEADING}">
+        <Setter Property="Height" Value="70"/>
         <Setter Property="FontWeight" Value="Regular"/>
-        <Setter Property="TextWrapping" Value="NoWrap"/>
+        <Setter Property="TextWrapping" Value="WrapWithOverflow"/>
         <Setter Property="TextTrimming" Value="CharacterEllipsis"/>
     </Style>
 
