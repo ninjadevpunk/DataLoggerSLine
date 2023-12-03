@@ -376,9 +376,10 @@
 
                         <!-- HELP -->
                         <Button Grid.Column="0" x:Name="button_HELP" Style="{DynamicResource button_SUPPORT}"
-                                >
+                                IsEnabled="False">
                             <Path Style="{DynamicResource path_HELP}"
-                                 />
+                                  Fill="{DynamicResource iconCOLOURAccent01}"
+                                  />
                         </Button>
 
                         <!-- FEEDBACK -->
@@ -412,7 +413,7 @@
         <!-- APP NAVIGATOR -->
         <Frame Grid.Column="1" Grid.Row="0" Grid.RowSpan="2" x:Name="frame_MAINWINDOW"
                NavigationUIVisibility="Hidden"
-               Source="/Views/LogPages/LogCachePage.xaml"
+               Source="/Views/Dialogs/ReportPage.xaml"
                HorizontalAlignment="Stretch"
                VerticalAlignment="Stretch"
                />
