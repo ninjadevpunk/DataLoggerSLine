@@ -125,7 +125,9 @@
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="{x:Type ComboBox}">
-                        <Border SnapsToDevicePixels="true">
+                        <Border SnapsToDevicePixels="true"
+                                CornerRadius="3"
+                                >
                             <Grid x:Name="templateRoot" SnapsToDevicePixels="true">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="6*"/>
@@ -277,7 +279,8 @@
        />
 
         <!-- USER TEXT -->
-        <ComboBox ItemContainerStyle="{DynamicResource comboBox_ITEM_template}" Style="{DynamicResource comboBox_template}" x:Name="comboBox_TEXTBOX"
+        <ComboBox x:Name="comboBox_TEXTBOX" Style="{DynamicResource comboBox_template}"
+                  ItemContainerStyle="{DynamicResource comboBox_ITEM_template}" 
                   IsEditable="{Binding Enabled, ElementName=control_COMBOBOX_textbox}"
                   Text="{Binding UserComboInput, ElementName=control_COMBOBOX_textbox}"
                   
