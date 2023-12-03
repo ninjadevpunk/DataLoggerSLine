@@ -32,8 +32,8 @@
         <!--#region Data Logger LOGO -->
 
         <StackPanel Margin="0 10" Orientation="Horizontal" HorizontalAlignment="Center"
-    VerticalAlignment="Center"
-    Grid.Column="1">
+                    VerticalAlignment="Center"
+                    Grid.Column="1">
 
 
 
@@ -54,10 +54,10 @@
         <!-- HEADING -->
         <Grid Margin="0 10">
             <TextBlock Style="{DynamicResource HEADING5}"
-                   Text="LOGIN"
-                   HorizontalAlignment="Right"
-                   VerticalAlignment="Center"
-                   />
+                       Text="LOGIN"
+                       HorizontalAlignment="Right"
+                       VerticalAlignment="Center"/>
+            
         </Grid>
 
         <!-- FIELDS -->
