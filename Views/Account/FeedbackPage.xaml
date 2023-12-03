@@ -6,9 +6,11 @@
       xmlns:local="clr-namespace:Data_Logger_1._3.Views.Account" xmlns:components="clr-namespace:Data_Logger_1._3.Components"
       mc:Ignorable="d"
       d:Background="White"
+      HorizontalAlignment="Stretch"
+      VerticalAlignment="Stretch"
       Title="Feedback">
-
-    <Grid>
+    <Border Padding="40 60">
+        <Grid>
 
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="650"/>
@@ -150,4 +152,5 @@
 
 
     </Grid>
+    </Border>
 </Page>
