@@ -3,12 +3,294 @@
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-      xmlns:local="clr-namespace:Data_Logger_1._3.Views.Account"
-      mc:Ignorable="d" 
-      d:DesignHeight="450" d:DesignWidth="800"
+      xmlns:local="clr-namespace:Data_Logger_1._3.Views.Account" xmlns:components="clr-namespace:Data_Logger_1._3.Components"
+      mc:Ignorable="d"
+      HorizontalAlignment="Stretch"
+      VerticalAlignment="Stretch"
+      d:Background="White"
       Title="SettingsPage">
 
-    <Grid>
-        
-    </Grid>
+    <Border Padding="40 60">
+        <Grid>
+
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="650"/>
+                <ColumnDefinition Width="50"/>
+                <ColumnDefinition Width="auto"/>
+            </Grid.ColumnDefinitions>
+
+            <!-- #region FEEDBACK FIELDS SIDE -->
+
+
+            <Grid Margin="20 10 0 10">
+
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="30" />
+                    <RowDefinition Height="25" />
+                    <RowDefinition Height="45" />
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+
+
+                <!-- HEADING -->
+                <TextBlock Grid.Column="0" Grid.Row="0" Style="{DynamicResource HEADING5}"
+                   Text="SETTINGS"/>
+
+
+
+
+
+
+                <!--#region ACCOUNT FIELDS -->
+                
+                
+                
+                
+                
+                <StackPanel Grid.Row="3" VerticalAlignment="Stretch">
+                    
+                    <!-- ACCOUNT -->
+                    <Border Padding="10 30">
+                        <TextBlock Text="Account" Style="{DynamicResource text_minorHEADING1}" />
+                    </Border>
+                    
+                    <!-- Profile Picture -->
+                    <Border Padding="30 10">
+                        <Grid>
+
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="auto"/>
+                                <ColumnDefinition Width="20"/>
+                                <ColumnDefinition Width="auto"/>
+                                <ColumnDefinition Width="20"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+
+
+                            <Border x:Name="image_PROFILE_PIC" Style="{DynamicResource image_displayPic}"
+                                    >
+                                <Path Style="{DynamicResource path_USER}"
+                                      Visibility="Visible"
+                                      />
+                            </Border>
+                            
+                            <!-- Browse Button -->
+                            <Button Grid.Column="2"  x:Name="button_BROWSE_PICTURE" Style="{DynamicResource ACTIONBrowse}">
+                                <TextBlock Style="{DynamicResource text_button01}"
+                                           Text="Browse"/>
+                            </Button>
+
+
+                            <TextBlock Grid.Column="4" Style="{DynamicResource text_LABEL02}"
+                                       Text="C:\Users\STUDIO\STUDIO\Art\Design\Data Logger\1.3\Stage 6\Default\v5"
+                                       TextAlignment="Left"
+                                       TextTrimming="CharacterEllipsis"
+                                       HorizontalAlignment="Stretch"/>
+                        </Grid>
+                    </Border>
+
+                    <!-- FIRST AND LAST NAME -->
+                    <Grid Margin="0 2.5">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="10" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+
+                        <!-- FIRST NAME -->
+                        <components:PlainInputField x:Name="inputText_FIRSTNAME" Grid.Column="0"
+                                HorizontalAlignment="Stretch"
+                                VerticalAlignment="Center"
+                                PlaceholderText=""
+                                UserTextBoxStyle="{DynamicResource inputText_LOGIN}"
+                                UserTextBlockStyle="{DynamicResource text_login_PLACEHOLDER}"
+                                UserInput="{Binding}"
+                                />
+
+                        <!-- LAST NAME -->
+                        <components:PlainInputField x:Name="inputText_SURNAME" Grid.Column="2"
+                                HorizontalAlignment="Stretch"
+                                VerticalAlignment="Center"
+                                PlaceholderText=""
+                                UserTextBoxStyle="{DynamicResource inputText_LOGIN}"
+                                UserTextBlockStyle="{DynamicResource text_login_PLACEHOLDER}"
+                                UserInput="{Binding}"
+                                />
+
+
+                    </Grid>
+
+                    <!-- EMAIL -->
+                    <Grid Margin="0 2.5">
+                        <components:PlainInputField x:Name="inputText_EMAIL"
+                                                    HorizontalAlignment="Stretch"
+                                                    VerticalAlignment="Center"
+                                                    PlaceholderText=""
+                                                    UserTextBoxStyle="{DynamicResource inputText_LOGIN}"
+                                                    UserTextBlockStyle="{DynamicResource text_login_PLACEHOLDER}"
+                                                    UserInput="{Binding}"/>
+                    </Grid>
+
+
+                    <!-- EMPLOYEE? -->
+                    <Grid Margin="0 2.5">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="auto" />
+                        </Grid.ColumnDefinitions>
+
+                        <TextBlock Grid.Column="0" Style="{DynamicResource text_LABEL01}"
+                                   Text="Company Employee"
+                                   TextAlignment="Left"
+                                   Padding="10 0"/>
+
+                        <Grid Grid.Column="1"
+                              HorizontalAlignment="Right"
+                              VerticalAlignment="Center"
+                              Margin="10">
+                            
+                            
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+
+
+                            <!-- YES -->
+                            <TextBlock Grid.Column="0" Style="{DynamicResource text_LABEL02}"
+                                       Text="Yes"
+                                       Margin="5 0"/>
+                            
+                            <CheckBox Grid.Column="1" Style="{DynamicResource check_SIGNUP}" x:Name="checkBox_YES"
+                                      IsChecked="True"
+                                      Margin="0 0 10 0"/>
+
+
+                            <!-- NO -->
+                            <TextBlock Grid.Column="2" Style="{DynamicResource text_LABEL02}"
+                                       Text="No"
+                                       Margin="5 0"/>
+                            
+                            <CheckBox Grid.Column="3" Style="{DynamicResource check_SIGNUP}" x:Name="checkBox_NO"
+                                      
+                                      Background="{DynamicResource iconCOLOURAccent01}"
+                                      Foreground="{DynamicResource WHITE}"
+                                      IsChecked="False"/>
+                            
+                        </Grid>
+                    </Grid>
+
+                    <!-- NAME OF COMPANY -->
+                    <Grid Margin="0 2.5">
+                        <components:PlainInputField x:Name="inputText_COMPANY"
+                                                    HorizontalAlignment="Stretch"
+                                                    VerticalAlignment="Center"
+                                                    PlaceholderText=""
+                                                    UserTextBoxStyle="{DynamicResource inputText_LOGIN}"
+                                                    UserTextBlockStyle="{DynamicResource text_login_PLACEHOLDER}"
+                                                    UserInput="{Binding}"/>
+                    </Grid>
+
+                    <!-- COMPANY ADDRESS -->
+                    <Grid Margin="0 2.5">
+                        <components:PlainInputField x:Name="inputText_COMPANY_ADDRESS"
+                                                    HorizontalAlignment="Stretch"
+                                                    VerticalAlignment="Center"
+                                                    PlaceholderText=""
+                                                    UserTextBoxStyle="{DynamicResource inputText_LOGIN}"
+                                                    UserTextBlockStyle="{DynamicResource text_login_PLACEHOLDER}"
+                                                    UserInput="{Binding}"/>
+                    </Grid>
+
+                </StackPanel>
+                
+
+
+
+
+
+                <Border Grid.Row="4"
+                        Padding="10"
+                        HorizontalAlignment="Stretch">
+                    
+                    
+                    <Button x:Name="button_PASSWORD_RESET_LINK" Style="{DynamicResource ACTION}"
+                            HorizontalAlignment="Right"
+                            Width="auto">
+                        
+                        <TextBlock Style="{DynamicResource text_button01}"
+                                   Text="Request Password Reset"/>
+                    </Button>
+                </Border>
+
+
+                <Border Grid.Row="5"
+                        Padding="10"
+                        HorizontalAlignment="Stretch">
+
+
+                    <Button x:Name="button_DELETE_ACCOUNT" Style="{DynamicResource ACTION}"
+                            HorizontalAlignment="Right">
+
+                        <TextBlock Style="{DynamicResource text_button01}"
+                                   Text="Delete Account"/>
+                    </Button>
+                </Border>
+                <!--#endregion-->
+                
+                
+                
+                
+                
+                
+                
+                <!-- #region THEME FIELDS -->
+                <StackPanel Grid.Row="6" VerticalAlignment="Stretch">
+
+                    <!-- ACCOUNT -->
+                    <Border Padding="10 30">
+                        <TextBlock Text="Theme" Style="{DynamicResource text_minorHEADING1}" />
+                    </Border>
+                    
+                    
+                    <!-- Theme Options -->
+                    <components:ComboBoxInputField x:Name="theme_CHOICE"
+                                                   UserTextBoxStyle="{DynamicResource inputText}"
+                                                   Enabled="False"
+                                                   UserComboInput="Default"
+                                                   IsEnabled="False"
+                                                   />
+
+
+                </StackPanel>
+
+            </Grid>
+
+
+
+
+            <!--#endregion-->
+
+
+
+            <!-- #region CONTACT -->
+
+
+
+
+
+
+
+
+            <!--#endregion-->
+
+
+        </Grid>
+    </Border>
 </Page>
