@@ -100,7 +100,7 @@
                                     <Condition Binding="{Binding IsEnabled, RelativeSource={RelativeSource Self}}" Value="false"/>
                                     <Condition Binding="{Binding IsEditable, RelativeSource={RelativeSource AncestorType={x:Type ComboBox}}}" Value="true"/>
                                 </MultiDataTrigger.Conditions>
-                                <Setter Property="Background" TargetName="templateRoot" Value="{StaticResource ComboBox.Disabled.Editable.Background}"/>
+                                <Setter Property="Background" TargetName="templateRoot" Value="Transparent"/>
                                 <Setter Property="BorderBrush" TargetName="templateRoot" Value="{StaticResource ComboBox.Disabled.Editable.Border}"/>
                             </MultiDataTrigger>
                         </ControlTemplate.Triggers>
@@ -158,16 +158,15 @@
                                           />
 
 
-                            <Border x:Name="border" Grid.Column="0"
-                                    >
-                                    <Grid>
-                                        
-                                        <TextBox x:Name="PART_EditableTextBox" 
-                                                 Style="{Binding UserTextBoxStyle, ElementName=control_COMBOBOX_textbox}"
-                                                 TextChanged="on_EditableTextBox_changed"
-                                                 LostFocus="on_EditableTextBox_lostfocus"
-                                                 />
-                                    </Grid>
+                            <Border x:Name="border" Grid.Column="0">
+                                <Grid>
+                                    
+                                    <TextBox x:Name="PART_EditableTextBox"
+                                             Style="{Binding UserTextBoxStyle, ElementName=control_COMBOBOX_textbox}"
+                                             TextChanged="on_EditableTextBox_changed"
+                                             LostFocus="on_EditableTextBox_lostfocus"
+                                             />
+                                </Grid>
                             </Border>
                         </Grid>
                         </Border>
@@ -278,8 +277,8 @@
     <Grid>
         <TextBlock x:Name="text_Placeholdertext" Style="{Binding UserTextBlockStyle, ElementName=control_COMBOBOX_textbox}"
                    Text="{Binding PlaceholderText, ElementName=control_COMBOBOX_textbox}" 
-       
-       />
+                   
+                   />
 
         <!-- USER TEXT -->
         <ComboBox x:Name="comboBox_TEXTBOX" Style="{DynamicResource comboBox_template}"
