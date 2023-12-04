@@ -74,8 +74,7 @@
                             <Border x:Name="image_PROFILE_PIC" Style="{DynamicResource image_displayPic}"
                                     >
                                 <Path Style="{DynamicResource path_USER}"
-                                      Visibility="{Binding}"
-                                      />
+                                      Visibility="{Binding}" />
                             </Border>
                             
                             <!-- Browse Button -->
@@ -219,13 +218,13 @@
                 <Border Grid.Row="4"
                         Padding="10"
                         HorizontalAlignment="Stretch">
-                    
-                    
+
+
                     <Button x:Name="button_PASSWORD_RESET_LINK" Style="{DynamicResource ACTION}"
                             HorizontalAlignment="Right"
                             Width="auto"
                             Command="{Binding}">
-                        
+
                         <TextBlock Style="{DynamicResource text_button01}"
                                    Text="Request Password Reset"/>
                     </Button>
