@@ -74,19 +74,20 @@
                             <Border x:Name="image_PROFILE_PIC" Style="{DynamicResource image_displayPic}"
                                     >
                                 <Path Style="{DynamicResource path_USER}"
-                                      Visibility="Visible"
+                                      Visibility="{Binding}"
                                       />
                             </Border>
                             
                             <!-- Browse Button -->
-                            <Button Grid.Column="2"  x:Name="button_BROWSE_PICTURE" Style="{DynamicResource ACTIONBrowse}">
+                            <Button Grid.Column="2"  x:Name="button_BROWSE_PICTURE" Style="{DynamicResource ACTIONBrowse}"
+                                    Command="{Binding}">
                                 <TextBlock Style="{DynamicResource text_button01}"
                                            Text="Browse"/>
                             </Button>
 
 
                             <TextBlock Grid.Column="4" Style="{DynamicResource text_LABEL02}"
-                                       Text="C:\Users\STUDIO\STUDIO\Art\Design\Data Logger\1.3\Stage 6\Default\v5"
+                                       Text="{Binding}"
                                        TextAlignment="Left"
                                        TextTrimming="CharacterEllipsis"
                                        HorizontalAlignment="Stretch"/>
@@ -222,7 +223,8 @@
                     
                     <Button x:Name="button_PASSWORD_RESET_LINK" Style="{DynamicResource ACTION}"
                             HorizontalAlignment="Right"
-                            Width="auto">
+                            Width="auto"
+                            Command="{Binding}">
                         
                         <TextBlock Style="{DynamicResource text_button01}"
                                    Text="Request Password Reset"/>
@@ -236,7 +238,8 @@
 
 
                     <Button x:Name="button_DELETE_ACCOUNT" Style="{DynamicResource ACTION}"
-                            HorizontalAlignment="Right">
+                            HorizontalAlignment="Right"
+                            Command="{Binding}">
 
                         <TextBlock Style="{DynamicResource text_button01}"
                                    Text="Delete Account"/>
@@ -251,7 +254,8 @@
                 
                 
                 <!-- #region THEME FIELDS -->
-                <StackPanel Grid.Row="6" VerticalAlignment="Stretch">
+                <StackPanel Grid.Row="6" VerticalAlignment="Stretch"
+                            Visibility="Collapsed">
 
                     <!-- ACCOUNT -->
                     <Border Padding="10 30">
