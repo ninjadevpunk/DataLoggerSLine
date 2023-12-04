@@ -600,12 +600,11 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type ButtonBase}">
-                    <Border x:Name="border" Background="{TemplateBinding Background}"
-                     BorderBrush="{TemplateBinding BorderBrush}"
-                     BorderThickness="{TemplateBinding BorderThickness}"
-                     CornerRadius="3">
+                    <Border x:Name="border" 
+                            Style="{DynamicResource image_displayPic}">
                         <Grid>
-                            <Path x:Name="path_USER" Style="{DynamicResource path_USER}" />
+                            <Path x:Name="path_USER" Style="{DynamicResource path_USER}"
+                                  Visibility="{Binding}" />
                             <Path x:Name="ACTIONCreateICON" Style="{DynamicResource ACTIONCreateICON}"
                                   Fill="{DynamicResource iconCOLOURAccent02}"
                                   Margin="0"
@@ -799,6 +798,73 @@
             </Setter.Value>
         </Setter>
     </Style>
+    
+    
+    <!-- TOOLBUTTON ADOBE EXPORT -->
+    <Style x:Key="toolbutton_Adobe_EXPORT" TargetType="Button">
+        <Setter Property="Focusable" Value="False"/>
+        <Setter Property="HorizontalAlignment" Value="Right"/>
+        <Setter Property="VerticalAlignment" Value="Center"/>
+        <Setter Property="Height" Value="30"/>
+        <Setter Property="Width" Value="30"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type Button}">
+                    <Grid>
+                        <Path x:Name="icon_adobe1" Style="{DynamicResource path_TOOLBUTTON_adobe01}"/>
+                        <Path x:Name="icon_adobe2" Style="{DynamicResource path_TOOLBUTTON_adobe02}"/>
+                        <Path x:Name="icon_adobe3" Style="{DynamicResource path_TOOLBUTTON_adobe03}"/>
+                        <Path x:Name="icon_adobe4" Style="{DynamicResource path_TOOLBUTTON_adobe04}"/>
+                    </Grid>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter Property="Fill" TargetName="icon_adobe1" Value="{DynamicResource iconCOLOURAccent02}"/>
+                            <Setter Property="Fill" TargetName="icon_adobe4" Value="{DynamicResource iconCOLOURAccent02}"/>
+                        </Trigger>
+                        <Trigger Property="IsPressed" Value="True">
+                            <Setter Property="Fill" TargetName="icon_adobe1" Value="{DynamicResource RED}"/>
+                            <Setter Property="Fill" TargetName="icon_adobe4" Value="{DynamicResource RED}"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- TOOLBUTTON PRINTER EXPORT -->
+    <Style x:Key="toolbutton_PRINTER_EXPORT" TargetType="Button" BasedOn="{StaticResource toolbutton_Adobe_EXPORT}">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type Button}">
+                    <Grid>
+                        <Path x:Name="icon_printer_export1" Style="{DynamicResource path_TOOLBUTTON_printer01}"/>
+                        <Path x:Name="icon_printer_export2" Style="{DynamicResource path_TOOLBUTTON_printer02}"/>
+                        <Path x:Name="icon_printer_export3" Style="{DynamicResource path_TOOLBUTTON_printer03}"/>
+                        <Path x:Name="icon_printer_export4" Style="{DynamicResource path_TOOLBUTTON_printer04}"/>
+                        <Path x:Name="icon_printer_export5" Style="{DynamicResource path_TOOLBUTTON_printer05}"/>
+                        <Path x:Name="icon_printer_export6" Style="{DynamicResource path_TOOLBUTTON_printer06}"/>
+                    </Grid>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter Property="Fill" TargetName="icon_printer_export1" Value="{DynamicResource iconCOLOURAccent02}"/>
+                            <Setter Property="Fill" TargetName="icon_printer_export4" Value="{DynamicResource iconCOLOURAccent02}"/>
+                            <Setter Property="Fill" TargetName="icon_printer_export5" Value="{DynamicResource iconCOLOURAccent02}"/>
+                            <Setter Property="Fill" TargetName="icon_printer_export6" Value="{DynamicResource iconCOLOURAccent02}"/>
+                        </Trigger>
+                        <Trigger Property="IsPressed" Value="True">
+                            <Setter Property="Fill" TargetName="icon_printer_export1" Value="{DynamicResource WHITE}"/>
+                            <Setter Property="Fill" TargetName="icon_printer_export2" Value="{DynamicResource BLACK}"/>
+                            <Setter Property="Fill" TargetName="icon_printer_export3" Value="{DynamicResource BLACK}"/>
+                            <Setter Property="Fill" TargetName="icon_printer_export4" Value="{DynamicResource WHITE}"/>
+                            <Setter Property="Fill" TargetName="icon_printer_export5" Value="{DynamicResource WHITE}"/>
+                            <Setter Property="Fill" TargetName="icon_printer_export6" Value="{DynamicResource WHITE}"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
 
 
 
