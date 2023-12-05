@@ -60,7 +60,7 @@
     <SolidColorBrush x:Key="WhiteAccent02">#DAE0D7</SolidColorBrush>
     <SolidColorBrush x:Key="SCROLLBAR">#5A5A5A</SolidColorBrush>
     <SolidColorBrush x:Key="Highlighter01">#BB01FF01</SolidColorBrush>
-    <SolidColorBrush x:Key="Black40">#80000000</SolidColorBrush>
+    <SolidColorBrush x:Key="Black50">#80000000</SolidColorBrush>
 
     <!-- #region PRE-MADE -->
     <SolidColorBrush x:Key="ComboBox.Static.Background" Color="Transparent"/>
