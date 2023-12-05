@@ -272,12 +272,18 @@
         <Setter Property="TextWrapping" Value="WrapWithOverflow"/>
     </Style>
 
-    <Style x:Key="text_NOTE_DATE02" TargetType="TextBlock" BasedOn="{StaticResource text_NOTE_HEADING}">
-        <Setter Property="Foreground" Value="{DynamicResource Black40}"/>
+    <Style x:Key="text_NOTE_DATE01" TargetType="TextBlock" BasedOn="{StaticResource text_NOTE_HEADING}">
+        <Setter Property="Foreground" Value="{DynamicResource Black50}"/>
         <Setter Property="FontSize" Value="13"/>
+        <Setter Property="Padding" Value="5 0"/>
         <Setter Property="FontStyle" Value="Italic"/>
         <Setter Property="FontWeight" Value="Regular"/>
         <Setter Property="TextTrimming" Value="CharacterEllipsis"/>
+    </Style>
+
+    <Style x:Key="text_NOTE_DATE02" TargetType="TextBlock" BasedOn="{StaticResource text_NOTE_DATE01}">
+        <Setter Property="Padding" Value="13"/>
+        <Setter Property="FontWeight" Value="SemiBold"/>
     </Style>
 
 </ResourceDictionary>
