@@ -76,9 +76,9 @@
     
     
     <!-- Minor Heading 1 -->
-    <Style x:Key="text_minorHEADING1" TargetType="TextBlock" BasedOn="{StaticResource HEADING6}">
-    </Style>
-    
+    <Style x:Key="text_minorHEADING1" TargetType="TextBlock" BasedOn="{StaticResource HEADING6}"/>
+
+
     <!-- Minor Heading 2 -->
     <Style x:Key="text_minHEADING2" TargetType="TextBlock" BasedOn="{StaticResource text_minorHEADING1}">
         <Setter Property="FontSize" Value="13"/>
@@ -227,7 +227,7 @@
     
     
     
-    <!-- MENU TEXT -->
+    <!-- #region MENU TEXT -->
     <Style x:Key="text_MENU" TargetType="TextBlock">
         <Setter Property="Foreground" Value="{DynamicResource BLACK}"/>
         <Setter Property="Background" Value="Transparent"/>
@@ -248,6 +248,36 @@
 
     <Style x:Key="text_SUBMENU" TargetType="TextBlock" BasedOn="{StaticResource text_SUBMENU BOLD}">
         <Setter Property="FontWeight" Value="SemiBold"/>
+    </Style>
+    
+    <!--#endregion-->
+
+    
+    <!-- #region NOTES TEXT -->
+    <Style x:Key="text_NOTE_HEADING" TargetType="TextBlock">
+        <Setter Property="FontFamily" Value="{DynamicResource Red Hat Display}"/>
+        <Setter Property="Foreground" Value="{DynamicResource BLACK}"/>
+        <Setter Property="FontSize" Value="16"/>
+        <Setter Property="FontWeight" Value="SemiBold"/>
+        <Setter Property="VerticalAlignment" Value="Center"/>
+        <Setter Property="TextTrimming" Value="WordEllipsis"/>
+        <Setter Property="TextWrapping" Value="NoWrap"/>
+    </Style>
+
+    <Style x:Key="text_NOTE_CONTENT" TargetType="TextBlock" BasedOn="{StaticResource text_NOTE_HEADING}">
+        <Setter Property="FontSize" Value="13"/>
+        <Setter Property="FontWeight" Value="Regular"/>
+        <Setter Property="VerticalAlignment" Value="Top"/>
+        <Setter Property="TextTrimming" Value="CharacterEllipsis"/>
+        <Setter Property="TextWrapping" Value="WrapWithOverflow"/>
+    </Style>
+
+    <Style x:Key="text_NOTE_DATE02" TargetType="TextBlock" BasedOn="{StaticResource text_NOTE_HEADING}">
+        <Setter Property="Foreground" Value="{DynamicResource Black40}"/>
+        <Setter Property="FontSize" Value="13"/>
+        <Setter Property="FontStyle" Value="Italic"/>
+        <Setter Property="FontWeight" Value="Regular"/>
+        <Setter Property="TextTrimming" Value="CharacterEllipsis"/>
     </Style>
 
 </ResourceDictionary>
