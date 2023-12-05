@@ -57,8 +57,7 @@
 
         <!-- LOG CACHE -->
         <ListView Style="{DynamicResource listView_LOGCACHE}" Grid.Column="0" Grid.Row="3"
-                  ItemContainerStyle="{DynamicResource listView_LOGCACHE_ITEM}"
-                  />
+                  ItemContainerStyle="{DynamicResource listView_LOGCACHE_ITEM}" />
 
 
 
