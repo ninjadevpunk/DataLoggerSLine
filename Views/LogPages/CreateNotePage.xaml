@@ -12,6 +12,7 @@
       VerticalAlignment="Top"
       d:Background="White"
       Title="Create Note">
+    
     <Page.Resources>
 
         <Style x:Key="scrollViewer_CONTAINER" TargetType="{x:Type ScrollViewer}">
@@ -134,7 +135,7 @@
                     VerticalAlignment="Top" >
 
             <!-- CREATE LOG BUTTON -->
-            <Button x:Name="button_CREATE" Style="{DynamicResource SECONDARYSave}"
+            <Button x:Name="button_SAVE_NOTE" Style="{DynamicResource SECONDARYSave}"
                     VerticalAlignment="Bottom"
                     HorizontalAlignment="Center"
                     Margin="0 70 0 0"
