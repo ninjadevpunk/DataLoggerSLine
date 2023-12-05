@@ -41,7 +41,7 @@
            />
 
         <TextBlock Grid.Column="0" Grid.Row="1" x:Name="text_logCACHE_COUNT" Style="{DynamicResource text_SUB HEADING1}"
-           Text="15 logs cached | 68 total logs"
+           Text="{Binding}"
            />
 
 
@@ -58,15 +58,8 @@
         <!-- LOG CACHE -->
         <ListView Style="{DynamicResource listView_LOGCACHE}" Grid.Column="0" Grid.Row="3"
                   ItemContainerStyle="{DynamicResource listView_LOGCACHE_ITEM}"
-                  >
+                  />
 
-            <ListViewItem IsSelected="True"></ListViewItem>
-            <ListViewItem></ListViewItem>
-            <ListViewItem></ListViewItem>
-            <ListViewItem></ListViewItem>
-            <ListViewItem></ListViewItem>
-            <ListViewItem></ListViewItem>
-        </ListView>
 
 
 
@@ -81,10 +74,11 @@
             
             <!-- CREATE LOG BUTTON -->
             <Button x:Name="button_CREATE" Style="{DynamicResource PRIMARYCreate}"
-                VerticalAlignment="Top"
-                HorizontalAlignment="Center"
-                Margin="0 70 0 0"
-                >
+                    VerticalAlignment="Top"
+                    HorizontalAlignment="Center"
+                    Margin="0 70 0 0"
+                    Command="{Binding}">
+                
                 <TextBlock Style="{DynamicResource text_button01}"
                        Text="Create Log"
                        />
@@ -92,10 +86,11 @@
 
             <!-- CREATE REPORT BUTTON -->
             <Button x:Name="button_REPORT" Style="{DynamicResource SECONDARYReport}"
-                VerticalAlignment="Top"
-                HorizontalAlignment="Center"
-                Margin="0 20"
-                >
+                    VerticalAlignment="Top"
+                    HorizontalAlignment="Center"
+                    Margin="0 20"
+                    Command="{Binding}">
+                
                 <TextBlock Style="{DynamicResource text_button01}"
                        Text="Report"
                        />

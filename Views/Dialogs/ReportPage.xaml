@@ -40,6 +40,7 @@
                                        UserTextBlockStyle="{DynamicResource text_PROJECT_Placeholder}"
                                        UserTextBoxStyle="{DynamicResource inputText_PROJECT}"
                                        PlaceholderText="Project Name"
+                                       UserComboInput="{Binding}"
                                        Margin="0 10"/>
 
         
@@ -47,8 +48,8 @@
         <components:ComboBoxInputField Grid.Row="2" x:Name="inputText_APP"
                                        UserTextBlockStyle="{DynamicResource text_Placeholder}"
                                        UserTextBoxStyle="{DynamicResource inputText}"
-                                       PlaceholderText="Qt Creator"
-                                       IsEnabled="False"
+                                       PlaceholderText="{Binding}"
+                                       IsEnabled="{Binding}"
                                        Margin="0 10"/>
 
         <Grid Grid.Column="0" Grid.Row="2" Height="70"/>
@@ -60,16 +61,9 @@
 
         <!-- REPORTS LIST -->
         <ListView x:Name="listView_REPORTLIST" Style="{DynamicResource listView_REPORT_list}" Grid.Column="0" Grid.Row="4"
-              ItemContainerStyle="{DynamicResource listView_REPORT_list_ITEM}"
-              >
+                  ItemContainerStyle="{DynamicResource listView_REPORT_list_ITEM}"
+                  ItemsSource="{Binding}"/>
 
-            <ListViewItem IsSelected="True"></ListViewItem>
-            <ListViewItem></ListViewItem>
-            <ListViewItem></ListViewItem>
-            <ListViewItem></ListViewItem>
-            <ListViewItem></ListViewItem>
-            <ListViewItem></ListViewItem>
-        </ListView>
 
 
 
@@ -86,7 +80,8 @@
             <Button x:Name="button_REPORT" Style="{DynamicResource PRIMARYReport}"
                     VerticalAlignment="Top"
                     HorizontalAlignment="Center"
-                    Margin="10">
+                    Margin="10"
+                    Command="{Binding}">
                 
                 <TextBlock Style="{DynamicResource text_button01}"
                            Text="Export"/>

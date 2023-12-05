@@ -9,7 +9,9 @@
       HorizontalAlignment="Stretch"
       VerticalAlignment="Stretch"
       Title="Feedback">
+    
     <Border Padding="40 60">
+        
         <Grid>
 
         <Grid.ColumnDefinitions>
@@ -108,8 +110,8 @@
                 Padding="20 5"
                 HorizontalAlignment="Stretch">
                 <Button x:Name="button_FEEDBACK_SUBMIT" Style="{DynamicResource ACTION}"
-                    HorizontalAlignment="Right"
-                    >
+                        HorizontalAlignment="Right"
+                        Command="{Binding}">
                     <TextBlock Style="{DynamicResource text_button01}"
                            Text="Submit"
                            />
@@ -119,12 +121,12 @@
 
             <Border Grid.Row="5"
                 Padding="20 10"
-                HorizontalAlignment="Stretch"
-                >
+                HorizontalAlignment="Stretch">
+                
                 <TextBlock x:Name="feedback_SUBMISSION_STATUS" Style="{DynamicResource text_LABEL02}"
-                           Foreground="{DynamicResource GREEN}"
+                           Foreground="{Binding}"
                            TextAlignment="Right"
-                           Text="Feedback Succesfully Submitted"/>
+                           Text="{Binding}"/>
             </Border>
 
 
