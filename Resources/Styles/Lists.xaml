@@ -8,7 +8,7 @@
         <Setter Property="Background" Value="Transparent"/>
         <Setter Property="BorderBrush" Value="Transparent"/>
         <Setter Property="BorderThickness" Value="0.6"/>
-        <Setter Property="MinHeight" Value="640"/>
+        <Setter Property="Height" Value="auto"/>
         <Setter Property="MinWidth" Value="650"/>
         <Setter Property="MaxWidth" Value="900"/>
         <Setter Property="Margin" Value="0"/>
@@ -364,7 +364,12 @@
     </Style>
 
 
-    <!-- NOTES LIST VIEW -->
+    <!-- #region NOTES LIST VIEW -->
+    
+    
+    
+    
+    
     <Style x:Key="listView_NOTES_list" TargetType="{x:Type ListView}" BasedOn="{StaticResource listView_LOGCACHE}">
         <Setter Property="Template">
             <Setter.Value>
@@ -598,10 +603,58 @@
         </Setter>
         
     </Style>
+    
+    
+    
+    
+    
+    <!--#endregion-->
+    
+    
+    
+    <!-- POST ITS LIST -->
 
-
-    <!-- POST ITS LIST VIEW ITEM-->
-
+    <Style x:Key="listView_POSTITS" TargetType="{x:Type ListView}">
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="BorderBrush" Value="Transparent"/>
+        <Setter Property="MaxHeight" Value="470"/>
+        <Setter Property="BorderThickness" Value="0"/>
+        <Setter Property="Foreground" Value="{DynamicResource BLACK}"/>
+        <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Disabled"/>
+        <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Auto"/>
+        <Setter Property="ScrollViewer.CanContentScroll" Value="true"/>
+        <Setter Property="ScrollViewer.PanningMode" Value="Both"/>
+        <Setter Property="Stylus.IsFlicksEnabled" Value="False"/>
+        <Setter Property="VerticalContentAlignment" Value="Center"/>
+        <Setter Property="HorizontalAlignment" Value="Stretch"/>
+        <Setter Property="ItemContainerStyle" Value="{StaticResource listViewITEM_POSTITS}"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type ListView}">
+                    <Border x:Name="Bd"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            Padding="5"
+                            SnapsToDevicePixels="true"
+                            >
+                        <ScrollViewer Focusable="false" Padding="{TemplateBinding Padding}">
+                            <ItemsPresenter SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"/>
+                        </ScrollViewer>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <MultiTrigger>
+                            <MultiTrigger.Conditions>
+                                <Condition Property="IsGrouping" Value="true"/>
+                                <Condition Property="VirtualizingPanel.IsVirtualizingWhenGrouping" Value="false"/>
+                            </MultiTrigger.Conditions>
+                            <Setter Property="ScrollViewer.CanContentScroll" Value="false"/>
+                        </MultiTrigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
 
     <Style x:Key="listViewITEM_POSTITS" TargetType="{x:Type ListViewItem}">
         <Setter Property="SnapsToDevicePixels" Value="True"/>
@@ -761,35 +814,49 @@
     </Style>
 
 
-    <Style x:Key="listView_POSTITS" TargetType="{x:Type ListView}">
+    
+    
+    <!-- Check List  -->
+    <Style x:Key="listView_CHECKLIST" TargetType="{x:Type ListView}">
         <Setter Property="Background" Value="Transparent"/>
         <Setter Property="BorderBrush" Value="Transparent"/>
-        <Setter Property="MaxHeight" Value="470"/>
-        <Setter Property="BorderThickness" Value="0"/>
+        <Setter Property="BorderThickness" Value="0.6"/>
+        <Setter Property="Height" Value="auto"/>
+        <Setter Property="Width" Value="650"/>
+        <Setter Property="Margin" Value="0"/>
         <Setter Property="Foreground" Value="{DynamicResource BLACK}"/>
         <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Disabled"/>
         <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Auto"/>
         <Setter Property="ScrollViewer.CanContentScroll" Value="true"/>
         <Setter Property="ScrollViewer.PanningMode" Value="Both"/>
         <Setter Property="Stylus.IsFlicksEnabled" Value="False"/>
+        <Setter Property="HorizontalAlignment" Value="Left"/>
+        <Setter Property="VerticalAlignment" Value="Stretch"/>
         <Setter Property="VerticalContentAlignment" Value="Center"/>
-        <Setter Property="HorizontalAlignment" Value="Stretch"/>
-        <Setter Property="ItemContainerStyle" Value="{StaticResource listViewITEM_POSTITS}"/>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type ListView}">
-                    <Border x:Name="Bd"
-                            Background="{TemplateBinding Background}"
-                            BorderBrush="{TemplateBinding BorderBrush}"
-                            BorderThickness="{TemplateBinding BorderThickness}"
-                            Padding="5"
+                    <Border x:Name="Bd" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}"
+                            Padding="5 5 5 10"
                             SnapsToDevicePixels="true"
-                            >
+                            CornerRadius="3" >
+                        
                         <ScrollViewer Focusable="false" Padding="{TemplateBinding Padding}">
-                            <ItemsPresenter SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"/>
+                            <!-- Grid makes the items in ListView behave. -->
+                            <Grid>
+                                <ItemsPresenter SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
+                            </Grid>
                         </ScrollViewer>
+                            
                     </Border>
                     <ControlTemplate.Triggers>
+                        <Trigger Property="IsEnabled" Value="false"/>
+                        <Trigger Property="IsMouseOver" Value="true">
+                            <Setter Property="BorderThickness" TargetName="Bd" Value="0.6"/>
+                            <Setter Property="BorderBrush" TargetName="Bd" Value="{DynamicResource STROKE}"/>
+                        </Trigger>
+
+
                         <MultiTrigger>
                             <MultiTrigger.Conditions>
                                 <Condition Property="IsGrouping" Value="true"/>
@@ -802,7 +869,85 @@
             </Setter.Value>
         </Setter>
     </Style>
-    
-    
+
+    <Style x:Key="listView_CHECKLIST_ITEM" TargetType="{x:Type ListViewItem}">
+        <Setter Property="SnapsToDevicePixels" Value="True"/>
+        <Setter Property="Height" Value="60"/>
+        <Setter Property="Margin" Value="0 5 5 0"/>
+        <Setter Property="HorizontalAlignment" Value="Stretch"/>
+        <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+        <Setter Property="VerticalContentAlignment" Value="Center"/>
+        <Setter Property="Background" Value="{DynamicResource ListItem}"/>
+        <Setter Property="BorderBrush" Value="Transparent"/>
+        <Setter Property="BorderThickness" Value="0"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type ListViewItem}">
+                    <Border x:Name="Bd"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            Padding="40 10"
+                            SnapsToDevicePixels="true"
+                            CornerRadius="3"
+                            HorizontalAlignment="{TemplateBinding HorizontalAlignment}" >
+
+                        <Grid>
+
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="auto" />
+                                <ColumnDefinition Width="10" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="10" />
+                                <ColumnDefinition Width="auto" />
+                            </Grid.ColumnDefinitions>
+                            
+                            <!-- CHECKBOX -->
+                            <CheckBox Style="{DynamicResource check_SIGNUP}"
+                                      IsChecked="False"/>
+                            
+                            
+                            <!-- ITEM -->
+                            <TextBox Grid.Column="2" x:Name="inputText_CHECKLIST_item" Style="{DynamicResource inputText_CHECKLIST_itemContent}"
+                                     Text="Item" />
+                            
+                            <!-- DELETE BUTTON -->
+                            <Button Grid.Column="4" x:Name="button_DELETE_CHECKLIST_item" Style="{DynamicResource toolbutton_DELETE}"
+                                    Command="{Binding}"/>
+                                
+                                
+                        </Grid>
+
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <MultiTrigger>
+                            <MultiTrigger.Conditions>
+                                <Condition Property="IsMouseOver" Value="True"/>
+                            </MultiTrigger.Conditions>
+                            <Setter Property="Background" TargetName="Bd" Value="{DynamicResource SELECTEDListItem}"/>
+                        </MultiTrigger>
+                        <MultiTrigger>
+                            <MultiTrigger.Conditions>
+                                <Condition Property="Selector.IsSelectionActive" Value="False"/>
+                                <Condition Property="IsSelected" Value="True"/>
+                            </MultiTrigger.Conditions>
+                            <Setter Property="Background" TargetName="Bd" Value="{DynamicResource SELECTEDListItem}"/>
+                        </MultiTrigger>
+                        <MultiTrigger>
+                            <MultiTrigger.Conditions>
+                                <Condition Property="Selector.IsSelectionActive" Value="True"/>
+                                <Condition Property="IsSelected" Value="True"/>
+                            </MultiTrigger.Conditions>
+                            <Setter Property="Background" TargetName="Bd" Value="{DynamicResource SELECTEDListItem}"/>
+                        </MultiTrigger>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter Property="TextElement.Foreground" TargetName="Bd" Value="{DynamicResource {x:Static SystemColors.GrayTextBrushKey}}"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
 
 </ResourceDictionary>
