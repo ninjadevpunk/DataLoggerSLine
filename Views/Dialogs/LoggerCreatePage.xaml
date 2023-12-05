@@ -9,7 +9,7 @@
       VerticalAlignment="Stretch"
       d:Background="{DynamicResource WHITE}"
       d:Width="1145"
-      Title="Logger">
+      Title="Create Log">
 
     <Border Padding="40 60"
             >
@@ -38,16 +38,14 @@
 
                 <!-- HEADING -->
                 <TextBlock Grid.Column="0" Grid.Row="0" Style="{DynamicResource HEADING5}"
-                   Text="CREATE LOG"
-                   />
+                   Text="CREATE LOG" />
 
                 <TextBlock Grid.Column="0" Grid.Row="1" x:Name="text_LOG_CATEGORY" Style="{DynamicResource text_SUB HEADING1}"
-                   Text="coding log"
-                   />
+                   Text="{Binding}" />
 
                 <!--#region INPUT FIELDS -->
-                <StackPanel Grid.Row="3" VerticalAlignment="Stretch"
-                    >
+                <StackPanel Grid.Row="3" VerticalAlignment="Stretch" >
+                    
                     <!-- AUTHOR -->
                     <Border Padding="20 2"
                             Height="30">
@@ -56,21 +54,21 @@
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="auto"/>
                                 <ColumnDefinition Width="*"/>
-                            </Grid.ColumnDefinitions>
+                            </Grid.ColumnDefinitions >
                             
                             <Border x:Name="image_USER" Style="{DynamicResource image_displayPic}"
                                     BorderThickness="0"
                                     Height="20"
                                     Width="20"
-                                    HorizontalAlignment="Left"/>
-                            <Path Style="{DynamicResource path_AUTHOR}"
-                                  />
+                                    HorizontalAlignment="Left" />
+                            
+                            <Path x:Name="path_DEFAULT_DP" Style="{DynamicResource path_AUTHOR}"
+                                  Visibility="{Binding}" />
 
-                            <TextBlock Grid.Column="1" Style="{DynamicResource text_Placeholder}"
-                                       Text="Joe Soap"
+                            <TextBlock x:Name="text_AUTHOR" Grid.Column="1" Style="{DynamicResource text_Placeholder}"
+                                       Text="{Binding}"
                                        Foreground="{DynamicResource BLACK}"
-                                       HorizontalAlignment="Left"
-                                       />
+                                       HorizontalAlignment="Left" />
                         </Grid>
                     </Border>
 
@@ -102,17 +100,17 @@
                         </Grid.ColumnDefinitions>
 
                         <!-- DATE -->
-                        <components:DateInputField Grid.Column="0" x:Name="dateEdit_START"
-                                                   />
+                        <components:DateInputField Grid.Column="0" x:Name="dateEdit_START" />
                         
                         <!-- TIME -->
                         <components:TimeInputField Grid.Column="2" x:Name="timeEdit_START"/>
 
                         <!-- CURRENT DAYTIME-->
-                        <Button x:Name="button_START" Style="{DynamicResource ACTIONCurrentDate}" Grid.Column="4">
+                        <Button x:Name="button_START" Style="{DynamicResource ACTIONCurrentDate}" Grid.Column="4"
+                                Command="{Binding}" >
+                            
                             <TextBlock Style="{DynamicResource text_button01}" 
-                                       Text="Current"
-                                       />
+                                       Text="Current" />
                         </Button>
                     </Grid>
                     
@@ -137,10 +135,11 @@
                         <components:TimeInputField Grid.Column="2" x:Name="timeEdit_END"/>
 
                         <!-- CURRENT DAYTIME-->
-                        <Button x:Name="button_END" Style="{DynamicResource ACTIONCurrentDate}" Grid.Column="4">
+                        <Button x:Name="button_END" Style="{DynamicResource ACTIONCurrentDate}" Grid.Column="4"
+                                Command="{Binding}" >
+                            
                             <TextBlock Style="{DynamicResource text_button01}"
-                                       Text="Current"
-                                       />
+                                       Text="Current" />
                         </Button>
                     </Grid>
                     
@@ -175,27 +174,30 @@
 
                 <Border Grid.Row="4"
                         Padding="10 5"
-                        HorizontalAlignment="Stretch">
+                        HorizontalAlignment="Stretch" >
+                    
                     <Button x:Name="button_SAVE" Style="{DynamicResource SECONDARY}"
-                            HorizontalAlignment="Right"
-                            >
+                            HorizontalAlignment="Right" 
+                            Command="{Binding}" >
+                        
                         <TextBlock Style="{DynamicResource text_button01}"
-                                   Text="Save"
-                                   />
+                                   Text="Save" />
+                        
                     </Button>
                 </Border>
 
 
                 <Border Grid.Row="5"
                         Padding="10 5"
-                        HorizontalAlignment="Stretch"
-                        >
+                        HorizontalAlignment="Stretch" >
+                    
                     <Button x:Name="button_ANNOTATE" Style="{DynamicResource PRIMARY}"
-                            HorizontalAlignment="Right"
-                            >
+                            HorizontalAlignment="Right" 
+                            Command="{Binding}" >
+                        
                         <TextBlock Style="{DynamicResource text_button01}"
-                                   Text="Annotate"
-                                   />
+                                   Text="Annotate" />
+                        
                     </Button>
                 </Border>
 
@@ -214,8 +216,8 @@
             <!-- #region POST ITS SIDE -->
 
             <Grid Grid.Column="2" Margin="0 10 20 10"
-                  HorizontalAlignment="Stretch"
-                  >
+                  HorizontalAlignment="Stretch" >
+                
                 <Grid.RowDefinitions>
                     <RowDefinition Height="30" />
                     <RowDefinition Height="25" />
@@ -229,22 +231,21 @@
 
                 <!-- HEADING -->
                 <TextBlock Grid.Column="0" Grid.Row="0" Style="{DynamicResource HEADING5}"
-                           Text="23 LOGS CACHED"
-                           />
+                           Text="{Binding}" />
                 
                 <!-- FIREBASE STATUS -->
                 <StackPanel Orientation="Horizontal"
                             HorizontalAlignment="Right"
-                            VerticalAlignment="Center"
-                            >
+                            VerticalAlignment="Center" >
+                    
                     <Ellipse x:Name="ellipse_FIREBASE_CONNECTION" Style="{DynamicResource ellipse_FIREBASE_CONNECTION}"
-                             Fill="{DynamicResource GREEN}"
-                             VerticalAlignment="Center"
-                             />
+                             Fill="{Binding}"
+                             VerticalAlignment="Center" />
+                    
                     <TextBlock x:Name="text_FIREBASE_CONNECTION" Style="{DynamicResource text_minorHEADING1}"
-                               Text="Connected"
-                               Padding="10 0"
-                               />
+                               Text="{Binding}"
+                               Padding="10 0" />
+                    
                 </StackPanel>
 
                 <!--#region LIST OF POST ITS -->
@@ -252,38 +253,28 @@
                 <Border Grid.Row="3"
                         CornerRadius="3"
                         HorizontalAlignment="Stretch"
-                        Padding="0"
-                        >
+                        Padding="0" >
+                    
                     <StackPanel Orientation="Vertical"
                                 HorizontalAlignment="Stretch"
-                                VerticalAlignment="Stretch"
-                                >
+                                VerticalAlignment="Stretch" >
 
                         <!-- TOOLBAR -->
                         <ToolBar Style="{DynamicResource toolbar_POSTITS}" x:Name="tool_POST_IT_LIST"
                                  Height="30"
-                                 BorderThickness="0"
-                                 >
-                            <Button x:Name="toolbutton_DELETE" Style="{DynamicResource toolbutton_DELETE}"
-                                    HorizontalAlignment="Left"
-                                    />                       
+                                 BorderThickness="0" >
 
+                            <Button x:Name="toolbutton_DELETE" Style="{DynamicResource toolbutton_DELETE}"
+                                    HorizontalAlignment="Left" 
+                                    Command="{Binding}" />
+                            
                         </ToolBar>
 
 
                         <!-- POST ITS -->
                         <ListView Style="{DynamicResource listView_POSTITS}"
-                                  ItemsSource="{Binding}"
-                                  >
-                            <ListViewItem></ListViewItem>
-                            <ListViewItem></ListViewItem>
-                            <ListViewItem></ListViewItem>
-                            <ListViewItem></ListViewItem>
-                            <ListViewItem></ListViewItem>
-                            <ListViewItem></ListViewItem>
-                            <ListViewItem></ListViewItem>
-                            <ListViewItem></ListViewItem>
-                        </ListView>
+                                  ItemsSource="{Binding}" />
+
 
 
 
@@ -303,15 +294,16 @@
                 <!-- ADD POST IT -->
 
                 <Border Grid.Row="5"
-            Padding="10 5"
-            HorizontalAlignment="Stretch"
-            >
+                        Padding="10 5"
+                        HorizontalAlignment="Stretch" >
+                    
                     <Button x:Name="button_POST_IT" Style="{DynamicResource ACTIONCreate}"
-                HorizontalAlignment="Right"
-                >
+                            HorizontalAlignment="Right"
+                            Command="{Binding}" >
+                        
                         <TextBlock Style="{DynamicResource text_button01}"
-                       Text="Add Note"
-                       />
+                                   Text="Add Note" />
+                        
                     </Button>
                 </Border>
 
