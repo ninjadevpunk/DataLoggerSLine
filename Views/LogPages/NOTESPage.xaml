@@ -62,7 +62,7 @@
             HorizontalAlignment="Center">
 
             <!-- CREATE NOTES BUTTON -->
-            <Button x:Name="button_CREATE" Style="{DynamicResource PRIMARYCreate}"
+            <Button x:Name="button_NEW_NOTE" Style="{DynamicResource PRIMARYCreate}"
                     VerticalAlignment="Top"
                     HorizontalAlignment="Center"
                     Margin="0 70 0 0"
@@ -73,4 +73,5 @@
 
         </StackPanel>
     </Grid>
+    
 </Page>
