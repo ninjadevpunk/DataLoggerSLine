@@ -1,17 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
+﻿using System.Windows.Controls;
 
 namespace Data_Logger_1._3.Views.LogPages
 {
@@ -20,9 +7,25 @@ namespace Data_Logger_1._3.Views.LogPages
     /// </summary>
     public partial class CreateNotePage : Page
     {
+        public string Created { get; set; } = date();
+
+
         public CreateNotePage()
         {
             InitializeComponent();
+
+
+            this.text_logCACHE_COUNT.Text = "Created " + Created + ". Last modified " + Created;
+        }
+
+        private void on_NOTEPAD_modified(object sender, TextChangedEventArgs e)
+        {
+            this.text_logCACHE_COUNT.Text = "Created " + Created + ". Last modified " + date();
+        }
+
+        public static string date() 
+        { 
+            return DateTime.Now.ToString("d MMMM yyyy HH:mm");
         }
     }
 }
