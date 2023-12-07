@@ -11,8 +11,8 @@
       d:Width="1145"
       Title="Create Log">
 
-    <Border Padding="40 60"
-            >
+    <Border Padding="40 60" >
+        
         <Grid>
             
             <Grid.ColumnDefinitions>
@@ -260,7 +260,7 @@
                                 VerticalAlignment="Stretch" >
 
                         <!-- TOOLBAR -->
-                        <ToolBar Style="{DynamicResource toolbar_POSTITS}" x:Name="tool_POST_IT_LIST"
+                        <ToolBar Style="{DynamicResource toolbar_POSTITS_list}" x:Name="tool_POST_IT_LIST"
                                  Height="30"
                                  BorderThickness="0" >
 
@@ -298,11 +298,12 @@
                         HorizontalAlignment="Stretch" >
                     
                     <Button x:Name="button_POST_IT" Style="{DynamicResource ACTIONCreate}"
+                            Width="auto"
                             HorizontalAlignment="Right"
                             Command="{Binding}" >
                         
                         <TextBlock Style="{DynamicResource text_button01}"
-                                   Text="Add Note" />
+                                   Text="Sticky Note" />
                         
                     </Button>
                 </Border>
