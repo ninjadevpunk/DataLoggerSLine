@@ -83,7 +83,12 @@
     <Style x:Key="text_minHEADING2" TargetType="TextBlock" BasedOn="{StaticResource text_minorHEADING1}">
         <Setter Property="FontSize" Value="13"/>
     </Style>
-    
+
+    <!-- Minor Heading 2 -->
+    <Style x:Key="text_minHEADING3" TargetType="TextBlock" BasedOn="{StaticResource text_minorHEADING1}">
+        <Setter Property="FontWeight" Value="SemiBold"/>
+    </Style>
+
     <!-- LOGO SPLASH SCREEN -->
     <Style x:Key="text_logoSPLASHscreen" TargetType="TextBlock">
         <Setter Property="FontFamily" Value="{StaticResource Zekton}"/>
