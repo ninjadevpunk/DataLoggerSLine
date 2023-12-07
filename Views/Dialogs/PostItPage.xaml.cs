@@ -13,14 +13,14 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace Data_Logger_1._3.Views.LogPages
+namespace Data_Logger_1._3.Views.Dialogs
 {
     /// <summary>
-    /// Interaction logic for CreateNotePage.xaml
+    /// Interaction logic for PostItPage.xaml
     /// </summary>
-    public partial class CreateNotePage : Page
+    public partial class PostItPage : Page
     {
-        public CreateNotePage()
+        public PostItPage()
         {
             InitializeComponent();
         }

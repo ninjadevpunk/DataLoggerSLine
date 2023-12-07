@@ -1,0 +1,6 @@
+﻿namespace Data_Logger_1._3.ViewModels.LogViewModels
+{
+    class CodeLOGViewModel
+    {
+    }
+}

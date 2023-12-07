@@ -100,7 +100,7 @@
                                     <Condition Binding="{Binding IsEnabled, RelativeSource={RelativeSource Self}}" Value="false"/>
                                     <Condition Binding="{Binding IsEditable, RelativeSource={RelativeSource AncestorType={x:Type ComboBox}}}" Value="true"/>
                                 </MultiDataTrigger.Conditions>
-                                <Setter Property="Background" TargetName="templateRoot" Value="{StaticResource ComboBox.Disabled.Editable.Background}"/>
+                                <Setter Property="Background" TargetName="templateRoot" Value="Transparent"/>
                                 <Setter Property="BorderBrush" TargetName="templateRoot" Value="{StaticResource ComboBox.Disabled.Editable.Border}"/>
                             </MultiDataTrigger>
                         </ControlTemplate.Triggers>
@@ -115,7 +115,6 @@
             <Setter Property="Background" Value="{DynamicResource WHITE}"/>
             <Setter Property="Foreground" Value="Transparent"/>
             <Setter Property="Height" Value="40"/>
-            <Setter Property="MinWidth" Value="487.5"/>
             <Setter Property="BorderThickness" Value="0.6"/>
             <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Auto"/>
             <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Auto"/>
@@ -125,7 +124,9 @@
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="{x:Type ComboBox}">
-                        <Border SnapsToDevicePixels="true">
+                        <Border SnapsToDevicePixels="true"
+                                CornerRadius="3"
+                                >
                             <Grid x:Name="templateRoot" SnapsToDevicePixels="true">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="6*"/>
@@ -156,16 +157,15 @@
                                           />
 
 
-                            <Border x:Name="border" Grid.Column="0"
-                                    >
-                                    <Grid>
-                                        
-                                        <TextBox x:Name="PART_EditableTextBox" 
-                                                 Style="{Binding UserTextBoxStyle, ElementName=control_COMBOBOX_textbox}"
-                                                 TextChanged="on_EditableTextBox_changed"
-                                                 LostFocus="on_EditableTextBox_lostfocus"
-                                                 />
-                                    </Grid>
+                            <Border x:Name="border" Grid.Column="0">
+                                <Grid>
+                                    
+                                    <TextBox x:Name="PART_EditableTextBox"
+                                             Style="{Binding UserTextBoxStyle, ElementName=control_COMBOBOX_textbox}"
+                                             TextChanged="on_EditableTextBox_changed"
+                                             LostFocus="on_EditableTextBox_lostfocus"
+                                             />
+                                </Grid>
                             </Border>
                         </Grid>
                         </Border>
@@ -188,6 +188,9 @@
                                 <Setter Property="Canvas.Top" TargetName="opaqueRect" Value="{Binding VerticalOffset, ElementName=DropDownScrollViewer}"/>
                                 <Setter Property="Canvas.Left" TargetName="opaqueRect" Value="{Binding HorizontalOffset, ElementName=DropDownScrollViewer}"/>
                             </Trigger>
+                            <!--<Trigger Property="IsEditable" Value="False">
+                                <Setter Property="Template" TargetName="comboBox_template" Value=""/>
+                            </Trigger>-->
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
                 </Setter.Value>
@@ -206,7 +209,6 @@
             <Setter Property="Background" Value="Transparent"/>
             <Setter Property="BorderBrush" Value="Transparent"/>
             <Setter Property="BorderThickness" Value="0"/>
-            <Setter Property="FocusVisualStyle" Value="{StaticResource FocusVisual1}"/>
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="{x:Type ComboBoxItem}">
@@ -274,11 +276,12 @@
     <Grid>
         <TextBlock x:Name="text_Placeholdertext" Style="{Binding UserTextBlockStyle, ElementName=control_COMBOBOX_textbox}"
                    Text="{Binding PlaceholderText, ElementName=control_COMBOBOX_textbox}" 
-       
-       />
+                   
+                   />
 
         <!-- USER TEXT -->
-        <ComboBox ItemContainerStyle="{DynamicResource comboBox_ITEM_template}" Style="{DynamicResource comboBox_template}" x:Name="comboBox_TEXTBOX"
+        <ComboBox x:Name="comboBox_TEXTBOX" Style="{DynamicResource comboBox_template}"
+                  ItemContainerStyle="{DynamicResource comboBox_ITEM_template}" 
                   IsEditable="{Binding Enabled, ElementName=control_COMBOBOX_textbox}"
                   Text="{Binding UserComboInput, ElementName=control_COMBOBOX_textbox}"
                   

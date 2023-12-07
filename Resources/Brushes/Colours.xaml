@@ -49,6 +49,7 @@
     <!-- TOOLBAR-->
     <SolidColorBrush x:Key="TOOLBAR">#DAE0D7</SolidColorBrush>
     <SolidColorBrush x:Key="ToolbarItem">#656565</SolidColorBrush>
+    <SolidColorBrush x:Key="SELECTEDToolbutton">#F3FAF0</SolidColorBrush>
 
     <!-- Others -->
     <SolidColorBrush x:Key="iconCOLOURAccent01">#AAAAAA</SolidColorBrush>
@@ -56,12 +57,12 @@
     <SolidColorBrush x:Key="contextMENUItemSEPARATOR">#9BB292</SolidColorBrush>
     <SolidColorBrush x:Key="STROKE">#B3B3B3</SolidColorBrush>
     <SolidColorBrush x:Key="PlaceholderText">#B3808080</SolidColorBrush>
-    <SolidColorBrush x:Key="SELECTEDToolbutton">#F3FAF0</SolidColorBrush>
     <SolidColorBrush x:Key="WhiteAccent02">#DAE0D7</SolidColorBrush>
     <SolidColorBrush x:Key="SCROLLBAR">#5A5A5A</SolidColorBrush>
     <SolidColorBrush x:Key="Highlighter01">#BB01FF01</SolidColorBrush>
+    <SolidColorBrush x:Key="Black50">#80000000</SolidColorBrush>
 
-    <!-- PRE-MADE -->
+    <!-- #region PRE-MADE -->
     <SolidColorBrush x:Key="ComboBox.Static.Background" Color="Transparent"/>
     <SolidColorBrush x:Key="ComboBox.Static.Border" Color="#FFACACAC"/>
     <SolidColorBrush x:Key="ComboBox.Static.Glyph" Color="#000000"/>
@@ -119,6 +120,8 @@
     <SolidColorBrush x:Key="DisabledBrush" Color="#A5FFFFFF"/>
     
     <SolidColorBrush x:Key="WatermarkBrush" Color="#FFAAAAAA"/>
+    
+    <!--#endregion-->
 
     <!-- THEME COLOURS - DARK (for Data Logger 1.4) -->
 

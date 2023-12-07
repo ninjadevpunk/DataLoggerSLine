@@ -1,164 +1,197 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
-    
 
 
+    <!-- LOG CACHE LIST VIEW -->
+    <Style x:Key="listView_LOGCACHE" TargetType="{x:Type ListView}">
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="BorderBrush" Value="Transparent"/>
+        <Setter Property="BorderThickness" Value="0.6"/>
+        <Setter Property="Height" Value="auto"/>
+        <Setter Property="MinWidth" Value="650"/>
+        <Setter Property="MaxWidth" Value="900"/>
+        <Setter Property="Margin" Value="0"/>
+        <Setter Property="Foreground" Value="{DynamicResource BLACK}"/>
+        <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Disabled"/>
+        <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Auto"/>
+        <Setter Property="ScrollViewer.CanContentScroll" Value="true"/>
+        <Setter Property="ScrollViewer.PanningMode" Value="Both"/>
+        <Setter Property="Stylus.IsFlicksEnabled" Value="False"/>
+        <Setter Property="HorizontalAlignment" Value="Left"/>
+        <Setter Property="VerticalAlignment" Value="Stretch"/>
+        <Setter Property="VerticalContentAlignment" Value="Center"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type ListView}">
+                    <Border x:Name="Bd" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}"
+                            Padding="1"
+                            SnapsToDevicePixels="true"
+                            CornerRadius="3">
+                        <ScrollViewer Focusable="false" Padding="{TemplateBinding Padding}">
+                            <!-- Grid makes the items in ListView behave. -->
+                            <Grid>
+                                <ItemsPresenter SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"
+                                            />
+                            </Grid>
+                        </ScrollViewer>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsEnabled" Value="false"/>
+                        <Trigger Property="IsMouseOver" Value="true">
+                            <Setter Property="BorderThickness" TargetName="Bd" Value="0.6"/>
+                            <Setter Property="BorderBrush" TargetName="Bd" Value="{DynamicResource STROKE}"/>
+                        </Trigger>
 
 
-    <!-- POST ITS LIST VIEW ITEM-->
+                        <MultiTrigger>
+                            <MultiTrigger.Conditions>
+                                <Condition Property="IsGrouping" Value="true"/>
+                                <Condition Property="VirtualizingPanel.IsVirtualizingWhenGrouping" Value="false"/>
+                            </MultiTrigger.Conditions>
+                            <Setter Property="ScrollViewer.CanContentScroll" Value="false"/>
+                        </MultiTrigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
 
-
-    <Style x:Key="listViewITEM_POSTITS" TargetType="{x:Type ListViewItem}">
+    <Style x:Key="listView_LOGCACHE_ITEM" TargetType="{x:Type ListViewItem}">
         <Setter Property="SnapsToDevicePixels" Value="True"/>
-        <Setter Property="HorizontalContentAlignment" Value="{Binding HorizontalContentAlignment, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}"/>
-        <Setter Property="VerticalContentAlignment" Value="{Binding VerticalContentAlignment, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}"/>
+        <Setter Property="Padding" Value="4,1"/>
+        <Setter Property="Height" Value="170"/>
+        <Setter Property="Margin" Value="0 5 5 0"/>
+        <Setter Property="HorizontalAlignment" Value="Stretch"/>
+        <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+        <Setter Property="VerticalContentAlignment" Value="Center"/>
         <Setter Property="Background" Value="{DynamicResource ListItem}"/>
         <Setter Property="BorderBrush" Value="Transparent"/>
         <Setter Property="BorderThickness" Value="0"/>
-        <Setter Property="Margin" Value="0 0 5 7"/>
-        <Setter Property="FocusVisualStyle" Value="{StaticResource FocusVisual}"/>
-        <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Disabled"/>
-        <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Auto"/>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type ListViewItem}">
-                    <Border x:Name="border"
-                            Background="{TemplateBinding Background}"
-                            Padding="20 10"
-                            CornerRadius="3"
-                            SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}">
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="35"/>
-                            </Grid.ColumnDefinitions>
+                    <Border x:Name="Bd"
+                        Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        Padding="0"
+                        SnapsToDevicePixels="true"
+                        CornerRadius="3"
+                        HorizontalAlignment="{TemplateBinding HorizontalAlignment}"
+                        >
+                        <Border Padding="30 5 30 0"
+                            HorizontalAlignment="Stretch"
+                            VerticalAlignment="Bottom"
+                            >
 
-                            <!-- COLUMN 1 -->
-                            <Grid>
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="27"/>
-                                    <RowDefinition Height="*"/>
-                                </Grid.RowDefinitions>
+                            <StackPanel Orientation="Vertical" HorizontalAlignment="{TemplateBinding HorizontalAlignment}">
 
-                                <!-- SUBJECT -->
-                                <TextBlock x:Name="text_POSTIT_SUBJECT" Style="{DynamicResource text_LIST_LABEL_HEADING}"
-                                       Height="27"
-                                       HorizontalAlignment="Stretch"
-                                       Text="Subject"
+                                <!-- HEADING -->
+                                <Grid Margin="0 5">
+
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="10"/>
+                                        <ColumnDefinition Width="0.7*"/>
+                                    </Grid.ColumnDefinitions>
+
+                                    <TextBlock x:Name="text_PROJECTNAME" Style="{DynamicResource text_LIST_LABEL_HEADING}"
+                                           Text="{Binding}"/>
+
+                                    <!-- ERSO -->
+                                    <StackPanel Grid.Column="2" Orientation="Horizontal"
+                                            HorizontalAlignment="Right">
+
+                                        <!-- ERROR -->
+                                        <Ellipse x:Name="ellipse_LIST_ERROR" Style="{DynamicResource ellipse_LIST_ERSO}"
+                                             Fill="{DynamicResource postIT_ERROR}"/>
+
+                                        <TextBlock x:Name="text_LIST_ERROR" Style="{DynamicResource text_LIST_LABEL_ERSO}"
+                                               Text="{Binding}"
+                                               Margin="10 0"/>
+
+
+                                        <!-- SOLUTION -->
+                                        <Ellipse x:Name="ellipse_LIST_SOLUTION" Style="{DynamicResource ellipse_LIST_ERSO}"
+                                             Fill="{DynamicResource postIT_SOLUTION}"/>
+
+                                        <TextBlock x:Name="text_LIST_SOLUTION" Style="{DynamicResource text_LIST_LABEL_ERSO}"
+                                               Text="{Binding}"
+                                               Margin="10 0"/>
+
+
+                                        <!-- SUGGESTION -->
+                                        <Ellipse x:Name="ellipse_LIST_SUGGESTION" Style="{DynamicResource ellipse_LIST_ERSO}"
+                                             Fill="{DynamicResource postIT_SUGGESTION}"/>
+
+                                        <TextBlock x:Name="text_LIST_SUGGESTION" Style="{DynamicResource text_LIST_LABEL_ERSO}"
+                                               Text="{Binding}"
+                                               Margin="10 0"/>
+
+
+                                        <!-- COMMENT -->
+                                        <Ellipse x:Name="ellipse_LIST_COMMENT" Style="{DynamicResource ellipse_LIST_ERSO}"
+                                             Fill="{DynamicResource postIT_COMMENT}"/>
+
+                                        <TextBlock x:Name="text_LIST_COMMENT" Style="{DynamicResource text_LIST_LABEL_ERSO}"
+                                               Text="{Binding}"
+                                               Margin="10 0"/>
+
+
+
+                                    </StackPanel>
+
+                                </Grid>
+
+                                <TextBlock x:Name="text_LIST_DATE" Style="{DynamicResource text_LIST_LABEL_DATE}"
+                                       Text="{Binding}"
+                                       Margin="0 5"
                                        />
 
-                                <StackPanel Orientation="Vertical" Grid.Row="1"
-                                        HorizontalAlignment="Stretch"
-                                        >
-                                    <!-- ERROR -->
-                                    <Border Padding="0 5" Visibility="{Binding}">
-                                        <Grid>
-                                            <Grid.ColumnDefinitions>
-                                                <ColumnDefinition Width="15"/>
-                                                <ColumnDefinition Width="10"/>
-                                                <ColumnDefinition Width="*"/>
-                                            </Grid.ColumnDefinitions>
+                                <TextBlock x:Name="text_LIST_CONTENT" Style="{DynamicResource text_LIST_LABEL_CONTENT}"
+                                       Text="{Binding}"
+                                       Margin="0 5"/>
 
-                                            <Ellipse x:Name="ellipse_POSTIT_ERROR" Style="{DynamicResource ellipse_ERSO}"
-                                                 Fill="{DynamicResource postIT_ERROR}"
-                                                 />
-                                            <TextBlock Grid.Column="2" x:Name="text_POSTIT_ERROR" Style="{DynamicResource text_LIST_LABEL_CONTENT}"
-                                                   HorizontalAlignment="Stretch"
-                                                   Text="The quick fox jumps over the lazy dog. The quick fox jumps over the lazy dog."
-                                                   />
-                                        </Grid>
-                                    </Border>
+                                <!-- Maximum value is 20 minutes in Milliseconds xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx -->
+                                <ProgressBar x:Name="progress_CACHE_ITEM"
+                                             Height="8"
+                                             Minimum="0"
+                                             Maximum="1200000" 
+                                             Value="0"
+                                             BorderThickness="0"
+                                             Foreground="{DynamicResource PANEL}"/>
 
 
-                                    <!-- SOLUTION -->
-                                    <Border Padding="0 5" Visibility="{Binding}">
-                                        <Grid>
-                                            <Grid.ColumnDefinitions>
-                                                <ColumnDefinition Width="15"/>
-                                                <ColumnDefinition Width="10"/>
-                                                <ColumnDefinition Width="*"/>
-                                            </Grid.ColumnDefinitions>
-
-                                            <Ellipse x:Name="ellipse_POSTIT_SOLUTION" Style="{DynamicResource ellipse_ERSO}"
-                                                     Fill="{DynamicResource postIT_SOLUTION}"
-                                                     />
-                                            <TextBlock Grid.Column="2" x:Name="text_POSTIT_SOLUTION" Style="{DynamicResource text_LIST_LABEL_CONTENT}"
-                                                       HorizontalAlignment="Stretch"
-                                                       Text="The quick fox jumps over the lazy dog. The quick fox jumps over the lazy dog."
-                                                       />
-                                        </Grid>
-                                    </Border>
-                                    
-                                    
-                                    <!-- SUGGESTION -->
-                                    <Border Padding="0 5" Visibility="{Binding}">
-                                        <Grid>
-                                            <Grid.ColumnDefinitions>
-                                                <ColumnDefinition Width="15"/>
-                                                <ColumnDefinition Width="10"/>
-                                                <ColumnDefinition Width="*"/>
-                                            </Grid.ColumnDefinitions>
-
-                                            <Ellipse x:Name="ellipse_POSTIT_SUGGESTION" Style="{DynamicResource ellipse_ERSO}"
-                                                     Fill="{DynamicResource postIT_SUGGESTION}"
-                                                     />
-                                            <TextBlock Grid.Column="2" x:Name="text_POSTIT_SUGGESTION" Style="{DynamicResource text_LIST_LABEL_CONTENT}"
-                                                       HorizontalAlignment="Stretch"
-                                                       Text="The quick fox jumps over the lazy dog. The quick fox jumps over the lazy dog."
-                                                       />
-                                        </Grid>
-                                    </Border>
-
-
-                                    <!-- COMMENT -->
-                                    <Border Padding="0 5" Visibility="{Binding}">
-                                        <Grid>
-                                            <Grid.ColumnDefinitions>
-                                                <ColumnDefinition Width="15"/>
-                                                <ColumnDefinition Width="10"/>
-                                                <ColumnDefinition Width="*"/>
-                                            </Grid.ColumnDefinitions>
-
-                                            <Ellipse x:Name="ellipse_POSTIT_COMMENT" Style="{DynamicResource ellipse_ERSO}"
-                                                     Fill="{DynamicResource postIT_COMMENT}"
-                                                     />
-                                            <TextBlock Grid.Column="2" x:Name="text_POSTIT_COMMENT" Style="{DynamicResource text_LIST_LABEL_CONTENT}"
-                                                       HorizontalAlignment="Stretch"
-                                                       Text="The quick fox jumps over the lazy dog. The quick fox jumps over the lazy dog."
-                                                       />
-                                        </Grid>
-                                    </Border>
-                                </StackPanel>
-                            </Grid>
-
-                            <Button Grid.Column="1" Style="{DynamicResource toolbutton_DELETE}" />
-
-                        </Grid>
+                            </StackPanel>
+                        </Border>
                     </Border>
                     <ControlTemplate.Triggers>
                         <MultiTrigger>
                             <MultiTrigger.Conditions>
                                 <Condition Property="IsMouseOver" Value="True"/>
                             </MultiTrigger.Conditions>
-                            <Setter Property="Background" TargetName="border" Value="{DynamicResource SELECTEDListItem}"/>
+                            <Setter Property="Background" TargetName="Bd" Value="{DynamicResource SELECTEDListItem}"/>
+                            <Setter Property="Foreground" TargetName="progress_CACHE_ITEM" Value="{DynamicResource WHITE}"/>
                         </MultiTrigger>
                         <MultiTrigger>
                             <MultiTrigger.Conditions>
                                 <Condition Property="Selector.IsSelectionActive" Value="False"/>
                                 <Condition Property="IsSelected" Value="True"/>
                             </MultiTrigger.Conditions>
-                            <Setter Property="Background" TargetName="border" Value="{DynamicResource SELECTEDListItem}"/>
+                            <Setter Property="Background" TargetName="Bd" Value="{DynamicResource SELECTEDListItem}"/>
+                            <Setter Property="Foreground" TargetName="progress_CACHE_ITEM" Value="{DynamicResource WHITE}"/>
                         </MultiTrigger>
                         <MultiTrigger>
                             <MultiTrigger.Conditions>
                                 <Condition Property="Selector.IsSelectionActive" Value="True"/>
                                 <Condition Property="IsSelected" Value="True"/>
                             </MultiTrigger.Conditions>
-                            <Setter Property="Background" TargetName="border" Value="{DynamicResource SELECTEDListItem}"/>
+                            <Setter Property="Background" TargetName="Bd" Value="{DynamicResource SELECTEDListItem}"/>
+                            <Setter Property="Foreground" TargetName="progress_CACHE_ITEM" Value="{DynamicResource WHITE}"/>
                         </MultiTrigger>
                         <Trigger Property="IsEnabled" Value="False">
-                            <Setter Property="TextElement.Foreground" TargetName="border" Value="{DynamicResource {x:Static SystemColors.GrayTextBrushKey}}"/>
+                            <Setter Property="TextElement.Foreground" TargetName="Bd" Value="{DynamicResource {x:Static SystemColors.GrayTextBrushKey}}"/>
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
@@ -166,6 +199,420 @@
         </Setter>
     </Style>
 
+    <!-- REPORT LIST VIEW -->
+    <Style x:Key="listView_REPORT_list" TargetType="{x:Type ListView}" BasedOn="{StaticResource listView_LOGCACHE}">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type ListView}">
+                    <Border x:Name="Bd" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}"
+                    Padding="1"
+                    SnapsToDevicePixels="true">
+                        <ScrollViewer Focusable="false" Padding="{TemplateBinding Padding}">
+                            <!-- Grid makes the items in ListView behave. -->
+                            <Grid>
+                                <ItemsPresenter SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"
+                                        />
+                            </Grid>
+                        </ScrollViewer>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsEnabled" Value="false"/>
+
+
+                        <MultiTrigger>
+                            <MultiTrigger.Conditions>
+                                <Condition Property="IsGrouping" Value="true"/>
+                                <Condition Property="VirtualizingPanel.IsVirtualizingWhenGrouping" Value="false"/>
+                            </MultiTrigger.Conditions>
+                            <Setter Property="ScrollViewer.CanContentScroll" Value="false"/>
+                        </MultiTrigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="listView_REPORT_list_ITEM" TargetType="{x:Type ListViewItem}"  BasedOn="{StaticResource listView_LOGCACHE_ITEM}">
+        <Setter Property="Height" Value="220"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type ListViewItem}">
+                    <Border x:Name="Bd"
+                    Background="{TemplateBinding Background}"
+                    BorderBrush="{TemplateBinding BorderBrush}"
+                    BorderThickness="{TemplateBinding BorderThickness}"
+                    Padding="0"
+                    SnapsToDevicePixels="true"
+                    CornerRadius="3"
+                    HorizontalAlignment="{TemplateBinding HorizontalAlignment}"
+                    >
+                        <Border Padding="30 5 30 0"
+                        HorizontalAlignment="Stretch"
+                        VerticalAlignment="Bottom"
+                        >
+
+                            <StackPanel Orientation="Vertical" HorizontalAlignment="{TemplateBinding HorizontalAlignment}">
+
+                                <!-- HEADING -->
+                                <Grid Margin="0 5">
+
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="10"/>
+                                        <ColumnDefinition Width="0.7*"/>
+                                    </Grid.ColumnDefinitions>
+
+                                    <TextBlock x:Name="text_PROJECTNAME" Style="{DynamicResource text_LIST_LABEL_HEADING}"
+                                       Text="{Binding}"/>
+
+                                    <StackPanel Grid.Column="2" Orientation="Horizontal"
+                                        HorizontalAlignment="Right">
+
+                                        <!-- ERROR -->
+                                        <Ellipse x:Name="ellipse_LIST_ERROR" Style="{DynamicResource ellipse_LIST_ERSO}"
+                                         Fill="{DynamicResource postIT_ERROR}"/>
+
+                                        <TextBlock x:Name="text_LIST_ERROR" Style="{DynamicResource text_LIST_LABEL_ERSO}"
+                                           Text="{Binding}"
+                                           Margin="10 0"/>
+
+
+                                        <!-- SOLUTION -->
+                                        <Ellipse x:Name="ellipse_LIST_SOLUTION" Style="{DynamicResource ellipse_LIST_ERSO}"
+                                         Fill="{DynamicResource postIT_SOLUTION}"/>
+
+                                        <TextBlock x:Name="text_LIST_SOLUTION" Style="{DynamicResource text_LIST_LABEL_ERSO}"
+                                           Text="{Binding}"
+                                           Margin="10 0"/>
+
+
+                                        <!-- SUGGESTION -->
+                                        <Ellipse x:Name="ellipse_LIST_SUGGESTION" Style="{DynamicResource ellipse_LIST_ERSO}"
+                                         Fill="{DynamicResource postIT_SUGGESTION}"/>
+
+                                        <TextBlock x:Name="text_LIST_SUGGESTION" Style="{DynamicResource text_LIST_LABEL_ERSO}"
+                                           Text="{Binding}"
+                                           Margin="10 0"/>
+
+
+                                        <!-- COMMENT -->
+                                        <Ellipse x:Name="ellipse_LIST_COMMENT" Style="{DynamicResource ellipse_LIST_ERSO}"
+                                         Fill="{DynamicResource postIT_COMMENT}"/>
+
+                                        <TextBlock x:Name="text_LIST_COMMENT" Style="{DynamicResource text_LIST_LABEL_ERSO}"
+                                           Text="{Binding}"
+                                           Margin="10 0"/>
+
+
+
+                                    </StackPanel>
+
+                                </Grid>
+
+                                <TextBlock x:Name="text_LIST_DATE" Style="{DynamicResource text_LIST_LABEL_DATE}"
+                                   Text="{Binding}"
+                                   Margin="0 5"
+                                   />
+
+                                <TextBlock x:Name="text_LIST_CONTENT" Style="{DynamicResource text_LIST_LABEL_CONTENT}"
+                                   Text="{Binding}"
+                                   Margin="0 5"/>
+
+                                <Border>
+                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                                        <Button Style="{DynamicResource toolbutton_Adobe_EXPORT}"
+                                                Margin="10"
+                                                Command="{Binding}"/>
+                                        <Button Style="{DynamicResource toolbutton_PRINTER_EXPORT}"
+                                                Margin="10"
+                                                Command="{Binding}"/>
+                                    </StackPanel>
+                                </Border>
+
+
+                            </StackPanel>
+                        </Border>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <MultiTrigger>
+                            <MultiTrigger.Conditions>
+                                <Condition Property="IsMouseOver" Value="True"/>
+                            </MultiTrigger.Conditions>
+                            <Setter Property="Background" TargetName="Bd" Value="{DynamicResource SELECTEDListItem}"/>
+                        </MultiTrigger>
+                        <MultiTrigger>
+                            <MultiTrigger.Conditions>
+                                <Condition Property="Selector.IsSelectionActive" Value="False"/>
+                                <Condition Property="IsSelected" Value="True"/>
+                            </MultiTrigger.Conditions>
+                            <Setter Property="Background" TargetName="Bd" Value="{DynamicResource SELECTEDListItem}"/>
+                        </MultiTrigger>
+                        <MultiTrigger>
+                            <MultiTrigger.Conditions>
+                                <Condition Property="Selector.IsSelectionActive" Value="True"/>
+                                <Condition Property="IsSelected" Value="True"/>
+                            </MultiTrigger.Conditions>
+                            <Setter Property="Background" TargetName="Bd" Value="{DynamicResource SELECTEDListItem}"/>
+                        </MultiTrigger>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter Property="TextElement.Foreground" TargetName="Bd" Value="{DynamicResource {x:Static SystemColors.GrayTextBrushKey}}"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+
+    <!-- #region NOTES LIST VIEW -->
+    
+    
+    
+    
+    
+    <Style x:Key="listView_NOTES_list" TargetType="{x:Type ListView}" BasedOn="{StaticResource listView_LOGCACHE}">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type ListView}">
+                    <Border x:Name="Bd" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}"
+                            Padding="1"
+                            SnapsToDevicePixels="true"
+                            CornerRadius="3">
+                        
+                        <ScrollViewer Focusable="false" Padding="{TemplateBinding Padding}">
+                            <!-- Grid makes the items in ListView behave. -->
+                            <Grid>
+                                <WrapPanel Orientation="Horizontal" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" IsItemsHost="True"
+                                    />
+                            </Grid>
+                        </ScrollViewer>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsEnabled" Value="false"/>
+
+                        <Trigger Property="IsMouseOver" Value="true">
+                            <Setter Property="BorderThickness" TargetName="Bd" Value="0.6"/>
+                            <Setter Property="BorderBrush" TargetName="Bd" Value="{DynamicResource STROKE}"/>
+                        </Trigger>
+                        
+                        <MultiTrigger>
+                            <MultiTrigger.Conditions>
+                                <Condition Property="IsGrouping" Value="true"/>
+                                <Condition Property="VirtualizingPanel.IsVirtualizingWhenGrouping" Value="false"/>
+                            </MultiTrigger.Conditions>
+                            <Setter Property="ScrollViewer.CanContentScroll" Value="false"/>
+                        </MultiTrigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+       
+
+        <!-- CHECKLIST NOTE TEMPLATE -->
+    <ControlTemplate x:Key="template_NOTE_checklist_ITEM" TargetType="{x:Type ListViewItem}">
+        <Border x:Name="Bd"
+            Background="{TemplateBinding Background}"
+            BorderBrush="{TemplateBinding BorderBrush}"
+            BorderThickness="{TemplateBinding BorderThickness}"
+            Padding="10"
+            SnapsToDevicePixels="true"
+            CornerRadius="3"
+            HorizontalAlignment="{TemplateBinding HorizontalAlignment}">
+
+            <Grid>
+                <Grid.Resources>
+                    <Style x:Key="border_NOTES" TargetType="Border">
+                        <Setter Property="Padding" Value="10"/>
+                    </Style>
+                </Grid.Resources>
+
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="40"/>
+                    <RowDefinition Height="10"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="10"/>
+                    <RowDefinition Height="35"/>
+                </Grid.RowDefinitions>
+
+                <!-- NOTE SUBJECT -->
+                <Border Style="{StaticResource border_NOTES}"
+                        Padding="10 0">
+                    
+                    <Grid Height="40">
+
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="35"/>
+                        </Grid.ColumnDefinitions>
+
+                        <!-- SUBJECT HERE -->
+                        <TextBlock x:Name="note_SUBJECT" Style="{DynamicResource text_NOTE_HEADING}"
+                                   Margin="0 0 10 0"
+                                   Text="{Binding}"/>
+
+                        <Button Grid.Column="1" x:Name="button_DELETE_NOTE" Style="{DynamicResource toolbutton_DELETE}"
+                                Command="{Binding}"/>
+                    </Grid>
+
+                </Border>
+
+                <!-- NOTE CONTENT SNIPPET -->
+                <Border Grid.Row="2" Style="{StaticResource border_NOTES}">
+                    <Grid>
+                        <ListView x:Name="note_CHECKLIST"
+                                  ItemsSource="{Binding}"/>
+
+                    </Grid>
+                </Border>
+
+                <!-- NOTE DATE -->
+                <Border Grid.Row="4" Style="{StaticResource border_NOTES}">
+                    <TextBlock x:Name="note_DATE" Style="{DynamicResource text_NOTE_DATE02}"
+                           Text="{Binding}"/>
+                </Border>
+            </Grid>
+
+        </Border>
+        <ControlTemplate.Triggers>
+            <MultiTrigger>
+                <MultiTrigger.Conditions>
+                    <Condition Property="IsMouseOver" Value="True"/>
+                </MultiTrigger.Conditions>
+                <Setter Property="Background" TargetName="Bd" Value="{DynamicResource SELECTEDListItem}"/>
+            </MultiTrigger>
+            <MultiTrigger>
+                <MultiTrigger.Conditions>
+                    <Condition Property="Selector.IsSelectionActive" Value="False"/>
+                    <Condition Property="IsSelected" Value="True"/>
+                </MultiTrigger.Conditions>
+                <Setter Property="Background" TargetName="Bd" Value="{DynamicResource SELECTEDListItem}"/>
+            </MultiTrigger>
+            <MultiTrigger>
+                <MultiTrigger.Conditions>
+                    <Condition Property="Selector.IsSelectionActive" Value="True"/>
+                    <Condition Property="IsSelected" Value="True"/>
+                </MultiTrigger.Conditions>
+                <Setter Property="Background" TargetName="Bd" Value="{DynamicResource SELECTEDListItem}"/>
+            </MultiTrigger>
+            <Trigger Property="IsEnabled" Value="False">
+                <Setter Property="TextElement.Foreground" TargetName="Bd" Value="{DynamicResource {x:Static SystemColors.GrayTextBrushKey}}"/>
+            </Trigger>
+        </ControlTemplate.Triggers>
+    </ControlTemplate>
+
+    <Style x:Key="listView_NOTES_list_ITEM" TargetType="{x:Type ListViewItem}"  BasedOn="{StaticResource listView_LOGCACHE_ITEM}">
+        <Setter Property="Height" Value="310"/>
+        <Setter Property="Width" Value="320"/>
+        <Setter Property="Margin" Value="5"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <!-- NOTE TEMPLATE -->
+                <ControlTemplate TargetType="{x:Type ListViewItem}">
+                    <Border x:Name="Bd"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            Padding="10"
+                            SnapsToDevicePixels="true"
+                            CornerRadius="3"
+                            HorizontalAlignment="{TemplateBinding HorizontalAlignment}">
+
+                        <Grid>
+                            <Grid.Resources>
+                                <Style x:Key="border_NOTES" TargetType="Border">
+                                    <Setter Property="Padding" Value="10"/>
+                                </Style>
+                            </Grid.Resources>
+
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="40"/>
+                                <RowDefinition Height="10"/>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="10"/>
+                                <RowDefinition Height="35"/>
+                            </Grid.RowDefinitions>
+
+                            <!-- NOTE SUBJECT -->
+                            <Border Style="{StaticResource border_NOTES}"
+                                    Padding="10 0">
+                                
+                                <Grid Height="40">
+
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="35"/>
+                                    </Grid.ColumnDefinitions>
+
+                                    <!-- SUBJECT HERE -->
+                                    <TextBlock x:Name="note_SUBJECT" Style="{DynamicResource text_NOTE_HEADING}"
+                                               Margin="0 0 10 0"
+                                               Text="{Binding}"/>
+
+                                    <Button Grid.Column="1" x:Name="button_DELETE_NOTE" Style="{DynamicResource toolbutton_DELETE}"
+                                            Command="{Binding}"/>
+                                </Grid>
+
+                            </Border>
+
+                            <!-- NOTE CONTENT SNIPPET -->
+                            <Border Grid.Row="2" Style="{StaticResource border_NOTES}">
+                                <TextBlock x:Name="note_CONTENT" Style="{DynamicResource text_NOTE_CONTENT}"
+                                           Text="{Binding}"/>
+                            </Border>
+
+                            <!-- NOTE DATE -->
+                            <Border Grid.Row="4" Style="{StaticResource border_NOTES}">
+                                <TextBlock x:Name="note_DATE" Style="{DynamicResource text_NOTE_DATE02}"
+                                           Text="{Binding}"/>
+                            </Border>
+                        </Grid>
+
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <MultiTrigger>
+                            <MultiTrigger.Conditions>
+                                <Condition Property="IsMouseOver" Value="True"/>
+                            </MultiTrigger.Conditions>
+                            <Setter Property="Background" TargetName="Bd" Value="{DynamicResource SELECTEDListItem}"/>
+                        </MultiTrigger>
+                        <MultiTrigger>
+                            <MultiTrigger.Conditions>
+                                <Condition Property="Selector.IsSelectionActive" Value="False"/>
+                                <Condition Property="IsSelected" Value="True"/>
+                            </MultiTrigger.Conditions>
+                            <Setter Property="Background" TargetName="Bd" Value="{DynamicResource SELECTEDListItem}"/>
+                        </MultiTrigger>
+                        <MultiTrigger>
+                            <MultiTrigger.Conditions>
+                                <Condition Property="Selector.IsSelectionActive" Value="True"/>
+                                <Condition Property="IsSelected" Value="True"/>
+                            </MultiTrigger.Conditions>
+                            <Setter Property="Background" TargetName="Bd" Value="{DynamicResource SELECTEDListItem}"/>
+                        </MultiTrigger>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter Property="TextElement.Foreground" TargetName="Bd" Value="{DynamicResource {x:Static SystemColors.GrayTextBrushKey}}"/>
+                        </Trigger>
+                    <!--<DataTrigger Binding="{Binding}" Value="True">
+                        <Setter Property="Template" Value="{StaticResource template_NOTE_checklist_ITEM}"/>
+                    </DataTrigger>-->
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+        
+    </Style>
+    
+    
+    
+    
+    
+    <!--#endregion-->
+    
+    
+    
+    <!-- POST ITS LIST -->
 
     <Style x:Key="listView_POSTITS" TargetType="{x:Type ListView}">
         <Setter Property="Background" Value="Transparent"/>
@@ -208,5 +655,299 @@
             </Setter.Value>
         </Setter>
     </Style>
+
+    <Style x:Key="listViewITEM_POSTITS" TargetType="{x:Type ListViewItem}">
+        <Setter Property="SnapsToDevicePixels" Value="True"/>
+        <Setter Property="HorizontalContentAlignment" Value="{Binding HorizontalContentAlignment, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}"/>
+        <Setter Property="VerticalContentAlignment" Value="{Binding VerticalContentAlignment, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}"/>
+        <Setter Property="Background" Value="{DynamicResource ListItem}"/>
+        <Setter Property="BorderBrush" Value="Transparent"/>
+        <Setter Property="BorderThickness" Value="0"/>
+        <Setter Property="Margin" Value="0 0 5 7"/>
+        <Setter Property="FocusVisualStyle" Value="{StaticResource FocusVisual}"/>
+        <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Disabled"/>
+        <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Auto"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type ListViewItem}">
+                    <Border x:Name="border"
+                            Background="{TemplateBinding Background}"
+                            Padding="20 10"
+                            CornerRadius="3"
+                            SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="35"/>
+                            </Grid.ColumnDefinitions>
+
+                            <!-- COLUMN 1 -->
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="27"/>
+                                    <RowDefinition Height="*"/>
+                                </Grid.RowDefinitions>
+
+                                <!-- SUBJECT -->
+                                <TextBlock x:Name="text_POSTIT_SUBJECT" Style="{DynamicResource text_LIST_LABEL_HEADING}"
+                                       Height="27"
+                                       HorizontalAlignment="Stretch"
+                                       Text="{Binding}"
+                                       />
+
+                                <StackPanel Orientation="Vertical" Grid.Row="1"
+                                        HorizontalAlignment="Stretch"
+                                        >
+                                    <!-- ERROR -->
+                                    <Border Padding="0 5" Visibility="{Binding}">
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="15"/>
+                                                <ColumnDefinition Width="10"/>
+                                                <ColumnDefinition Width="*"/>
+                                            </Grid.ColumnDefinitions>
+
+                                            <Ellipse x:Name="ellipse_POSTIT_ERROR" Style="{DynamicResource ellipse_ERSO}"
+                                                 Fill="{DynamicResource postIT_ERROR}"
+                                                 />
+                                            <TextBlock Grid.Column="2" x:Name="text_POSTIT_ERROR" Style="{DynamicResource text_LIST_LABEL_CONTENT}"
+                                                   HorizontalAlignment="Stretch"
+                                                   Text="{Binding}"
+                                                   />
+                                        </Grid>
+                                    </Border>
+
+
+                                    <!-- SOLUTION -->
+                                    <Border Padding="0 5" Visibility="{Binding}">
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="15"/>
+                                                <ColumnDefinition Width="10"/>
+                                                <ColumnDefinition Width="*"/>
+                                            </Grid.ColumnDefinitions>
+
+                                            <Ellipse x:Name="ellipse_POSTIT_SOLUTION" Style="{DynamicResource ellipse_ERSO}"
+                                                     Fill="{DynamicResource postIT_SOLUTION}"
+                                                     />
+                                            <TextBlock Grid.Column="2" x:Name="text_POSTIT_SOLUTION" Style="{DynamicResource text_LIST_LABEL_CONTENT}"
+                                                       HorizontalAlignment="Stretch"
+                                                       Text="{Binding}"
+                                                       />
+                                        </Grid>
+                                    </Border>
+                                    
+                                    
+                                    <!-- SUGGESTION -->
+                                    <Border Padding="0 5" Visibility="{Binding}">
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="15"/>
+                                                <ColumnDefinition Width="10"/>
+                                                <ColumnDefinition Width="*"/>
+                                            </Grid.ColumnDefinitions>
+
+                                            <Ellipse x:Name="ellipse_POSTIT_SUGGESTION" Style="{DynamicResource ellipse_ERSO}"
+                                                     Fill="{DynamicResource postIT_SUGGESTION}"
+                                                     />
+                                            <TextBlock Grid.Column="2" x:Name="text_POSTIT_SUGGESTION" Style="{DynamicResource text_LIST_LABEL_CONTENT}"
+                                                       HorizontalAlignment="Stretch"
+                                                       Text="{Binding}"
+                                                       />
+                                        </Grid>
+                                    </Border>
+
+
+                                    <!-- COMMENT -->
+                                    <Border Padding="0 5" Visibility="{Binding}">
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="15"/>
+                                                <ColumnDefinition Width="10"/>
+                                                <ColumnDefinition Width="*"/>
+                                            </Grid.ColumnDefinitions>
+
+                                            <Ellipse x:Name="ellipse_POSTIT_COMMENT" Style="{DynamicResource ellipse_ERSO}"
+                                                     Fill="{DynamicResource postIT_COMMENT}"
+                                                     />
+                                            <TextBlock Grid.Column="2" x:Name="text_POSTIT_COMMENT" Style="{DynamicResource text_LIST_LABEL_CONTENT}"
+                                                       HorizontalAlignment="Stretch"
+                                                       Text="{Binding}"
+                                                       />
+                                        </Grid>
+                                    </Border>
+                                </StackPanel>
+                            </Grid>
+
+                            <Button Grid.Column="1" Style="{DynamicResource toolbutton_DELETE}" />
+
+                        </Grid>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <MultiTrigger>
+                            <MultiTrigger.Conditions>
+                                <Condition Property="IsMouseOver" Value="True"/>
+                            </MultiTrigger.Conditions>
+                            <Setter Property="Background" TargetName="border" Value="{DynamicResource SELECTEDListItem}"/>
+                        </MultiTrigger>
+                        <MultiTrigger>
+                            <MultiTrigger.Conditions>
+                                <Condition Property="Selector.IsSelectionActive" Value="False"/>
+                                <Condition Property="IsSelected" Value="True"/>
+                            </MultiTrigger.Conditions>
+                            <Setter Property="Background" TargetName="border" Value="{DynamicResource SELECTEDListItem}"/>
+                        </MultiTrigger>
+                        <MultiTrigger>
+                            <MultiTrigger.Conditions>
+                                <Condition Property="Selector.IsSelectionActive" Value="True"/>
+                                <Condition Property="IsSelected" Value="True"/>
+                            </MultiTrigger.Conditions>
+                            <Setter Property="Background" TargetName="border" Value="{DynamicResource SELECTEDListItem}"/>
+                        </MultiTrigger>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter Property="TextElement.Foreground" TargetName="border" Value="{DynamicResource {x:Static SystemColors.GrayTextBrushKey}}"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+
+    
+    
+    <!-- Check List  -->
+    <Style x:Key="listView_CHECKLIST" TargetType="{x:Type ListView}">
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="BorderBrush" Value="Transparent"/>
+        <Setter Property="BorderThickness" Value="0.6"/>
+        <Setter Property="Height" Value="auto"/>
+        <Setter Property="Width" Value="650"/>
+        <Setter Property="Margin" Value="0"/>
+        <Setter Property="Foreground" Value="{DynamicResource BLACK}"/>
+        <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Disabled"/>
+        <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Auto"/>
+        <Setter Property="ScrollViewer.CanContentScroll" Value="true"/>
+        <Setter Property="ScrollViewer.PanningMode" Value="Both"/>
+        <Setter Property="Stylus.IsFlicksEnabled" Value="False"/>
+        <Setter Property="HorizontalAlignment" Value="Left"/>
+        <Setter Property="VerticalAlignment" Value="Stretch"/>
+        <Setter Property="VerticalContentAlignment" Value="Center"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type ListView}">
+                    <Border x:Name="Bd" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}"
+                            Padding="5 5 5 10"
+                            SnapsToDevicePixels="true"
+                            CornerRadius="3" >
+                        
+                        <ScrollViewer Focusable="false" Padding="{TemplateBinding Padding}">
+                            <!-- Grid makes the items in ListView behave. -->
+                            <Grid>
+                                <ItemsPresenter SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
+                            </Grid>
+                        </ScrollViewer>
+                            
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsEnabled" Value="false"/>
+                        <Trigger Property="IsMouseOver" Value="true">
+                            <Setter Property="BorderThickness" TargetName="Bd" Value="0.6"/>
+                            <Setter Property="BorderBrush" TargetName="Bd" Value="{DynamicResource STROKE}"/>
+                        </Trigger>
+
+
+                        <MultiTrigger>
+                            <MultiTrigger.Conditions>
+                                <Condition Property="IsGrouping" Value="true"/>
+                                <Condition Property="VirtualizingPanel.IsVirtualizingWhenGrouping" Value="false"/>
+                            </MultiTrigger.Conditions>
+                            <Setter Property="ScrollViewer.CanContentScroll" Value="false"/>
+                        </MultiTrigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="listView_CHECKLIST_ITEM" TargetType="{x:Type ListViewItem}">
+        <Setter Property="SnapsToDevicePixels" Value="True"/>
+        <Setter Property="Height" Value="60"/>
+        <Setter Property="Margin" Value="0 5 5 0"/>
+        <Setter Property="HorizontalAlignment" Value="Stretch"/>
+        <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+        <Setter Property="VerticalContentAlignment" Value="Center"/>
+        <Setter Property="Background" Value="{DynamicResource ListItem}"/>
+        <Setter Property="BorderBrush" Value="Transparent"/>
+        <Setter Property="BorderThickness" Value="0"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type ListViewItem}">
+                    <Border x:Name="Bd"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            Padding="40 10"
+                            SnapsToDevicePixels="true"
+                            CornerRadius="3"
+                            HorizontalAlignment="{TemplateBinding HorizontalAlignment}" >
+
+                        <Grid>
+
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="auto" />
+                                <ColumnDefinition Width="10" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="10" />
+                                <ColumnDefinition Width="auto" />
+                            </Grid.ColumnDefinitions>
+                            
+                            <!-- CHECKBOX -->
+                            <CheckBox Style="{DynamicResource check_SIGNUP}"
+                                      IsChecked="False"/>
+                            
+                            
+                            <!-- ITEM -->
+                            <TextBox Grid.Column="2" x:Name="inputText_CHECKLIST_item" Style="{DynamicResource inputText_CHECKLIST_itemContent}"
+                                     Text="Item" />
+                            
+                            <!-- DELETE BUTTON -->
+                            <Button Grid.Column="4" x:Name="button_DELETE_CHECKLIST_item" Style="{DynamicResource toolbutton_DELETE}"
+                                    Command="{Binding}"/>
+                                
+                                
+                        </Grid>
+
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <MultiTrigger>
+                            <MultiTrigger.Conditions>
+                                <Condition Property="IsMouseOver" Value="True"/>
+                            </MultiTrigger.Conditions>
+                            <Setter Property="Background" TargetName="Bd" Value="{DynamicResource SELECTEDListItem}"/>
+                        </MultiTrigger>
+                        <MultiTrigger>
+                            <MultiTrigger.Conditions>
+                                <Condition Property="Selector.IsSelectionActive" Value="False"/>
+                                <Condition Property="IsSelected" Value="True"/>
+                            </MultiTrigger.Conditions>
+                            <Setter Property="Background" TargetName="Bd" Value="{DynamicResource SELECTEDListItem}"/>
+                        </MultiTrigger>
+                        <MultiTrigger>
+                            <MultiTrigger.Conditions>
+                                <Condition Property="Selector.IsSelectionActive" Value="True"/>
+                                <Condition Property="IsSelected" Value="True"/>
+                            </MultiTrigger.Conditions>
+                            <Setter Property="Background" TargetName="Bd" Value="{DynamicResource SELECTEDListItem}"/>
+                        </MultiTrigger>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter Property="TextElement.Foreground" TargetName="Bd" Value="{DynamicResource {x:Static SystemColors.GrayTextBrushKey}}"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
 
 </ResourceDictionary>
