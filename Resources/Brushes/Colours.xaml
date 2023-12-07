@@ -49,6 +49,7 @@
     <!-- TOOLBAR-->
     <SolidColorBrush x:Key="TOOLBAR">#DAE0D7</SolidColorBrush>
     <SolidColorBrush x:Key="ToolbarItem">#656565</SolidColorBrush>
+    <SolidColorBrush x:Key="SELECTEDToolbutton">#F3FAF0</SolidColorBrush>
 
     <!-- Others -->
     <SolidColorBrush x:Key="iconCOLOURAccent01">#AAAAAA</SolidColorBrush>
@@ -56,7 +57,6 @@
     <SolidColorBrush x:Key="contextMENUItemSEPARATOR">#9BB292</SolidColorBrush>
     <SolidColorBrush x:Key="STROKE">#B3B3B3</SolidColorBrush>
     <SolidColorBrush x:Key="PlaceholderText">#B3808080</SolidColorBrush>
-    <SolidColorBrush x:Key="SELECTEDToolbutton">#F3FAF0</SolidColorBrush>
     <SolidColorBrush x:Key="WhiteAccent02">#DAE0D7</SolidColorBrush>
     <SolidColorBrush x:Key="SCROLLBAR">#5A5A5A</SolidColorBrush>
     <SolidColorBrush x:Key="Highlighter01">#BB01FF01</SolidColorBrush>
