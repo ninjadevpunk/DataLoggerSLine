@@ -115,7 +115,6 @@
             <Setter Property="Background" Value="{DynamicResource WHITE}"/>
             <Setter Property="Foreground" Value="Transparent"/>
             <Setter Property="Height" Value="40"/>
-            <Setter Property="MinWidth" Value="487.5"/>
             <Setter Property="BorderThickness" Value="0.6"/>
             <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Auto"/>
             <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Auto"/>
