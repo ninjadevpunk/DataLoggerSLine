@@ -11,7 +11,7 @@
       HorizontalAlignment="Stretch"
       VerticalAlignment="Top"
       d:Background="White"
-      Title="Dashboard">
+      Title="Dashboard" >
 
 
 
