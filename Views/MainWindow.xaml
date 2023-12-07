@@ -9,8 +9,7 @@
         Background="Transparent"
         WindowStyle="None"
         Title="MainWindow" Height="899" Width="1394"
-        Loaded="on_MainWindow_Loaded"
-        >
+        Loaded="on_MainWindow_Loaded" >
 
     <Window.Template>
         <ControlTemplate TargetType="Window">
@@ -35,30 +34,10 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <!--#region HEADINGS -->
-        <StackPanel Visibility="Collapsed">
-            <TextBlock Style="{StaticResource HEADING1}" Text="HEADING 1"/>
-            <TextBlock Style="{StaticResource HEADING2}" Text="HEADING 1"/>
-            <TextBlock Style="{StaticResource HEADING3}" Text="HEADING 1"/>
-            <TextBlock Style="{StaticResource HEADING4}" Text="HEADING 1"/>
-            <TextBlock Style="{StaticResource HEADING5}" Text="HEADING 1"/>
-            <TextBlock Style="{StaticResource HEADING6}" Text="HEADING 1"/>
-        </StackPanel>
-        <!--#endregion-->
-
-        <!--<RadioButton Style="{DynamicResource radio_MENU_ITEM}" HorizontalAlignment="Right"  VerticalAlignment="Top"
-                     Height="80
-                     "/>
-
-        --><!-- BUTTONS --><!--
-        <Button Style="{StaticResource ACTIONCreate}">
-            <TextBlock Text="Action" Style="{StaticResource text_button01}"/>
-        </Button>-->
 
         <Border Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="3" Background="{DynamicResource WHITE}"
                 CornerRadius="2 2 0 0"
-                Visibility="Collapsed"
-                />
+                Visibility="Collapsed" />
 
         <!-- NAVIGATION ARROWS -->
         <StackPanel Orientation="Horizontal" Grid.Column="1" Grid.Row="0"
@@ -410,13 +389,16 @@
         </Border>
         
         
+        
+        
+        
+        
         <!-- APP NAVIGATOR -->
         <Frame Grid.Column="1" Grid.Row="0" Grid.RowSpan="2" x:Name="frame_MAINWINDOW"
                NavigationUIVisibility="Hidden"
-               Source="/Views/Dialogs/ReportPage.xaml"
+               Source="/Views/Dialogs/PostItPage.xaml"
                HorizontalAlignment="Stretch"
-               VerticalAlignment="Stretch"
-               />
+               VerticalAlignment="Stretch" />
 
        
 
