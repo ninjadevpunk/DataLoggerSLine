@@ -31,9 +31,11 @@
 
 
         <!-- Search Bar -->
-        <components:ComboBoxInputField Grid.Row="0"
-                                       Margin="0 10"/>
-
+        <components:SearchInputField Grid.Row="0" x:Name="inputText_SEARCH"
+                                     UserTextBlockStyle="{DynamicResource text_Placeholder}"
+                                     UserTextBoxStyle="{DynamicResource inputText}"
+                                     PlaceholderText="Search"
+                                     UserComboInput="{Binding}" />
 
         <!-- PROJECT -->
         <components:ComboBoxInputField Grid.Row="1" x:Name="inputText_PROJECT"
@@ -41,7 +43,7 @@
                                        UserTextBoxStyle="{DynamicResource inputText_PROJECT}"
                                        PlaceholderText="Project Name"
                                        UserComboInput="{Binding}"
-                                       Margin="0 10"/>
+                                       Margin="0 10" />
 
         
         <!-- APP -->
@@ -50,7 +52,7 @@
                                        UserTextBoxStyle="{DynamicResource inputText}"
                                        PlaceholderText="{Binding}"
                                        IsEnabled="{Binding}"
-                                       Margin="0 10"/>
+                                       Margin="0 10" />
 
         <Grid Grid.Column="0" Grid.Row="2" Height="70"/>
 
