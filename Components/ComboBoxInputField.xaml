@@ -7,8 +7,8 @@
              mc:Ignorable="d"
              HorizontalAlignment="Stretch"
              Margin="0 5"
-             x:Name="control_COMBOBOX_textbox"
-             >
+             d:Background="White"
+             x:Name="control_COMBOBOX_textbox" >
 
     <UserControl.Resources>
 
@@ -110,6 +110,7 @@
         </Style>
 
         <!-- TEMPLATE COMBOBOX LOGGER PROJECT -->
+
         <Style x:Key="comboBox_template" TargetType="{x:Type ComboBox}">
             <Setter Property="FocusVisualStyle" Value="{StaticResource FocusVisual}"/>
             <Setter Property="Background" Value="{DynamicResource WHITE}"/>
@@ -273,6 +274,8 @@
         </Style>
         
     </UserControl.Resources>
+    
+    
     <Grid>
         <TextBlock x:Name="text_Placeholdertext" Style="{Binding UserTextBlockStyle, ElementName=control_COMBOBOX_textbox}"
                    Text="{Binding PlaceholderText, ElementName=control_COMBOBOX_textbox}" 
@@ -285,7 +288,7 @@
                   IsEditable="{Binding Enabled, ElementName=control_COMBOBOX_textbox}"
                   Text="{Binding UserComboInput, ElementName=control_COMBOBOX_textbox}"
                   
-                  ItemsSource="{Binding Items, ElementName=control_COMBOBOX_textbox}"
-                  />
+                  ItemsSource="{Binding Items, ElementName=control_COMBOBOX_textbox}" />
     </Grid>
+    
 </UserControl>

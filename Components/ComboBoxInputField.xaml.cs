@@ -9,7 +9,7 @@ namespace Data_Logger_1._3.Components
     public partial class ComboBoxInputField : UserControl
     {
         public bool Status { get; set; } = true;
-        public string Temp { get; set; } = "";
+        public string? Temp { get; set; } = "";
 
         public ComboBoxInputField()
         {
