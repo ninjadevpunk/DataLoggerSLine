@@ -1,0 +1,89 @@
+﻿<UserControl x:Class="Data_Logger_1._3.Components.Subcontrols.coding_UserControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Data_Logger_1._3.Components.Subcontrols" xmlns:components="clr-namespace:Data_Logger_1._3.Components"
+             mc:Ignorable="d" 
+             d:Background="White"
+             HorizontalAlignment="Stretch"
+             x:Name="control_CODING_fields" >
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="5" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <Border Grid.Row="0"
+                Height="40"
+                Padding="12 5 10 5"
+                BorderThickness="0.6"
+                BorderBrush="{DynamicResource STROKE}"
+                CornerRadius="3" >
+
+            <Grid>
+
+                <Grid.ColumnDefinitions>
+
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="10"/>
+                    <ColumnDefinition Width="93"/>
+                    
+                </Grid.ColumnDefinitions>
+
+                <TextBlock Style="{DynamicResource text_LABEL03}"
+                       Text="Bugs" />
+
+
+
+                <components:SpinnerInputField Grid.Column="2" x:Name="spinner_BUGS"
+                                              Digits="2"
+                                              IsInteger="True"
+                                              MinimumValue="0"
+                                              MaximumValue="99"
+                                              Width="50"
+                                              HorizontalAlignment="Right"/>
+                
+                
+                
+                
+                
+            </Grid>
+
+        </Border>
+
+        <Border Grid.Row="2"
+                Height="40"
+                Padding="12 5 10 5"
+                BorderThickness="0.6"
+                BorderBrush="{DynamicResource STROKE}"
+                CornerRadius="3" >
+
+            <Grid>
+
+                <Grid.ColumnDefinitions>
+
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="10" />
+                    <ColumnDefinition Width="93" />
+
+                </Grid.ColumnDefinitions>
+
+
+                <TextBlock Grid.Column="0" Style="{DynamicResource text_LABEL03}"
+                           Text="Succesful?"/>
+
+                <CheckBox Grid.Column="2" x:Name="checkBox_IsLAUNCHSUCCESSFUL" Style="{DynamicResource check_SIGNUP}"
+                          HorizontalAlignment="Right"/>
+
+            </Grid>
+            
+        </Border>
+        
+        
+    </Grid>
+
+
+</UserControl>
