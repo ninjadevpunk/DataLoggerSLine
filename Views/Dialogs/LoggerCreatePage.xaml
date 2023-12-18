@@ -42,12 +42,27 @@
 
                 <TextBlock Grid.Column="0" Grid.Row="1" x:Name="text_LOG_CATEGORY" Style="{DynamicResource text_SUB HEADING1}"
                    Text="{Binding}" />
-
+                
+                
+                
+                
+                
+                
+                
+                
                 <!--#region INPUT FIELDS -->
-                <StackPanel Grid.Row="3" VerticalAlignment="Stretch" >
+
+
+                <ScrollViewer Grid.Row="3"
+                              HorizontalScrollBarVisibility="Disabled"
+                              VerticalScrollBarVisibility="Auto"
+                              Padding="5" >
                     
-                    <!-- AUTHOR -->
-                    <Border Padding="20 2"
+                    <StackPanel VerticalAlignment="Stretch" >
+                        
+                        
+                        <!-- AUTHOR -->
+                        <Border Padding="20 2"
                             Height="30">
                         <Grid>
 
@@ -73,21 +88,21 @@
                     </Border>
 
 
-                    <!-- PROJECT -->
-                    <components:ComboBoxInputField x:Name="inputText_PROJECT"
-                                                   PlaceholderText="PROJECT NAME"
-                                                   UserTextBoxStyle="{DynamicResource inputText_PROJECT}"
-                                                   UserTextBlockStyle="{DynamicResource text_PROJECT_Placeholder}"
-                                                   UserComboInput="{Binding}"
-                                                   />
-
-                    <!-- APPLICATION -->
-                    <components:ComboBoxInputField x:Name="inputText_APP"
-                                                   PlaceholderText="Application Name"
-                                                   UserTextBoxStyle="{DynamicResource inputText_APP}"
-                                                   UserTextBlockStyle="{DynamicResource text_APP_Placeholder}"
-                                                   UserComboInput="{Binding}"
-                                                   />
+                        <!-- PROJECT -->
+                        <components:ComboBoxInputField x:Name="inputText_PROJECT"
+                                                       Enabled="True"
+                                                       PlaceholderText="PROJECT NAME"
+                                                       UserTextBoxStyle="{DynamicResource inputText_PROJECT}"
+                                                       UserTextBlockStyle="{DynamicResource text_PROJECT_Placeholder}"
+                                                       UserComboInput="{Binding}" />
+                        
+                        <!-- APPLICATION -->
+                        <components:ComboBoxInputField x:Name="inputText_APP"
+                                                       Enabled="True"
+                                                       PlaceholderText="Application Name"
+                                                       UserTextBoxStyle="{DynamicResource inputText_APP}"
+                                                       UserTextBlockStyle="{DynamicResource text_APP_Placeholder}"
+                                                       UserComboInput="{Binding}" />
 
                     <!-- #region DATE START -->
                     <Grid>
@@ -103,7 +118,7 @@
                         <components:DateInputField Grid.Column="0" x:Name="dateEdit_START" />
                         
                         <!-- TIME -->
-                        <components:TimeInputField Grid.Column="2" x:Name="timeEdit_START"/>
+                        <components:TimeInputField Grid.Column="2" x:Name="timeEdit_START" />
 
                         <!-- CURRENT DAYTIME-->
                         <Button x:Name="button_START" Style="{DynamicResource ACTIONCurrentDate}" Grid.Column="4"
@@ -148,24 +163,48 @@
                     
                     <!-- OUTPUT -->
                     <components:ComboBoxInputField x:Name="inputText_OUTPUT"
+                                                   Enabled="True"
                                                    PlaceholderText="Output"
                                                    UserTextBoxStyle="{DynamicResource inputText}"
                                                    UserTextBlockStyle="{DynamicResource text_Placeholder}"
-                                                   UserComboInput="{Binding}"
-                                                   />
+                                                   UserComboInput="{Binding}" />
                     
                     <!-- TYPE -->
                     <components:ComboBoxInputField x:Name="inputText_TYPE"
+                                                   Enabled="True"
                                                    PlaceholderText="Type"
                                                    UserTextBoxStyle="{DynamicResource inputText}"
                                                    UserTextBlockStyle="{DynamicResource text_Placeholder}"
-                                                   UserComboInput="{Binding}"
-                                                   />
+                                                   UserComboInput="{Binding}" />
 
-                    <!-- LOG VARIED FIELDS -->
-                    <Frame x:Name="frame_VARIATIONS" />
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <!-- LOG VARIED FIELDS -->
+                        <Frame x:Name="frame_VARIATIONS"
+                               Source="/Components/Subcontrols/coding_UserControl.xaml"/>
+                        
+                        <!-- ANDROID STUDIO ONLY -->
+                        <Frame x:Name="frame_ANDROIDSTUDIO" />
 
-                </StackPanel>
+
+
+
+
+
+
+
+
+                    </StackPanel>
+                
+                    
+                </ScrollViewer>
+                
                 <!--#endregion-->
 
 

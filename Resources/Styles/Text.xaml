@@ -129,7 +129,23 @@
         <Setter Property="HorizontalAlignment" Value="Center"/>
         <Setter Property="VerticalAlignment" Value="Center"/>
     </Style>
-    
+
+    <Style x:Key="text_button02" TargetType="TextBlock" BasedOn="{StaticResource text_button01}">
+        <Setter Property="FontSize" Value="13"/>
+    </Style>
+
+    <Style x:Key="text_button03" TargetType="TextBlock" BasedOn="{StaticResource text_button01}">
+        <Setter Property="Foreground" Value="{DynamicResource BLACK}"/>
+        <Setter Property="TextDecorations" Value="Underline"/>
+
+        <Style.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Foreground" Value="{DynamicResource iconCOLOURAccent01}"/>
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
+
     <!-- #region PLACEHOLDERS -->
 
     <Style x:Key="text_login_PLACEHOLDER" TargetType="TextBlock">
@@ -198,6 +214,9 @@
 
     <Style x:Key="text_LABEL03" TargetType="TextBlock" BasedOn="{StaticResource text_LABEL01}">
         <Setter Property="FontWeight" Value="Regular"/>
+        <Setter Property="TextAlignment" Value="Left"/>
+        <Setter Property="TextWrapping" Value="WrapWithOverflow"/>
+        <Setter Property="TextTrimming" Value="CharacterEllipsis"/>
     </Style>
 
     <Style x:Key="text_LIST_LABEL_HEADING" TargetType="TextBlock" BasedOn="{StaticResource text_LABEL01}">

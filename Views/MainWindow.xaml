@@ -396,7 +396,7 @@
         <!-- APP NAVIGATOR -->
         <Frame Grid.Column="1" Grid.Row="0" Grid.RowSpan="2" x:Name="frame_MAINWINDOW"
                NavigationUIVisibility="Hidden"
-               Source="/Views/Dialogs/PostItPage.xaml"
+               Source="/Views/LogPages/LogCachePage.xaml"
                HorizontalAlignment="Stretch"
                VerticalAlignment="Stretch" />
 

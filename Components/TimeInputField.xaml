@@ -9,14 +9,19 @@
              HorizontalAlignment="Stretch"
              VerticalAlignment="Center"
              Margin="0 5"
-             x:Name="control_TIME_edit"
-             >
+             x:Name="control_TIME_edit" >
+    
+    
     <Border BorderBrush="{DynamicResource STROKE}"
             BorderThickness="0.6"
             Height="40"
-            CornerRadius="2"
-            >
+            CornerRadius="2" >
+        
+        
         <Grid>
+            
+            
+            
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="10"/>
                 <!-- Hours HHHHHHHHHHHHHHHHHHHHHH -->

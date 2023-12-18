@@ -4,23 +4,17 @@ using System.Windows.Controls;
 namespace Data_Logger_1._3.Components
 {
     /// <summary>
-    /// Interaction logic for ComboBoxInputField.xaml
+    /// Interaction logic for SearchInputField.xaml
     /// </summary>
-    public partial class ComboBoxInputField : UserControl
+    public partial class SearchInputField : UserControl
     {
         public bool Status { get; set; } = true;
-        public string? Temp { get; set; } = "";
+        public string? Temp { get; set; }
 
-        public ComboBoxInputField()
+        public SearchInputField()
         {
-
             InitializeComponent();
-
         }
-
-
-
-
 
         #region Dependency Properties
 
@@ -33,7 +27,7 @@ namespace Data_Logger_1._3.Components
         }
 
         public static readonly DependencyProperty PlaceholderTextProperty =
-            DependencyProperty.Register("PlaceholderText", typeof(string), typeof(ComboBoxInputField));
+            DependencyProperty.Register("PlaceholderText", typeof(string), typeof(SearchInputField));
 
 
         // User's input
@@ -44,7 +38,7 @@ namespace Data_Logger_1._3.Components
         }
 
         public static readonly DependencyProperty UserComboInputProperty =
-            DependencyProperty.Register("UserComboInput", typeof(string), typeof(ComboBoxInputField));
+            DependencyProperty.Register("UserComboInput", typeof(string), typeof(SearchInputField));
 
         // Items in the combo box
         public IEnumerable<string> Items
@@ -54,7 +48,7 @@ namespace Data_Logger_1._3.Components
         }
 
         public static readonly DependencyProperty ItemsProperty =
-            DependencyProperty.Register("Items", typeof(IEnumerable<string>), typeof(ComboBoxInputField));
+            DependencyProperty.Register("Items", typeof(IEnumerable<string>), typeof(SearchInputField));
 
 
         // For enabling and disabling editing the control. Will allow it to be a normal combo box if false.
@@ -65,7 +59,7 @@ namespace Data_Logger_1._3.Components
         }
 
         public static readonly DependencyProperty EnabledProperty =
-            DependencyProperty.Register("Enabled", typeof(bool), typeof(ComboBoxInputField), new PropertyMetadata(true));
+            DependencyProperty.Register("Enabled", typeof(bool), typeof(SearchInputField), new PropertyMetadata(true));
 
 
 
@@ -77,7 +71,7 @@ namespace Data_Logger_1._3.Components
         }
 
         public static readonly DependencyProperty UserTextBoxStyleProperty =
-            DependencyProperty.Register("UserTextBoxStyle", typeof(Style), typeof(ComboBoxInputField) );
+            DependencyProperty.Register("UserTextBoxStyle", typeof(Style), typeof(SearchInputField));
 
 
         // TextBlock Style
@@ -88,7 +82,66 @@ namespace Data_Logger_1._3.Components
         }
 
         public static readonly DependencyProperty UserTextBlockStyleProperty =
-            DependencyProperty.Register("UserTextBlockStyle", typeof(Style), typeof(ComboBoxInputField));
+            DependencyProperty.Register("UserTextBlockStyle", typeof(Style), typeof(SearchInputField));
+
+
+        // Icon that appears in a search result to show the application used.
+        public Style IconStyle
+        {
+            get { return (Style)GetValue(IconStyleProperty); }
+            set { SetValue(IconStyleProperty, value); }
+        }
+
+        public static readonly DependencyProperty IconStyleProperty =
+            DependencyProperty.Register("IconStyle", typeof(Style), typeof(SearchInputField));
+
+
+        // Project name in a search result to show the project in which a post it belongs
+        public string SearchBarProjectName
+        {
+            get { return (string)GetValue(SearchBarProjectNameProperty); }
+            set { SetValue(SearchBarProjectNameProperty, value); }
+        }
+
+        public static readonly DependencyProperty SearchBarProjectNameProperty =
+            DependencyProperty.Register("SearchBarProjectName", typeof(string), typeof(SearchInputField));
+
+
+        // Start date of project in search result
+        public DateTime SearchBarProjectStart
+        {
+            get { return (DateTime)GetValue(SearchBarProjectStartProperty); }
+            set { SetValue(SearchBarProjectStartProperty, value); }
+        }
+
+        public static readonly DependencyProperty SearchBarProjectStartProperty =
+            DependencyProperty.Register("SearchBarProjectStart", typeof(DateTime), typeof(SearchInputField));
+
+
+
+        // Post It subject of search result
+        public string SearchBarSubject
+        {
+            get { return (string)GetValue(SearchBarSubjectProperty); }
+            set { SetValue(SearchBarSubjectProperty, value); }
+        }
+
+        public static readonly DependencyProperty SearchBarSubjectProperty =
+            DependencyProperty.Register("SearchBarSubject", typeof(string), typeof(SearchInputField));
+
+
+        // Content of post it in search result
+        public string SearchBarResultContent
+        {
+            get { return (string)GetValue(SearchBarResultContentProperty); }
+            set { SetValue(SearchBarResultContentProperty, value); }
+        }
+
+        public static readonly DependencyProperty SearchBarResultContentProperty =
+            DependencyProperty.Register("SearchBarResultContent", typeof(string), typeof(SearchInputField));
+
+
+        // List of SearchResults
 
 
 
@@ -105,21 +158,6 @@ namespace Data_Logger_1._3.Components
         #region Member Functions
 
 
-        private void on_PLACEHOLDERTEXT_loaded(object sender, RoutedEventArgs e)
-        {
-
-            // If the combobox is not Editable, show no placeholder text.
-            if (!Enabled)
-            {
-                text_PLACEHOLDERTEXT.Visibility = Visibility.Hidden;
-                Status = false;
-
-                return;
-            }
-
-
-        }
-
         private void on_EditableTextBox_lostfocus(object sender, RoutedEventArgs e)
         {
             showPlaceholderText();
@@ -127,34 +165,27 @@ namespace Data_Logger_1._3.Components
 
         public void showPlaceholderText()
         {
-            
-
-            // If the combobox text is null return
             if (this.comboBox_TEXTBOX.Text == null)
             {
                 return;
             }
-
-
-            else if (this.comboBox_TEXTBOX.Text == "" && this.text_PLACEHOLDERTEXT.Text == "")
+            else if (this.comboBox_TEXTBOX.Text == "" && this.text_Placeholdertext.Text == "")
             {
-                this.text_PLACEHOLDERTEXT.Text = Temp;
+                this.text_Placeholdertext.Text = Temp;
                 Status = true;
             }
-
-
         }
 
         public void showPlaceholderText(bool show, bool assert)
         {
             if (show)
             {
-                this.text_PLACEHOLDERTEXT.Text = Temp;
+                this.text_Placeholdertext.Text = Temp;
                 Status = true;
             }
             else if (show && assert || this.comboBox_TEXTBOX.Text == "")
             {
-                this.text_PLACEHOLDERTEXT.Text = PlaceholderText;
+                this.text_Placeholdertext.Text = PlaceholderText;
                 Status = true;
             }
         }
@@ -179,10 +210,10 @@ namespace Data_Logger_1._3.Components
 
         private void on_EditableTextBox_changed(object sender, TextChangedEventArgs e)
         {
-            if(Status)
+            if (Status)
             {
-                Temp = this.text_PLACEHOLDERTEXT.Text;
-                this.text_PLACEHOLDERTEXT.Text = "";
+                Temp = this.text_Placeholdertext.Text;
+                this.text_Placeholdertext.Text = "";
                 Status = false;
             }
 
@@ -215,7 +246,7 @@ namespace Data_Logger_1._3.Components
             "TextChanged",
             RoutingStrategy.Bubble,
             typeof(RoutedEventHandler),
-            typeof(ComboBoxInputField));
+            typeof(SearchInputField));
 
 
 
@@ -225,7 +256,5 @@ namespace Data_Logger_1._3.Components
 
 
         #endregion
-
-        
     }
 }
