@@ -1,0 +1,132 @@
+﻿<UserControl x:Class="Data_Logger_1._3.Components.Subcontrols.flexi_UserControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Data_Logger_1._3.Components.Subcontrols" xmlns:components="clr-namespace:Data_Logger_1._3.Components"
+             mc:Ignorable="d" 
+             d:Background="White"
+             HorizontalAlignment="Stretch"
+             x:Name="control_FLEXI_fields" >
+    
+    
+    <Grid>
+
+        <Grid.RowDefinitions>
+
+            <RowDefinition Height="*"/> <!-- FLEXI NOTE CATEGORY -->
+            <RowDefinition Height="0"/>
+            <RowDefinition Height="*"/> <!-- MEDIUM -->
+            <RowDefinition Height="0"/>
+            <RowDefinition Height="*"/> <!-- FORMAT -->
+            <RowDefinition Height="5"/>
+            <RowDefinition Height="*"/> <!-- BITRATE -->
+            <RowDefinition Height="10"/>
+            <RowDefinition Height="*"/> <!-- DURATION -->
+            <RowDefinition Height="10"/>
+            <RowDefinition Height="*"/> <!-- COMPLETED -->
+            <RowDefinition Height="5"/>
+            <RowDefinition Height="*"/> <!-- SOURCE -->
+
+        </Grid.RowDefinitions>
+        
+        <!-- FLEXI NOTE CATEGORY -->
+        <components:ComboBoxInputField Grid.Row="0" x:Name="input_FLEXINOTE_CATEGORY"
+                                       Enabled="False" />
+        
+        <!-- MEDIUM -->
+        <components:ComboBoxInputField Grid.Row="2" x:Name="inputText_MEDIUM"
+                                       Enabled="True"
+                                       PlaceholderText="Medium"
+                                       UserTextBoxStyle="{DynamicResource inputText}"
+                                       UserTextBlockStyle="{DynamicResource text_Placeholder}"
+                                       UserComboInput="{Binding}" />
+        
+        <!-- FORMAT -->
+        <components:ComboBoxInputField Grid.Row="4" x:Name="inputText_FORMAT"
+                                       Enabled="True"
+                                       PlaceholderText="Format"
+                                       UserTextBoxStyle="{DynamicResource inputText}"
+                                       UserTextBlockStyle="{DynamicResource text_Placeholder}"/>
+        
+        <!-- BITRATE -->
+        <components:PlainInputField Grid.Row="6" x:Name="inputText_BITRATE"
+                                    PlaceholderText="Bitrate (kbps)"
+                                    UserTextBoxStyle="{DynamicResource inputText_LOGIN}"
+                                    UserTextBlockStyle="{DynamicResource text_login_PLACEHOLDER}"
+                                    UserInput="{Binding}" />
+        
+        <!-- DURATION -->
+        <components:PlainInputField Grid.Row="8" x:Name="inputText_DURATION"
+                                    PlaceholderText="Duration"
+                                    UserTextBoxStyle="{DynamicResource inputText_LOGIN}"
+                                    UserTextBlockStyle="{DynamicResource text_login_PLACEHOLDER}"
+                                    UserInput="{Binding}" />
+
+        <!-- COMPLETED -->
+        <Border Grid.Row="10"
+                Margin="0 0 0 5"
+                Height="40"
+                Padding="12 5 10 5"
+                BorderThickness="0.6"
+                BorderBrush="{DynamicResource STROKE}"
+                CornerRadius="3" >
+
+            <Grid>
+
+                <Grid.ColumnDefinitions>
+
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="10" />
+                    <ColumnDefinition Width="93" />
+
+                </Grid.ColumnDefinitions>
+
+
+                <TextBlock Grid.Column="0" Style="{DynamicResource text_LABEL03}"
+                           Text="Completed?" />
+
+                <CheckBox Grid.Column="2" x:Name="checkBox_IsCOMPLETED" Style="{DynamicResource check_SIGNUP}"
+                          HorizontalAlignment="Right" />
+
+
+            </Grid>
+
+        </Border>
+
+        <!-- SOURCE -->
+        <Grid Grid.Row="12">
+
+            <Grid.ColumnDefinitions>
+
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="10" />
+                <ColumnDefinition Width="93" />
+
+            </Grid.ColumnDefinitions>
+
+            <components:PlainInputField Grid.Column="0"
+                                        PlaceholderText="Source"
+                                        UserTextBoxStyle="{DynamicResource inputText_LOGIN}"
+                                        UserTextBlockStyle="{DynamicResource text_login_PLACEHOLDER}"
+                                        UserInput="{Binding}" />
+
+            <Button Grid.Column="3" Style="{DynamicResource ACTIONBrowse}"
+                    Height="auto"
+                    Width="auto" >
+
+                <TextBlock Style="{DynamicResource text_button01}"
+                           Text="Open" />
+
+            </Button>
+
+
+
+        </Grid>
+        
+        
+
+    </Grid>
+    
+    
+</UserControl>
