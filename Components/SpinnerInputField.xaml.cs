@@ -14,6 +14,20 @@ namespace Data_Logger_1._3.Components
         public SpinnerInputField()
         {
             InitializeComponent();
+
+            buttonCheck();
+            SetLeader();
+
+            if(Number != null)
+            {
+
+                if(IsInteger)
+                    Number = $"{Leader}{0}";
+                else
+                    Number = $"{Leader}{0,00}";
+            }
+
+            
         }
 
         #region Dependency Properties
@@ -114,6 +128,9 @@ namespace Data_Logger_1._3.Components
 
         public void SetLeader()
         {
+            if(Leader is null)
+                return;
+
             if (Digits == 5)
             {
                 Leader = "0000";
@@ -248,42 +265,60 @@ namespace Data_Logger_1._3.Components
         // When the scroll wheel is rolled over the spinner, increment/decrement
         private void on_SPINNER_rotate(object sender, MouseWheelEventArgs e)
         {
-            // e.Handled ensures that the ScrollViewer doesn't scroll when the mousewheel rotates over the spinner
-            e.Handled = true;
+            
 
-            // Ensure that the number is an integer first. Then make sure that when a maximum or minimum value is reached,
-            // the scrolling is unable to increment/decrement.
-            if (IsInteger)
+            
+
+            try
             {
-                if (e.Delta > 0 && int.Parse(this.Number) != MaximumValue)
-                {
-                    SetLeader();
-                    increment();
 
-                }
-                else if (e.Delta < 0 && int.Parse(this.Number) != MinimumValue)
+
+                // e.Handled ensures that the ScrollViewer doesn't scroll when the mousewheel rotates over the spinner
+                e.Handled = true;
+
+                // Ensure that the number is an integer first. Then make sure that when a maximum or minimum value is reached,
+                // the scrolling is unable to increment/decrement.
+                if (IsInteger)
                 {
-                    SetLeader();
-                    decrement();
+                    if (e.Delta > 0 && int.Parse(this.Number) != MaximumValue)
+                    {
+                        SetLeader();
+                        increment();
+
+                    }
+                    else if (e.Delta < 0 && int.Parse(this.Number) != MinimumValue)
+                    {
+                        SetLeader();
+                        decrement();
+                    }
                 }
+                else
+                {
+                    if (e.Delta > 0 && double.Parse(this.Number) != MaximumValue)
+                    {
+                        SetLeader();
+                        increment();
+
+                    }
+                    else if (e.Delta < 0 && double.Parse(this.Number) != MinimumValue)
+                    {
+                        SetLeader();
+                        decrement();
+                    }
+                }
+
+
+                    buttonCheck();
+
+
+
+
             }
-            else
+            catch (Exception)
             {
-                if (e.Delta > 0 && double.Parse(this.Number) != MaximumValue)
-                {
-                    SetLeader();
-                    increment();
 
-                }
-                else if (e.Delta < 0 && double.Parse(this.Number) != MinimumValue)
-                {
-                    SetLeader();
-                    decrement();
-                }
+
             }
-
-
-            buttonCheck();
 
         }
 
