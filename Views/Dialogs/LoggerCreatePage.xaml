@@ -187,7 +187,7 @@
                         
                         <!-- LOG VARIED FIELDS -->
                         <Frame x:Name="frame_VARIATIONS"
-                               Source="/Components/Subcontrols/film_UserControl.xaml"/>
+                               Source="/Components/Subcontrols/coding_UserControl.xaml"/>
                         
                         <!-- ANDROID STUDIO ONLY -->
                         <Frame x:Name="frame_ANDROIDSTUDIO" />
