@@ -13,7 +13,9 @@ namespace Data_Logger_1._3.Components
 
         public ComboBoxInputField()
         {
+
             InitializeComponent();
+
         }
 
 
@@ -103,6 +105,21 @@ namespace Data_Logger_1._3.Components
         #region Member Functions
 
 
+        private void on_PLACEHOLDERTEXT_loaded(object sender, RoutedEventArgs e)
+        {
+
+            // If the combobox is not Editable, show no placeholder text.
+            if (!Enabled)
+            {
+                text_PLACEHOLDERTEXT.Visibility = Visibility.Hidden;
+                Status = false;
+
+                return;
+            }
+
+
+        }
+
         private void on_EditableTextBox_lostfocus(object sender, RoutedEventArgs e)
         {
             showPlaceholderText();
@@ -110,27 +127,34 @@ namespace Data_Logger_1._3.Components
 
         public void showPlaceholderText()
         {
+            
+
+            // If the combobox text is null return
             if (this.comboBox_TEXTBOX.Text == null)
             {
                 return;
             }
-            else if (this.comboBox_TEXTBOX.Text == "" && this.text_Placeholdertext.Text == "")
+
+
+            else if (this.comboBox_TEXTBOX.Text == "" && this.text_PLACEHOLDERTEXT.Text == "")
             {
-                this.text_Placeholdertext.Text = Temp;
+                this.text_PLACEHOLDERTEXT.Text = Temp;
                 Status = true;
             }
+
+
         }
 
         public void showPlaceholderText(bool show, bool assert)
         {
             if (show)
             {
-                this.text_Placeholdertext.Text = Temp;
+                this.text_PLACEHOLDERTEXT.Text = Temp;
                 Status = true;
             }
             else if (show && assert || this.comboBox_TEXTBOX.Text == "")
             {
-                this.text_Placeholdertext.Text = PlaceholderText;
+                this.text_PLACEHOLDERTEXT.Text = PlaceholderText;
                 Status = true;
             }
         }
@@ -157,8 +181,8 @@ namespace Data_Logger_1._3.Components
         {
             if(Status)
             {
-                Temp = this.text_Placeholdertext.Text;
-                this.text_Placeholdertext.Text = "";
+                Temp = this.text_PLACEHOLDERTEXT.Text;
+                this.text_PLACEHOLDERTEXT.Text = "";
                 Status = false;
             }
 
@@ -202,5 +226,6 @@ namespace Data_Logger_1._3.Components
 
         #endregion
 
+        
     }
 }
