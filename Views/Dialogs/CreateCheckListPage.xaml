@@ -47,8 +47,7 @@
 
         <ListView Style="{DynamicResource listView_CHECKLIST}" Grid.Column="0" Grid.Row="3"
                   ItemContainerStyle="{DynamicResource listView_CHECKLIST_ITEM}"
-                  ItemsSource="{Binding}"
-                  />
+                  ItemsSource="{Binding}" />
 
 
 
