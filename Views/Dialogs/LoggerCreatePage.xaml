@@ -311,8 +311,8 @@
 
 
                         <!-- POST ITS -->
-                        <!--<ListView Style="{DynamicResource listView_POSTITS}"
-                                  ItemsSource="{Binding}" />-->
+                        <ListView Style="{DynamicResource listView_POSTITS}"
+                                  ItemsSource="{Binding}" />
 
 
 
