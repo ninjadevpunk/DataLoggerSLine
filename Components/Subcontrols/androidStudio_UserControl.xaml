@@ -8,7 +8,7 @@
              Margin="0 10"
              Padding="0 20"
              d:Background="White"
-             x:Name="control_ANDROIDSTUDIO_UserControl" >
+             x:Name="control_ANDROIDSTUDIO_fields" >
     
     
     
@@ -114,7 +114,8 @@
 
         </Grid.RowDefinitions>
 
-        <ToggleButton Style="{DynamicResource template_OPTION_SWITCH}" />
+        <ToggleButton x:Name="toggleButton_SWITCH" Style="{DynamicResource template_OPTION_SWITCH}"
+                      Command="{Binding}" />
 
         <!-- SYNC -->
         <Border Grid.Row="3"
