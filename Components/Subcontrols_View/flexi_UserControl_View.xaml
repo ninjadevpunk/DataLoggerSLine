@@ -1,0 +1,101 @@
+﻿<UserControl x:Class="Data_Logger_1._3.Components.Subcontrols_View.flexi_UserControl_View"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Data_Logger_1._3.Components.Subcontrols_View"
+             mc:Ignorable="d"
+             d:Background="White"
+             x:Name="control_FLEXI_fields_View" >
+
+
+    <Grid Width="380">
+
+        <Grid.RowDefinitions>
+
+            <RowDefinition Height="*" />
+            <!-- H x W -->
+            <RowDefinition Height="5" />
+            <RowDefinition Height="*" />
+            <!-- UNIT -->
+            <RowDefinition Height="5" />
+            <RowDefinition Height="*" />
+            <!-- SIZE -->
+            <RowDefinition Height="5" />
+            <RowDefinition Height="*" />
+            <!-- DPI -->
+            <RowDefinition Height="5" />
+            <RowDefinition Height="*" />
+            <!-- Colour Depth -->
+            <RowDefinition Height="5" />
+            <RowDefinition Height="*" />
+            <!-- IsCompleted? -->
+            <RowDefinition Height="5" />
+            <RowDefinition Height="*" />
+            <!-- Source -->
+
+        </Grid.RowDefinitions>
+
+        <!-- FLEXI-NOTE CATEGORY -->
+        <TextBlock x:Name="text_FLEXINOTE_CATEGORY" Style="{DynamicResource text_Placeholder}"
+               Foreground="{DynamicResource BLACK}"
+               Height="35"
+               Margin="0 5"
+               Padding="10"
+               Text="{Binding}"/>
+
+        <!-- MEDIUM -->
+        <TextBlock Grid.Row="2" x:Name="text_MEDIUM" Style="{DynamicResource text_Placeholder}"
+               Foreground="{DynamicResource BLACK}"
+               Height="35"
+               Margin="0 5"
+               Padding="10"
+               Text="{Binding}" />
+
+        <!-- FORMAT -->
+        <TextBlock Grid.Row="4" x:Name="text_FORMAT" Style="{DynamicResource text_Placeholder}"
+               Foreground="{DynamicResource BLACK}"
+               Height="35"
+               Margin="0 5"
+               Padding="10"
+               Text="{Binding}" />
+
+        <!-- BITRATE -->
+        <TextBlock Grid.Row="6" x:Name="text_BITRATE" Style="{DynamicResource text_Placeholder}"
+               Foreground="{DynamicResource BLACK}"
+               Height="35"
+               Margin="0 5"
+               Padding="10"
+               Text="{Binding}" />
+
+        <!-- DUARTION -->
+        <TextBlock Grid.Row="8" x:Name="text_DEPTH" Style="{DynamicResource text_Placeholder}"
+               Foreground="{DynamicResource BLACK}"
+               Height="35"
+               Margin="0 5"
+               Padding="10"
+               Text="{Binding}" />
+
+        <!-- COMPLETED -->
+        <TextBlock Grid.Row="10" x:Name="text_IsCOMPLETED" Style="{DynamicResource text_Placeholder}"
+               Foreground="{DynamicResource BLACK}"
+               Height="35"
+               Margin="0 5"
+               Padding="10"
+               Text="{Binding}" />
+
+
+        <!-- SOURCE -->
+        <TextBlock Grid.Row="12" x:Name="text_SOURCE" Style="{DynamicResource text_Placeholder}"
+               Foreground="{DynamicResource BLACK}"
+               Height="35"
+               Margin="0 5"
+               Padding="10"
+               Text="{Binding}" />
+
+
+
+
+    </Grid>
+
+</UserControl>

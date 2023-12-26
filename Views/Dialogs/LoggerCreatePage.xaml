@@ -9,7 +9,7 @@
       VerticalAlignment="Stretch"
       d:Background="{DynamicResource WHITE}"
       d:Width="1145"
-      Title="Create Log">
+      Title="Create Log" >
 
     <Border Padding="40 60" >
         

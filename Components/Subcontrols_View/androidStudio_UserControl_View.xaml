@@ -1,23 +1,19 @@
-﻿<UserControl x:Class="Data_Logger_1._3.Components.Subcontrols.androidStudio_UserControl"
+﻿<UserControl x:Class="Data_Logger_1._3.Components.Subcontrols_View.androidStudio_UserControl_View"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:Data_Logger_1._3.Components.Subcontrols" xmlns:components="clr-namespace:Data_Logger_1._3.Components"
-             mc:Ignorable="d"
+             xmlns:local="clr-namespace:Data_Logger_1._3.Components.Subcontrols_View" xmlns:components="clr-namespace:Data_Logger_1._3.Components"
+             mc:Ignorable="d" 
              Margin="0 10"
              Padding="0 20"
              d:Background="White"
-             x:Name="control_ANDROIDSTUDIO_fields" >
-    
-    
-    
-    
-    
+             x:Name="control_ANDROIDSTUDIO_fields_View" >
+
     <UserControl.Resources>
-        
-        
-        
+
+
+
         <Style x:Key="FocusVisual">
             <Setter Property="Control.Template">
                 <Setter.Value>
@@ -27,11 +23,11 @@
                 </Setter.Value>
             </Setter>
         </Style>
-        
-        
-        
-        
-        
+
+
+
+
+
         <Style x:Key="template_OPTION_SWITCH" TargetType="{x:Type ToggleButton}">
             <Setter Property="FocusVisualStyle" Value="{StaticResource FocusVisual}"/>
             <Setter Property="Background" Value="{DynamicResource PrimaryColour}"/>
@@ -46,25 +42,25 @@
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="{x:Type ToggleButton}" >
-                        
+
                         <Border x:Name="border"
-                                Background="{TemplateBinding Background}"
-                                BorderBrush="{TemplateBinding BorderBrush}"
-                                BorderThickness="{TemplateBinding BorderThickness}"
-                                SnapsToDevicePixels="true"
-                                CornerRadius="3" >
-                            
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            SnapsToDevicePixels="true"
+                            CornerRadius="3" >
+
                             <TextBlock x:Name="contentPresenter" Style="{DynamicResource text_LABEL02}"
-                                       Foreground="{DynamicResource WHITE}"
-                                       Focusable="False"
-                                       HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
-                                       Margin="{TemplateBinding Padding}"
-                                       SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"
-                                       VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
-                            
-                            
+                                   Foreground="{DynamicResource WHITE}"
+                                   Focusable="False"
+                                   HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                   Margin="{TemplateBinding Padding}"
+                                   SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"
+                                   VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
+
+
                         </Border>
-                        
+
                         <ControlTemplate.Triggers>
                             <Trigger Property="Button.IsDefaulted" Value="true">
                                 <Setter Property="BorderBrush" TargetName="border" Value="{DynamicResource {x:Static SystemColors.HighlightBrushKey}}"/>
@@ -95,10 +91,10 @@
         <Grid.RowDefinitions>
 
             <RowDefinition Height="*" />
-            
+
             <RowDefinition Height="5" />
             <RowDefinition Height="10" />
-            
+
             <RowDefinition Height="*" />
             <RowDefinition Height="5" />
             <RowDefinition Height="*" />
@@ -119,9 +115,9 @@
 
         <!-- SYNC -->
         <Border Grid.Row="3"
-                Padding="12 0 10 0" >
+            Padding="12 0 10 0" >
 
-            <Grid>
+            <Grid Width="380">
 
                 <Grid.ColumnDefinitions>
 
@@ -133,19 +129,23 @@
 
 
                 <TextBlock Grid.Column="0" Style="{DynamicResource text_LABEL03}"
-                           Text="Sync" />
+                       Text="Sync" />
 
-                <components:TimeInputField Grid.Column="2" x:Name="timeEdit_SYNC" />
+                <TextBlock Grid.Column="2" x:Name="text_SYNC" Style="{DynamicResource text_LABEL03}"
+                           Height="35"
+                           Padding="10"
+                           VerticalAlignment="Center"
+                           Text="{Binding}"/>
 
             </Grid>
-            
+
         </Border>
-        
+
         <!-- GRADLE DAEMON -->
         <Border Grid.Row="5"
-                Padding="12 0 10 0" >
+            Padding="12 0 10 0" >
 
-            <Grid>
+            <Grid Width="380">
 
                 <Grid.ColumnDefinitions>
 
@@ -159,27 +159,26 @@
                 <Grid>
 
                     <Grid.ColumnDefinitions>
-                        
+
                         <ColumnDefinition Width="*" />
                         <ColumnDefinition Width="auto" />
-                        
-                        
-                    </Grid.ColumnDefinitions>
-                    
-                <TextBlock Grid.Column="0" Style="{DynamicResource text_LABEL03}"
-                           Text="Starting Gradle Daemon" />
 
-                <CheckBox Grid.Column="1" x:Name="checkBox_SHOWHIDE" Style="{DynamicResource check_SIGNUP}"
-                          IsChecked="True"
-                          Margin="10 0"
-                          HorizontalAlignment="Center" />
-                    
-                    
-                    
+
+                    </Grid.ColumnDefinitions>
+
+                    <TextBlock Grid.Column="0" Style="{DynamicResource text_LABEL03}"
+                               Text="Starting Gradle Daemon" />
+
+
+
                 </Grid>
 
 
-                <components:TimeInputField Grid.Column="2" x:Name="timeEdit_GRADLEDAEMON" />
+                <TextBlock Grid.Column="2" x:Name="text_GRADLEDAEMON" Style="{DynamicResource text_LABEL03}"
+                           Height="35"
+                           Padding="10"
+                           VerticalAlignment="Center"
+                           Text="{Binding}"/>
 
             </Grid>
 
@@ -187,9 +186,9 @@
 
         <!-- RUN BUILD -->
         <Border Grid.Row="7"
-                Padding="12 0 10 0" >
+            Padding="12 0 10 0" >
 
-            <Grid>
+            <Grid Width="380">
 
                 <Grid.ColumnDefinitions>
 
@@ -201,9 +200,13 @@
 
 
                 <TextBlock Grid.Column="0" Style="{DynamicResource text_LABEL03}"
-                           Text="Run Build" />
+                       Text="Run Build" />
 
-                <components:TimeInputField Grid.Column="2" x:Name="timeEdit_RUNBUILD" />
+                <TextBlock Grid.Column="2" x:Name="text_RUNBUILD" Style="{DynamicResource text_LABEL03}"
+                           Height="35"
+                           Padding="10"
+                           VerticalAlignment="Center"
+                           Text="{Binding}" />
 
             </Grid>
 
@@ -211,9 +214,9 @@
 
         <!-- LOAD BUILD -->
         <Border Grid.Row="9"
-                Padding="12 0 10 0" >
+            Padding="12 0 10 0" >
 
-            <Grid>
+            <Grid Width="380">
 
                 <Grid.ColumnDefinitions>
 
@@ -225,9 +228,13 @@
 
 
                 <TextBlock Grid.Column="0" Style="{DynamicResource text_LABEL03}"
-                           Text="Load Build" />
+                       Text="Load Build" />
 
-                <components:TimeInputField Grid.Column="2" x:Name="timeEdit_LOADBUILD" />
+                <TextBlock Grid.Column="2" x:Name="text_LOADBUILD" Style="{DynamicResource text_LABEL03}"
+                           Height="35"
+                           Padding="10"
+                           VerticalAlignment="Center"
+                           Text="{Binding}" />
 
             </Grid>
 
@@ -235,7 +242,7 @@
 
         <!-- CONFIGURE BUILD -->
         <Border Grid.Row="11"
-                Padding="12 0 10 0" >
+            Padding="12 0 10 0" >
 
             <Grid>
 
@@ -251,7 +258,11 @@
                 <TextBlock Grid.Column="0" Style="{DynamicResource text_LABEL03}"
                            Text="Configure Build" />
 
-                <components:TimeInputField Grid.Column="2" x:Name="timeEdit_CONFIGUREBUILD" />
+                <TextBlock Grid.Column="2" x:Name="text_CONFIGUREBUILD" Style="{DynamicResource text_LABEL03}"
+                           Height="35"
+                           Padding="10"
+                           VerticalAlignment="Center"
+                           Text="{Binding}" />
 
             </Grid>
 
@@ -259,9 +270,9 @@
 
         <!-- ALL PROJECTS -->
         <Border Grid.Row="13"
-                Padding="12 0 10 0" >
+            Padding="12 0 10 0" >
 
-            <Grid>
+            <Grid Width="380">
 
                 <Grid.ColumnDefinitions>
 
@@ -273,9 +284,13 @@
 
 
                 <TextBlock Grid.Column="0" Style="{DynamicResource text_LABEL03}"
-                           Text="All Projects" />
+                       Text="All Projects" />
 
-                <components:TimeInputField Grid.Column="2" x:Name="timeEdit_ALLPROJECTS" />
+                <TextBlock Grid.Column="2" x:Name="text_ALLPROJECTS" Style="{DynamicResource text_LABEL03}"
+                           Height="35"
+                           Padding="10"
+                           VerticalAlignment="Center"
+                           Text="{Binding}" />
 
             </Grid>
 
@@ -284,7 +299,6 @@
 
 
     </Grid>
-    
-    
-    
+
+
 </UserControl>

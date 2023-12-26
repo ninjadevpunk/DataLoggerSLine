@@ -227,6 +227,11 @@
         <Setter Property="TextAlignment" Value="Left"/>
     </Style>
 
+    <Style x:Key="text_LIST_LABEL_HEADING_View" TargetType="TextBlock" BasedOn="{StaticResource text_LIST_LABEL_HEADING}">
+        <Setter Property="TextWrapping" Value="Wrap"/>
+        <Setter Property="TextTrimming" Value="None"/>
+    </Style>
+
     <Style x:Key="text_LIST_LABEL_DATE" TargetType="TextBlock" BasedOn="{StaticResource text_LIST_LABEL_HEADING}">
         <Setter Property="FontWeight" Value="SemiBold"/>
         <Setter Property="TextTrimming" Value="CharacterEllipsis"/>
@@ -241,6 +246,11 @@
         <Setter Property="FontWeight" Value="Regular"/>
         <Setter Property="TextWrapping" Value="WrapWithOverflow"/>
         <Setter Property="TextTrimming" Value="CharacterEllipsis"/>
+    </Style>
+
+    <Style x:Key="text_LIST_LABEL_CONTENT_View" TargetType="TextBlock" BasedOn="{StaticResource text_LIST_LABEL_CONTENT}">
+        <Setter Property="TextWrapping" Value="Wrap"/>
+        <Setter Property="TextTrimming" Value="None"/>
     </Style>
 
 
