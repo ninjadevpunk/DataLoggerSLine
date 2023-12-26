@@ -650,8 +650,7 @@
                                 <TextBlock x:Name="text_POSTIT_SUBJECT" Style="{DynamicResource text_LIST_LABEL_HEADING}"
                                        Height="27"
                                        HorizontalAlignment="Stretch"
-                                       Text="{Binding}"
-                                       />
+                                       Text="{Binding}" />
 
                                 <StackPanel Orientation="Vertical" Grid.Row="1"
                                         HorizontalAlignment="Stretch"
@@ -666,12 +665,12 @@
                                             </Grid.ColumnDefinitions>
 
                                             <Ellipse x:Name="ellipse_POSTIT_ERROR" Style="{DynamicResource ellipse_ERSO}"
-                                                 Fill="{DynamicResource postIT_ERROR}"
-                                                 />
+                                                 Fill="{DynamicResource postIT_ERROR}" />
+                                            
                                             <TextBlock Grid.Column="2" x:Name="text_POSTIT_ERROR" Style="{DynamicResource text_LIST_LABEL_CONTENT}"
                                                    HorizontalAlignment="Stretch"
-                                                   Text="{Binding}"
-                                                   />
+                                                   Text="{Binding}" />
+                                            
                                         </Grid>
                                     </Border>
 
@@ -686,12 +685,12 @@
                                             </Grid.ColumnDefinitions>
 
                                             <Ellipse x:Name="ellipse_POSTIT_SOLUTION" Style="{DynamicResource ellipse_ERSO}"
-                                                     Fill="{DynamicResource postIT_SOLUTION}"
-                                                     />
+                                                     Fill="{DynamicResource postIT_SOLUTION}" />
+                                            
                                             <TextBlock Grid.Column="2" x:Name="text_POSTIT_SOLUTION" Style="{DynamicResource text_LIST_LABEL_CONTENT}"
                                                        HorizontalAlignment="Stretch"
-                                                       Text="{Binding}"
-                                                       />
+                                                       Text="{Binding}" />
+                                            
                                         </Grid>
                                     </Border>
                                     
@@ -706,12 +705,12 @@
                                             </Grid.ColumnDefinitions>
 
                                             <Ellipse x:Name="ellipse_POSTIT_SUGGESTION" Style="{DynamicResource ellipse_ERSO}"
-                                                     Fill="{DynamicResource postIT_SUGGESTION}"
-                                                     />
+                                                     Fill="{DynamicResource postIT_SUGGESTION}" />
+                                            
                                             <TextBlock Grid.Column="2" x:Name="text_POSTIT_SUGGESTION" Style="{DynamicResource text_LIST_LABEL_CONTENT}"
                                                        HorizontalAlignment="Stretch"
-                                                       Text="{Binding}"
-                                                       />
+                                                       Text="{Binding}" />
+                                            
                                         </Grid>
                                     </Border>
 
@@ -726,17 +725,18 @@
                                             </Grid.ColumnDefinitions>
 
                                             <Ellipse x:Name="ellipse_POSTIT_COMMENT" Style="{DynamicResource ellipse_ERSO}"
-                                                     Fill="{DynamicResource postIT_COMMENT}"
-                                                     />
+                                                     Fill="{DynamicResource postIT_COMMENT}" />
+                                            
                                             <TextBlock Grid.Column="2" x:Name="text_POSTIT_COMMENT" Style="{DynamicResource text_LIST_LABEL_CONTENT}"
                                                        HorizontalAlignment="Stretch"
-                                                       Text="{Binding}"
-                                                       />
+                                                       Text="{Binding}" />
+                                            
                                         </Grid>
                                     </Border>
                                 </StackPanel>
                             </Grid>
-
+                            
+                            <!-- COLUMN 2 -->
                             <Button Grid.Column="1" Style="{DynamicResource toolbutton_DELETE}" />
 
                         </Grid>
@@ -812,10 +812,221 @@
             </Setter.Value>
         </Setter>
     </Style>
-
-
     
     
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <!-- POST ITS LIST (VIEW VERSION) -->
+
+    <Style x:Key="listViewITEM_POSTITS_View" TargetType="{x:Type ListViewItem}">
+        <Setter Property="SnapsToDevicePixels" Value="True"/>
+        <Setter Property="HorizontalContentAlignment" Value="{Binding HorizontalContentAlignment, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}"/>
+        <Setter Property="VerticalContentAlignment" Value="{Binding VerticalContentAlignment, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}"/>
+        <Setter Property="Background" Value="{DynamicResource ListItem}"/>
+        <Setter Property="BorderBrush" Value="Transparent"/>
+        <Setter Property="BorderThickness" Value="0"/>
+        <Setter Property="Margin" Value="0 0 5 7"/>
+        <Setter Property="FocusVisualStyle" Value="{StaticResource FocusVisual}"/>
+        <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Disabled"/>
+        <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Auto"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type ListViewItem}">
+                    <Border x:Name="border"
+                        Background="{TemplateBinding Background}"
+                        Padding="20 10"
+                        CornerRadius="3"
+                        SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="auto"/>
+                            </Grid.ColumnDefinitions>
+
+                            <!-- COLUMN 1 -->
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="27"/>
+                                    <RowDefinition Height="*"/>
+                                </Grid.RowDefinitions>
+
+                                <!-- SUBJECT -->
+                                <TextBlock x:Name="text_POSTIT_SUBJECT" Style="{DynamicResource text_LIST_LABEL_HEADING_View}"
+                                   Height="27"
+                                   HorizontalAlignment="Stretch"
+                                   Text="{Binding}" />
+
+                                <StackPanel Orientation="Vertical" Grid.Row="1"
+                                    HorizontalAlignment="Stretch"
+                                    >
+                                    <!-- ERROR -->
+                                    <Border Padding="0 5" Visibility="{Binding}">
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="15"/>
+                                                <ColumnDefinition Width="10"/>
+                                                <ColumnDefinition Width="*"/>
+                                            </Grid.ColumnDefinitions>
+
+                                            <Ellipse x:Name="ellipse_POSTIT_ERROR" Style="{DynamicResource ellipse_ERSO}"
+                                             Fill="{DynamicResource postIT_ERROR}" />
+
+                                            <TextBlock Grid.Column="2" x:Name="text_POSTIT_ERROR" Style="{DynamicResource text_LIST_LABEL_CONTENT_View}"
+                                               HorizontalAlignment="Stretch"
+                                               Text="{Binding}" />
+
+                                        </Grid>
+                                    </Border>
+
+
+                                    <!-- SOLUTION -->
+                                    <Border Padding="0 5" Visibility="{Binding}">
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="15"/>
+                                                <ColumnDefinition Width="10"/>
+                                                <ColumnDefinition Width="*"/>
+                                            </Grid.ColumnDefinitions>
+
+                                            <Ellipse x:Name="ellipse_POSTIT_SOLUTION" Style="{DynamicResource ellipse_ERSO}"
+                                                 Fill="{DynamicResource postIT_SOLUTION}" />
+
+                                            <TextBlock Grid.Column="2" x:Name="text_POSTIT_SOLUTION" Style="{DynamicResource text_LIST_LABEL_CONTENT_View}"
+                                                   HorizontalAlignment="Stretch"
+                                                   Text="{Binding}" />
+
+                                        </Grid>
+                                    </Border>
+
+
+                                    <!-- SUGGESTION -->
+                                    <Border Padding="0 5" Visibility="{Binding}">
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="15"/>
+                                                <ColumnDefinition Width="10"/>
+                                                <ColumnDefinition Width="*"/>
+                                            </Grid.ColumnDefinitions>
+
+                                            <Ellipse x:Name="ellipse_POSTIT_SUGGESTION" Style="{DynamicResource ellipse_ERSO}"
+                                                 Fill="{DynamicResource postIT_SUGGESTION}" />
+
+                                            <TextBlock Grid.Column="2" x:Name="text_POSTIT_SUGGESTION" Style="{DynamicResource text_LIST_LABEL_CONTENT_View}"
+                                                   HorizontalAlignment="Stretch"
+                                                   Text="{Binding}" />
+
+                                        </Grid>
+                                    </Border>
+
+
+                                    <!-- COMMENT -->
+                                    <Border Padding="0 5" Visibility="{Binding}">
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="15"/>
+                                                <ColumnDefinition Width="10"/>
+                                                <ColumnDefinition Width="*"/>
+                                            </Grid.ColumnDefinitions>
+
+                                            <Ellipse x:Name="ellipse_POSTIT_COMMENT" Style="{DynamicResource ellipse_ERSO}"
+                                                 Fill="{DynamicResource postIT_COMMENT}" />
+
+                                            <TextBlock Grid.Column="2" x:Name="text_POSTIT_COMMENT" Style="{DynamicResource text_LIST_LABEL_CONTENT_View}"
+                                                   HorizontalAlignment="Stretch"
+                                                   Text="{Binding}" />
+
+                                        </Grid>
+                                    </Border>
+                                </StackPanel>
+                            </Grid>
+
+                            <!-- COLUMN 2 -->
+                            
+
+                        </Grid>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <MultiTrigger>
+                            <MultiTrigger.Conditions>
+                                <Condition Property="IsMouseOver" Value="True"/>
+                            </MultiTrigger.Conditions>
+                            <Setter Property="Background" TargetName="border" Value="{DynamicResource SELECTEDListItem}"/>
+                        </MultiTrigger>
+                        <MultiTrigger>
+                            <MultiTrigger.Conditions>
+                                <Condition Property="Selector.IsSelectionActive" Value="False"/>
+                                <Condition Property="IsSelected" Value="True"/>
+                            </MultiTrigger.Conditions>
+                            <Setter Property="Background" TargetName="border" Value="{DynamicResource SELECTEDListItem}"/>
+                        </MultiTrigger>
+                        <MultiTrigger>
+                            <MultiTrigger.Conditions>
+                                <Condition Property="Selector.IsSelectionActive" Value="True"/>
+                                <Condition Property="IsSelected" Value="True"/>
+                            </MultiTrigger.Conditions>
+                            <Setter Property="Background" TargetName="border" Value="{DynamicResource SELECTEDListItem}"/>
+                        </MultiTrigger>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter Property="TextElement.Foreground" TargetName="border" Value="{DynamicResource {x:Static SystemColors.GrayTextBrushKey}}"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="listView_POSTITS_View" TargetType="{x:Type ListView}">
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="BorderBrush" Value="Transparent"/>
+        <Setter Property="MaxHeight" Value="470"/>
+        <Setter Property="BorderThickness" Value="0"/>
+        <Setter Property="Foreground" Value="{DynamicResource BLACK}"/>
+        <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Disabled"/>
+        <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Auto"/>
+        <Setter Property="ScrollViewer.CanContentScroll" Value="true"/>
+        <Setter Property="ScrollViewer.PanningMode" Value="Both"/>
+        <Setter Property="Stylus.IsFlicksEnabled" Value="False"/>
+        <Setter Property="VerticalContentAlignment" Value="Center"/>
+        <Setter Property="HorizontalAlignment" Value="Stretch"/>
+        <Setter Property="ItemContainerStyle" Value="{StaticResource listViewITEM_POSTITS_View}"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type ListView}">
+                    <Border x:Name="Bd"
+                        Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        Padding="5"
+                        SnapsToDevicePixels="true"
+                        >
+                        <ScrollViewer Focusable="false" Padding="{TemplateBinding Padding}">
+                            <ItemsPresenter SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"/>
+                        </ScrollViewer>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <MultiTrigger>
+                            <MultiTrigger.Conditions>
+                                <Condition Property="IsGrouping" Value="true"/>
+                                <Condition Property="VirtualizingPanel.IsVirtualizingWhenGrouping" Value="false"/>
+                            </MultiTrigger.Conditions>
+                            <Setter Property="ScrollViewer.CanContentScroll" Value="false"/>
+                        </MultiTrigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+
+
     <!-- Check List  -->
     <Style x:Key="listView_CHECKLIST" TargetType="{x:Type ListView}">
         <Setter Property="Background" Value="Transparent"/>
