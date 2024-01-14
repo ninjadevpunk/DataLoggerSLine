@@ -90,7 +90,6 @@ namespace Data_Logger_1._3.Models
                    Output == lOG.Output &&
                    Type == lOG.Type &&
                    PostItList.Equals(lOG.PostItList) &&
-                   Category == lOG.Category &&
                    Medium == lOG.Medium &&
                    Format == lOG.Format &&
                    Brush == lOG.Brush &&
