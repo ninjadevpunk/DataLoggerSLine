@@ -48,7 +48,7 @@
                                         PlaceholderText="Height"
                                         UserTextBoxStyle="{DynamicResource inputText_LOGIN}"
                                         UserTextBlockStyle="{DynamicResource text_login_PLACEHOLDER}"
-                                        UserInput="{Binding}" />
+                                        UserInput="{Binding Height}" />
 
             <!-- WIDTH -->
             <components:PlainInputField x:Name="inputText_WIDTH" Grid.Column="2"
@@ -57,7 +57,7 @@
                                         PlaceholderText="Width"
                                         UserTextBoxStyle="{DynamicResource inputText_LOGIN}"
                                         UserTextBlockStyle="{DynamicResource text_login_PLACEHOLDER}"
-                                        UserInput="{Binding}" />
+                                        UserInput="{Binding Width}" />
 
 
         </Grid>
@@ -68,7 +68,8 @@
                                        PlaceholderText="Measuring Unit"
                                        UserTextBoxStyle="{DynamicResource inputText}"
                                        UserTextBlockStyle="{DynamicResource text_Placeholder}"
-                                       UserComboInput="{Binding}" />
+                                       UserComboInput="{Binding MeasuringUnit}"
+                                       Items="{Binding Units}" />
 
         <!-- SIZE -->
         <components:ComboBoxInputField Grid.Row="4" x:Name="inputText_SIZE"
@@ -76,7 +77,8 @@
                                        PlaceholderText="Page Size"
                                        UserTextBoxStyle="{DynamicResource inputText}"
                                        UserTextBlockStyle="{DynamicResource text_Placeholder}"
-                                       UserComboInput="{Binding}" />
+                                       UserComboInput="{Binding Size}"
+                                       Items="{Binding Sizes}" />
 
         <!-- DPI -->
         <components:PlainInputField Grid.Row="6" x:Name="inputText_DPI"
@@ -84,7 +86,7 @@
                                     PlaceholderText="DPI"
                                     UserTextBoxStyle="{DynamicResource inputText_LOGIN}"
                                     UserTextBlockStyle="{DynamicResource text_login_PLACEHOLDER}"
-                                    UserInput="{Binding}" />
+                                    UserInput="{Binding DPI}" />
         
         <!-- COLOUR DEPTH -->
         <components:PlainInputField Grid.Row="8" x:Name="inputText_DEPTH"
@@ -92,7 +94,7 @@
                                     PlaceholderText="Colour Depth"
                                     UserTextBoxStyle="{DynamicResource inputText_LOGIN}"
                                     UserTextBlockStyle="{DynamicResource text_login_PLACEHOLDER}"
-                                    UserInput="{Binding}" />
+                                    UserInput="{Binding ColourDepth}" />
         
         <!-- COMPLETED -->
         <Border Grid.Row="10"
@@ -118,7 +120,8 @@
                            Text="Completed?" />
 
                 <CheckBox Grid.Column="2" x:Name="checkBox_IsCOMPLETED" Style="{DynamicResource check_SIGNUP}"
-                          HorizontalAlignment="Right" />
+                          HorizontalAlignment="Right"
+                          IsChecked="{Binding IsCompleted}" />
                 
 
             </Grid>
@@ -141,11 +144,12 @@
                                         PlaceholderText="Source"
                                         UserTextBoxStyle="{DynamicResource inputText_LOGIN}"
                                         UserTextBlockStyle="{DynamicResource text_login_PLACEHOLDER}"
-                                        UserInput="{Binding}" />
+                                        UserInput="{Binding Source}" />
 
             <Button Grid.Column="3" Style="{DynamicResource ACTIONBrowse}"
                     Height="auto"
-                    Width="auto" >
+                    Width="auto"
+                    Command="{Binding BrowseCommand}" >
                 
                 <TextBlock Style="{DynamicResource text_button01}"
                            Text="Open" />

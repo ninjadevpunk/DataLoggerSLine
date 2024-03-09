@@ -41,7 +41,7 @@
                             PlaceholderText="Height"
                             UserTextBoxStyle="{DynamicResource inputText_LOGIN}"
                             UserTextBlockStyle="{DynamicResource text_login_PLACEHOLDER}"
-                            UserInput="{Binding}" />
+                            UserInput="{Binding Height}" />
 
             <!-- WIDTH -->
             <components:PlainInputField x:Name="inputText_WIDTH" Grid.Column="2"
@@ -50,7 +50,7 @@
                             PlaceholderText="Width"
                             UserTextBoxStyle="{DynamicResource inputText_LOGIN}"
                             UserTextBlockStyle="{DynamicResource text_login_PLACEHOLDER}"
-                            UserInput="{Binding}" />
+                            UserInput="{Binding Width}" />
 
 
         </Grid>
@@ -61,7 +61,7 @@
                                 PlaceholderText="Resolution"
                                 UserTextBoxStyle="{DynamicResource inputText_LOGIN}"
                                 UserTextBlockStyle="{DynamicResource text_login_PLACEHOLDER}"
-                                UserInput="{Binding}" />
+                                UserInput="{Binding Resolution}" />
 
         <!-- LENGTH -->
         <components:PlainInputField Grid.Row="3" x:Name="inputText_LENGTH"
@@ -69,7 +69,7 @@
                                 PlaceholderText="Length"
                                 UserTextBoxStyle="{DynamicResource inputText_LOGIN}"
                                 UserTextBlockStyle="{DynamicResource text_login_PLACEHOLDER}"
-                                UserInput="{Binding}" />
+                                UserInput="{Binding Length}" />
 
         <!-- COMPLETED -->
         <Border Grid.Row="5"
@@ -95,7 +95,8 @@
                        Text="Completed?" />
 
                 <CheckBox Grid.Column="2" x:Name="checkBox_IsCOMPLETED" Style="{DynamicResource check_SIGNUP}"
-                      HorizontalAlignment="Right" />
+                      HorizontalAlignment="Right"
+                          IsChecked="{Binding IsCompleted}" />
 
 
             </Grid>
@@ -118,14 +119,15 @@
                                     PlaceholderText="Source"
                                     UserTextBoxStyle="{DynamicResource inputText_LOGIN}"
                                     UserTextBlockStyle="{DynamicResource text_login_PLACEHOLDER}"
-                                    UserInput="{Binding}" />
+                                    UserInput="{Binding Source}" />
 
             <Button Grid.Column="3" Style="{DynamicResource ACTIONBrowse}"
-                Height="auto"
-                Width="auto" >
+                    Height="auto"
+                    Width="auto"
+                    Command="{Binding BrowseCommand}" >
 
                 <TextBlock Style="{DynamicResource text_button01}"
-                       Text="Open" />
+                           Text="Open" />
 
             </Button>
 

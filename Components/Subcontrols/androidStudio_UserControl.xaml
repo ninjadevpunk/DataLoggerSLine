@@ -115,7 +115,7 @@
         </Grid.RowDefinitions>
 
         <ToggleButton x:Name="toggleButton_SWITCH" Style="{DynamicResource template_OPTION_SWITCH}"
-                      Command="{Binding}" />
+                      Command="{Binding ToggleDetailsCommand}" />
 
         <!-- SYNC -->
         <Border Grid.Row="3"
@@ -135,7 +135,12 @@
                 <TextBlock Grid.Column="0" Style="{DynamicResource text_LABEL03}"
                            Text="Sync" />
 
-                <components:TimeInputField Grid.Column="2" x:Name="timeEdit_SYNC" />
+                <components:TimeInputField Grid.Column="2" x:Name="timeEdit_SYNC"
+                                           Time="{Binding SyncTime}"
+                                           Hours="{Binding SyncHours}"
+                                           Minutes="{Binding SyncMinutes}"
+                                           Seconds="{Binding SyncSeconds}"
+                                           Milliseconds="{Binding SyncMilliseconds}" />
 
             </Grid>
             
@@ -143,7 +148,8 @@
         
         <!-- GRADLE DAEMON -->
         <Border Grid.Row="5"
-                Padding="12 0 10 0" >
+                Padding="12 0 10 0"
+                Visibility="{Binding GradleDaemonVisibility}" >
 
             <Grid>
 
@@ -167,10 +173,11 @@
                     </Grid.ColumnDefinitions>
                     
                 <TextBlock Grid.Column="0" Style="{DynamicResource text_LABEL03}"
-                           Text="Starting Gradle Daemon" />
+                           Text="Starting Gradle Daemon"
+                           IsEnabled="{Binding IsConsidered}"/>
 
                 <CheckBox Grid.Column="1" x:Name="checkBox_SHOWHIDE" Style="{DynamicResource check_SIGNUP}"
-                          IsChecked="True"
+                          IsChecked="{Binding IsConsidered}"
                           Margin="10 0"
                           HorizontalAlignment="Center" />
                     
@@ -179,7 +186,13 @@
                 </Grid>
 
 
-                <components:TimeInputField Grid.Column="2" x:Name="timeEdit_GRADLEDAEMON" />
+                <components:TimeInputField Grid.Column="2" x:Name="timeEdit_GRADLEDAEMON"
+                                           IsEnabled="{Binding IsConsidered}"
+                                           Time="{Binding GradleDaemonTime}"
+                                           Hours="{Binding GradleDaemonHours}"
+                                           Minutes="{Binding GradleDaemonMinutes}"
+                                           Seconds="{Binding GradleDaemonSeconds}"
+                                           Milliseconds="{Binding GradleDaemonMilliseconds}" />
 
             </Grid>
 
@@ -187,7 +200,8 @@
 
         <!-- RUN BUILD -->
         <Border Grid.Row="7"
-                Padding="12 0 10 0" >
+                Padding="12 0 10 0"
+                Visibility="{Binding RunBuildVisibility}" >
 
             <Grid>
 
@@ -203,7 +217,12 @@
                 <TextBlock Grid.Column="0" Style="{DynamicResource text_LABEL03}"
                            Text="Run Build" />
 
-                <components:TimeInputField Grid.Column="2" x:Name="timeEdit_RUNBUILD" />
+                <components:TimeInputField Grid.Column="2" x:Name="timeEdit_RUNBUILD"
+                                           Time="{Binding RunBuildTime}"
+                                           Hours="{Binding RunBuildHours}" 
+                                           Minutes="{Binding RunBuildMinutes}" 
+                                           Seconds="{Binding RunBuildSeconds}"
+                                           Milliseconds="{Binding RunBuildMilliseconds}" />
 
             </Grid>
 
@@ -211,7 +230,8 @@
 
         <!-- LOAD BUILD -->
         <Border Grid.Row="9"
-                Padding="12 0 10 0" >
+                Padding="12 0 10 0"
+                Visibility="{Binding LoadBuildVisibility}" >
 
             <Grid>
 
@@ -227,7 +247,12 @@
                 <TextBlock Grid.Column="0" Style="{DynamicResource text_LABEL03}"
                            Text="Load Build" />
 
-                <components:TimeInputField Grid.Column="2" x:Name="timeEdit_LOADBUILD" />
+                <components:TimeInputField Grid.Column="2" x:Name="timeEdit_LOADBUILD"
+                                           Time="{Binding LoadBuildTime}"
+                                           Hours="{Binding LoadBuildHours}"
+                                           Minutes="{Binding LoadBuildMinutes}"
+                                           Seconds="{Binding LoadBuildSeconds}"
+                                           Milliseconds="{Binding LoadBuildMilliseconds}" />
 
             </Grid>
 
@@ -235,7 +260,8 @@
 
         <!-- CONFIGURE BUILD -->
         <Border Grid.Row="11"
-                Padding="12 0 10 0" >
+                Padding="12 0 10 0"
+                Visibility="{Binding ConfigureBuildVisibility}" >
 
             <Grid>
 
@@ -251,7 +277,11 @@
                 <TextBlock Grid.Column="0" Style="{DynamicResource text_LABEL03}"
                            Text="Configure Build" />
 
-                <components:TimeInputField Grid.Column="2" x:Name="timeEdit_CONFIGUREBUILD" />
+                <components:TimeInputField Grid.Column="2" x:Name="timeEdit_CONFIGUREBUILD"
+                                           Time="{Binding ConfigureBuildTime}"
+                                           Minutes="{Binding ConfigureBuildMinutes}"
+                                           Seconds="{Binding ConfigureBuildSeconds}"
+                                           Milliseconds="{Binding ConfigureBuildMilliseconds}" />
 
             </Grid>
 
@@ -259,7 +289,8 @@
 
         <!-- ALL PROJECTS -->
         <Border Grid.Row="13"
-                Padding="12 0 10 0" >
+                Padding="12 0 10 0"
+                Visibility="{Binding AllProjectsVisibility}" >
 
             <Grid>
 
@@ -275,7 +306,12 @@
                 <TextBlock Grid.Column="0" Style="{DynamicResource text_LABEL03}"
                            Text="All Projects" />
 
-                <components:TimeInputField Grid.Column="2" x:Name="timeEdit_ALLPROJECTS" />
+                <components:TimeInputField Grid.Column="2" x:Name="timeEdit_ALLPROJECTS"
+                                           Time="{Binding AllProjectsTime}"
+                                           Hours="{Binding AllProjectsHours}"
+                                           Minutes="{Binding AllProjectsMinutes}"
+                                           Seconds="{Binding AllProjectsSeconds}"
+                                           Milliseconds="{Binding AllProjectsMilliseconds}" />
 
             </Grid>
 
