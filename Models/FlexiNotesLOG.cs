@@ -1,6 +1,6 @@
 ﻿namespace Data_Logger_1._3.Models
 {
-    internal class FlexiNotesLOG : NotesLOG
+    public class FlexiNotesLOG : NotesLOG
     {
         /* DOCUMENTATION
          * 
