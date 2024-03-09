@@ -1,0 +1,7 @@
+﻿namespace Data_Logger_1._3.Services
+{
+    public class CacheService
+    {
+
+    }
+}
