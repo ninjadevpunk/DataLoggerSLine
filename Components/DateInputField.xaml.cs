@@ -37,7 +37,7 @@ namespace Data_Logger_1._3.Components
         }
 
         public static readonly DependencyProperty TheDateProperty =
-            DependencyProperty.Register("TheDate", typeof(DateTime), typeof(DateInputField),
+            DependencyProperty.Register("Date", typeof(DateTime), typeof(DateInputField),
                 
                 new PropertyMetadata(DateTime.Now)
                 );

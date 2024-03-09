@@ -32,14 +32,29 @@ namespace Data_Logger_1._3.Components
             DependencyProperty.Register("Placeholder", typeof(string), typeof(PasswordField));
 
 
-        public string UserInput
+        public SecureString UserInput
         {
-            get { return (string)GetValue(UserInputProperty); }
+            get { return (SecureString)GetValue(UserInputProperty); }
             set { SetValue(UserInputProperty, value); }
         }
 
         public static readonly DependencyProperty UserInputProperty =
-            DependencyProperty.Register("UserInput", typeof(string), typeof(PasswordField));
+            DependencyProperty.Register("UserInput", typeof(SecureString), typeof(PasswordField));
+
+
+
+
+        public string PasswordHash
+        {
+            get { return (string)GetValue(PasswordHashProperty); }
+            set { SetValue(PasswordHashProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for PasswordHash.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty PasswordHashProperty =
+            DependencyProperty.Register("PasswordHash", typeof(string), typeof(PasswordField));
+
+
 
 
 
@@ -72,12 +87,22 @@ namespace Data_Logger_1._3.Components
                 Status = false;
 
             }
+
+            UserInput?.Clear(); // Clear the current value, if any
+            UserInput = new SecureString();
+
+            foreach(char c in this.inputText_password.Password)
+            {
+                UserInput.AppendChar(c);
+            }
             
-            UserInput = this.inputText_password.Password;
             
             var ev = new RoutedEventArgs(PasswordChangedEvent);
             RaiseEvent(ev);
+
         }
+
+        
 
 
         private void on_Password_lostFocus(object sender, RoutedEventArgs e)

@@ -134,8 +134,6 @@ namespace Data_Logger_1._3.Components
             {
                 return;
             }
-
-
             else if (this.comboBox_TEXTBOX.Text == "" && this.text_PLACEHOLDERTEXT.Text == "")
             {
                 this.text_PLACEHOLDERTEXT.Text = Temp;

@@ -69,16 +69,6 @@ namespace Data_Logger_1._3.Components
 
 
 
-
-
-
-
-
-
-
-
-
-
         #region Event Handlers
 
 
@@ -95,6 +85,10 @@ namespace Data_Logger_1._3.Components
         }
 
         #endregion
+
+
+
+
 
 
         #region Routed Events

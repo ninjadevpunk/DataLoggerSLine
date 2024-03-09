@@ -89,7 +89,7 @@ namespace Data_Logger_1._3.Components
             DependencyProperty.Register("Time", typeof(DateTime), typeof(TimeInputField), 
                 
                 
-                new PropertyMetadata(DateTime.Parse(DateTime.Now.ToString("HH:mm:ss.fff")))
+                new PropertyMetadata(DateTime.Now)
                 );
 
 
@@ -129,6 +129,15 @@ namespace Data_Logger_1._3.Components
         private void updateTime(object sender, RoutedEventArgs e)
         {
             if (this.spinner_MILLISECONDS is null)
+                return;
+
+            if (this.spinner_SECONDS is null)
+                return;
+
+            if (this.spinner_MINUTES is null)
+                return;
+
+            if (this.spinner_HOURS is null)
                 return;
 
             try

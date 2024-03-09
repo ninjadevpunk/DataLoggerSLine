@@ -412,7 +412,7 @@
     
     <DatePicker x:Name="datePicker_DATE"
         Grid.Column="0"
-        SelectedDate="{Binding Date, ElementName=control_DATETIME}"
+        SelectedDate="{Binding Date, ElementName=control_DATE_edit}"
         CalendarStyle="{DynamicResource template_CALENDAR}"
         Style="{StaticResource datePicker_DATE}"
         SelectedDateChanged="on_DATE_changed"
