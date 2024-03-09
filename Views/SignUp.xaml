@@ -113,7 +113,7 @@
             <Grid Margin="0 10">
                 <Button x:Name="button_USER"
                         Style="{DynamicResource button_DP}"
-                        Command="{Binding}" />
+                        Command="{Binding DisplayPicCommand}" />
                 
 
 
@@ -185,7 +185,7 @@
                                             PlaceholderText="Name"
                                             UserTextBoxStyle="{DynamicResource inputText_LOGIN}"
                                             UserTextBlockStyle="{DynamicResource text_login_PLACEHOLDER}"
-                                            UserInput="{Binding}"
+                                            UserInput="{Binding Name, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
                                             />
 
                 <!-- LAST NAME -->
@@ -195,7 +195,7 @@
                                             PlaceholderText="Surname"
                                             UserTextBoxStyle="{DynamicResource inputText_LOGIN}"
                                             UserTextBlockStyle="{DynamicResource text_login_PLACEHOLDER}"
-                                            UserInput="{Binding}"
+                                            UserInput="{Binding Surname, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
                                             />
                 
                 
@@ -207,7 +207,7 @@
                                           HorizontalAlignment="Stretch"
                                           VerticalAlignment="Center"
                                           Placeholder="Password"
-                                          UserInput="{Binding}"
+                                          UserInput="{Binding Password, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
                                           Aligned="Left"
                                           />
             </Grid>
@@ -220,7 +220,7 @@
                                             PlaceholderText="Email"
                                             UserTextBoxStyle="{DynamicResource inputText_LOGIN}"
                                             UserTextBlockStyle="{DynamicResource text_login_PLACEHOLDER}"
-                                            UserInput="{Binding}"
+                                            UserInput="{Binding Email, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
                                             />
             </Grid>
 
@@ -256,7 +256,7 @@
                                Margin="5 0"
                                />
                     <CheckBox Grid.Column="1" Style="{DynamicResource check_SIGNUP}" x:Name="checkBox_YES"
-                              IsChecked="True"
+                              IsChecked="{Binding YesBox, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
                               Margin="0 0 10 0"
                               />
                     
@@ -270,7 +270,7 @@
                               
                               Background="{DynamicResource iconCOLOURAccent01}"
                               Foreground="{DynamicResource WHITE}"
-                              IsChecked="False"
+                              IsChecked="{Binding NoBox, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
                               />
                     
                 </Grid>
@@ -284,7 +284,8 @@
                                             PlaceholderText="Company Name"
                                             UserTextBoxStyle="{DynamicResource inputText_LOGIN}"
                                             UserTextBlockStyle="{DynamicResource text_login_PLACEHOLDER}"
-                                            UserInput="{Binding}"
+                                            UserInput="{Binding CompanyName, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                                            IsEnabled="{Binding FieldEnabled, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
                                             />
             </Grid>
 
@@ -296,7 +297,8 @@
                                             PlaceholderText="Company Address"
                                             UserTextBoxStyle="{DynamicResource inputText_LOGIN}"
                                             UserTextBlockStyle="{DynamicResource text_login_PLACEHOLDER}"
-                                            UserInput="{Binding}"
+                                            UserInput="{Binding CompanyAddress, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                                            IsEnabled="{Binding FieldEnabled, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
                                             />
             </Grid>
 
@@ -308,7 +310,7 @@
                   >
                 <Button x:Name="button_LOGIN" Style="{DynamicResource PRIMARY}"
                         HorizontalAlignment="Right"
-                        Command="{Binding}" >
+                        Command="{Binding EmailSignUpCommand}" >
                     
                     <TextBlock Style="{DynamicResource text_button01}"
                                Text="OK" />
@@ -349,13 +351,16 @@
                   Margin="0 5" >
                 
                 <Button x:Name="button_GOOGLE_login" Style="{DynamicResource button_API_GOOGLE}"
-                        Command="{Binding}" />
+                        Command="{Binding GoogleSignUpCommand}" />
             </Grid>
 
             <Grid Height="35"
                   Margin="0 5" >
                 
+                <!-- TODO Disabler Code Added -->
                 <Button x:Name="button_MS_login" Style="{DynamicResource button_API_MICROSOFT}"
+                        Opacity=".8"
+                        IsEnabled="False"
                         Command="{Binding}" />
             
             </Grid>
