@@ -1,11 +1,68 @@
 ﻿
 using System.Windows.Media;
 using System.Windows;
+using System.Security;
+using System.Windows.Input;
+using Data_Logger_1._3.Services;
+using Data_Logger_1._3.Commands;
+using MVVMEssentials.ViewModels;
 
 namespace Data_Logger_1._3.ViewModels
 {
     public class LoginViewModel : ViewModelBase
     {
+
+
+
+        private readonly AuthService _authService;
+        private readonly NavigationService _navigationService;
+
+        /* Member Variables */
+
+        private string signUpImage;
+        public string SignUpImage
+        {
+            get
+            {
+                return signUpImage;
+            }
+            set
+            {
+                signUpImage = value;
+                OnPropertyChanged(nameof(SignUpImage));
+            }
+        }
+
+        private string username;
+        public string Username
+        {
+            get
+            {
+                return username;
+            }
+            set
+            {
+                username = value;
+                OnPropertyChanged(nameof(Username));
+            }
+        }
+
+        private SecureString password;
+        public SecureString Password
+        {
+            get
+            {
+                return password;
+            }
+            set
+            {
+                password = value;
+                OnPropertyChanged(nameof(Password));
+            }
+        }
+
+
+
         private static readonly Brush? EnabledColor = TryParseBrush("iconColourAccent02");
         private static readonly Brush? DisabledColor = TryParseBrush("AccentColour");
 
@@ -17,7 +74,6 @@ namespace Data_Logger_1._3.ViewModels
             {
                 _isButtonBackEnabled = value;
                 OnPropertyChanged(nameof(IsButtonBackEnabled));
-                OnPropertyChanged(nameof(IconBackFill));
             }
         }
 
@@ -29,18 +85,25 @@ namespace Data_Logger_1._3.ViewModels
             {
                 _isButtonForwardEnabled = value;
                 OnPropertyChanged(nameof(IsButtonForwardEnabled));
-                OnPropertyChanged(nameof(IconForwardFill));
             }
         }
 
         public Brush? IconBackFill => IsButtonBackEnabled ? EnabledColor : DisabledColor;
         public Brush? IconForwardFill => IsButtonForwardEnabled ? EnabledColor : DisabledColor;
 
-        public LoginViewModel()
+        public ICommand LoginCommand { get; set; }
+
+        public LoginViewModel(AuthService authService, NavigationService navigationService)
         {
+
+            _authService = authService;
+            _navigationService = navigationService;
+
             // Set initial button states
             IsButtonBackEnabled = true;
             IsButtonForwardEnabled = false;
+
+            LoginCommand = new LoginCommand(this, _authService, _navigationService);
         }
 
         public void UpdateNavigationButtons()
