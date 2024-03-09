@@ -1,6 +1,132 @@
-﻿namespace Data_Logger_1._3.ViewModels.LogViewModels
+﻿using Data_Logger_1._3.Messages;
+using Data_Logger_1._3.Models;
+using Data_Logger_1._3.Services;
+using MVVMEssentials.ViewModels;
+using System.Windows;
+
+namespace Data_Logger_1._3.ViewModels.LogViewModels
 {
-    class GraphicsLOGViewModel
+    public class GraphicsLOGViewModel : ViewModelBase
     {
+        private readonly GraphicsLOG _graphicsLOG;
+        private readonly MessagingService _messagingService;
+
+        private Timer _timer;
+
+
+        #region Constructor
+
+
+        public GraphicsLOGViewModel(GraphicsLOG graphicsLOG)
+        {
+            _graphicsLOG = graphicsLOG;
+            TimeRemaining = 1200;
+            StartCountdown();
+        }
+
+
+
+
+        #endregion
+
+
+
+
+        #region Properties
+
+
+        public string ProjectName => $"{_graphicsLOG.ProjectName} ({_graphicsLOG.ApplicationName})";
+
+        public string ErrorCount => _graphicsLOG.errorCount().ToString();
+
+        public string SolutionCount => _graphicsLOG.solutionCount().ToString();
+
+        public string SuggestionCount => _graphicsLOG.suggestionCount().ToString();
+
+        public string CommentCount => _graphicsLOG.commentCount().ToString();
+
+        /** Save the start and end time here **/
+        public string StartEndDate => $"{_graphicsLOG.StartTime.ToString("dddd, d MMMM yyyy HH:mm:ss.fff")} - " +
+            $"{_graphicsLOG.EndTime.ToString("dddd, d MMMM yyyy HH:mm:ss.fff")}";
+
+        /** Store the first occurence of a note with acceptable input only. **/
+        public string NotaryContent => content();
+
+
+
+        private double timeRemaining;
+
+        public double TimeRemaining
+        {
+            get
+            {
+                return timeRemaining;
+            }
+            set
+            {
+                timeRemaining = value;
+                OnPropertyChanged(nameof(TimeRemaining));
+            }
+        }
+
+
+
+
+
+
+
+
+
+        #endregion
+
+
+
+
+        #region Member Functions
+
+
+
+
+        public void StartCountdown()
+        {
+            _timer = new Timer(TimerCallback, null, TimeSpan.Zero, TimeSpan.FromSeconds(1));
+        }
+
+        private void TimerCallback(object state)
+        {
+            Application.Current.Dispatcher.Invoke(() =>
+            {
+                TimeRemaining--;
+
+                if (TimeRemaining <= 0)
+                {
+                    // Trigger removal logic
+                    RemoveItem();
+                }
+            });
+        }
+
+
+        private void RemoveItem()
+        {
+            _messagingService.Send(new RemoveItemMessage(this));
+        }
+
+        public string content()
+        {
+            return "No Notes";
+        }
+
+
+
+
+
+
+
+
+
+
+
+        #endregion
     }
 }
