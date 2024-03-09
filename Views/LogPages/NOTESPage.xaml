@@ -30,8 +30,7 @@
 
 
         <TextBlock Grid.Column="0" Grid.Row="0" Style="{DynamicResource HEADING5}"
-                   Text="NOTES"
-       />
+                   Text="NOTES" />
 
 
 
@@ -47,7 +46,7 @@
         <!-- NOTES LIST -->
         <ListView x:Name="listVIew_NOTES" Style="{DynamicResource listView_NOTES_list}" Grid.Column="0" Grid.Row="3"
                   ItemContainerStyle="{DynamicResource listView_NOTES_list_ITEM}"
-                  ItemsSource="{Binding}"/>
+                  ItemsSource="{Binding NoteItems}" />
 
 
 
@@ -66,7 +65,7 @@
                     VerticalAlignment="Top"
                     HorizontalAlignment="Center"
                     Margin="0 70 0 0"
-                    Command="{Binding}">
+                    Command="{Binding NewNoteCommand}">
                 <TextBlock Style="{DynamicResource text_button01}"
                            Text="New Note"/>
             </Button>
