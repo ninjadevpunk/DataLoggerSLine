@@ -97,7 +97,7 @@
                                     </Grid.ColumnDefinitions>
 
                                     <TextBlock x:Name="text_PROJECTNAME" Style="{DynamicResource text_LIST_LABEL_HEADING}"
-                                           Text="{Binding}"/>
+                                           Text="{Binding ProjectName}"/>
 
                                     <!-- ERSO -->
                                     <StackPanel Grid.Column="2" Orientation="Horizontal"
@@ -108,8 +108,8 @@
                                              Fill="{DynamicResource postIT_ERROR}"/>
 
                                         <TextBlock x:Name="text_LIST_ERROR" Style="{DynamicResource text_LIST_LABEL_ERSO}"
-                                               Text="{Binding}"
-                                               Margin="10 0"/>
+                                               Text="{Binding ErrorCount}"
+                                               Margin="10 0" />
 
 
                                         <!-- SOLUTION -->
@@ -117,16 +117,16 @@
                                              Fill="{DynamicResource postIT_SOLUTION}"/>
 
                                         <TextBlock x:Name="text_LIST_SOLUTION" Style="{DynamicResource text_LIST_LABEL_ERSO}"
-                                               Text="{Binding}"
-                                               Margin="10 0"/>
+                                               Text="{Binding SolutionCount}"
+                                               Margin="10 0" />
 
 
                                         <!-- SUGGESTION -->
                                         <Ellipse x:Name="ellipse_LIST_SUGGESTION" Style="{DynamicResource ellipse_LIST_ERSO}"
-                                             Fill="{DynamicResource postIT_SUGGESTION}"/>
+                                             Fill="{DynamicResource postIT_SUGGESTION}" />
 
                                         <TextBlock x:Name="text_LIST_SUGGESTION" Style="{DynamicResource text_LIST_LABEL_ERSO}"
-                                               Text="{Binding}"
+                                               Text="{Binding SuggestionCount}"
                                                Margin="10 0"/>
 
 
@@ -135,7 +135,7 @@
                                              Fill="{DynamicResource postIT_COMMENT}"/>
 
                                         <TextBlock x:Name="text_LIST_COMMENT" Style="{DynamicResource text_LIST_LABEL_ERSO}"
-                                               Text="{Binding}"
+                                               Text="{Binding CommentCount}"
                                                Margin="10 0"/>
 
 
@@ -145,12 +145,12 @@
                                 </Grid>
 
                                 <TextBlock x:Name="text_LIST_DATE" Style="{DynamicResource text_LIST_LABEL_DATE}"
-                                       Text="{Binding}"
+                                       Text="{Binding StartEndDate}"
                                        Margin="0 5"
                                        />
 
                                 <TextBlock x:Name="text_LIST_CONTENT" Style="{DynamicResource text_LIST_LABEL_CONTENT}"
-                                       Text="{Binding}"
+                                       Text="{Binding NotaryContent}"
                                        Margin="0 5"/>
 
                                 <!-- Maximum value is 20 minutes in Milliseconds xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx -->
@@ -158,7 +158,7 @@
                                              Height="8"
                                              Minimum="0"
                                              Maximum="1200000" 
-                                             Value="0"
+                                             Value="{Binding TimeRemaining}"
                                              BorderThickness="0"
                                              Foreground="{DynamicResource PANEL}"/>
 
@@ -450,10 +450,10 @@
                         <!-- SUBJECT HERE -->
                         <TextBlock x:Name="note_SUBJECT" Style="{DynamicResource text_NOTE_HEADING}"
                                    Margin="0 0 10 0"
-                                   Text="{Binding}"/>
+                                   Text="{Binding Subject}"/>
 
                         <Button Grid.Column="1" x:Name="button_DELETE_NOTE" Style="{DynamicResource toolbutton_DELETE}"
-                                Command="{Binding}"/>
+                                Command="{Binding DeleteNoteItemCommand}"/>
                     </Grid>
 
                 </Border>
@@ -470,7 +470,7 @@
                 <!-- NOTE DATE -->
                 <Border Grid.Row="4" Style="{StaticResource border_NOTES}">
                     <TextBlock x:Name="note_DATE" Style="{DynamicResource text_NOTE_DATE02}"
-                           Text="{Binding}"/>
+                           Text="{Binding Date}"/>
                 </Border>
             </Grid>
 
@@ -548,10 +548,11 @@
                                     <!-- SUBJECT HERE -->
                                     <TextBlock x:Name="note_SUBJECT" Style="{DynamicResource text_NOTE_HEADING}"
                                                Margin="0 0 10 0"
-                                               Text="{Binding}"/>
+                                               Text="{Binding Subject}"/>
 
                                     <Button Grid.Column="1" x:Name="button_DELETE_NOTE" Style="{DynamicResource toolbutton_DELETE}"
-                                            Command="{Binding}"/>
+                                            Command="{Binding DeleteNoteItemCommand}"
+                                            CommandParameter="{Binding}" />
                                 </Grid>
 
                             </Border>
@@ -559,13 +560,13 @@
                             <!-- NOTE CONTENT SNIPPET -->
                             <Border Grid.Row="2" Style="{StaticResource border_NOTES}">
                                 <TextBlock x:Name="note_CONTENT" Style="{DynamicResource text_NOTE_CONTENT}"
-                                           Text="{Binding}"/>
+                                           Text="{Binding Content}"/>
                             </Border>
 
                             <!-- NOTE DATE -->
                             <Border Grid.Row="4" Style="{StaticResource border_NOTES}">
                                 <TextBlock x:Name="note_DATE" Style="{DynamicResource text_NOTE_DATE02}"
-                                           Text="{Binding}"/>
+                                           Text="{Binding Date}"/>
                             </Border>
                         </Grid>
 
@@ -594,9 +595,9 @@
                         <Trigger Property="IsEnabled" Value="False">
                             <Setter Property="TextElement.Foreground" TargetName="Bd" Value="{DynamicResource {x:Static SystemColors.GrayTextBrushKey}}"/>
                         </Trigger>
-                    <!--<DataTrigger Binding="{Binding}" Value="True">
-                        <Setter Property="Template" Value="{StaticResource template_NOTE_checklist_ITEM}"/>
-                    </DataTrigger>-->
+                        <!--<DataTrigger Binding="{Binding ItemType}" Value="Checklist">
+                            <Setter Property="Template" Value="{StaticResource template_NOTE_checklist_ITEM}"/>
+                        </DataTrigger>-->
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
             </Setter.Value>

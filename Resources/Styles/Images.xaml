@@ -12,11 +12,11 @@
         <Setter Property="Width" Value="50"/>
         <Setter Property="Background">
             <Setter.Value>
-                <ImageBrush ImageSource="{Binding}" Stretch="UniformToFill"/>
+                <ImageBrush ImageSource="{Binding SignUpImage}" Stretch="UniformToFill"/>
             </Setter.Value>
         </Setter>
     </Style>
-
+    
     <Style x:Key="image_wallpaper" TargetType="Border">
         <Setter Property="CornerRadius" Value="3 0 0 3"/>
         <Setter Property="Height" Value="899"/>
