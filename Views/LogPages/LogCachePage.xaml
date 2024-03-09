@@ -37,12 +37,10 @@
 
 
         <TextBlock Grid.Column="0" Grid.Row="0" Style="{DynamicResource HEADING5}"
-           Text="LOG CACHE"
-           />
+           Text="LOG CACHE" />
 
         <TextBlock Grid.Column="0" Grid.Row="1" x:Name="text_logCACHE_COUNT" Style="{DynamicResource text_SUB HEADING1}"
-           Text="{Binding}"
-           />
+           Text="{Binding LogCount}" />
 
 
 
@@ -57,7 +55,8 @@
 
         <!-- LOG CACHE -->
         <ListView Style="{DynamicResource listView_LOGCACHE}" Grid.Column="0" Grid.Row="3"
-                  ItemContainerStyle="{DynamicResource listView_LOGCACHE_ITEM}" />
+                  ItemContainerStyle="{DynamicResource listView_LOGCACHE_ITEM}"
+                  ItemsSource="{Binding CacheItems}" />
 
 
 
@@ -76,7 +75,7 @@
                     VerticalAlignment="Top"
                     HorizontalAlignment="Center"
                     Margin="0 70 0 0"
-                    Command="{Binding}">
+                    Command="{Binding CreateLogCommand}">
                 
                 <TextBlock Style="{DynamicResource text_button01}"
                        Text="Create Log"
@@ -88,7 +87,7 @@
                     VerticalAlignment="Top"
                     HorizontalAlignment="Center"
                     Margin="0 20"
-                    Command="{Binding}">
+                    Command="{Binding ReportLogCommand}">
                 
                 <TextBlock Style="{DynamicResource text_button01}"
                        Text="Report"
