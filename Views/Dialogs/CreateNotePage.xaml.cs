@@ -1,4 +1,5 @@
-﻿using System.Windows.Controls;
+﻿using Data_Logger_1._3.ViewModels.LogViewModels;
+using System.Windows.Controls;
 
 namespace Data_Logger_1._3.Views.LogPages
 {
@@ -14,13 +15,12 @@ namespace Data_Logger_1._3.Views.LogPages
         {
             InitializeComponent();
 
-
-            this.text_logCACHE_COUNT.Text = "Created " + Created + ". Last modified " + Created;
+            this.text_DATE.Text = "Created " + Created + ". Last modified " + Created;
         }
 
         private void on_NOTEPAD_modified(object sender, TextChangedEventArgs e)
         {
-            this.text_logCACHE_COUNT.Text = "Created " + Created + ". Last modified " + date();
+            this.text_DATE.Text = "Created " + Created + ". Last modified " + date();
         }
 
         public static string date() 

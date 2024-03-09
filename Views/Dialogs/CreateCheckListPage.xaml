@@ -31,9 +31,10 @@
 
 
         <TextBox Grid.Column="0" Grid.Row="0" Style="{DynamicResource inputText_NOTE_subject}"
-                 Text="Groceries" />
+                 Text="{Binding NoteSubject}" />
 
-        <TextBlock Grid.Column="0" Grid.Row="1" x:Name="text_logCACHE_COUNT" Style="{DynamicResource text_NOTE_DATE01}" />
+        <TextBlock Grid.Column="0" Grid.Row="1" x:Name="text_DATE" Style="{DynamicResource text_NOTE_DATE01}"
+                   Text="{Binding Date}"/>
 
 
 
@@ -47,7 +48,7 @@
 
         <ListView Style="{DynamicResource listView_CHECKLIST}" Grid.Column="0" Grid.Row="3"
                   ItemContainerStyle="{DynamicResource listView_CHECKLIST_ITEM}"
-                  ItemsSource="{Binding}" />
+                  ItemsSource="{Binding ChecklistItems}" />
 
 
 
@@ -66,7 +67,8 @@
                     VerticalAlignment="Bottom"
                     HorizontalAlignment="Center"
                     Margin="0 70 0 20"
-                    Command="{Binding}" >
+                    Click="on_AddItem_clicked"
+                    Command="{Binding AddChecklistItem}" >
 
                 <TextBlock Style="{DynamicResource text_button01}"
                            Text="Add Item" />
@@ -78,7 +80,7 @@
                     VerticalAlignment="Bottom"
                     HorizontalAlignment="Center"
                     Margin="00"
-                    Command="{Binding}" >
+                    Command="{Binding SaveChecklistCommand}" >
 
                 <TextBlock Style="{DynamicResource text_button01}"
                            Text="Save" />

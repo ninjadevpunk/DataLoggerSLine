@@ -41,7 +41,7 @@
                    Text="CREATE LOG" />
 
                 <TextBlock Grid.Column="0" Grid.Row="1" x:Name="text_LOG_CATEGORY" Style="{DynamicResource text_SUB HEADING1}"
-                   Text="{Binding}" />
+                   Text="{Binding LogType}" />
                 
                 
                 
@@ -78,10 +78,10 @@
                                     HorizontalAlignment="Left" />
                             
                             <Path x:Name="path_DEFAULT_DP" Style="{DynamicResource path_AUTHOR}"
-                                  Visibility="{Binding}" />
+                                  Visibility="{Binding DisplayPicVisibility}" />
 
                             <TextBlock x:Name="text_AUTHOR" Grid.Column="1" Style="{DynamicResource text_Placeholder}"
-                                       Text="{Binding}"
+                                       Text="{Binding Author, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
                                        Foreground="{DynamicResource BLACK}"
                                        HorizontalAlignment="Left" />
                         </Grid>
@@ -94,15 +94,17 @@
                                                        PlaceholderText="PROJECT NAME"
                                                        UserTextBoxStyle="{DynamicResource inputText_PROJECT}"
                                                        UserTextBlockStyle="{DynamicResource text_PROJECT_Placeholder}"
-                                                       UserComboInput="{Binding}" />
+                                                       UserComboInput="{Binding ProjectName, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                                                       Items="{Binding Projects}" />
                         
                         <!-- APPLICATION -->
                         <components:ComboBoxInputField x:Name="inputText_APP"
-                                                       Enabled="True"
+                                                       Enabled="{Binding AppFieldEnabled}"
                                                        PlaceholderText="Application Name"
                                                        UserTextBoxStyle="{DynamicResource inputText_APP}"
                                                        UserTextBlockStyle="{DynamicResource text_APP_Placeholder}"
-                                                       UserComboInput="{Binding}" />
+                                                       UserComboInput="{Binding ApplicationName, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                                                       Items="{Binding Applications}" />
 
                     <!-- #region DATE START -->
                     <Grid>
@@ -115,14 +117,20 @@
                         </Grid.ColumnDefinitions>
 
                         <!-- DATE -->
-                        <components:DateInputField Grid.Column="0" x:Name="dateEdit_START" />
+                        <components:DateInputField Grid.Column="0" x:Name="dateEdit_START"
+                                                   Date="{Binding StartDate, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
                         
                         <!-- TIME -->
-                        <components:TimeInputField Grid.Column="2" x:Name="timeEdit_START" />
+                        <components:TimeInputField Grid.Column="2" x:Name="timeEdit_START"
+                                                   Time="{Binding StartTime, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                                                   Hours="{Binding StartHours, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                                                   Minutes="{Binding StartMinutes, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                                                   Seconds="{Binding StartSeconds, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                                                   Milliseconds="{Binding StartMilliseconds, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
 
                         <!-- CURRENT DAYTIME-->
                         <Button x:Name="button_START" Style="{DynamicResource ACTIONCurrentDate}" Grid.Column="4"
-                                Command="{Binding}" >
+                                Command="{Binding CurrentStartDateCommand}" >
                             
                             <TextBlock Style="{DynamicResource text_button01}" 
                                        Text="Current" />
@@ -144,14 +152,19 @@
 
                         <!-- DATE -->
                         <components:DateInputField Grid.Column="0" x:Name="dateEdit_END"
-                                                   />
+                                                   Date="{Binding EndDate, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"/>
                                                                                     
                         <!-- TIME -->                                               
-                        <components:TimeInputField Grid.Column="2" x:Name="timeEdit_END"/>
+                        <components:TimeInputField Grid.Column="2" x:Name="timeEdit_END"
+                                                   Time="{Binding EndTime, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                                                   Hours="{Binding EndHours, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                                                   Minutes="{Binding EndMinutes, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                                                   Seconds="{Binding EndSeconds, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                                                   Milliseconds="{Binding EndMilliseconds, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"/>
 
                         <!-- CURRENT DAYTIME-->
                         <Button x:Name="button_END" Style="{DynamicResource ACTIONCurrentDate}" Grid.Column="4"
-                                Command="{Binding}" >
+                                Command="{Binding CurrentEndDateCommand}" >
                             
                             <TextBlock Style="{DynamicResource text_button01}"
                                        Text="Current" />
@@ -167,7 +180,8 @@
                                                    PlaceholderText="Output"
                                                    UserTextBoxStyle="{DynamicResource inputText}"
                                                    UserTextBlockStyle="{DynamicResource text_Placeholder}"
-                                                   UserComboInput="{Binding}" />
+                                                   UserComboInput="{Binding Output, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                                                   Items="{Binding Outputs}" />
                     
                     <!-- TYPE -->
                     <components:ComboBoxInputField x:Name="inputText_TYPE"
@@ -175,7 +189,8 @@
                                                    PlaceholderText="Type"
                                                    UserTextBoxStyle="{DynamicResource inputText}"
                                                    UserTextBlockStyle="{DynamicResource text_Placeholder}"
-                                                   UserComboInput="{Binding}" />
+                                                   UserComboInput="{Binding Type, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                                                   Items="{Binding Types}"/>
 
                         
                         
@@ -187,10 +202,11 @@
                         
                         <!-- LOG VARIED FIELDS -->
                         <Frame x:Name="frame_VARIATIONS"
-                               Source="/Components/Subcontrols/coding_UserControl.xaml"/>
+                               NavigationUIVisibility="Hidden" />
                         
                         <!-- ANDROID STUDIO ONLY -->
-                        <Frame x:Name="frame_ANDROIDSTUDIO" />
+                        <Frame x:Name="frame_ANDROIDSTUDIO"
+                               NavigationUIVisibility="Hidden" />
 
 
 
@@ -217,7 +233,7 @@
                     
                     <Button x:Name="button_SAVE" Style="{DynamicResource SECONDARY}"
                             HorizontalAlignment="Right" 
-                            Command="{Binding}" >
+                            Command="{Binding SaveCommand}" >
                         
                         <TextBlock Style="{DynamicResource text_button01}"
                                    Text="Save" />
@@ -232,7 +248,7 @@
                     
                     <Button x:Name="button_ANNOTATE" Style="{DynamicResource PRIMARY}"
                             HorizontalAlignment="Right" 
-                            Command="{Binding}" >
+                            Command="{Binding AnnotateCommand}" >
                         
                         <TextBlock Style="{DynamicResource text_button01}"
                                    Text="Annotate" />
@@ -270,7 +286,7 @@
 
                 <!-- HEADING -->
                 <TextBlock Grid.Column="0" Grid.Row="0" Style="{DynamicResource HEADING5}"
-                           Text="{Binding}" />
+                           Text="{Binding LogCount, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
                 
                 <!-- FIREBASE STATUS -->
                 <StackPanel Orientation="Horizontal"
@@ -278,11 +294,11 @@
                             VerticalAlignment="Center" >
                     
                     <Ellipse x:Name="ellipse_FIREBASE_CONNECTION" Style="{DynamicResource ellipse_FIREBASE_CONNECTION}"
-                             Fill="{Binding}"
+                             Fill="{Binding FirebaseStatusFill, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
                              VerticalAlignment="Center" />
                     
                     <TextBlock x:Name="text_FIREBASE_CONNECTION" Style="{DynamicResource text_minorHEADING1}"
-                               Text="{Binding}"
+                               Text="{Binding FirebaseStatus, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
                                Padding="10 0" />
                     
                 </StackPanel>
@@ -305,14 +321,14 @@
 
                             <Button x:Name="toolbutton_DELETE" Style="{DynamicResource toolbutton_DELETE}"
                                     HorizontalAlignment="Left" 
-                                    Command="{Binding}" />
+                                    Command="{Binding ClearPostItListCommand}" />
                             
                         </ToolBar>
 
 
                         <!-- POST ITS -->
                         <ListView Style="{DynamicResource listView_POSTITS}"
-                                  ItemsSource="{Binding}" />
+                                  ItemsSource="{Binding PostIts, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
 
 
 
@@ -339,7 +355,7 @@
                     <Button x:Name="button_POST_IT" Style="{DynamicResource ACTIONCreate}"
                             Width="auto"
                             HorizontalAlignment="Right"
-                            Command="{Binding}" >
+                            Command="{Binding AddPostItCommand}" >
                         
                         <TextBlock Style="{DynamicResource text_button01}"
                                    Text="Sticky Note" />

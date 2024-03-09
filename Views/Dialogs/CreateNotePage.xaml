@@ -94,9 +94,10 @@
 
 
         <TextBox Grid.Column="0" Grid.Row="0" Style="{DynamicResource inputText_NOTE_subject}"
-                 Text="No Subject" />
+                 Text="{Binding NoteSubject}" />
 
-        <TextBlock Grid.Column="0" Grid.Row="1" x:Name="text_logCACHE_COUNT" Style="{DynamicResource text_NOTE_DATE01}" />
+        <TextBlock Grid.Column="0" Grid.Row="1" x:Name="text_DATE" Style="{DynamicResource text_NOTE_DATE01}"
+                   Text="{Binding Date}"/>
 
 
 
@@ -117,7 +118,7 @@
                 <!-- NOTE PAD -->
                 <Grid>
                     <RichTextBox x:Name="richTextBox_NOTEPAD" Style="{DynamicResource inputText_NOTEPAD}"
-                                 TextChanged="on_NOTEPAD_modified"/>
+                                 TextChanged="on_NOTEPAD_modified" />
                     
                 </Grid>
             
@@ -134,12 +135,12 @@
                     HorizontalAlignment="Center"
                     VerticalAlignment="Top" >
 
-            <!-- CREATE LOG BUTTON -->
+            <!-- SAVE NOTE BUTTON -->
             <Button x:Name="button_SAVE_NOTE" Style="{DynamicResource SECONDARYSave}"
                     VerticalAlignment="Bottom"
                     HorizontalAlignment="Center"
                     Margin="0 70 0 0"
-                    Command="{Binding}" >
+                    Command="{Binding SaveNoteCommand}" >
 
                 <TextBlock Style="{DynamicResource text_button01}"
                            Text="Save" />

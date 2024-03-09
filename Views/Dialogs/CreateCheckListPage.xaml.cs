@@ -1,17 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
+﻿using Data_Logger_1._3.ViewModels.LogViewModels;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace Data_Logger_1._3.Views.LogPages
 {
@@ -20,9 +8,23 @@ namespace Data_Logger_1._3.Views.LogPages
     /// </summary>
     public partial class CreateCheckListPage : Page
     {
+        public string Created { get; set; } = date();
+
         public CreateCheckListPage()
         {
             InitializeComponent();
+
+            this.text_DATE.Text = "Created " + Created + ". Last modified " + Created;
+        }
+
+        public static string date()
+        {
+            return DateTime.Now.ToString("d MMMM yyyy HH:mm");
+        }
+
+        private void on_AddItem_clicked(object sender, System.Windows.RoutedEventArgs e)
+        {
+            this.text_DATE.Text = "Created " + Created + ". Last modified " + date();
         }
     }
 }
