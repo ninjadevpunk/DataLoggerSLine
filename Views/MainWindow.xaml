@@ -48,8 +48,8 @@
             <Button x:Name="button_BACK" Style="{DynamicResource button_TITLE_bar}"
                     Margin="0 0 20 0"
                     Height="25"
-                    Width="25"
-                    >
+                    Width="25" 
+                    Command="{Binding GoBackCommand}" >
                 <Path x:Name="icon_BACK" Style="{DynamicResource path_ARROW_BACK}"
                       Fill="{DynamicResource iconCOLOURAccent01}"
                       />
@@ -148,6 +148,7 @@
                     <RowDefinition Height="auto"/>
                     <RowDefinition Height="auto"/>
                     <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
                     <RowDefinition Height="2*"/>
                     <RowDefinition Height="auto"/>
                 </Grid.RowDefinitions>
@@ -208,9 +209,8 @@
                 <components:MENURadioButton Grid.Row="2" x:Name="radio_CODING"
                                             MENUIcon="{DynamicResource path_CODING}"
                                             Category="CODING"
-                                            Checked="True"
-                                            Crew="Menu"
-                                            />
+                                            Checked="{Binding CodingChecked, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                                            Crew="Menu" />
 
                 <!--#region CODING SUB MENU -->
 
@@ -220,7 +220,7 @@
                     <components:SubMENURadioButton x:Name="radio_Qt"
                                                    SubMENUIcon="{DynamicResource path_Qt}"
                                                    SubCategory="Qt"
-                                                   SubChecked="True"
+                                                   SubChecked="{Binding CodingQtChecked, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
                                                    SubCrew="CODING_SubMenu"
                                                    />
 
@@ -228,7 +228,7 @@
                     <components:SubMENURadioButton x:Name="radio_Android"
                                                    SubMENUIcon="{DynamicResource path_AS}"
                                                    SubCategory="Android Studio"
-                                                   SubChecked="False"
+                                                   SubChecked="{Binding CodingAndroidChecked, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
                                                    SubCrew="CODING_SubMenu"
                                                    />
 
@@ -236,7 +236,7 @@
                     <components:SubMENURadioButton x:Name="radio_VS"
                                                    SubMENUIcon="{DynamicResource path_VS}"
                                                    SubCategory="Generic"
-                                                   SubChecked="False"
+                                                   SubChecked="{Binding CodingGenericChecked, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
                                                    SubCrew="CODING_SubMenu"
                                                    />
 
@@ -254,7 +254,7 @@
                 <components:MENURadioButton Grid.Row="4" x:Name="radio_GRAPHICS"
                             MENUIcon="{DynamicResource path_GRAPHICS}"
                             Category="GRAPHICS"
-                            Checked="False"
+                            Checked="{Binding GraphicsChecked, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
                             Crew="Menu"
                             />
 
@@ -262,7 +262,7 @@
                 <components:MENURadioButton Grid.Row="5" x:Name="radio_FILM"
                     MENUIcon="{DynamicResource path_FILM}"
                     Category="FILM"
-                    Checked="False"
+                    Checked="{Binding FilmChecked, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
                     Crew="Menu"
                     />
 
@@ -270,7 +270,7 @@
                 <components:MENURadioButton Grid.Row="6" x:Name="radio_NOTES"
                     MENUIcon="{DynamicResource path_NOTES}"
                     Category="NOTES"
-                    Checked="False"
+                    Checked="{Binding NotesChecked, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
                     Crew="Menu"
                     />
 
@@ -284,7 +284,7 @@
                     <components:SubMENURadioButton x:Name="radio_FREE_NOTES"
                                    SubMENUIcon="{DynamicResource path_FREE_NOTES}"
                                    SubCategory="Create Notes"
-                                   SubChecked="False"
+                                   SubChecked="{Binding GenericNotesChecked, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
                                    SubCrew="NOTES_SubMenu"
                                    />
 
@@ -292,7 +292,7 @@
                     <components:SubMENURadioButton x:Name="radio_CHECKLIST"
                                     SubMENUIcon="{DynamicResource path_CHECKLIST}"
                                     SubCategory="Create Checklist"
-                                    SubChecked="False"
+                                    SubChecked="{Binding ChecklistNotesChecked, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
                                     SubCrew="NOTES_SubMenu"
                                     />
 
@@ -300,7 +300,7 @@
                     <components:SubMENURadioButton x:Name="radio_OTHER"
                                     SubMENUIcon="{DynamicResource path_OTHER}"
                                     SubCategory="Other"
-                                    SubChecked="False"
+                                    SubChecked="{Binding FlexiChecked, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
                                     SubCrew="NOTES_SubMenu"
                                     />
 
@@ -335,7 +335,7 @@
 
 
                 <!-- #region SUPPORT -->
-                <Grid Grid.Row="9" Height="84">
+                <Grid Grid.Row="10" Height="84">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>

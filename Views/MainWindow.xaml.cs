@@ -1,5 +1,8 @@
-﻿using System.Windows;
+﻿using Data_Logger_1._3.Components;
+using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Media.Animation;
 
 namespace Data_Logger_1._3
 {
@@ -12,7 +15,75 @@ namespace Data_Logger_1._3
         public MainWindow()
         {
             InitializeComponent();
+
+            // Create a DoubleAnimation to animate the height of the radiobutton.
+            DoubleAnimation startAnimate = new(), endAnimate = new(), n1animation = new(), n2animation = new();
+            startAnimate.From = 0;
+            startAnimate.To = 180;
+            startAnimate.Duration = new Duration(TimeSpan.FromMilliseconds(200));
+
+            n1animation.From = 0;
+            n1animation.To = 180;
+            n1animation.Duration = new Duration(TimeSpan.FromMilliseconds(200));
+
+            endAnimate.From = 180;
+            endAnimate.To = 0;
+            endAnimate.Duration = new Duration(TimeSpan.FromMilliseconds(200));
+
+            n2animation.From = 180;
+            n2animation.To = 0;
+            n2animation.Duration = new Duration(TimeSpan.FromMilliseconds(200));
+
+            HeightAnimationStart(startAnimate, this.STACK_CODING.Name, this.radio_CODING, this.STACK_CODING);
+            HeightAnimationEnd(endAnimate, this.STACK_CODING.Name, this.radio_CODING, this.STACK_CODING);
+            HeightAnimationStart(n1animation, this.STACK_NOTES.Name, this.radio_NOTES, this.STACK_NOTES);
+            HeightAnimationEnd(n2animation, this.STACK_NOTES.Name, this.radio_NOTES, this.STACK_NOTES);
         }
+
+        # region Animations
+
+
+
+        public void HeightAnimationStart(DependencyObject d, string name, MENURadioButton rad, StackPanel stack)
+        {
+            // Configure the animation to target the radiobutton's height property.
+            Storyboard.SetTargetName((DoubleAnimation)d, name);
+            Storyboard.SetTargetProperty((DoubleAnimation)d, new PropertyPath(StackPanel.HeightProperty));
+
+            // Create a storyboard to contain the animation.
+            var story1 = new Storyboard();
+            story1.Children.Add((DoubleAnimation)d);
+
+            // Animate the radiobutton height when it's clicked.
+            rad.RadioCheck += delegate (object sender, RoutedEventArgs args)
+            {
+                if (rad.Checked)
+                    story1.Begin(stack);
+            };
+        }
+
+        public void HeightAnimationEnd(DependencyObject d, string name, MENURadioButton rad, StackPanel stack)
+        {
+            // Configure the animation to target the radiobutton's height property.
+            Storyboard.SetTargetName((DoubleAnimation)d, name);
+            Storyboard.SetTargetProperty((DoubleAnimation)d, new PropertyPath(StackPanel.HeightProperty));
+
+            // Create a storyboard to contain the animation.
+            var story1 = new Storyboard();
+            story1.Children.Add((DoubleAnimation)d);
+
+            // Animate the radiobutton height when it's clicked.
+            rad.RadioUnCheck += delegate (object sender, RoutedEventArgs args)
+            {
+                if (!rad.Checked)
+                    story1.Begin(stack);
+            };
+        }
+
+
+
+
+        #endregion
 
         private void on_MainWindow_Loaded(object sender, RoutedEventArgs e)
         {
