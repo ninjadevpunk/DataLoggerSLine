@@ -102,7 +102,6 @@
         <!-- LOGIN -->
         <Frame x:Name="frame_LOGIN" Style="{DynamicResource FrameStyle1}" Grid.Column="2" Grid.Row="1"
                NavigationUIVisibility="Hidden"
-               Source="/Views/loginPage01.xaml"
                Navigated="on_Navigation"        
                HorizontalAlignment="Stretch"
                VerticalAlignment="Stretch"
