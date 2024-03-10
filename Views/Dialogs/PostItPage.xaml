@@ -535,11 +535,11 @@
                                                Items="{Binding Subjects}"/>
 
                 <!-- REPLACE -->
-                <components:ComboBoxInputField Grid.Column="2" Grid.Row="0" x:Name="POSTIT_REPLACE"
-                                               PlaceholderText="Replace"
-                                               UserTextBlockStyle="{DynamicResource text_Placeholder}"
-                                               UserTextBoxStyle="{DynamicResource inputText}"
-                                               UserComboInput="{Binding Replace, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
+                <components:PlainInputField Grid.Column="2" Grid.Row="0" x:Name="POSTIT_REPLACE"
+                                            PlaceholderText="Replace"
+                                            UserTextBlockStyle="{DynamicResource text_login_PLACEHOLDER}"
+                                            UserTextBoxStyle="{DynamicResource inputText_LOGIN}"
+                                            UserInput="{Binding Replace, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
 
                 <StackPanel Grid.Column="2" Grid.Row="2" Orientation="Horizontal"
                             HorizontalAlignment="Right" >
