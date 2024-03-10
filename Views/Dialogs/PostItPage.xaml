@@ -3,7 +3,7 @@
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-      xmlns:components="clr-namespace:Data_Logger_1._3.Components"
+      xmlns:components="clr-namespace:Data_Logger_1._3.Components" xmlns:toolkit="http://schemas.xceed.com/wpf/xaml/toolkit"
       mc:Ignorable="d" 
       Height="800"
       Width="800"
@@ -309,11 +309,18 @@
                                     Padding="{TemplateBinding Padding}"
                                     CornerRadius="3 3 0 0">
                                 
-                                <Border x:Name="innerBorder" Background="Transparent" BorderBrush="{DynamicResource AccentColour}" BorderThickness="0" />
+                                <Border x:Name="innerBorder" Background="Transparent" BorderBrush="Transparent" BorderThickness="0" />
                             
                             </Border>
                             
-                            <ContentPresenter x:Name="contentPresenter" ContentSource="Header" Focusable="False" HorizontalAlignment="{Binding HorizontalContentAlignment, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}" Margin="{TemplateBinding Padding}" RecognizesAccessKey="True" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" VerticalAlignment="{Binding VerticalContentAlignment, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}"/>
+                            <ContentPresenter x:Name="contentPresenter"
+                                              ContentSource="Header"
+                                              Focusable="False"
+                                              HorizontalAlignment="{Binding HorizontalContentAlignment, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}"
+                                              Margin="{TemplateBinding Padding}"
+                                              RecognizesAccessKey="True"
+                                              SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"
+                                              VerticalAlignment="{Binding VerticalContentAlignment, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}" />
                        
                         </Grid>
                         
@@ -812,8 +819,10 @@
 
                             <Grid>
 
-                                <RichTextBox x:Name="richTextBox_POSTIT_ERROR" Style="{DynamicResource inputText_NOTEPAD}"
-                                             BorderThickness="0" />
+                                <!--<RichTextBox x:Name="richTextBox_POSTIT_ERROR" Style="{DynamicResource inputText_NOTEPAD}"
+                                             BorderThickness="0" />-->
+                                <toolkit:RichTextBox Style="{DynamicResource inputText_NOTEPAD}"
+                                    Text="{Binding Error, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
 
                             </Grid>
 
@@ -831,8 +840,14 @@
                                  VerticalAlignment="Stretch" >
 
                             <Grid>
-                                <RichTextBox x:Name="richTextBox_POSTIT_SOLUTION"  Style="{DynamicResource inputText_NOTEPAD}"
-                                             BorderThickness="0" />
+                                
+                                
+                                <!--<RichTextBox x:Name="richTextBox_POSTIT_SOLUTION"  Style="{DynamicResource inputText_NOTEPAD}"
+                                             BorderThickness="0" />-->
+                                <toolkit:RichTextBox Style="{DynamicResource inputText_NOTEPAD}"
+                                                     Text="{Binding Solution, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
+                                
+                                
                             </Grid>
                             
 
@@ -847,8 +862,10 @@
 
 
                             <Grid>
-                                <RichTextBox x:Name="richTextBox_POSTIT_SUGGESTION" Style="{DynamicResource inputText_NOTEPAD}"
-                                             BorderThickness="0"/>
+                                <!--<RichTextBox x:Name="richTextBox_POSTIT_SUGGESTION" Style="{DynamicResource inputText_NOTEPAD}"
+                                             BorderThickness="0"/>-->
+                                <toolkit:RichTextBox Style="{DynamicResource inputText_NOTEPAD}"
+                                                     Text="{Binding Suggestion, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
                             </Grid>
                             
 
@@ -867,8 +884,14 @@
                                  VerticalAlignment="Stretch" >
 
                             <Grid>
-                                <RichTextBox x:Name="richTextBox_POSTIT_COMMENT" Style="{DynamicResource inputText_NOTEPAD}"
-                                             BorderThickness="0"/>
+                                
+                                
+                                <!--<RichTextBox x:Name="richTextBox_POSTIT_COMMENT" Style="{DynamicResource inputText_NOTEPAD}"
+                                             BorderThickness="0"/>-->
+                                <toolkit:RichTextBox Style="{DynamicResource inputText_NOTEPAD}"
+                                                     Text="{Binding Comment, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
+                            
+                            
                             </Grid>
                             
 
@@ -898,7 +921,7 @@
                             Command="{Binding PostCommand}" >
 
                         <TextBlock Style="{DynamicResource text_button01}"
-                                   Text="Post"/>
+                                   Text="Post" />
 
                     </Button>
                     
