@@ -455,7 +455,18 @@ namespace Data_Logger_1._3.Components
             return true;
         }
 
+        // Number Formatter
+        public void Formatter()
+        {
+            var count = this.Number.Length - Digits;
+            if (count != 0 && count > 0)
+            {
+                const string zero = "0";
 
+                for (int i = 0; i < count; i++)
+                    this.Number = zero + this.Number;
+            }
+        }
 
         #endregion
 
@@ -478,6 +489,8 @@ namespace Data_Logger_1._3.Components
                         this.Number = $"{Leader}{value}";
                     else
                         this.Number = $"{Leader.Remove(0, 1)}{value}";
+
+                    Formatter();
                 }
                 else
                 {
@@ -521,6 +534,8 @@ namespace Data_Logger_1._3.Components
                         this.Number = $"{Leader}{value}";
                     else
                         this.Number = $"{Leader.Remove(0, 1)}{value}";
+
+                    Formatter();
                 }
                 else
                 {

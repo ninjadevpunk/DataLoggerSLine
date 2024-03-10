@@ -141,17 +141,15 @@ namespace Data_Logger_1._3.Components
                 return;
 
             try
-            {
-                int milliseconds_count = this.spinner_MILLISECONDS.Digits - Milliseconds.Length;
+            {               
 
-                if (milliseconds_count != 0 && milliseconds_count > 0)
-                {
-                    const string zero = "0";
+                Milliseconds = NumberFormatter(this.spinner_MILLISECONDS.Digits - Milliseconds.Length, Milliseconds);
 
+                Seconds = NumberFormatter(this.spinner_SECONDS.Digits - Seconds.Length, Seconds);
 
-                    for (int i = 0; i < milliseconds_count; i++)
-                        Milliseconds = zero + Milliseconds;
-                }
+                Minutes = NumberFormatter(this.spinner_MINUTES.Digits - Minutes.Length, Minutes);
+
+                Hours = NumberFormatter(this.spinner_HOURS.Digits - Hours.Length, Hours);
 
                 this.Time = DateTime.Parse(
                 Hours + ":" +
@@ -168,7 +166,19 @@ namespace Data_Logger_1._3.Components
             RaiseEvent(ev);
         }
 
+        public string NumberFormatter(int realLength, string currentNumber)
+        {
 
+            if(realLength != 0 && realLength > 0)
+            {
+                const string zero = "0";
+
+                for (int i = 0; i < realLength; i++)
+                    currentNumber = zero + currentNumber;
+            }
+
+            return currentNumber;
+        }
 
 
         #endregion
