@@ -1,11 +1,12 @@
-﻿using System.Windows;
+﻿using Data_Logger_1._3.Services;
+using System.Windows;
 using System.Windows.Input;
 
 namespace Data_Logger_1._3.ViewModels.Dialogs
 {
     public class AScodeCreateViewModel : codeCreateViewModel
     {
-        public AScodeCreateViewModel()
+        public AScodeCreateViewModel(NavigationService navigationService) : base(navigationService)
         {
             ApplicationName = "Android Studio Hedgehog 2023.1.1";
 			//AppFieldEnabled = false;
@@ -21,13 +22,15 @@ namespace Data_Logger_1._3.ViewModels.Dialogs
 			set
 			{
 				fullORsimple = value;
+
+				GradleDaemonVisibility = Visibility.Hidden;
+                RunBuildVisibility = Visibility.Hidden;
+                LoadBuildVisibility = Visibility.Hidden;
+                ConfigureBuildVisibility = Visibility.Hidden;
+                AllProjectsVisibility = Visibility.Hidden;
+
 				OnPropertyChanged(nameof(FullORSimple));
 
-				gradleDaemonVisibility = Visibility.Hidden;
-                runBuildVisibility = Visibility.Hidden;
-                loadBuildVisibility = Visibility.Hidden;
-                configureBuildVisibility = Visibility.Hidden;
-                allProjectsVisibility = Visibility.Hidden;
 			}
 		}
 
@@ -617,7 +620,7 @@ namespace Data_Logger_1._3.ViewModels.Dialogs
 
 
 
-		ICommand ToggleDetailsCommand { get; }
+		public ICommand ToggleDetailsCommand { get; set; }
 
     }
 }

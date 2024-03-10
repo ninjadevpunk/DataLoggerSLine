@@ -1,12 +1,17 @@
-﻿namespace Data_Logger_1._3.ViewModels.Dialogs
+﻿using Data_Logger_1._3.Services;
+
+namespace Data_Logger_1._3.ViewModels.Dialogs
 {
     public class codeCreateViewModel : LoggerCreateViewModel
     {
 
 
-        public codeCreateViewModel() { }
+        public codeCreateViewModel(NavigationService navigationService) : base(navigationService)
+        {
 
-        public codeCreateViewModel(string app) 
+        }
+
+        public codeCreateViewModel(NavigationService navigationService, string app) : base(navigationService)
         {
             if (app == "Qt")
             {

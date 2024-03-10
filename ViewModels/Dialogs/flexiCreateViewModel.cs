@@ -1,4 +1,5 @@
-﻿using System.Collections.ObjectModel;
+﻿using Data_Logger_1._3.Services;
+using System.Collections.ObjectModel;
 using System.Windows.Input;
 
 namespace Data_Logger_1._3.ViewModels.Dialogs
@@ -115,8 +116,11 @@ namespace Data_Logger_1._3.ViewModels.Dialogs
 
 
 
-        ICommand BrowseCommand { get; set; }
+        public ICommand BrowseCommand { get; set; }
 
-
+        public flexiCreateViewModel(NavigationService navigationService) : base(navigationService)
+        {
+            //
+        }
     }
 }

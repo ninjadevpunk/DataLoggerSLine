@@ -1,4 +1,6 @@
-﻿using Data_Logger_1._3.Services;
+﻿using Data_Logger_1._3.Commands;
+using Data_Logger_1._3.Commands.PostIt;
+using Data_Logger_1._3.Services;
 using MVVMEssentials.ViewModels;
 using System.Collections.ObjectModel;
 using System.Windows;
@@ -101,21 +103,7 @@ namespace Data_Logger_1._3.ViewModels.Dialogs
 			{
 				startDate = value;
 				OnPropertyChanged(nameof(StartDate));
-			}
-		}
-
-		private DateTime startTime;
-		public DateTime StartTime
-		{
-			get
-			{
-				return startTime;
-			}
-			set
-			{
-				startTime = value;
-				OnPropertyChanged(nameof(StartTime));
-			}
+            }
 		}
 
 		private int startHours;
@@ -128,7 +116,7 @@ namespace Data_Logger_1._3.ViewModels.Dialogs
 			set
 			{
 				startHours = value;
-				StartDate = DateTime.Parse(StartDate.Date.ToLongDateString() + " " + StartHours + ":" + StartDate.Minute + ":" + StartDate.Second + "." + StartDate.Millisecond);
+				UpdateDateControl();
 				OnPropertyChanged(nameof(StartHours));
 			}
 		}
@@ -143,8 +131,9 @@ namespace Data_Logger_1._3.ViewModels.Dialogs
 			set
 			{
 				startMinutes = value;
+				UpdateDateControl();
 				OnPropertyChanged(nameof(StartMinutes));
-			}
+            }
 		}
 
 		private int startSeconds;
@@ -157,8 +146,9 @@ namespace Data_Logger_1._3.ViewModels.Dialogs
 			set
 			{
 				startSeconds = value;
+				UpdateDateControl();
 				OnPropertyChanged(nameof(StartSeconds));
-			}
+            }
 		}
 
 		private int startMilliseconds;
@@ -171,8 +161,9 @@ namespace Data_Logger_1._3.ViewModels.Dialogs
 			set
 			{
 				startMilliseconds = value;
+				UpdateDateControl();
 				OnPropertyChanged(nameof(StartMilliseconds));
-			}
+            }
 		}
 
 
@@ -200,20 +191,6 @@ namespace Data_Logger_1._3.ViewModels.Dialogs
 			}
 		}
 
-		private DateTime endTime;
-		public DateTime EndTime
-		{
-			get
-			{
-				return endTime;
-			}
-			set
-			{
-				endTime = value;
-				OnPropertyChanged(nameof(EndTime));
-			}
-		}
-
 		private int endHours;
 		public int EndHours
 		{
@@ -224,6 +201,7 @@ namespace Data_Logger_1._3.ViewModels.Dialogs
 			set
 			{
 				endHours = value;
+				UpdateEndDateControl();
 				OnPropertyChanged(nameof(EndHours));
 			}
 		}
@@ -238,6 +216,7 @@ namespace Data_Logger_1._3.ViewModels.Dialogs
 			set
 			{
 				endMinutes = value;
+				UpdateEndDateControl();
 				OnPropertyChanged(nameof(EndMinutes));
 			}
 		}
@@ -252,6 +231,7 @@ namespace Data_Logger_1._3.ViewModels.Dialogs
 			set
 			{
 				endSeconds = value;
+				UpdateEndDateControl();
 				OnPropertyChanged(nameof(EndSeconds));
 			}
 		}
@@ -266,6 +246,7 @@ namespace Data_Logger_1._3.ViewModels.Dialogs
 			set
 			{
 				endMilliseconds = value;
+				UpdateEndDateControl();
 				OnPropertyChanged(nameof(EndMilliseconds));
 			}
 		}
@@ -306,8 +287,8 @@ namespace Data_Logger_1._3.ViewModels.Dialogs
 		}
 
 
-		private ObservableCollection<PostItViewModel> postIts;
-		public ObservableCollection<PostItViewModel> PostIts
+		private ObservableCollection<CreatePostItViewModel> postIts;
+		public ObservableCollection<CreatePostItViewModel> PostIts
 		{
 			get
 			{
@@ -329,32 +310,70 @@ namespace Data_Logger_1._3.ViewModels.Dialogs
 		public string FirebaseStatus { get; set; } = "Not Connected";
 
 
-        ICommand CurrentStartDateCommand { get; set; }
+        public ICommand CurrentStartDateCommand { get; set; }
 
-		ICommand CurrentEndDateCommand { get; set; }
+		public ICommand CurrentEndDateCommand { get; set; }
 
-		ICommand SaveCommand { get; set; }
-
-
-		ICommand AnnotateCommand { get; set; }
+		public ICommand SaveCommand { get; set; }
 
 
-		ICommand ClearPostItListCommand { get; set; }
-
-		ICommand AddPostItCommand { get; set; }
+		public ICommand AnnotateCommand { get; set; }
 
 
+		public ICommand ClearPostItListCommand { get; set; }
+
+		public ICommand AddPostItCommand { get; set; }
 
 
 
-        protected LoggerCreateViewModel()
+
+
+        protected LoggerCreateViewModel(NavigationService navigationService)
         {
+			_navigationService = navigationService;
+
 			AppFieldEnabled = true;
 
 			_applications = new ObservableCollection<string>();
 			_applications.Add("Visual Studio");
 			_applications.Add("Komodo Edit IDE");
 			_applications.Add("Blender 3D");
+
+			StartHours = DateTime.Now.Hour;
+			StartMinutes = DateTime.Now.Minute;
+			StartSeconds = DateTime.Now.Second;
+			StartMilliseconds = DateTime.Now.Millisecond;
+
+			StartDate = DateTime.Now;
+
+			EndHours = DateTime.Now.Hour;
+			EndMinutes = DateTime.Now.Minute;
+			EndSeconds = DateTime.Now.Second;
+			EndMilliseconds = DateTime.Now.Millisecond;
+
+			EndDate = DateTime.Now;
+
+			CurrentStartDateCommand = new CurrentStartDateCommand(this);
+			CurrentEndDateCommand = new CurrentEndDateCommand(this);
+			AddPostItCommand = new AddPostItCommand(_navigationService, this);
         }
+
+        #region Member Functions 
+
+
+
+		public void UpdateDateControl()
+		{
+            StartDate = DateTime.Parse(StartDate.Date.ToLongDateString() + " " + StartHours + ":" + StartMinutes + ":" + StartSeconds + "." + StartMilliseconds);
+        }
+
+		public void UpdateEndDateControl()
+		{
+            EndDate = DateTime.Parse(EndDate.Date.ToLongDateString() + " " + EndHours + ":" + EndMinutes + ":" + EndSeconds + "." + EndMilliseconds);
+        }
+
+
+
+        #endregion
     }
 }
