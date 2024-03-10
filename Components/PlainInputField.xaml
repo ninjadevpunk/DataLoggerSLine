@@ -10,7 +10,7 @@
              >
     <Border CornerRadius="2"
             Background="{DynamicResource WHITE}"
-            Height="35"
+            Height="40"
             >
         <Grid>
             <!-- Placeholder Text here-->
