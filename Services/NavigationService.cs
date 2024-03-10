@@ -155,12 +155,12 @@ namespace Data_Logger_1._3.Services
             flexiDashboard = new FlexiViewModel(this);
             notesDashboard = new NOTESViewModel(this);
 
-            QtCodingLogger = new codeCreateViewModel("Qt");
-            ASCodingLogger = new AScodeCreateViewModel();
-            CodingLogger = new codeCreateViewModel();
-            GraphicsLogger = new graphicCreateViewModel();
-            FilmLogger = new filmCreateViewModel();
-            FlexiLogger = new flexiCreateViewModel();
+            QtCodingLogger = new codeCreateViewModel(this, "Qt");
+            ASCodingLogger = new AScodeCreateViewModel(this);
+            CodingLogger = new codeCreateViewModel(this);
+            GraphicsLogger = new graphicCreateViewModel(this);
+            FilmLogger = new filmCreateViewModel(this);
+            FlexiLogger = new flexiCreateViewModel(this);
 
             CodingFrame = new coding_UserControl();
             AndroidStudioFrame = new androidStudio_UserControl();
@@ -345,7 +345,13 @@ namespace Data_Logger_1._3.Services
             _MainFrame.Navigate(Logger);
         }
 
+        public void NavigateToPostItCreator(LoggerCreateViewModel loggerCreator)
+        {
+            var postItPage = new PostItPage();
+            postItPage.DataContext = new CreatePostItViewModel(this, loggerCreator);
 
+            _MainFrame.Navigate(postItPage);
+        }
 
         public void NavigateToReporter()
         {
