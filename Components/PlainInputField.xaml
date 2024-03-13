@@ -21,7 +21,7 @@
 
             <!-- User Input here -->
             <TextBox x:Name="inputText_text" Style="{Binding UserTextBoxStyle, ElementName=control_INPUT_plain}"
-                     Text="{Binding UserInput, ElementName=control_INPUT_plain}"
+                     Text="{Binding UserInput, UpdateSourceTrigger=PropertyChanged, ElementName=control_INPUT_plain}"
                      TextAlignment="{Binding Aligned, ElementName=control_INPUT_plain}"
                      TextChanged="on_inputText_text_changed"
                      LostFocus="on_inputText_lostFocus"

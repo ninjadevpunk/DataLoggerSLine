@@ -115,7 +115,7 @@
         </Grid.RowDefinitions>
 
         <ToggleButton x:Name="toggleButton_SWITCH" Style="{DynamicResource template_OPTION_SWITCH}"
-                      Command="{Binding ToggleDetailsCommand}" />
+                      IsChecked="{Binding FullORSimple, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
 
         <!-- SYNC -->
         <Border Grid.Row="3"
@@ -136,11 +136,11 @@
                            Text="Sync" />
 
                 <components:TimeInputField Grid.Column="2" x:Name="timeEdit_SYNC"
-                                           Time="{Binding SyncTime}"
-                                           Hours="{Binding SyncHours}"
-                                           Minutes="{Binding SyncMinutes}"
-                                           Seconds="{Binding SyncSeconds}"
-                                           Milliseconds="{Binding SyncMilliseconds}" />
+                                           Time="{Binding SyncTime, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                                           Hours="{Binding SyncHours, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                                           Minutes="{Binding SyncMinutes, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                                           Seconds="{Binding SyncSeconds, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                                           Milliseconds="{Binding SyncMilliseconds, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
 
             </Grid>
             
@@ -149,7 +149,7 @@
         <!-- GRADLE DAEMON -->
         <Border Grid.Row="5"
                 Padding="12 0 10 0"
-                Visibility="{Binding GradleDaemonVisibility}" >
+                Visibility="{Binding GradleDaemonVisibility, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" >
 
             <Grid>
 
@@ -174,10 +174,10 @@
                     
                 <TextBlock Grid.Column="0" Style="{DynamicResource text_LABEL03}"
                            Text="Starting Gradle Daemon"
-                           IsEnabled="{Binding IsConsidered}"/>
+                           IsEnabled="{Binding IsConsidered, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"/>
 
                 <CheckBox Grid.Column="1" x:Name="checkBox_SHOWHIDE" Style="{DynamicResource check_SIGNUP}"
-                          IsChecked="{Binding IsConsidered}"
+                          IsChecked="{Binding IsConsidered, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
                           Margin="10 0"
                           HorizontalAlignment="Center" />
                     
@@ -187,12 +187,12 @@
 
 
                 <components:TimeInputField Grid.Column="2" x:Name="timeEdit_GRADLEDAEMON"
-                                           IsEnabled="{Binding IsConsidered}"
-                                           Time="{Binding GradleDaemonTime}"
-                                           Hours="{Binding GradleDaemonHours}"
-                                           Minutes="{Binding GradleDaemonMinutes}"
-                                           Seconds="{Binding GradleDaemonSeconds}"
-                                           Milliseconds="{Binding GradleDaemonMilliseconds}" />
+                                           IsEnabled="{Binding IsConsidered, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                                           Time="{Binding GradleDaemonTime, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                                           Hours="{Binding GradleDaemonHours, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                                           Minutes="{Binding GradleDaemonMinutes, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                                           Seconds="{Binding GradleDaemonSeconds, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                                           Milliseconds="{Binding GradleDaemonMilliseconds, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
 
             </Grid>
 
@@ -201,7 +201,7 @@
         <!-- RUN BUILD -->
         <Border Grid.Row="7"
                 Padding="12 0 10 0"
-                Visibility="{Binding RunBuildVisibility}" >
+                Visibility="{Binding RunBuildVisibility, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" >
 
             <Grid>
 
@@ -218,11 +218,11 @@
                            Text="Run Build" />
 
                 <components:TimeInputField Grid.Column="2" x:Name="timeEdit_RUNBUILD"
-                                           Time="{Binding RunBuildTime}"
-                                           Hours="{Binding RunBuildHours}" 
-                                           Minutes="{Binding RunBuildMinutes}" 
-                                           Seconds="{Binding RunBuildSeconds}"
-                                           Milliseconds="{Binding RunBuildMilliseconds}" />
+                                           Time="{Binding RunBuildTime, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                                           Hours="{Binding RunBuildHours, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" 
+                                           Minutes="{Binding RunBuildMinutes, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" 
+                                           Seconds="{Binding RunBuildSeconds, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                                           Milliseconds="{Binding RunBuildMilliseconds, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
 
             </Grid>
 
@@ -231,7 +231,7 @@
         <!-- LOAD BUILD -->
         <Border Grid.Row="9"
                 Padding="12 0 10 0"
-                Visibility="{Binding LoadBuildVisibility}" >
+                Visibility="{Binding LoadBuildVisibility, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" >
 
             <Grid>
 
@@ -248,11 +248,11 @@
                            Text="Load Build" />
 
                 <components:TimeInputField Grid.Column="2" x:Name="timeEdit_LOADBUILD"
-                                           Time="{Binding LoadBuildTime}"
-                                           Hours="{Binding LoadBuildHours}"
-                                           Minutes="{Binding LoadBuildMinutes}"
-                                           Seconds="{Binding LoadBuildSeconds}"
-                                           Milliseconds="{Binding LoadBuildMilliseconds}" />
+                                           Time="{Binding LoadBuildTime, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                                           Hours="{Binding LoadBuildHours, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                                           Minutes="{Binding LoadBuildMinutes, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                                           Seconds="{Binding LoadBuildSeconds, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                                           Milliseconds="{Binding LoadBuildMilliseconds, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
 
             </Grid>
 
@@ -261,7 +261,7 @@
         <!-- CONFIGURE BUILD -->
         <Border Grid.Row="11"
                 Padding="12 0 10 0"
-                Visibility="{Binding ConfigureBuildVisibility}" >
+                Visibility="{Binding ConfigureBuildVisibility, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" >
 
             <Grid>
 
@@ -278,10 +278,10 @@
                            Text="Configure Build" />
 
                 <components:TimeInputField Grid.Column="2" x:Name="timeEdit_CONFIGUREBUILD"
-                                           Time="{Binding ConfigureBuildTime}"
-                                           Minutes="{Binding ConfigureBuildMinutes}"
-                                           Seconds="{Binding ConfigureBuildSeconds}"
-                                           Milliseconds="{Binding ConfigureBuildMilliseconds}" />
+                                           Time="{Binding ConfigureBuildTime, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                                           Minutes="{Binding ConfigureBuildMinutes, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                                           Seconds="{Binding ConfigureBuildSeconds, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                                           Milliseconds="{Binding ConfigureBuildMilliseconds, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
 
             </Grid>
 
@@ -290,7 +290,7 @@
         <!-- ALL PROJECTS -->
         <Border Grid.Row="13"
                 Padding="12 0 10 0"
-                Visibility="{Binding AllProjectsVisibility}" >
+                Visibility="{Binding AllProjectsVisibility, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" >
 
             <Grid>
 
@@ -307,11 +307,11 @@
                            Text="All Projects" />
 
                 <components:TimeInputField Grid.Column="2" x:Name="timeEdit_ALLPROJECTS"
-                                           Time="{Binding AllProjectsTime}"
-                                           Hours="{Binding AllProjectsHours}"
-                                           Minutes="{Binding AllProjectsMinutes}"
-                                           Seconds="{Binding AllProjectsSeconds}"
-                                           Milliseconds="{Binding AllProjectsMilliseconds}" />
+                                           Time="{Binding AllProjectsTime, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                                           Hours="{Binding AllProjectsHours, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                                           Minutes="{Binding AllProjectsMinutes, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                                           Seconds="{Binding AllProjectsSeconds, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                                           Milliseconds="{Binding AllProjectsMilliseconds, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
 
             </Grid>
 

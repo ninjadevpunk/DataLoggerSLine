@@ -44,7 +44,8 @@
                                               MinimumValue="0"
                                               MaximumValue="99"
                                               Width="50"
-                                              HorizontalAlignment="Right"/>
+                                              HorizontalAlignment="Right"
+                                              Number="{Binding BugsFound, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"/>
                 
                 
                 
@@ -76,7 +77,8 @@
                            Text="Succesful?"/>
 
                 <CheckBox Grid.Column="2" x:Name="checkBox_IsLAUNCHSUCCESSFUL" Style="{DynamicResource check_SIGNUP}"
-                          HorizontalAlignment="Right"/>
+                          HorizontalAlignment="Right"
+                          IsChecked="{Binding ApplicationOpened, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"/>
 
             </Grid>
             
