@@ -12,16 +12,18 @@ namespace Data_Logger_1._3.Commands
 
         private readonly SignUpViewModel _signUpViewModel;
         private readonly AuthService _authService;
+        private readonly NavigationService _navigationService;
 
         public EmailSignUpCommand(SignUpViewModel signUpViewModel)
         {
             _signUpViewModel = signUpViewModel;
         }
 
-        public EmailSignUpCommand(SignUpViewModel signUpViewModel, AuthService authService)
+        public EmailSignUpCommand(SignUpViewModel signUpViewModel, AuthService authService, NavigationService navigationService)
         {
             _signUpViewModel = signUpViewModel;
             _authService = authService;
+            _navigationService = navigationService;
         }
 
         protected override async Task ExecuteAsync(object parameter)
@@ -30,16 +32,19 @@ namespace Data_Logger_1._3.Commands
             {
                 // Retrieve user input from the view model
                 string email = _signUpViewModel.Email;
-                SecureString password = _signUpViewModel.Password;
+                string password = _signUpViewModel.Password;
                 string displayName = _signUpViewModel.Name;
+                string surname = _signUpViewModel.Surname;
+                var IsHired = _signUpViewModel.YesBox ? true : false;
+                var company = _signUpViewModel.CompanyName;
+                var address = _signUpViewModel.CompanyAddress;
 
                 // Call the SignUp method in AuthService to handle user registration
-                var isSignedUp = _authService.SignUp(email, password, displayName);
+                var isSignedUp = _authService.SignUp(email, password, displayName, surname, IsHired, company, address);
 
                 if(isSignedUp)
                 {
-                    var mainWindow = new MainWindow();
-                    mainWindow.Show();
+                    _navigationService.NavigateToMainWindow();
                 }
             }
             catch (Exception)
