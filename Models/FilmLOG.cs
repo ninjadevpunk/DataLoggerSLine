@@ -16,8 +16,6 @@
 
         public double Width { get; set; } = 0.0;
 
-        public string Unit { get; set; } = "";
-
         public string Length { get; set; } = "0:00";
 
         public bool IsCompleted { get; set; } = false;
@@ -34,11 +32,10 @@
         {
         }
 
-        public FilmLOG(double height, double width, string unit, string length, bool isCompleted, string source)
+        public FilmLOG(double height, double width, string length, bool isCompleted, string source)
         {
             Height = height;
             Width = width;
-            Unit = unit;
             Length = length;
             IsCompleted = isCompleted;
             Source = source;
@@ -46,12 +43,11 @@
 
         public FilmLOG(ACCOUNT author, string projectName, string applicationName, DateTime startTime, DateTime endTime,
             string output, string type, List<PostIt> postItList,
-            double height, double width, string unit, string length, bool isCompleted, string source) : base(author, projectName, applicationName,
+            double height, double width, string length, bool isCompleted, string source) : base(author, projectName, applicationName,
                                                                                                             startTime, endTime, output, type, postItList)
         {
             Height = height;
             Width = width;
-            Unit = unit;
             Length = length;
             IsCompleted = isCompleted;
             Source = source;
@@ -78,7 +74,6 @@
                    PostItList.Equals(lOG.PostItList) &&
                    Height == lOG.Height &&
                    Width == lOG.Width &&
-                   Unit == lOG.Unit &&
                    Length == lOG.Length &&
                    IsCompleted == lOG.IsCompleted &&
                    Source == lOG.Source;
@@ -98,7 +93,6 @@
             hash.Add(PostItList);
             hash.Add(Height);
             hash.Add(Width);
-            hash.Add(Unit);
             hash.Add(Length);
             hash.Add(IsCompleted);
             hash.Add(Source);

@@ -15,7 +15,7 @@ namespace Data_Logger_1._3.Models
 
         public string Email { get; set; } = "";
 
-        public SecureString Password { get; set; } = new SecureString();
+        public string Password { get; set; } = "";
 
         public bool IsEmplyee { get; set; } = false;
 
@@ -36,7 +36,7 @@ namespace Data_Logger_1._3.Models
             // EMPTY
         }
 
-        public ACCOUNT(string profilePic, string firstName, string lastName, string email, SecureString password, bool isEmplyee, string companyName, string companyAddress, string companyLogo, bool status)
+        public ACCOUNT(string profilePic, string firstName, string lastName, string email, string password, bool isEmplyee, string companyName, string companyAddress, string companyLogo, bool status)
         {
             ProfilePic = profilePic;
             FirstName = firstName;
@@ -50,7 +50,43 @@ namespace Data_Logger_1._3.Models
             Status = status;
         }
 
-        public ACCOUNT(string firstName, string lastName, SecureString password, bool status)
+        public ACCOUNT(string firstName, string lastName, string email, string password, bool isEmplyee, string companyName, string companyAddress)
+        {
+            FirstName = firstName;
+            LastName = lastName;
+            Email = email;
+            Password = password;
+            IsEmplyee = isEmplyee;
+            CompanyName = companyName;
+            CompanyAddress = companyAddress;
+        }
+
+        public ACCOUNT(string firstName, string lastName, string email,  bool isEmplyee, string companyName, string companyAddress, string companyLogo, bool status)
+        {
+            FirstName = firstName;
+            LastName = lastName;
+            Email = email;
+            IsEmplyee = isEmplyee;
+            CompanyName = companyName;
+            CompanyAddress = companyAddress;
+            CompanyLogo = companyLogo;
+            Status = status;
+        }
+
+        public ACCOUNT(string firstName, string lastName, string email, string password, bool isEmplyee, string companyName, string companyAddress, string companyLogo, bool status)
+        {
+            FirstName = firstName;
+            LastName = lastName;
+            Email = email;
+            Password = password;
+            IsEmplyee = isEmplyee;
+            CompanyName = companyName;
+            CompanyAddress = companyAddress;
+            CompanyLogo = companyLogo;
+            Status = status;
+        }
+
+        public ACCOUNT(string firstName, string lastName, string password, bool status)
         {
             FirstName = firstName;
             LastName = lastName;
