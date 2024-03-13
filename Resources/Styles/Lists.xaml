@@ -157,8 +157,8 @@
                                 <ProgressBar x:Name="progress_CACHE_ITEM"
                                              Height="8"
                                              Minimum="0"
-                                             Maximum="1200000" 
-                                             Value="{Binding TimeRemaining}"
+                                             Maximum="1200" 
+                                             Value="{Binding TimeRemaining, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
                                              BorderThickness="0"
                                              Foreground="{DynamicResource PANEL}"/>
 
@@ -651,13 +651,13 @@
                                 <TextBlock x:Name="text_POSTIT_SUBJECT" Style="{DynamicResource text_LIST_LABEL_HEADING}"
                                        Height="27"
                                        HorizontalAlignment="Stretch"
-                                       Text="{Binding}" />
+                                       Text="{Binding Subject, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
 
                                 <StackPanel Orientation="Vertical" Grid.Row="1"
                                         HorizontalAlignment="Stretch"
                                         >
                                     <!-- ERROR -->
-                                    <Border Padding="0 5" Visibility="{Binding}">
+                                    <Border Padding="0 5" Visibility="{Binding ErrorVisible, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}">
                                         <Grid>
                                             <Grid.ColumnDefinitions>
                                                 <ColumnDefinition Width="15"/>
@@ -670,14 +670,14 @@
                                             
                                             <TextBlock Grid.Column="2" x:Name="text_POSTIT_ERROR" Style="{DynamicResource text_LIST_LABEL_CONTENT}"
                                                    HorizontalAlignment="Stretch"
-                                                   Text="{Binding}" />
+                                                   Text="{Binding Error, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
                                             
                                         </Grid>
                                     </Border>
 
 
                                     <!-- SOLUTION -->
-                                    <Border Padding="0 5" Visibility="{Binding}">
+                                    <Border Padding="0 5" Visibility="{Binding SolutionVisible, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}">
                                         <Grid>
                                             <Grid.ColumnDefinitions>
                                                 <ColumnDefinition Width="15"/>
@@ -690,14 +690,14 @@
                                             
                                             <TextBlock Grid.Column="2" x:Name="text_POSTIT_SOLUTION" Style="{DynamicResource text_LIST_LABEL_CONTENT}"
                                                        HorizontalAlignment="Stretch"
-                                                       Text="{Binding}" />
+                                                       Text="{Binding Solution, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
                                             
                                         </Grid>
                                     </Border>
                                     
                                     
                                     <!-- SUGGESTION -->
-                                    <Border Padding="0 5" Visibility="{Binding}">
+                                    <Border Padding="0 5" Visibility="{Binding SuggestionVisible, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}">
                                         <Grid>
                                             <Grid.ColumnDefinitions>
                                                 <ColumnDefinition Width="15"/>
@@ -710,14 +710,14 @@
                                             
                                             <TextBlock Grid.Column="2" x:Name="text_POSTIT_SUGGESTION" Style="{DynamicResource text_LIST_LABEL_CONTENT}"
                                                        HorizontalAlignment="Stretch"
-                                                       Text="{Binding}" />
+                                                       Text="{Binding Suggestion, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
                                             
                                         </Grid>
                                     </Border>
 
 
                                     <!-- COMMENT -->
-                                    <Border Padding="0 5" Visibility="{Binding}">
+                                    <Border Padding="0 5" Visibility="{Binding CommentVisible, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}">
                                         <Grid>
                                             <Grid.ColumnDefinitions>
                                                 <ColumnDefinition Width="15"/>
@@ -730,7 +730,7 @@
                                             
                                             <TextBlock Grid.Column="2" x:Name="text_POSTIT_COMMENT" Style="{DynamicResource text_LIST_LABEL_CONTENT}"
                                                        HorizontalAlignment="Stretch"
-                                                       Text="{Binding}" />
+                                                       Text="{Binding Comment, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
                                             
                                         </Grid>
                                     </Border>
@@ -738,7 +738,9 @@
                             </Grid>
                             
                             <!-- COLUMN 2 -->
-                            <Button Grid.Column="1" Style="{DynamicResource toolbutton_DELETE}" />
+                            <Button Grid.Column="1" Style="{DynamicResource toolbutton_DELETE}"
+                                    Command="{Binding DeletePostItCommand}"
+                                    CommandParameter="{Binding}"/>
 
                         </Grid>
                     </Border>
