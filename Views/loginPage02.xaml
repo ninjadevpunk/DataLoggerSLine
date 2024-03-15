@@ -73,7 +73,7 @@
                                             HorizontalAlignment="Stretch"
                                             VerticalAlignment="Center"
                                             PlaceholderText="Email"
-                                            UserInput="{Binding}"
+                                            UserInput="{Binding Email, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
                                             Aligned="Right" />
             </StackPanel>
         </Grid>
@@ -91,7 +91,7 @@
 
             <Button Grid.Column="1" x:Name="button_LOGIN" Style="{DynamicResource ACTION}"
                     HorizontalAlignment="Right"
-                    Command="{Binding}" >
+                    Command="{Binding RequestForgotPasswordCommand}" >
                 
                 <TextBlock Style="{DynamicResource text_button01}"
                            Text="Send" />

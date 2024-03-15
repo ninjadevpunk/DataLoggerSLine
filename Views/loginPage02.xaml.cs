@@ -1,4 +1,6 @@
-﻿using System.Windows.Controls;
+﻿using Data_Logger_1._3.Services;
+using Data_Logger_1._3.ViewModels;
+using System.Windows.Controls;
 
 namespace Data_Logger_1._3.Views
 {
@@ -7,9 +9,21 @@ namespace Data_Logger_1._3.Views
     /// </summary>
     public partial class loginPage02 : Page
     {
+        private readonly AuthService _authService;
+        private readonly NavigationService _navigationService;
+
         public loginPage02()
         {
             InitializeComponent();
+        }
+
+        public loginPage02(AuthService authService, NavigationService navigationService)
+        {
+            InitializeComponent();
+
+            _authService = authService;
+            _navigationService = navigationService;
+            
         }
     }
 }

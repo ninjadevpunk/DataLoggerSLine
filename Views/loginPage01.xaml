@@ -73,11 +73,11 @@
         </Grid>
 
         <Grid Margin="0 5">
-            <components:PasswordField x:Name="inputText_PASSWORD"
+            <components:PasswordInputField x:Name="L1_inputText_PASSWORD"
                                       HorizontalAlignment="Stretch"
                                       VerticalAlignment="Center"
                                       Placeholder="Password"
-                                      UserInput="{Binding Password, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
+                                      UserInput="{Binding Password, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay, BindsDirectlyToSource=True}" />
         </Grid>
 
         <Grid Height="50"

@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using Data_Logger_1._3.Services;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 
@@ -9,17 +10,24 @@ namespace Data_Logger_1._3.Views
     /// </summary>
     public partial class loginPage01 : Page
     {
+        private readonly NavigationService _navigationService;
+
+
         public loginPage01()
         {
             InitializeComponent();
         }
 
+        public loginPage01(NavigationService navigationService)
+        {
+            InitializeComponent();
+
+            _navigationService = navigationService;
+        }
+
         private void on_FORGOTPASSWORD_clicked(object sender, MouseButtonEventArgs e)
         {
-            var loginWindow = Window.GetWindow(this) as Login;
-
-            // Navigate to Forgot Password Page
-            loginWindow?.Navigator("Views/loginPage02.xaml");
+            _navigationService.NavigateToLogin(false);
         }
 
         private void on_SIGNUP_clicked(object sender, MouseButtonEventArgs e)
@@ -28,17 +36,8 @@ namespace Data_Logger_1._3.Views
             try
             {
 
-                // Open SignUp window
-                SignUp signUpWindow = new SignUp();
-                signUpWindow.Show();
-
-                var loginWindow = Window.GetWindow(this) as Login;
-
-                // Close the current window
-                if(loginWindow != null)
-                {
-                    loginWindow.Close();
-                }
+                _navigationService.NavigateToSignUp();
+               
             }
             catch (Exception ex)
             {

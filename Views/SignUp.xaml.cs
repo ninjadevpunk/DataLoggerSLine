@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using Data_Logger_1._3.Services;
+using System.Windows;
 using System.Windows.Input;
 
 namespace Data_Logger_1._3.Views
@@ -8,9 +9,18 @@ namespace Data_Logger_1._3.Views
     /// </summary>
     public partial class SignUp : Window
     {
+        private readonly NavigationService _navigationService;
+
         public SignUp()
         {
             InitializeComponent();
+        }
+
+        public SignUp(NavigationService navigationService)
+        {
+            InitializeComponent();
+
+            _navigationService = navigationService;
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
@@ -33,18 +43,8 @@ namespace Data_Logger_1._3.Views
 
             try
             {
-
-                // Open SignUp window
-                Login loginWindow = new();
-                loginWindow.Show();
-
-                var signupWindow = Window.GetWindow(this) as SignUp;
-
-                // Close the current window
-                if (signupWindow != null)
-                {
-                    signupWindow.Close();
-                }
+                _navigationService.NavigateToLogin(true);
+                this.Close();
             }
             catch (Exception ex)
             {
