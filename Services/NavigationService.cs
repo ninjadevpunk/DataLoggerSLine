@@ -25,12 +25,16 @@ namespace Data_Logger_1._3.Services
 
     public class NavigationService
     {
+        private readonly AuthService _authService;
+
         private IHost _host;
         private Frame _MainFrame; // MainWindow Frame
         private Frame _frame; // Sub class Logs Logger Frame
         private Frame _ASframe; // Android Studio Logger Frame
 
         public Login LoginWindow { get; set; }
+
+        public SignUp SignUpWindow { get; set; }
 
         public MainWindowViewModel Main { get; set; }
 
@@ -120,9 +124,9 @@ namespace Data_Logger_1._3.Services
 
 
 
-        public NavigationService(IHost host)
+        public NavigationService(AuthService service)
         {
-            _host = host;
+            _authService = service;
 
 
             setup();
@@ -153,17 +157,19 @@ namespace Data_Logger_1._3.Services
             graphicsDashboard = new GraphicsViewModel(this);
             filmDashboard = new FilmViewModel(this);
             flexiDashboard = new FlexiViewModel(this);
+
             notesDashboard = new NOTESViewModel(this);
 
-            QtCodingLogger = new codeCreateViewModel(this, "Qt");
-            ASCodingLogger = new AScodeCreateViewModel(this);
-            CodingLogger = new codeCreateViewModel(this);
-            GraphicsLogger = new graphicCreateViewModel(this);
-            FilmLogger = new filmCreateViewModel(this);
-            FlexiLogger = new flexiCreateViewModel(this);
+            QtCodingLogger = new codeCreateViewModel(this, codingQtDashboard, "Qt");
+            ASCodingLogger = new AScodeCreateViewModel(this, codingAndroidDashboard);
+            CodingLogger = new codeCreateViewModel(this, codingDashboard);
+            GraphicsLogger = new graphicCreateViewModel(this, graphicsDashboard);
+            FilmLogger = new filmCreateViewModel(this, filmDashboard);
+            FlexiLogger = new flexiCreateViewModel(this, flexiDashboard);
 
             CodingFrame = new coding_UserControl();
             AndroidStudioFrame = new androidStudio_UserControl();
+            AndroidStudioFrame.DataContext = ASCodingLogger;
             GraphicsFrame = new graphics_UserControl();
             FilmFrame = new film_UserControl();
             FlexiFrame = new flexi_UserControl();
@@ -221,19 +227,35 @@ namespace Data_Logger_1._3.Services
         public void NavigateToLogin()
         {
             LoginWindow = _host.Services.GetRequiredService<Login>();
-            var page = new loginPage01();
+            var page = _host.Services.GetRequiredService<loginPage01>();
 
-            var auth = new AuthService("AIzaSyBiJCKUXNgySke73-FgUEVZSZNxHHyJYYY", "dls03-d1959.firebaseapp.com");
 
-            page.DataContext = new LoginViewModel(auth, this);
             LoginWindow.frame_LOGIN.Navigate(page);
+            LoginWindow.Show();
+        }
+
+        public void NavigateToLogin(bool IsLogin)
+        {
+            if(IsLogin)
+            {
+                var page = _host.Services.GetRequiredService<loginPage01>();
+                LoginWindow.frame_LOGIN.Navigate(page);
+            }
+            else
+            {
+                var page = _host.Services.GetRequiredService<loginPage02>();
+                LoginWindow.frame_LOGIN.Navigate(page);
+            }
+
+
             LoginWindow.Show();
         }
 
         public void NavigateToSignUp()
         {
-            var signUpWindow = _host.Services.GetRequiredService<SignUp>();
-            signUpWindow.Show();
+            SignUpWindow = _host.Services.GetRequiredService<SignUp>();
+            SignUpWindow.Show();
+            LoginWindow.Hide();
         }
 
         public void NavigateToMainWindow()
@@ -248,15 +270,12 @@ namespace Data_Logger_1._3.Services
             _MainFrame = mainWindow.frame_MAINWINDOW;
             NavigateToLogCachePage();
             LoginWindow.Close();
+            SignUpWindow.Close();
         }
 
         public void NavigateToLogCachePage()
         {
-            if (codingQtDashboard is null)
-                return;
-
-            ChangeData(CacheContext.Qt);
-            _MainFrame.Navigate(Dashboard);
+            NavigateToLogCachePage(CacheContext.Qt);
         }
 
         public void NavigateToLogCachePage(CacheContext context)
@@ -283,6 +302,7 @@ namespace Data_Logger_1._3.Services
                     Dashboard.DataContext = codingQtDashboard;
                     Logger.DataContext = QtCodingLogger;
                     Logger.inputText_APP.UserComboInput = "Qt Creator";
+                    CodingFrame.DataContext = QtCodingLogger;
                     _frame.Navigate(CodingFrame);
                     _ASframe.Navigate(null);
                     break;
@@ -291,30 +311,35 @@ namespace Data_Logger_1._3.Services
                     Dashboard.DataContext = codingAndroidDashboard;
                     Logger.DataContext = ASCodingLogger;
                     Logger.inputText_APP.UserComboInput = "Android Studio Hedgehog 2023.1.1";
+                    CodingFrame.DataContext = ASCodingLogger;
                     _frame.Navigate(CodingFrame);
                     _ASframe.Navigate(AndroidStudioFrame);
                     break;
                 case CacheContext.Generic:
                     Dashboard.DataContext = codingDashboard;
                     Logger.DataContext = CodingLogger;
+                    CodingFrame.DataContext = CodingLogger;
                     _frame.Navigate(CodingFrame);
                     _ASframe.Navigate(null);
                     break;
                 case CacheContext.Graphics:
                     Dashboard.DataContext = graphicsDashboard;
                     Logger.DataContext = GraphicsLogger;
+                    GraphicsFrame.DataContext = GraphicsLogger;
                     _frame.Navigate(GraphicsFrame);
                     _ASframe.Navigate(null);
                     break;
                 case CacheContext.Film:
                     Dashboard.DataContext = filmDashboard;
                     Logger.DataContext = FilmLogger;
+                    FilmFrame.DataContext = FilmLogger;
                     _frame.Navigate(FilmFrame);
                     _ASframe.Navigate(null);
                     break;
                 case CacheContext.Flexi:
                     Dashboard.DataContext = flexiDashboard;
                     Logger.DataContext = FlexiLogger;
+                    FlexiFrame.DataContext = FlexiLogger;
                     _frame.Navigate(FlexiFrame);
                     _ASframe.Navigate(null);
                     break;
