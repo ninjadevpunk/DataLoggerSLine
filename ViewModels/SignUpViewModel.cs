@@ -1,8 +1,6 @@
-﻿
-using Data_Logger_1._3.Commands;
+﻿using Data_Logger_1._3.Commands;
 using Data_Logger_1._3.Services;
 using MVVMEssentials.ViewModels;
-using System.Security;
 using System.Windows.Input;
 
 namespace Data_Logger_1._3.ViewModels
@@ -12,6 +10,7 @@ namespace Data_Logger_1._3.ViewModels
 
 
         private readonly AuthService _authService;
+		private readonly NavigationService _navigationService;
 
 		/* PROPERTIES */
 
@@ -58,8 +57,8 @@ namespace Data_Logger_1._3.ViewModels
 			}
 		}
 
-		private SecureString password;
-		public SecureString Password
+		private string password;
+		public string Password
 		{
 			get
 			{
@@ -96,13 +95,15 @@ namespace Data_Logger_1._3.ViewModels
 			set
 			{
 				yesBox = value;
-				OnPropertyChanged(nameof(YesBox));
 
 				if(YesBox)
 					FieldEnabled = true;
 
 				if (NoBox == YesBox)
-					NoBox = !yesBox;
+					NoBox = !YesBox;
+
+				OnPropertyChanged(nameof(YesBox));
+
 			}
 		}
 
@@ -116,13 +117,15 @@ namespace Data_Logger_1._3.ViewModels
 			set
 			{
 				noBox = value;
-				OnPropertyChanged(nameof(NoBox));
 
 				if(NoBox)
 					FieldEnabled = false;
 
 				if(YesBox == NoBox)
-					YesBox = !noBox;
+					YesBox = !NoBox;
+
+				OnPropertyChanged(nameof(NoBox));
+
 			}
 		}
 
@@ -168,22 +171,23 @@ namespace Data_Logger_1._3.ViewModels
 			}
 		}
 
-		ICommand DisplayCommand { get; }
+		public ICommand DisplayCommand { get; set; }
 
-		ICommand EmailSignUpCommand { get; }
+		public ICommand EmailSignUpCommand { get; set; }
 
-        ICommand GoogleSignUpCommand { get; }
+        public ICommand GoogleSignInCommand { get; set; }
 
 
-		public SignUpViewModel(AuthService authService)
+		public SignUpViewModel(AuthService authService, NavigationService navigationService)
         {
             _authService = authService;
+			_navigationService = navigationService;
 
 			// TODO
 			// DisplayCommand = new DisplayPicCommand(this, _authService);
-			//EmailSignUpCommand = new EmailSignUpCommand(this, _authService);
-			// GoogleSignUpCommand = new GoogleSignUpCommand(this, _authService);
-        }
+			EmailSignUpCommand = new EmailSignUpCommand(this, _authService, _navigationService);
+            GoogleSignInCommand = new GoogleSignInCommand(this, _authService);
+		}
 
 
     }

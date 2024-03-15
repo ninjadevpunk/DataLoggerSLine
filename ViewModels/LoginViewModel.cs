@@ -1,7 +1,6 @@
 ﻿
 using System.Windows.Media;
 using System.Windows;
-using System.Security;
 using System.Windows.Input;
 using Data_Logger_1._3.Services;
 using Data_Logger_1._3.Commands;
@@ -47,8 +46,8 @@ namespace Data_Logger_1._3.ViewModels
             }
         }
 
-        private SecureString password;
-        public SecureString Password
+        private string password;
+        public string Password
         {
             get
             {
@@ -93,6 +92,8 @@ namespace Data_Logger_1._3.ViewModels
 
         public ICommand LoginCommand { get; set; }
 
+        public ICommand GoogleLoginCommand { get; set; }
+
         public LoginViewModel(AuthService authService, NavigationService navigationService)
         {
 
@@ -104,6 +105,7 @@ namespace Data_Logger_1._3.ViewModels
             IsButtonForwardEnabled = false;
 
             LoginCommand = new LoginCommand(this, _authService, _navigationService);
+            GoogleLoginCommand = new GoogleLoginCommand(this, _authService);
         }
 
         public void UpdateNavigationButtons()

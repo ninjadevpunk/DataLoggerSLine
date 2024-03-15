@@ -1,5 +1,4 @@
-﻿
-using Data_Logger_1._3.Commands;
+﻿using Data_Logger_1._3.Commands;
 using Data_Logger_1._3.Services;
 using MVVMEssentials.ViewModels;
 using System.Windows.Input;
