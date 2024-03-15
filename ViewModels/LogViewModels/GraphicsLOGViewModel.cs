@@ -1,27 +1,36 @@
-﻿using Data_Logger_1._3.Messages;
+﻿using Data_Logger_1._3.Commands.LogCacheCommands;
 using Data_Logger_1._3.Models;
-using Data_Logger_1._3.Services;
+using Data_Logger_1._3.ViewModels.Dashboard;
 using MVVMEssentials.ViewModels;
+using System.Text.RegularExpressions;
 using System.Windows;
+using System.Windows.Input;
 
 namespace Data_Logger_1._3.ViewModels.LogViewModels
 {
     public class GraphicsLOGViewModel : ViewModelBase
     {
-        private readonly GraphicsLOG _graphicsLOG;
-        private readonly MessagingService _messagingService;
+        public GraphicsLOG _GraphicsLOG;
+        private readonly LogCacheViewModel _vm;
+        public bool IsDisposed { get; set; } = false;
 
         private Timer _timer;
+
+        public ICommand DeleteCacheItemCommand { get; set; }
 
 
         #region Constructor
 
 
-        public GraphicsLOGViewModel(GraphicsLOG graphicsLOG)
+        public GraphicsLOGViewModel(GraphicsLOG graphicsLOG, LogCacheViewModel logCacheViewModel)
         {
-            _graphicsLOG = graphicsLOG;
+            _vm = logCacheViewModel;
+
+            _GraphicsLOG = graphicsLOG;
             TimeRemaining = 1200;
             StartCountdown();
+
+            DeleteCacheItemCommand = new DeleteGraphicsCacheItemCommand(_vm);
         }
 
 
@@ -35,19 +44,19 @@ namespace Data_Logger_1._3.ViewModels.LogViewModels
         #region Properties
 
 
-        public string ProjectName => $"{_graphicsLOG.ProjectName} ({_graphicsLOG.ApplicationName})";
+        public string ProjectName => $"{_GraphicsLOG.ProjectName} ({_GraphicsLOG.ApplicationName})";
 
-        public string ErrorCount => _graphicsLOG.errorCount().ToString();
+        public string ErrorCount => _GraphicsLOG.errorCount().ToString();
 
-        public string SolutionCount => _graphicsLOG.solutionCount().ToString();
+        public string SolutionCount => _GraphicsLOG.solutionCount().ToString();
 
-        public string SuggestionCount => _graphicsLOG.suggestionCount().ToString();
+        public string SuggestionCount => _GraphicsLOG.suggestionCount().ToString();
 
-        public string CommentCount => _graphicsLOG.commentCount().ToString();
+        public string CommentCount => _GraphicsLOG.commentCount().ToString();
 
         /** Save the start and end time here **/
-        public string StartEndDate => $"{_graphicsLOG.StartTime.ToString("dddd, d MMMM yyyy HH:mm:ss.fff")} - " +
-            $"{_graphicsLOG.EndTime.ToString("dddd, d MMMM yyyy HH:mm:ss.fff")}";
+        public string StartEndDate => $"{_GraphicsLOG.StartTime.ToString("dddd, d MMMM yyyy HH:mm:ss.fff")} - " +
+            $"{_GraphicsLOG.EndTime.ToString("dddd, d MMMM yyyy HH:mm:ss.fff")}";
 
         /** Store the first occurence of a note with acceptable input only. **/
         public string NotaryContent => content();
@@ -92,28 +101,44 @@ namespace Data_Logger_1._3.ViewModels.LogViewModels
             _timer = new Timer(TimerCallback, null, TimeSpan.Zero, TimeSpan.FromSeconds(1));
         }
 
-        private void TimerCallback(object state)
+        private void TimerCallback(object? state)
         {
             Application.Current.Dispatcher.Invoke(() =>
             {
-                TimeRemaining--;
-
-                if (TimeRemaining <= 0)
+                if (!IsDisposed)
                 {
-                    // Trigger removal logic
-                    RemoveItem();
+                    if (TimeRemaining == 0)
+                    {
+                        // Trigger removal logic
+                        // TODO
+                        DeleteCacheItemCommand.Execute(this);
+                        _timer.Dispose();
+                        IsDisposed = true;
+                    }
+                    else
+                        TimeRemaining--;
                 }
             });
         }
 
-
-        private void RemoveItem()
-        {
-            _messagingService.Send(new RemoveItemMessage(this));
-        }
-
         public string content()
         {
+            string pattern = "[A-Za-z]{5}[0-9]{0}";
+            Regex xp = new Regex(pattern);
+
+            foreach (PostIt p in _GraphicsLOG.PostItList)
+            {
+                if (xp.IsMatch(p.Error))
+                    return p.Error;
+                else if (xp.IsMatch(p.Solution))
+                    return p.Solution;
+                else if (xp.IsMatch(p.Suggestion))
+                    return p.Suggestion;
+                else if (xp.IsMatch(p.Comment))
+                    return p.Comment;
+
+            }
+
             return "No Notes";
         }
 
