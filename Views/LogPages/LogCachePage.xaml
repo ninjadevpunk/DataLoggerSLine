@@ -40,7 +40,7 @@
            Text="LOG CACHE" />
 
         <TextBlock Grid.Column="0" Grid.Row="1" x:Name="text_logCACHE_COUNT" Style="{DynamicResource text_SUB HEADING1}"
-           Text="{Binding LogCount}" />
+           Text="{Binding LogCount, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
 
 
 
@@ -56,7 +56,7 @@
         <!-- LOG CACHE -->
         <ListView Style="{DynamicResource listView_LOGCACHE}" Grid.Column="0" Grid.Row="3"
                   ItemContainerStyle="{DynamicResource listView_LOGCACHE_ITEM}"
-                  ItemsSource="{Binding CacheItems}" />
+                  ItemsSource="{Binding CacheItems, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
 
 
 
