@@ -270,7 +270,8 @@ namespace Data_Logger_1._3.Services
             _MainFrame = mainWindow.frame_MAINWINDOW;
             NavigateToLogCachePage();
             LoginWindow.Close();
-            SignUpWindow.Close();
+            if(SignUpWindow is not null)
+                SignUpWindow.Close();
         }
 
         public void NavigateToLogCachePage()
