@@ -1,6 +1,7 @@
 ﻿using Data_Logger_1._3.Commands;
-using Data_Logger_1._3.Commands.PostIt;
+using Data_Logger_1._3.Commands.PostItCommands;
 using Data_Logger_1._3.Services;
+using Data_Logger_1._3.ViewModels.Dashboard;
 using MVVMEssentials.ViewModels;
 using System.Collections.ObjectModel;
 using System.Windows;
@@ -14,7 +15,8 @@ namespace Data_Logger_1._3.ViewModels.Dialogs
 
         private readonly AuthService _authService;
         private readonly DataService _dataService;
-		private readonly NavigationService _navigationService;
+		protected readonly NavigationService _navigationService;
+        protected readonly LogCacheViewModel _logCacheViewModel;
 
 
 
@@ -314,10 +316,12 @@ namespace Data_Logger_1._3.ViewModels.Dialogs
 
 		public ICommand CurrentEndDateCommand { get; set; }
 
+
+
 		public ICommand SaveCommand { get; set; }
 
-
 		public ICommand AnnotateCommand { get; set; }
+
 
 
 		public ICommand ClearPostItListCommand { get; set; }
@@ -327,10 +331,10 @@ namespace Data_Logger_1._3.ViewModels.Dialogs
 
 
 
-
-        protected LoggerCreateViewModel(NavigationService navigationService)
+        protected LoggerCreateViewModel(NavigationService navigationService, LogCacheViewModel logCacheViewModel)
         {
 			_navigationService = navigationService;
+			_logCacheViewModel = logCacheViewModel;
 
 			AppFieldEnabled = true;
 
@@ -353,6 +357,8 @@ namespace Data_Logger_1._3.ViewModels.Dialogs
 
 			EndDate = DateTime.Now;
 
+			PostIts = new ObservableCollection<CreatePostItViewModel>();
+
 			CurrentStartDateCommand = new CurrentStartDateCommand(this);
 			CurrentEndDateCommand = new CurrentEndDateCommand(this);
 			AddPostItCommand = new AddPostItCommand(_navigationService, this);
@@ -362,7 +368,7 @@ namespace Data_Logger_1._3.ViewModels.Dialogs
 
 
 
-		public void UpdateDateControl()
+        public void UpdateDateControl()
 		{
             StartDate = DateTime.Parse(StartDate.Date.ToLongDateString() + " " + StartHours + ":" + StartMinutes + ":" + StartSeconds + "." + StartMilliseconds);
         }

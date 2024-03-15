@@ -1,4 +1,5 @@
 ﻿using Data_Logger_1._3.Services;
+using Data_Logger_1._3.ViewModels.Dashboard;
 using System.Windows;
 using System.Windows.Input;
 
@@ -6,10 +7,12 @@ namespace Data_Logger_1._3.ViewModels.Dialogs
 {
     public class AScodeCreateViewModel : codeCreateViewModel
     {
-        public AScodeCreateViewModel(NavigationService navigationService) : base(navigationService)
+        public AScodeCreateViewModel(NavigationService navigationService, LogCacheViewModel logCacheViewModel) : base(navigationService, logCacheViewModel)
         {
             ApplicationName = "Android Studio Hedgehog 2023.1.1";
 			//AppFieldEnabled = false;
+
+			FullORSimple = false;
         }
 
 		private bool fullORsimple;
@@ -23,13 +26,13 @@ namespace Data_Logger_1._3.ViewModels.Dialogs
 			{
 				fullORsimple = value;
 
-				GradleDaemonVisibility = Visibility.Hidden;
-                RunBuildVisibility = Visibility.Hidden;
-                LoadBuildVisibility = Visibility.Hidden;
-                ConfigureBuildVisibility = Visibility.Hidden;
-                AllProjectsVisibility = Visibility.Hidden;
+				GradleDaemonVisibility = FullORSimple ? Visibility.Hidden : Visibility.Visible;
+                RunBuildVisibility = FullORSimple ? Visibility.Hidden : Visibility.Visible;
+                LoadBuildVisibility = FullORSimple ? Visibility.Hidden : Visibility.Visible;
+                ConfigureBuildVisibility = FullORSimple ? Visibility.Hidden : Visibility.Visible;
+                AllProjectsVisibility = FullORSimple ? Visibility.Hidden : Visibility.Visible;
 
-				OnPropertyChanged(nameof(FullORSimple));
+                OnPropertyChanged(nameof(FullORSimple));
 
 			}
 		}
@@ -63,6 +66,7 @@ namespace Data_Logger_1._3.ViewModels.Dialogs
 			set
 			{
 				syncHours = value;
+				UpdateSyncTime();
 				OnPropertyChanged(nameof(SyncHours));
 			}
 		}
@@ -77,8 +81,9 @@ namespace Data_Logger_1._3.ViewModels.Dialogs
 			set
 			{
 				syncMinutes = value;
+				UpdateSyncTime();
 				OnPropertyChanged(nameof(SyncMinutes));
-			}
+            }
 		}
 
 		private int syncSeconds;
@@ -91,8 +96,9 @@ namespace Data_Logger_1._3.ViewModels.Dialogs
 			set
 			{
 				syncSeconds = value;
+				UpdateSyncTime();
 				OnPropertyChanged(nameof(SyncSeconds));
-			}
+            }
 		}
 
 		private int syncMilliseconds;
@@ -105,8 +111,9 @@ namespace Data_Logger_1._3.ViewModels.Dialogs
 			set
 			{
 				syncMilliseconds = value;
+				UpdateSyncTime();
 				OnPropertyChanged(nameof(SyncMilliseconds));
-			}
+            }
 		}
 
 
@@ -122,7 +129,7 @@ namespace Data_Logger_1._3.ViewModels.Dialogs
 
 
 
-		private Visibility gradleDaemonVisibility = Visibility.Visible;
+		private Visibility gradleDaemonVisibility;
 		public Visibility GradleDaemonVisibility
         {
 			get
@@ -177,6 +184,7 @@ namespace Data_Logger_1._3.ViewModels.Dialogs
 			set
 			{
 				gradleDaemonHours = value;
+				UpdateGradleDaemonTime();
 				OnPropertyChanged(nameof(GradleDaemonHours));
 			}
 		}
@@ -191,8 +199,9 @@ namespace Data_Logger_1._3.ViewModels.Dialogs
 			set
 			{
 				gradleDaemonMinutes = value;
+				UpdateGradleDaemonTime();
 				OnPropertyChanged(nameof(GradleDaemonMinutes));
-			}
+            }
 		}
 
 		private int gradleDaemonSeconds;
@@ -205,8 +214,9 @@ namespace Data_Logger_1._3.ViewModels.Dialogs
 			set
 			{
 				gradleDaemonSeconds = value;
+				UpdateGradleDaemonTime();
 				OnPropertyChanged(nameof(GradleDaemonSeconds));
-			}
+            }
 		}
 
 		private int gradleDaemonMilliseconds;
@@ -219,8 +229,9 @@ namespace Data_Logger_1._3.ViewModels.Dialogs
 			set
 			{
 				gradleDaemonMilliseconds = value;
+				UpdateGradleDaemonTime();
 				OnPropertyChanged(nameof(GradleDaemonMilliseconds));
-			}
+            }
 		}
 
 
@@ -275,6 +286,7 @@ namespace Data_Logger_1._3.ViewModels.Dialogs
 			set
 			{
 				runBuildHours = value;
+				UpdateRunBuildTime();
 				OnPropertyChanged(nameof(RunBuildHours));
 			}
 		}
@@ -289,8 +301,9 @@ namespace Data_Logger_1._3.ViewModels.Dialogs
 			set
 			{
 				runBuildMinutes = value;
+				UpdateRunBuildTime();
 				OnPropertyChanged(nameof(RunBuildMinutes));
-			}
+            }
 		}
 
 		private int runBuildSeconds;
@@ -303,8 +316,9 @@ namespace Data_Logger_1._3.ViewModels.Dialogs
 			set
 			{
 				runBuildSeconds = value;
+				UpdateRunBuildTime();
 				OnPropertyChanged(nameof(RunBuildSeconds));
-			}
+            }
 		}
 
 		private int runBuildMilliseconds;
@@ -317,8 +331,9 @@ namespace Data_Logger_1._3.ViewModels.Dialogs
 			set
 			{
 				runBuildMilliseconds = value;
+				UpdateRunBuildTime();
 				OnPropertyChanged(nameof(RunBuildMilliseconds));
-			}
+            }
 		}
 
 
@@ -359,7 +374,7 @@ namespace Data_Logger_1._3.ViewModels.Dialogs
 			{
 				loadBuildTime = value;
 				OnPropertyChanged(nameof(LoadBuildTime));
-			}
+            }
 		}
 
 		private int loadBuildHours;
@@ -372,8 +387,9 @@ namespace Data_Logger_1._3.ViewModels.Dialogs
 			set
 			{
 				loadBuildHours = value;
+				UpdateLoadBuildTime();
 				OnPropertyChanged(nameof(LoadBuildHours));
-			}
+            }
 		}
 
 		private int loadBuildMinutes;
@@ -386,8 +402,9 @@ namespace Data_Logger_1._3.ViewModels.Dialogs
 			set
 			{
 				loadBuildMinutes = value;
+				UpdateLoadBuildTime();
 				OnPropertyChanged(nameof(LoadBuildMinutes));
-			}
+            }
 		}
 
 		private int loadBuildSeconds;
@@ -400,8 +417,9 @@ namespace Data_Logger_1._3.ViewModels.Dialogs
 			set
 			{
 				loadBuildSeconds = value;
+				UpdateLoadBuildTime();
 				OnPropertyChanged(nameof(LoadBuildSeconds));
-			}
+            }
 		}
 
 		private int loadBuildMilliseconds;
@@ -414,8 +432,9 @@ namespace Data_Logger_1._3.ViewModels.Dialogs
 			set
 			{
 				loadBuildMilliseconds = value;
+				UpdateLoadBuildTime();
 				OnPropertyChanged(nameof(LoadBuildMilliseconds));
-			}
+            }
 		}
 
 
@@ -472,6 +491,7 @@ namespace Data_Logger_1._3.ViewModels.Dialogs
 			set
 			{
 				configureBuildHours = value;
+				UpdateConfigureBuildTime();
 				OnPropertyChanged(nameof(ConfigureBuildHours));
 			}
 		}
@@ -486,8 +506,9 @@ namespace Data_Logger_1._3.ViewModels.Dialogs
 			set
 			{
 				configureBuildMinutes = value;
+				UpdateConfigureBuildTime();
 				OnPropertyChanged(nameof(ConfigureBuildMinutes));
-			}
+            }
 		}
 
 		private int configureBuildSeconds;
@@ -500,8 +521,9 @@ namespace Data_Logger_1._3.ViewModels.Dialogs
 			set
 			{
 				configureBuildSeconds = value;
+				UpdateConfigureBuildTime();
 				OnPropertyChanged(nameof(ConfigureBuildSeconds));
-			}
+            }
 		}
 
 		private int configureBuildMilliseconds;
@@ -514,8 +536,9 @@ namespace Data_Logger_1._3.ViewModels.Dialogs
 			set
 			{
 				configureBuildMilliseconds = value;
+				UpdateConfigureBuildTime();
 				OnPropertyChanged(nameof(ConfigureBuildMilliseconds));
-			}
+            }
 		}
 
 
@@ -568,6 +591,7 @@ namespace Data_Logger_1._3.ViewModels.Dialogs
 			set
 			{
 				allProjectsHours = value;
+				UpdateAllProjectsTime();
 				OnPropertyChanged(nameof(AllProjectsHours));
 			}
 		}
@@ -582,8 +606,9 @@ namespace Data_Logger_1._3.ViewModels.Dialogs
 			set
 			{
 				allProjectsMinutes = value;
+				UpdateAllProjectsTime();
 				OnPropertyChanged(nameof(AllProjectsMinutes));
-			}
+            }
 		}
 
 		private int allProjectsSeconds;
@@ -596,8 +621,9 @@ namespace Data_Logger_1._3.ViewModels.Dialogs
 			set
 			{
 				allProjectsSeconds = value;
+				UpdateAllProjectsTime();
 				OnPropertyChanged(nameof(AllProjectsSeconds));
-			}
+            }
 		}
 
 		private int allProjectsMilliseconds;
@@ -610,8 +636,9 @@ namespace Data_Logger_1._3.ViewModels.Dialogs
 			set
 			{
 				allProjectsMilliseconds = value;
+				UpdateAllProjectsTime();
 				OnPropertyChanged(nameof(AllProjectsMilliseconds));
-			}
+            }
 		}
 
 
@@ -620,7 +647,50 @@ namespace Data_Logger_1._3.ViewModels.Dialogs
 
 
 
-		public ICommand ToggleDetailsCommand { get; set; }
 
+
+        #region Member Functions
+
+
+
+
+		public void UpdateSyncTime()
+		{
+			SyncTime = DateTime.Parse(DateTime.Now.ToLongDateString() + " " + SyncHours + ":" + SyncMinutes + ":" + SyncSeconds + "." + SyncMilliseconds);
+		}
+
+		public void UpdateGradleDaemonTime()
+		{
+			GradleDaemonTime = DateTime.Parse(DateTime.Now.ToLongDateString() + " " + GradleDaemonHours + ":" + GradleDaemonMinutes + ":" + GradleDaemonSeconds + "." + GradleDaemonMilliseconds);
+        }
+
+		public void UpdateRunBuildTime()
+		{
+			RunBuildTime = DateTime.Parse(DateTime.Now.ToLongDateString() + " " + RunBuildHours + ":" + RunBuildMinutes + ":" + RunBuildSeconds + "." + RunBuildMilliseconds);
+        }
+
+		public void UpdateLoadBuildTime()
+		{
+			LoadBuildTime = DateTime.Parse(DateTime.Now.ToLongDateString() + " " + LoadBuildHours + ":" + LoadBuildMinutes + ":" + LoadBuildSeconds + "." + LoadBuildMilliseconds);
+        }
+
+		public void UpdateConfigureBuildTime()
+		{
+			ConfigureBuildTime = DateTime.Parse(DateTime.Now.ToLongDateString() + " " + ConfigureBuildHours + ":" + ConfigureBuildMinutes + ":" + ConfigureBuildSeconds + "." + ConfigureBuildMilliseconds);
+        }
+
+		public void UpdateAllProjectsTime()
+		{
+			AllProjectsTime = DateTime.Parse(DateTime.Now.ToLongDateString() + " " + AllProjectsHours + ":" + AllProjectsMinutes + ":" + AllProjectsSeconds + "." + AllProjectsMilliseconds);
+        }
+
+
+
+
+
+
+
+
+        #endregion
     }
 }

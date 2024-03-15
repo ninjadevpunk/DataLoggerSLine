@@ -1,4 +1,5 @@
 ﻿using Data_Logger_1._3.Services;
+using Data_Logger_1._3.ViewModels.Dashboard;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
 
@@ -118,7 +119,7 @@ namespace Data_Logger_1._3.ViewModels.Dialogs
 
         public ICommand BrowseCommand { get; set; }
 
-        public flexiCreateViewModel(NavigationService navigationService) : base(navigationService)
+        public flexiCreateViewModel(NavigationService navigationService, LogCacheViewModel logCacheViewModel) : base(navigationService, logCacheViewModel)
         {
             //
         }

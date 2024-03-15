@@ -39,7 +39,7 @@ namespace Data_Logger_1._3.ViewModels.LogViewModels
 			}
 		}
 
-		ICommand SaveNoteCommand { get; set; }
+		public ICommand SaveNoteCommand { get; set; }
 
 		public CreateNoteViewModel(NavigationService navigationService)
 		{
