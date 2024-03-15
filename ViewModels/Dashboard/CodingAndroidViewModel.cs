@@ -1,5 +1,4 @@
 ﻿using Data_Logger_1._3.Commands.ASCommands;
-using Data_Logger_1._3.Messages;
 using Data_Logger_1._3.Services;
 using Data_Logger_1._3.ViewModels.Dashboard;
 using System.Collections.ObjectModel;
@@ -21,6 +20,7 @@ namespace Data_Logger_1._3.ViewModels.LogViewModels
             set
             {
                 cacheItems = value;
+                LogCount = CacheItems.Count.ToString() + " android logs cached | x total logs";
                 OnPropertyChanged(nameof(CacheItems));
             }
         }
@@ -28,12 +28,15 @@ namespace Data_Logger_1._3.ViewModels.LogViewModels
 
         public CodingAndroidViewModel(NavigationService navigationService) : base(navigationService)
         {
+            CacheItems = new ObservableCollection<AndroidLOGViewModel>();
+
             CreateLogCommand = new CreateASLogCommand(_navigationService);
             ReportLogCommand = new ReportASLogCommand(_navigationService);
         }
 
         public CodingAndroidViewModel(string logCount, NavigationService navigationService) : base(navigationService)
         {
+            CacheItems = new ObservableCollection<AndroidLOGViewModel>();
 
             LogCount = logCount;
 
@@ -41,9 +44,5 @@ namespace Data_Logger_1._3.ViewModels.LogViewModels
             ReportLogCommand = new ReportASLogCommand(_navigationService);
         }
 
-        public override void RemoveItemMethod(RemoveItemMessage item)
-        {
-            throw new NotImplementedException();
-        }
     }
 }

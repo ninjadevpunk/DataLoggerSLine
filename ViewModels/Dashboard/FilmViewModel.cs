@@ -1,5 +1,4 @@
 ﻿using Data_Logger_1._3.Commands.FilmCommands;
-using Data_Logger_1._3.Messages;
 using Data_Logger_1._3.Services;
 using Data_Logger_1._3.ViewModels.Dashboard;
 using System.Collections.ObjectModel;
@@ -18,6 +17,7 @@ namespace Data_Logger_1._3.ViewModels.LogViewModels
             set
             {
                 cacheItems = value;
+                LogCount = CacheItems.Count.ToString() + " film logs cached | x total logs";
                 OnPropertyChanged(nameof(CacheItems));
             }
         }
@@ -25,21 +25,21 @@ namespace Data_Logger_1._3.ViewModels.LogViewModels
 
         public FilmViewModel(NavigationService navigationService) : base(navigationService)
         {
+            CacheItems = new ObservableCollection<FilmLOGViewModel>();
+
             CreateLogCommand = new CreateFilmLogCommand(_navigationService);
             ReportLogCommand = new ReportFilmLogCommand(_navigationService);
         }
 
         public FilmViewModel(string logCount, NavigationService navigationService) : base(navigationService)
         {
+            CacheItems = new ObservableCollection<FilmLOGViewModel>();
+
             LogCount = logCount;
 
             CreateLogCommand = new CreateFilmLogCommand(_navigationService);
             ReportLogCommand = new ReportFilmLogCommand(_navigationService);
         }
 
-        public override void RemoveItemMethod(RemoveItemMessage item)
-        {
-            throw new NotImplementedException();
-        }
     }
 }

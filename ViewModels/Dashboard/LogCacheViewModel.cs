@@ -1,11 +1,10 @@
-﻿using Data_Logger_1._3.Messages;
-using Data_Logger_1._3.Services;
+﻿using Data_Logger_1._3.Services;
 using MVVMEssentials.ViewModels;
 using System.Windows.Input;
 
 namespace Data_Logger_1._3.ViewModels.Dashboard
 {
-    public abstract class LogCacheViewModel : ViewModelBase
+    public class LogCacheViewModel : ViewModelBase
     {
         private readonly AuthService _authService;
         private readonly DataService _dataService;
@@ -21,11 +20,8 @@ namespace Data_Logger_1._3.ViewModels.Dashboard
         {
             _navigationService = navigationService;
 
-            // Subscribe to RemoveItemMessage
-            MessagingService.Subscribe<RemoveItemMessage>(RemoveItemMethod);
         }
 
 
-        public abstract void RemoveItemMethod(RemoveItemMessage item);
     }
 }
