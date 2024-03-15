@@ -73,7 +73,7 @@
                          Margin="20 0"
                          Minimum="0"
                          Maximum="100"
-                         Value="68"
+                         Value="0"
                          VerticalAlignment="Stretch" >
                 
                 <ProgressBar.LayoutTransform>
