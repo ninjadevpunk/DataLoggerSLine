@@ -819,10 +819,10 @@
 
                             <Grid>
 
-                                <!--<RichTextBox x:Name="richTextBox_POSTIT_ERROR" Style="{DynamicResource inputText_NOTEPAD}"
-                                             BorderThickness="0" />-->
-                                <toolkit:RichTextBox Style="{DynamicResource inputText_NOTEPAD}"
-                                    Text="{Binding Error, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
+                                <toolkit:RichTextBox x:Name="inputText_ERROR" Style="{DynamicResource inputText_NOTEPAD}"
+                                                     Text="{Binding Error, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                                                     TextChanged="on_Error_Text_Changed"
+                                                     />
 
                             </Grid>
 
@@ -842,10 +842,9 @@
                             <Grid>
                                 
                                 
-                                <!--<RichTextBox x:Name="richTextBox_POSTIT_SOLUTION"  Style="{DynamicResource inputText_NOTEPAD}"
-                                             BorderThickness="0" />-->
-                                <toolkit:RichTextBox Style="{DynamicResource inputText_NOTEPAD}"
-                                                     Text="{Binding Solution, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
+                                <toolkit:RichTextBox x:Name="inputText_SOLUTION" Style="{DynamicResource inputText_NOTEPAD}"
+                                                     Text="{Binding Solution, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                                                     TextChanged="on_Solution_Text_Changed" />
                                 
                                 
                             </Grid>
@@ -862,10 +861,10 @@
 
 
                             <Grid>
-                                <!--<RichTextBox x:Name="richTextBox_POSTIT_SUGGESTION" Style="{DynamicResource inputText_NOTEPAD}"
-                                             BorderThickness="0"/>-->
-                                <toolkit:RichTextBox Style="{DynamicResource inputText_NOTEPAD}"
-                                                     Text="{Binding Suggestion, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
+                                
+                                <toolkit:RichTextBox x:Name="inputText_SUGGESTION" Style="{DynamicResource inputText_NOTEPAD}"
+                                                     Text="{Binding Suggestion, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                                                     TextChanged="on_Suggestion_Text_Changed" />
                             </Grid>
                             
 
@@ -886,10 +885,9 @@
                             <Grid>
                                 
                                 
-                                <!--<RichTextBox x:Name="richTextBox_POSTIT_COMMENT" Style="{DynamicResource inputText_NOTEPAD}"
-                                             BorderThickness="0"/>-->
-                                <toolkit:RichTextBox Style="{DynamicResource inputText_NOTEPAD}"
-                                                     Text="{Binding Comment, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
+                                <toolkit:RichTextBox x:Name="inputText_COMMENT" Style="{DynamicResource inputText_NOTEPAD}"
+                                                     Text="{Binding Comment, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                                                     TextChanged="on_Comment_Text_Changed" />
                             
                             
                             </Grid>

@@ -108,6 +108,20 @@ namespace Data_Logger_1._3.ViewModels.Dialogs
 			}
 		}
 
+		private string display_error;
+		public string Display_Error
+		{
+			get
+			{
+				return display_error;
+			}
+			set
+			{
+				display_error = value;
+                OnPropertyChanged(nameof(Display_Error));
+			}
+		}
+
 		private string solution;
 		public string Solution
 		{
@@ -165,6 +179,20 @@ namespace Data_Logger_1._3.ViewModels.Dialogs
 			}
 		}
 
+		private string display_solution;
+		public string Display_Solution
+		{
+			get
+			{
+				return display_solution;
+			}
+			set
+			{
+				display_solution = value;
+				OnPropertyChanged(nameof(Display_Solution));
+			}
+		}
+
 		private string suggestion;
 		public string Suggestion
 		{
@@ -196,6 +224,20 @@ namespace Data_Logger_1._3.ViewModels.Dialogs
 
                 OnPropertyChanged(nameof(Suggestion));
             }
+		}
+
+		private string display_suggestion;
+		public string Display_Suggestion
+		{
+			get
+			{
+				return display_suggestion;
+			}
+			set
+			{
+				display_suggestion = value;
+				OnPropertyChanged(nameof(Display_Suggestion));
+			}
 		}
 
 		private string comment;
@@ -231,6 +273,20 @@ namespace Data_Logger_1._3.ViewModels.Dialogs
 
                 OnPropertyChanged(nameof(Comment));
             }
+		}
+
+		private string display_comment;
+		public string Display_Comment
+		{
+			get
+			{
+				return display_comment;
+			}
+			set
+			{
+				display_comment = value;
+				OnPropertyChanged(nameof(Display_Comment));
+			}
 		}
 
 		private Visibility errorVisible;

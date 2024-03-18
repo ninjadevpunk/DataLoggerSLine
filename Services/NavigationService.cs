@@ -373,8 +373,7 @@ namespace Data_Logger_1._3.Services
 
         public void NavigateToPostItCreator(LoggerCreateViewModel loggerCreator)
         {
-            var postItPage = new PostItPage();
-            postItPage.DataContext = new CreatePostItViewModel(this, loggerCreator);
+            var postItPage = new PostItPage(new CreatePostItViewModel(this, loggerCreator));
 
             _MainFrame.Navigate(postItPage);
         }
