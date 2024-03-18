@@ -248,6 +248,11 @@
         <Setter Property="TextTrimming" Value="CharacterEllipsis"/>
     </Style>
 
+    <Style x:Key="text_LIST_POSTIT_ERSO_CONTENT" TargetType="TextBlock" BasedOn="{StaticResource text_LIST_LABEL_CONTENT}">
+        <Setter Property="Height" Value="24"/>
+        <Setter Property="VerticalAlignment" Value="Center"/>
+    </Style>
+
     <Style x:Key="text_LIST_LABEL_CONTENT_View" TargetType="TextBlock" BasedOn="{StaticResource text_LIST_LABEL_CONTENT}">
         <Setter Property="TextWrapping" Value="Wrap"/>
         <Setter Property="TextTrimming" Value="None"/>

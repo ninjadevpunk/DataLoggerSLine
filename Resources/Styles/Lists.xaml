@@ -652,12 +652,16 @@
                                        Height="27"
                                        HorizontalAlignment="Stretch"
                                        Text="{Binding Subject, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
+                                
+                                
+                                
+                                
 
                                 <StackPanel Orientation="Vertical" Grid.Row="1"
-                                        HorizontalAlignment="Stretch"
-                                        >
+                                        HorizontalAlignment="Stretch" >
+                                    
                                     <!-- ERROR -->
-                                    <Border Padding="0 5" Visibility="{Binding ErrorVisible, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}">
+                                    <Border Padding="0 5" Visibility="{Binding ErrorVisible, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" >
                                         <Grid>
                                             <Grid.ColumnDefinitions>
                                                 <ColumnDefinition Width="15"/>
@@ -667,10 +671,10 @@
 
                                             <Ellipse x:Name="ellipse_POSTIT_ERROR" Style="{DynamicResource ellipse_ERSO}"
                                                  Fill="{DynamicResource postIT_ERROR}" />
-                                            
-                                            <TextBlock Grid.Column="2" x:Name="text_POSTIT_ERROR" Style="{DynamicResource text_LIST_LABEL_CONTENT}"
-                                                   HorizontalAlignment="Stretch"
-                                                   Text="{Binding Error, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
+
+                                            <TextBlock Grid.Column="2" x:Name="text_POSTIT_ERROR" Style="{DynamicResource text_LIST_POSTIT_ERSO_CONTENT}"
+                                                       HorizontalAlignment="Stretch"
+                                                       Text="{Binding Display_Error, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
                                             
                                         </Grid>
                                     </Border>
@@ -687,10 +691,10 @@
 
                                             <Ellipse x:Name="ellipse_POSTIT_SOLUTION" Style="{DynamicResource ellipse_ERSO}"
                                                      Fill="{DynamicResource postIT_SOLUTION}" />
-                                            
-                                            <TextBlock Grid.Column="2" x:Name="text_POSTIT_SOLUTION" Style="{DynamicResource text_LIST_LABEL_CONTENT}"
+
+                                            <TextBlock Grid.Column="2" x:Name="text_POSTIT_SOLUTION" Style="{DynamicResource text_LIST_POSTIT_ERSO_CONTENT}"
                                                        HorizontalAlignment="Stretch"
-                                                       Text="{Binding Solution, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
+                                                       Text="{Binding Display_Solution, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
                                             
                                         </Grid>
                                     </Border>
@@ -707,10 +711,10 @@
 
                                             <Ellipse x:Name="ellipse_POSTIT_SUGGESTION" Style="{DynamicResource ellipse_ERSO}"
                                                      Fill="{DynamicResource postIT_SUGGESTION}" />
-                                            
-                                            <TextBlock Grid.Column="2" x:Name="text_POSTIT_SUGGESTION" Style="{DynamicResource text_LIST_LABEL_CONTENT}"
+
+                                            <TextBlock Grid.Column="2" x:Name="text_POSTIT_SUGGESTION" Style="{DynamicResource text_LIST_POSTIT_ERSO_CONTENT}"
                                                        HorizontalAlignment="Stretch"
-                                                       Text="{Binding Suggestion, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
+                                                       Text="{Binding Display_Suggestion, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
                                             
                                         </Grid>
                                     </Border>
@@ -727,10 +731,10 @@
 
                                             <Ellipse x:Name="ellipse_POSTIT_COMMENT" Style="{DynamicResource ellipse_ERSO}"
                                                      Fill="{DynamicResource postIT_COMMENT}" />
-                                            
-                                            <TextBlock Grid.Column="2" x:Name="text_POSTIT_COMMENT" Style="{DynamicResource text_LIST_LABEL_CONTENT}"
+
+                                            <TextBlock Grid.Column="2" x:Name="text_POSTIT_COMMENT" Style="{DynamicResource text_LIST_POSTIT_ERSO_CONTENT}"
                                                        HorizontalAlignment="Stretch"
-                                                       Text="{Binding Comment, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
+                                                       Text="{Binding Display_Comment, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
                                             
                                         </Grid>
                                     </Border>
