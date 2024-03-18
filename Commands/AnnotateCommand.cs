@@ -102,7 +102,7 @@ namespace Data_Logger_1._3.Commands
                                         _ASviewModel.LoadBuildTime,
                                         _ASviewModel.ConfigureBuildTime,
                                         _ASviewModel.AllProjectsTime
-                                        ), cavm));
+                                        ), cavm, _ASviewModel.PostIts));
                                 }
                                 else
                                 {
@@ -124,11 +124,11 @@ namespace Data_Logger_1._3.Commands
                                         _ASviewModel.LoadBuildTime,
                                         _ASviewModel.ConfigureBuildTime,
                                         _ASviewModel.AllProjectsTime
-                                        ), cavm));
+                                        ), cavm, _ASviewModel.PostIts));
                                 }
                                 
                                 
-                                cavm.LogCount = cavm.CacheItems.Count.ToString() + " logs cached | x total logs";
+                                cavm.LogCount = cavm.CacheItems.Count.ToString() + " android studio logs cached | x total logs";
 
                                 _navigationService.NavigateToLogCachePage(CacheContext.AndroidStudio);
 
@@ -151,7 +151,7 @@ namespace Data_Logger_1._3.Commands
                                         posts,
                                         _QtviewModel.BugsFound,
                                         _QtviewModel.ApplicationOpened
-                                        ), qtvm));
+                                        ), qtvm, _QtviewModel.PostIts));
                                 }
                                 else
                                 {
@@ -166,10 +166,10 @@ namespace Data_Logger_1._3.Commands
                                         posts,
                                         _QtviewModel.BugsFound,
                                         _QtviewModel.ApplicationOpened
-                                        ), qtvm));
+                                        ), qtvm, _QtviewModel.PostIts));
                                 }
 
-                                qtvm.LogCount = qtvm.CacheItems.Count.ToString() + " logs cached | x total logs";
+                                qtvm.LogCount = qtvm.CacheItems.Count.ToString() + " qt logs cached | x total logs";
 
                                 _navigationService.NavigateToLogCachePage(CacheContext.Qt);
 
@@ -192,7 +192,7 @@ namespace Data_Logger_1._3.Commands
                                         posts,
                                         _GENviewModel.BugsFound,
                                         _GENviewModel.ApplicationOpened
-                                        ), genvm));
+                                        ), genvm, _GENviewModel.PostIts));
                                 }
                                 else
                                 {
@@ -207,10 +207,10 @@ namespace Data_Logger_1._3.Commands
                                         posts,
                                         _GENviewModel.BugsFound,
                                         _GENviewModel.ApplicationOpened
-                                        ), genvm));
+                                        ), genvm, _GENviewModel.PostIts));
                                 }
 
-                                genvm.LogCount = genvm.CacheItems.Count.ToString() + " logs cached | x total logs";
+                                genvm.LogCount = genvm.CacheItems.Count.ToString() + " coding logs cached | x total logs";
 
                                 _navigationService.NavigateToLogCachePage(CacheContext.Generic);
 
@@ -245,7 +245,7 @@ namespace Data_Logger_1._3.Commands
                                     _GRAviewModel.ColourDepth,
                                     _GRAviewModel.IsCompleted,
                                     _GRAviewModel.Source
-                                    ), gvm));
+                                    ), gvm, _GRAviewModel.PostIts));
                             }
                             else
                             {
@@ -270,11 +270,11 @@ namespace Data_Logger_1._3.Commands
                                     _GRAviewModel.ColourDepth,
                                     _GRAviewModel.IsCompleted,
                                     _GRAviewModel.Source
-                                    ), gvm));
+                                    ), gvm, _GRAviewModel.PostIts));
 
                             }
 
-                            gvm.LogCount = gvm.CacheItems.Count.ToString() + " logs cached | x total logs";
+                            gvm.LogCount = gvm.CacheItems.Count.ToString() + " graphics logs cached | x total logs";
 
                             _navigationService.NavigateToLogCachePage(CacheContext.Graphics);
 
@@ -302,7 +302,7 @@ namespace Data_Logger_1._3.Commands
                                     _FILMviewModel.IsCompleted,
                                     _FILMviewModel.Source
                                     )
-                                    , fvm));
+                                    , fvm, _FILMviewModel.PostIts));
                             }
                             else
                             {
@@ -322,11 +322,78 @@ namespace Data_Logger_1._3.Commands
                                     _FILMviewModel.IsCompleted,
                                     _FILMviewModel.Source
                                     )
-                                    , fvm));
+                                    , fvm, _FILMviewModel.PostIts));
 
                             }
 
-                            fvm.LogCount = fvm.CacheItems.Count.ToString() + " logs cached | x total logs";
+                            fvm.LogCount = fvm.CacheItems.Count.ToString() + " film logs cached | x total logs";
+
+                            _navigationService.NavigateToLogCachePage(CacheContext.Film);
+
+                            break;
+                        }
+                    case "FLEXI LOG":
+                        {
+                            flexiCreateViewModel _FLEXIviewModel = (flexiCreateViewModel)_viewModel;
+                            FlexiViewModel flexvm = (FlexiViewModel)_dashboard;
+
+                            FlexiNotesLOG.FLEXINOTEType temp;
+                            if (_FLEXIviewModel.FlexibleLogCategory == "Document")
+                                temp = FlexiNotesLOG.FLEXINOTEType.Document;
+                            else if (_FLEXIviewModel.FlexibleLogCategory == "Music")
+                                temp = FlexiNotesLOG.FLEXINOTEType.Music;
+                            else
+                                temp = FlexiNotesLOG.FLEXINOTEType.Gaming;
+
+
+                            if(_viewModel.StartDate.Equals(_viewModel.EndDate))
+                            {
+                                flexvm.CacheItems.Add(new FlexiLOGViewModel(new FlexiNotesLOG(
+                                    account,
+                                    _FLEXIviewModel.ProjectName,
+                                    _FLEXIviewModel.ApplicationName,
+                                    _FLEXIviewModel.StartDate,
+                                    DateTime.Now,
+                                    _FLEXIviewModel.Output,
+                                    _FLEXIviewModel.Type,
+                                    posts,
+                                    temp,
+                                    FlexiNotesLOG.GAMINGContext.Create,
+                                    _FLEXIviewModel.Medium,
+                                    _FLEXIviewModel.Format,
+                                    int.Parse(_FLEXIviewModel.BitRate),
+                                    _FLEXIviewModel.Duration,
+                                    _FLEXIviewModel.IsCompleted,
+                                    _FLEXIviewModel.Source
+                                    ),
+                                    flexvm,
+                                    _FLEXIviewModel.PostIts));
+                            }
+                            else
+                            {
+                                flexvm.CacheItems.Add(new FlexiLOGViewModel(new FlexiNotesLOG(
+                                    account,
+                                    _FLEXIviewModel.ProjectName,
+                                    _FLEXIviewModel.ApplicationName,
+                                    _FLEXIviewModel.StartDate,
+                                    _FLEXIviewModel.EndDate,
+                                    _FLEXIviewModel.Output,
+                                    _FLEXIviewModel.Type,
+                                    posts,
+                                    temp,
+                                    FlexiNotesLOG.GAMINGContext.Create,
+                                    _FLEXIviewModel.Medium,
+                                    _FLEXIviewModel.Format,
+                                    int.Parse(_FLEXIviewModel.BitRate),
+                                    _FLEXIviewModel.Duration,
+                                    _FLEXIviewModel.IsCompleted,
+                                    _FLEXIviewModel.Source
+                                    ),
+                                    flexvm,
+                                    _FLEXIviewModel.PostIts));
+                            }
+
+                            flexvm.LogCount = flexvm.CacheItems.Count.ToString() + " flexible logs cached | x total logs";
 
                             _navigationService.NavigateToLogCachePage(CacheContext.Film);
 
