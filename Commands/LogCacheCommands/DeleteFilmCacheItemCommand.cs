@@ -1,4 +1,5 @@
-﻿using Data_Logger_1._3.ViewModels.Dashboard;
+﻿using Data_Logger_1._3.Services;
+using Data_Logger_1._3.ViewModels.Dashboard;
 using Data_Logger_1._3.ViewModels.LogViewModels;
 using MVVMEssentials.Commands;
 
@@ -7,6 +8,7 @@ namespace Data_Logger_1._3.Commands.LogCacheCommands
     public class DeleteFilmCacheItemCommand : CommandBase
     {
         private readonly LogCacheViewModel _viewModel;
+        private readonly DataService _dataService;
 
         public DeleteFilmCacheItemCommand(LogCacheViewModel logCacheViewModel)
         {

@@ -2,7 +2,9 @@
 using Data_Logger_1._3.Commands.LogCacheCommands;
 using Data_Logger_1._3.Models;
 using Data_Logger_1._3.ViewModels.Dashboard;
+using Data_Logger_1._3.ViewModels.Dialogs;
 using MVVMEssentials.ViewModels;
+using System.Collections.ObjectModel;
 using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Input;
@@ -13,6 +15,7 @@ namespace Data_Logger_1._3.ViewModels.LogViewModels
     {
         private readonly AndroidCodingLOG _AndroidCodingLOG;
         private readonly LogCacheViewModel _vm;
+        private readonly ObservableCollection<CreatePostItViewModel> _createPostItViewModels;
 
         public bool IsDisposed { get; set; } = false;
 
@@ -25,10 +28,11 @@ namespace Data_Logger_1._3.ViewModels.LogViewModels
 
 
 
-        public AndroidLOGViewModel(AndroidCodingLOG androidCodingLOG, LogCacheViewModel logCacheViewModel)
+        public AndroidLOGViewModel(AndroidCodingLOG androidCodingLOG, LogCacheViewModel logCacheViewModel, ObservableCollection<CreatePostItViewModel> createPostItViewModels)
 
         {
             _vm = logCacheViewModel;
+            _createPostItViewModels = createPostItViewModels;
 
             _AndroidCodingLOG = androidCodingLOG; 
             TimeRemaining = 1200;
@@ -127,16 +131,16 @@ namespace Data_Logger_1._3.ViewModels.LogViewModels
             string pattern = "[A-Za-z]{5}[0-9]{0}";
             Regex xp = new Regex(pattern);
 
-            foreach (PostIt p in _AndroidCodingLOG.PostItList)
+            foreach (CreatePostItViewModel p in _createPostItViewModels)
             {
-                if (xp.IsMatch(p.Error))
-                    return p.Error;
-                else if (xp.IsMatch(p.Solution))
-                    return p.Solution;
-                else if (xp.IsMatch(p.Suggestion))
-                    return p.Suggestion;
-                else if (xp.IsMatch(p.Comment))
-                    return p.Comment;
+                if (xp.IsMatch(p.Display_Error))
+                    return p.Display_Error;
+                else if (xp.IsMatch(p.Display_Solution))
+                    return p.Display_Solution;
+                else if (xp.IsMatch(p.Display_Suggestion))
+                    return p.Display_Suggestion;
+                else if (xp.IsMatch(p.Display_Comment))
+                    return p.Display_Comment;
 
             }
 
