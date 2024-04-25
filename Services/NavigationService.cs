@@ -26,6 +26,7 @@ namespace Data_Logger_1._3.Services
     public class NavigationService
     {
         private readonly AuthService _authService;
+        private readonly DataService _dataService;
 
         private IHost _host;
         private Frame _MainFrame; // MainWindow Frame
@@ -124,12 +125,12 @@ namespace Data_Logger_1._3.Services
 
 
 
-        public NavigationService(AuthService service)
+        public NavigationService(AuthService service, DataService dataService)
         {
             _authService = service;
+            _dataService = dataService;
 
 
-            setup();
             
         }
 
@@ -140,12 +141,11 @@ namespace Data_Logger_1._3.Services
             _frame = aSframe;
             _ASframe = aSframe;
 
-            setup();
         }
 
         public void setup()
         {
-            Main = new MainWindowViewModel(this);
+            Main = new MainWindowViewModel(this, _authService);
             Dashboard = new LogCachePage();
             Logger = new LoggerCreatePage();
             _frame = Logger.frame_VARIATIONS;
@@ -160,12 +160,12 @@ namespace Data_Logger_1._3.Services
 
             notesDashboard = new NOTESViewModel(this);
 
-            QtCodingLogger = new codeCreateViewModel(this, codingQtDashboard, "Qt");
-            ASCodingLogger = new AScodeCreateViewModel(this, codingAndroidDashboard);
-            CodingLogger = new codeCreateViewModel(this, codingDashboard);
-            GraphicsLogger = new graphicCreateViewModel(this, graphicsDashboard);
-            FilmLogger = new filmCreateViewModel(this, filmDashboard);
-            FlexiLogger = new flexiCreateViewModel(this, flexiDashboard);
+            QtCodingLogger = new codeCreateViewModel(this, codingQtDashboard, "Qt", _dataService);
+            ASCodingLogger = new AScodeCreateViewModel(this, codingAndroidDashboard, _dataService);
+            CodingLogger = new codeCreateViewModel(this, codingDashboard, _dataService);
+            GraphicsLogger = new graphicCreateViewModel(this, graphicsDashboard, _dataService);
+            FilmLogger = new filmCreateViewModel(this, filmDashboard, _dataService);
+            FlexiLogger = new flexiCreateViewModel(this, flexiDashboard, _dataService);
 
             CodingFrame = new coding_UserControl();
             AndroidStudioFrame = new androidStudio_UserControl();
@@ -260,12 +260,28 @@ namespace Data_Logger_1._3.Services
 
         public void NavigateToMainWindow()
         {
+            setup();
+
             if (LoginWindow is null)
                 return;
 
 
             var mainWindow = _host.Services.GetRequiredService<MainWindow>();
             mainWindow.DataContext = Main;
+            QtCodingLogger.SignUpImage = _authService.Account.ProfilePic;
+            QtCodingLogger.Author = _authService.Account.FirstName;
+            ASCodingLogger.SignUpImage = _authService.Account.ProfilePic;
+            ASCodingLogger.Author = _authService.Account.FirstName;
+            CodingLogger.SignUpImage = _authService.Account.ProfilePic;
+            CodingLogger.Author = _authService.Account.FirstName;
+            GraphicsLogger.SignUpImage = _authService.Account.ProfilePic;
+            GraphicsLogger.Author = _authService.Account.FirstName;
+            FilmLogger.SignUpImage = _authService.Account.ProfilePic;
+            FilmLogger.Author = _authService.Account.FirstName;
+            FlexiLogger.SignUpImage = _authService.Account.ProfilePic;
+            FlexiLogger.Author = _authService.Account.FirstName;
+
+            Main.SignUpImage = _authService.Account.ProfilePic;
             mainWindow.Show();
             _MainFrame = mainWindow.frame_MAINWINDOW;
             NavigateToLogCachePage();
@@ -301,6 +317,7 @@ namespace Data_Logger_1._3.Services
             {
                 case CacheContext.Qt:
                     Dashboard.DataContext = codingQtDashboard;
+                    QtCodingLogger.UpdateLogCount();
                     Logger.DataContext = QtCodingLogger;
                     Logger.inputText_APP.UserComboInput = "Qt Creator";
                     CodingFrame.DataContext = QtCodingLogger;
