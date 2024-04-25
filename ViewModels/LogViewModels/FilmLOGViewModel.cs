@@ -1,5 +1,6 @@
 ﻿using Data_Logger_1._3.Commands.LogCacheCommands;
 using Data_Logger_1._3.Models;
+using Data_Logger_1._3.Services;
 using Data_Logger_1._3.ViewModels.Dashboard;
 using Data_Logger_1._3.ViewModels.Dialogs;
 using MVVMEssentials.ViewModels;
@@ -25,7 +26,7 @@ namespace Data_Logger_1._3.ViewModels.LogViewModels
         #region Constructor
 
 
-        public FilmLOGViewModel(FilmLOG filmLOG, LogCacheViewModel logCacheViewModel, ObservableCollection<CreatePostItViewModel> createPostItViewModels)
+        public FilmLOGViewModel(FilmLOG filmLOG, LogCacheViewModel logCacheViewModel, ObservableCollection<CreatePostItViewModel> createPostItViewModels, DataService dataService)
         {
             _vm = logCacheViewModel;
             _createPostItViewModels = createPostItViewModels;
@@ -34,7 +35,7 @@ namespace Data_Logger_1._3.ViewModels.LogViewModels
             TimeRemaining = 1200;
             StartCountdown();
 
-            DeleteCacheItemCommand = new DeleteFilmCacheItemCommand(_vm);
+            DeleteCacheItemCommand = new DeleteFilmCacheItemCommand(_vm, dataService);
         }
 
 
@@ -123,22 +124,25 @@ namespace Data_Logger_1._3.ViewModels.LogViewModels
 
         private void TimerCallback(object? state)
         {
-            Application.Current.Dispatcher.Invoke(() =>
+            if (Application.Current != null)
             {
-                if (!IsDisposed)
+                Application.Current.Dispatcher.Invoke(() =>
                 {
-                    if (TimeRemaining == 0)
+                    if (!IsDisposed)
                     {
-                        // Trigger removal logic
-                        // TODO
-                        DeleteCacheItemCommand.Execute(this);
-                        _timer.Dispose();
-                        IsDisposed = true;
+                        if (TimeRemaining == 0)
+                        {
+                            // Trigger removal logic
+                            // TODO
+                            DeleteCacheItemCommand.Execute(this);
+                            _timer.Dispose();
+                            IsDisposed = true;
+                        }
+                        else
+                            TimeRemaining--;
                     }
-                    else
-                        TimeRemaining--;
-                }
-            });
+                });
+            }
         }
 
         public string content()
