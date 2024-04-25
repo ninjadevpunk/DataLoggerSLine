@@ -15,7 +15,7 @@ namespace Data_Logger_1._3.ViewModels
         {
             _navigationService = navigationService;
 
-            SignUpImage = "/Assets/login/user.png";
+            ShowDefault = Visibility.Visible;
 
             CodingChecked = true;
             CodingQtChecked = true;
@@ -30,6 +30,7 @@ namespace Data_Logger_1._3.ViewModels
             _navigationService = navigationService;
             _authService = authService;
 
+            ShowDefault = Visibility.Visible;
 
             CodingChecked = true;
             CodingQtChecked = true;
@@ -281,7 +282,12 @@ namespace Data_Logger_1._3.ViewModels
             set
             {
                 signupImage = value;
-                ShowDefault = Visibility.Collapsed;
+
+                if(SignUpImage != "")
+                    ShowDefault = Visibility.Collapsed;
+                else
+                    ShowDefault = Visibility.Visible;
+
                 OnPropertyChanged(nameof(SignUpImage));
             }
         }

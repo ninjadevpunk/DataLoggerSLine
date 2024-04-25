@@ -22,7 +22,7 @@ namespace Data_Logger_1._3.ViewModels
 			EmailSignUpCommand = new EmailSignUpCommand(this, _authService, _navigationService);
             GoogleSignInCommand = new GoogleSignInCommand(this, _authService);
 
-			SignUpImage = _authService.Account.ProfilePic;
+			ShowDefault = Visibility.Visible;
 		}
 
 		/* PROPERTIES */

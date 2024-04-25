@@ -26,7 +26,6 @@ namespace Data_Logger_1._3.ViewModels
             _authService = authService;
             _navigationService = navigationService;
 
-            SignUpImage = _authService.Account.ProfilePic;
             ShowDefault = Visibility.Visible;
 
             // Set initial button states

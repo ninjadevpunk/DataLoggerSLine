@@ -28,7 +28,8 @@ namespace Data_Logger_1._3.ViewModels.Dialogs
 			_dataService = dataService;
 
 			Author = _dataService.GetUser();
-			SignUpImage = _dataService.GetDisplayPic();
+
+			DisplayPicVisibility = Visibility.Visible;
 
 			AppFieldEnabled = true;
 
@@ -102,8 +103,13 @@ namespace Data_Logger_1._3.ViewModels.Dialogs
 			set
 			{
 				signupImage = value;
-				DisplayPicVisibility = Visibility.Collapsed;
-				OnPropertyChanged(nameof(SignUpImage));
+
+                if (SignUpImage != "")
+                    DisplayPicVisibility = Visibility.Collapsed;
+                else
+                    DisplayPicVisibility = Visibility.Visible;
+
+                OnPropertyChanged(nameof(SignUpImage));
 			}
 		}
 
