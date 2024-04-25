@@ -1,21 +1,30 @@
-﻿using Data_Logger_1._3.Services;
+﻿using Data_Logger_1._3.Commands;
+using Data_Logger_1._3.Services;
 using Data_Logger_1._3.ViewModels.Dashboard;
+using Data_Logger_1._3.ViewModels.LogViewModels;
 using System.Windows;
-using System.Windows.Input;
 
 namespace Data_Logger_1._3.ViewModels.Dialogs
 {
     public class AScodeCreateViewModel : codeCreateViewModel
     {
-        public AScodeCreateViewModel(NavigationService navigationService, LogCacheViewModel logCacheViewModel) : base(navigationService, logCacheViewModel)
+		private readonly CodingAndroidViewModel _ASviewModel;
+
+        public AScodeCreateViewModel(NavigationService navigationService, LogCacheViewModel logCacheViewModel, DataService dataService) : base(navigationService, logCacheViewModel, dataService)
         {
             ApplicationName = "Android Studio Hedgehog 2023.1.1";
 			//AppFieldEnabled = false;
 
 			FullORSimple = false;
+
+            AnnotateCommand = new AnnotateCommand(LogType, _navigationService, this, _logCacheViewModel, _dataService);
+
+            _ASviewModel = (CodingAndroidViewModel)logCacheViewModel;
+
+			_applications.Clear();
         }
 
-		private bool fullORsimple;
+        private bool fullORsimple;
 		public bool FullORSimple
 		{
 			get

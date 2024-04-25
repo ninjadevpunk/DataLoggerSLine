@@ -4,6 +4,7 @@ using Data_Logger_1._3.Services;
 using Data_Logger_1._3.ViewModels.Dashboard;
 using MVVMEssentials.ViewModels;
 using System.Collections.ObjectModel;
+using System.Net.NetworkInformation;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
