@@ -1,6 +1,7 @@
 ﻿using Data_Logger_1._3.Services;
 using Data_Logger_1._3.ViewModels;
 using MVVMEssentials.Commands;
+using System.Windows;
 
 namespace Data_Logger_1._3.Commands
 {
@@ -21,7 +22,7 @@ namespace Data_Logger_1._3.Commands
             _authService = authService;
         }
 
-        protected override Task ExecuteAsync(object parameter)
+        protected override async Task ExecuteAsync(object parameter)
         {
             try
             {
@@ -36,19 +37,20 @@ namespace Data_Logger_1._3.Commands
                 if (result == true)
                 {
                     // Open document
+                    _signUpViewModel.ShowDefault = Visibility.Collapsed;
                     _signUpViewModel.SignUpImage = dialog.FileName;
+                    _authService.Account.ProfilePic = dialog.FileName;
                 }
 
 
-                return Task.CompletedTask;
             }
             catch (Exception)
             {
-
-                _signUpViewModel.SignUpImage = @"C:\Users\STUDIO\OneDrive\Pictures\Application Icons\png";
+                _signUpViewModel.ShowDefault = Visibility.Collapsed;
+                _signUpViewModel.SignUpImage = "/Assets/login/user.png";
+                _authService.Account.ProfilePic = "/Assets/login/user.png";                
             }
 
-            return Task.CompletedTask;
         }
     }
 }
