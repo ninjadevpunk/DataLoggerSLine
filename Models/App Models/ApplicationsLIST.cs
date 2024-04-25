@@ -13,6 +13,12 @@
             this.Add(app);
         }
 
+        public void Add(string applicationName, LOG.CATEGORY category)
+        {
+            ApplicationClass app = new(this.Count + 1, applicationName, category);
+            this.Add(app);
+        }
+
         public new void Add(ApplicationClass application)
         {
 

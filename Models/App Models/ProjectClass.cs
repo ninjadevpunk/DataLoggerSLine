@@ -23,16 +23,6 @@ namespace Data_Logger_1._3.Models.App_Models
         {
         }
 
-        public ProjectClass(int projectID, ACCOUNT user, string name, ApplicationClass application, LOG.CATEGORY category, bool isDefault)
-        {
-            ProjectID = projectID;
-            User = user;
-            Name = name;
-            Application = application;
-            Category = category;
-            IsDefault = isDefault;
-        }
-
         public ProjectClass(int projectID, string name, ApplicationClass application)
         {
             ProjectID = projectID;
@@ -41,12 +31,25 @@ namespace Data_Logger_1._3.Models.App_Models
             Category = LOG.CATEGORY.CODING;
         }
 
-        public ProjectClass(int projectID, string name, ApplicationClass application, LOG.CATEGORY category)
+
+
+        public ProjectClass(int projectID, ACCOUNT user, string name, ApplicationClass application, LOG.CATEGORY category)
         {
             ProjectID = projectID;
+            User = user;
             Name = name;
             Application = application;
             Category = category;
+        }
+
+        public ProjectClass(int projectID, ACCOUNT user, string name, ApplicationClass application, LOG.CATEGORY category, bool isDefault)
+        {
+            ProjectID = projectID;
+            User = user;
+            Name = name;
+            Application = application;
+            Category = category;
+            IsDefault = isDefault;
         }
 
         public override bool Equals(object? obj)
