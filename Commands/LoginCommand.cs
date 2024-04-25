@@ -20,18 +20,16 @@ namespace Data_Logger_1._3.Commands
         }
 
         protected override async Task ExecuteAsync(object parameter)
-        {
-            _navigationService.NavigateToMainWindow();
+        {           
 
             try
             {
-                //bool signInResult = await Task.Run(() => _authService.SignIn(_loginViewModel.Username, _loginViewModel.Password));
+                bool signInResult = await Task.Run(() => _authService.SignIn(_loginViewModel.Username, _loginViewModel.Password));
 
-                //if (!signInResult)
-                //{
-                //    // Authentication failed
-                //    // You may want to display an error message or take appropriate action
-                //}
+                if (signInResult)
+                {
+                    _navigationService.NavigateToMainWindow();
+                }
 
             }
             catch (Exception)
