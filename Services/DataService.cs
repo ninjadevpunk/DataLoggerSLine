@@ -44,12 +44,12 @@ namespace Data_Logger_1._3.Services
             {
                 ApiKey = APIKey,
                 AuthDomain = Domain,
-                Providers = new FirebaseAuthProvider[]
-                {
+                Providers =
+                [
                 new GoogleProvider().AddScopes("email", "profile"),
                 new EmailProvider(),
                 new MicrosoftProvider(),
-                },
+                ],
                 UserRepository = new FileUserRepository("Data Logger")
             });
 
@@ -94,7 +94,7 @@ namespace Data_Logger_1._3.Services
             return _account.ProfilePic;
         }
 
-        /* Use this to create retrieve projects from Firebase. Use the total count of projects to create project IDs.
+        /* Use this to retrieve projects from Firebase. Use the total count of projects to create project IDs.
          * Use the Category to filter out projects for a specific category in the project object.
          * */
 
@@ -223,7 +223,7 @@ namespace Data_Logger_1._3.Services
                 {
                     await _firebaseDatabase.Child("Applications").Child(branch).PostAsync(application);
 
-                    InitialiseApplicationsLIST();
+                    await InitialiseApplicationsLIST();
                 }
                 catch (Exception)
                 {
@@ -257,10 +257,10 @@ namespace Data_Logger_1._3.Services
 
 
                     // Store the app
-                    ApplicationClass app = new(FIREBASE_APPLICATIONS.Count()+1, codingLog._CodeLOG.ApplicationName, LOG.CATEGORY.CODING);
+                    ApplicationClass app = new(FIREBASE_APPLICATIONS.Count()+1, _account, codingLog._CodeLOG.ApplicationName, LOG.CATEGORY.CODING);
 
                     // Store the project
-                    ProjectClass project = new(FIREBASE_PROJECTS.Count() + 1, codingLog._CodeLOG.ProjectName, app);
+                    ProjectClass project = new(FIREBASE_PROJECTS.Count() + 1, _account, codingLog._CodeLOG.ProjectName, app, LOG.CATEGORY.CODING);
 
                     FirebaseAppProjectStore(app, project, "Coding", LOG.CATEGORY.CODING);
 
@@ -294,8 +294,8 @@ namespace Data_Logger_1._3.Services
                     // No need to store Qt in ApplicationsList. It's stored by default.
 
                     // Store the project
-                    ProjectClass project = new(FIREBASE_PROJECTS.Count() + 1, QtcodingLog._QtcodingLOG.ProjectName,
-                        new(1, "Qt Creator", LOG.CATEGORY.CODING));
+                    ProjectClass project = new(FIREBASE_PROJECTS.Count() + 1, _account, QtcodingLog._QtcodingLOG.ProjectName,
+                        new(1, "Qt Creator", LOG.CATEGORY.CODING), LOG.CATEGORY.CODING);
 
                     if (QtcodingLog._QtcodingLOG.ApplicationName == "Qt Creator" && !FIREBASE_PROJECTS.Contains(project))
                     {
@@ -329,8 +329,8 @@ namespace Data_Logger_1._3.Services
                     // No need to store the Android Studio app in the ApplicationsList. It's stored by default.
 
                     // Store the project
-                    ProjectClass project = new(FIREBASE_PROJECTS.Count() + 1, AScodingLog._AndroidCodingLOG.ProjectName,
-                        new(2, "Android Studio Hedgehog 2023.1.1", LOG.CATEGORY.CODING));
+                    ProjectClass project = new(FIREBASE_PROJECTS.Count() + 1, _account, AScodingLog._AndroidCodingLOG.ProjectName,
+                        new(2, "Android Studio Hedgehog 2023.1.1", LOG.CATEGORY.CODING), LOG.CATEGORY.CODING);
 
                     if (AScodingLog._AndroidCodingLOG.ApplicationName == "Android Studio Hedgehog 2023.1.1" && !FIREBASE_PROJECTS.Contains(project))
                     {
@@ -364,11 +364,11 @@ namespace Data_Logger_1._3.Services
                     await _firebaseDatabase.Child("Log").Child("Graphics").PostAsync(graphicsLog);
 
                     // Store the app
-                    ApplicationClass app = new(FIREBASE_APPLICATIONS.Count() + 1, graphicsLog._GraphicsLOG.ApplicationName, LOG.CATEGORY.GRAPHICS);
+                    ApplicationClass app = new(FIREBASE_APPLICATIONS.Count() + 1, _account, graphicsLog._GraphicsLOG.ApplicationName, LOG.CATEGORY.GRAPHICS);
 
                     // Store the project
-                    ProjectClass project = new(FIREBASE_PROJECTS.Count() + 1, graphicsLog._GraphicsLOG.ProjectName,
-                        app);
+                    ProjectClass project = new(FIREBASE_PROJECTS.Count() + 1, _account, graphicsLog._GraphicsLOG.ProjectName,
+                        app, LOG.CATEGORY.GRAPHICS);
 
 
                     FirebaseAppProjectStore(app, project, "Graphics", LOG.CATEGORY.GRAPHICS);
@@ -400,10 +400,10 @@ namespace Data_Logger_1._3.Services
 
 
                     // Store the app
-                    ApplicationClass app = new(FIREBASE_APPLICATIONS.Count() + 1, filmLog._FilmLOG.ApplicationName, LOG.CATEGORY.FILM);
+                    ApplicationClass app = new(FIREBASE_APPLICATIONS.Count() + 1, _account, filmLog._FilmLOG.ApplicationName, LOG.CATEGORY.FILM);
 
                     // Store the project
-                    ProjectClass project = new(FIREBASE_PROJECTS.Count() + 1, filmLog._FilmLOG.ProjectName, app);
+                    ProjectClass project = new(FIREBASE_PROJECTS.Count() + 1, _account, filmLog._FilmLOG.ProjectName, app, LOG.CATEGORY.FILM);
 
                     FirebaseAppProjectStore(app, project, "Film", LOG.CATEGORY.FILM);
 
@@ -434,10 +434,10 @@ namespace Data_Logger_1._3.Services
                     await _firebaseDatabase.Child("Log").Child("Flexi").PostAsync(flexiLog);
 
                     // Store the app
-                    ApplicationClass app = new(FIREBASE_APPLICATIONS.Count() + 1, flexiLog._FlexiLOG.ApplicationName, LOG.CATEGORY.FILM);
+                    ApplicationClass app = new(FIREBASE_APPLICATIONS.Count() + 1, _account, flexiLog._FlexiLOG.ApplicationName, LOG.CATEGORY.NOTES);
 
                     // Store the project
-                    ProjectClass project = new(FIREBASE_PROJECTS.Count() + 1, flexiLog._FlexiLOG.ProjectName, app);
+                    ProjectClass project = new(FIREBASE_PROJECTS.Count() + 1, _account, flexiLog._FlexiLOG.ProjectName, app, LOG.CATEGORY.NOTES);
 
                     FirebaseAppProjectStore(app, project, "Flexi", LOG.CATEGORY.NOTES);
                 }
@@ -468,7 +468,7 @@ namespace Data_Logger_1._3.Services
             {
                 await _firebaseDatabase.Child("Applications").Child(branch).PostAsync(application);
 
-                InitialiseApplicationsLIST();
+                await InitialiseApplicationsLIST();
             }
 
 
@@ -481,7 +481,7 @@ namespace Data_Logger_1._3.Services
                 {
                     await _firebaseDatabase.Child("Projects").Child("Coding").Child("Generic").PostAsync(project);
 
-                    InitialiseProjectsLIST();
+                    await InitialiseProjectsLIST();
                 }
             }
             else
@@ -490,7 +490,7 @@ namespace Data_Logger_1._3.Services
                 {
                     await _firebaseDatabase.Child("Projects").Child(branch).PostAsync(project);
 
-                    InitialiseProjectsLIST();
+                    await InitialiseProjectsLIST();
                 }
             }
         }
@@ -529,7 +529,8 @@ namespace Data_Logger_1._3.Services
 
                 foreach (var item in items)
                 {
-                    if (item.Object._CodeLOG.ApplicationName != "Qt Creator" && item.Object._CodeLOG.ApplicationName != "Android Studio Hedgehog 2023.1.1")
+                    if (item.Object._CodeLOG.ApplicationName != "Qt Creator" && item.Object._CodeLOG.ApplicationName != "Android Studio Hedgehog 2023.1.1"
+                        && item.Object._CodeLOG.Author == _account)
                         list.Add(item.Object);
                 }
             }
@@ -551,7 +552,7 @@ namespace Data_Logger_1._3.Services
 
                 foreach (var item in items)
                 {
-                    if (item.Object._QtcodingLOG.ApplicationName == "Qt Creator")
+                    if (item.Object._QtcodingLOG.ApplicationName == "Qt Creator" && item.Object._QtcodingLOG.Author == _account)
                         list.Add(item.Object);
                 }
             }
@@ -573,7 +574,7 @@ namespace Data_Logger_1._3.Services
 
                 foreach (var item in items)
                 {
-                    if (item.Object._AndroidCodingLOG.ApplicationName == "Android Studio Hedgehog 2023.1.1")
+                    if (item.Object._AndroidCodingLOG.ApplicationName == "Android Studio Hedgehog 2023.1.1" && item.Object._AndroidCodingLOG.Author == _account)
                         list.Add(item.Object);
                 }
             }
@@ -596,7 +597,7 @@ namespace Data_Logger_1._3.Services
 
                 foreach (var item in items)
                 {
-                    if (item.Object._GraphicsLOG.Category == LOG.CATEGORY.GRAPHICS)
+                    if(item.Object._GraphicsLOG.Category == LOG.CATEGORY.GRAPHICS && item.Object._GraphicsLOG.Author == _account)
                         list.Add(item.Object);
                 }
             }
@@ -618,7 +619,7 @@ namespace Data_Logger_1._3.Services
 
                 foreach (var item in items)
                 {
-                    if (item.Object._FilmLOG.Category == LOG.CATEGORY.FILM)
+                    if (item.Object._FilmLOG.Category == LOG.CATEGORY.FILM && item.Object._FilmLOG.Author == _account)
                         list.Add(item.Object);
                 }
             }
@@ -640,7 +641,7 @@ namespace Data_Logger_1._3.Services
 
                 foreach (var item in items)
                 {
-                    if (item.Object._FlexiLOG.Category == LOG.CATEGORY.NOTES)
+                    if (item.Object._FlexiLOG.Category == LOG.CATEGORY.NOTES && item.Object._FlexiLOG.Author == _account)
                         list.Add(item.Object);
                 }
             }
@@ -682,7 +683,8 @@ namespace Data_Logger_1._3.Services
 
                 foreach (var item in items)
                 {
-                    list.Add(item.Object);
+                    if(item.Object.User == _account)
+                        list.Add(item.Object);
                 }
             }
             catch (Exception)
@@ -711,7 +713,8 @@ namespace Data_Logger_1._3.Services
 
                 foreach (var item in items)
                 {
-                    list.Add(item.Object);
+                    if(item.Object.User == _account)
+                        list.Add(item.Object);
                 }
             }
             catch (Exception)
@@ -749,7 +752,8 @@ namespace Data_Logger_1._3.Services
 
                 foreach (var item in items)
                 {
-                    list.Add(item.Object);
+                    if(item.Object.User == _account)
+                        list.Add(item.Object);
                 }
             }
             catch (Exception)
