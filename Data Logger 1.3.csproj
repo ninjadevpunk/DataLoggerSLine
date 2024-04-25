@@ -67,9 +67,7 @@
     <Resource Include="Assets\login\national-cancer-institute-uVnRa6mOLOM-unsplash.jpg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
-    <Resource Include="Assets\login\user.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Resource>
+    <Resource Include="Assets\login\user.png" />
     <Resource Include="Fonts\Red Hat Display.ttf">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
