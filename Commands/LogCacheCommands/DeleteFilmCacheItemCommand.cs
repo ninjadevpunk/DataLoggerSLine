@@ -10,36 +10,38 @@ namespace Data_Logger_1._3.Commands.LogCacheCommands
         private readonly LogCacheViewModel _viewModel;
         private readonly DataService _dataService;
 
-        public DeleteFilmCacheItemCommand(LogCacheViewModel logCacheViewModel)
+        public DeleteFilmCacheItemCommand(LogCacheViewModel logCacheViewModel, DataService dataService)
         {
             try
             {
                 _viewModel = logCacheViewModel ?? throw new ArgumentNullException(nameof(logCacheViewModel));
+                _dataService = dataService ?? throw new ArgumentNullException(nameof(dataService));
 
             }
             catch (Exception)
             {
-                //
+                // TODO
             }
         }
 
-        public override void Execute(object parameter)
+        public override async void Execute(object parameter)
         {
             try
             {
                 // Send data to Firebase first
-                // TODO
-
-
-                // Remove item
                 var item = parameter as FilmLOGViewModel;
                 FilmViewModel list = (FilmViewModel)_viewModel;
 
-                list.CacheItems.Remove(item);
+                var isLogged = await _dataService.StoreFilmLog(item);
+
+
+                // Remove item
+                if(isLogged)
+                    list.CacheItems.Remove(item);
             }
             catch (Exception e)
             {
-                //
+                // TODO
             }
         }
     }
