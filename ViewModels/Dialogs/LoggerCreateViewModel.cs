@@ -14,18 +14,61 @@ namespace Data_Logger_1._3.ViewModels.Dialogs
     public abstract class LoggerCreateViewModel : ViewModelBase
     {
 
-        private readonly AuthService _authService;
-        private readonly DataService _dataService;
+        protected readonly AuthService _authService;
+        protected readonly DataService _dataService;
 		protected readonly NavigationService _navigationService;
         protected readonly LogCacheViewModel _logCacheViewModel;
+        private Timer timer;
 
 
+        protected LoggerCreateViewModel(NavigationService navigationService, LogCacheViewModel logCacheViewModel, DataService dataService)
+        {
+			_navigationService = navigationService;
+			_logCacheViewModel = logCacheViewModel;
+			_dataService = dataService;
+
+			Author = _dataService.GetUser();
+			SignUpImage = _dataService.GetDisplayPic();
+
+			AppFieldEnabled = true;
+
+			ProjectName = "";
+			_projects = new();
+
+			ApplicationName = "";
+			_applications = new();
+
+			StartHours = DateTime.Now.Hour;
+			StartMinutes = DateTime.Now.Minute;
+			StartSeconds = DateTime.Now.Second;
+			StartMilliseconds = DateTime.Now.Millisecond;
+
+			StartDate = DateTime.Now;
+
+			EndHours = DateTime.Now.Hour;
+			EndMinutes = DateTime.Now.Minute;
+			EndSeconds = DateTime.Now.Second;
+			EndMilliseconds = DateTime.Now.Millisecond;
+
+			EndDate = DateTime.Now;
+
+			Output = "";
+			Type = "";
+
+			PostIts = new ObservableCollection<CreatePostItViewModel>();
+
+			NetworkStatusMonitor();
+
+			CurrentStartDateCommand = new CurrentStartDateCommand(this);
+			CurrentEndDateCommand = new CurrentEndDateCommand(this);
+			AddPostItCommand = new AddPostItCommand(_navigationService, this);
+        }
 
 
-        private readonly ObservableCollection<string> _projects;
-        private readonly ObservableCollection<string> _applications;
-        private readonly ObservableCollection<string> _outputs;
-        private readonly ObservableCollection<string> _types;
+        protected readonly ObservableCollection<string> _projects;
+        protected readonly ObservableCollection<string> _applications;
+        protected readonly ObservableCollection<string> _outputs;
+        protected readonly ObservableCollection<string> _types;
 
         public IEnumerable<string> Projects => _projects;
 
@@ -47,6 +90,22 @@ namespace Data_Logger_1._3.ViewModels.Dialogs
         public int LogID { get; set; }
 
         public string Author { get; set; }
+
+
+		private string signupImage;
+		public string SignUpImage
+		{
+			get
+			{
+				return signupImage;
+			}
+			set
+			{
+				signupImage = value;
+				DisplayPicVisibility = Visibility.Collapsed;
+				OnPropertyChanged(nameof(SignUpImage));
+			}
+		}
 
 		private string projectName;
 		public string ProjectName
@@ -304,16 +363,69 @@ namespace Data_Logger_1._3.ViewModels.Dialogs
 			}
 		}
 
+		private bool isFirebaseOnline;
+		public bool IsFirebaseOnline
+		{
+			get
+			{
+				return isFirebaseOnline;
+			}
+			set
+			{
+				isFirebaseOnline = value;
+				FirebaseStatusFill = IsFirebaseOnline ? Brushes.Green : Brushes.Red;
+				FirebaseStatus = IsFirebaseOnline ? "Connected" : "Not Connected";
+				OnPropertyChanged(nameof(IsFirebaseOnline));
+			}
+		}
 
 
-		public string LogCount { get; set; } = "0 Logs Cached";
 
-		public Brush FirebaseStatusFill { get; set; } = Brushes.Red;
+		private string logCount;
+		public string LogCount
+		{
+			get
+			{
+				return logCount;
+			}
+			set
+			{
+				logCount = value;
+				OnPropertyChanged(nameof(LogCount));
+			}
+		}
 
-		public string FirebaseStatus { get; set; } = "Not Connected";
+
+		private Brush firebaseStatusFill;
+		public Brush FirebaseStatusFill
+		{
+			get
+			{
+				return firebaseStatusFill;
+			}
+			set
+			{
+				firebaseStatusFill = value;
+				OnPropertyChanged(nameof(FirebaseStatusFill));
+			}
+		}
+
+		private string firebaseStatus;
+		public string FirebaseStatus
+		{
+			get
+			{
+				return firebaseStatus;
+			}
+			set
+			{
+				firebaseStatus = value;
+				OnPropertyChanged(nameof(FirebaseStatus));
+			}
+		}
 
 
-        public ICommand CurrentStartDateCommand { get; set; }
+		public ICommand CurrentStartDateCommand { get; set; }
 
 		public ICommand CurrentEndDateCommand { get; set; }
 
@@ -332,38 +444,6 @@ namespace Data_Logger_1._3.ViewModels.Dialogs
 
 
 
-        protected LoggerCreateViewModel(NavigationService navigationService, LogCacheViewModel logCacheViewModel)
-        {
-			_navigationService = navigationService;
-			_logCacheViewModel = logCacheViewModel;
-
-			AppFieldEnabled = true;
-
-			_applications = new ObservableCollection<string>();
-			_applications.Add("Visual Studio");
-			_applications.Add("Komodo Edit IDE");
-			_applications.Add("Blender 3D");
-
-			StartHours = DateTime.Now.Hour;
-			StartMinutes = DateTime.Now.Minute;
-			StartSeconds = DateTime.Now.Second;
-			StartMilliseconds = DateTime.Now.Millisecond;
-
-			StartDate = DateTime.Now;
-
-			EndHours = DateTime.Now.Hour;
-			EndMinutes = DateTime.Now.Minute;
-			EndSeconds = DateTime.Now.Second;
-			EndMilliseconds = DateTime.Now.Millisecond;
-
-			EndDate = DateTime.Now;
-
-			PostIts = new ObservableCollection<CreatePostItViewModel>();
-
-			CurrentStartDateCommand = new CurrentStartDateCommand(this);
-			CurrentEndDateCommand = new CurrentEndDateCommand(this);
-			AddPostItCommand = new AddPostItCommand(_navigationService, this);
-        }
 
         #region Member Functions 
 
@@ -379,7 +459,34 @@ namespace Data_Logger_1._3.ViewModels.Dialogs
             EndDate = DateTime.Parse(EndDate.Date.ToLongDateString() + " " + EndHours + ":" + EndMinutes + ":" + EndSeconds + "." + EndMilliseconds);
         }
 
+		public static bool IsInternetAvailable()
+		{
+			return NetworkInterface.GetIsNetworkAvailable();
+        }
 
+        public void NetworkStatusMonitor()
+        {
+            // Initialize the timer to check for network status every second
+            timer = new Timer(TimerCallback, null, TimeSpan.Zero, TimeSpan.FromSeconds(1));
+        }
+
+        private void TimerCallback(object? state)
+        {
+			try
+			{
+                if(Application.Current != null)
+				{
+                    Application.Current.Dispatcher.Invoke(() =>
+                    {
+                        IsFirebaseOnline = IsInternetAvailable();
+                    });
+                }
+            }
+			catch (Exception)
+			{
+				//
+			}
+        }
 
         #endregion
     }
