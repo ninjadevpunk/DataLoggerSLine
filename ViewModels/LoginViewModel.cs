@@ -16,6 +16,49 @@ namespace Data_Logger_1._3.ViewModels
         private readonly AuthService _authService;
         private readonly NavigationService _navigationService;
 
+
+
+
+
+        public LoginViewModel(AuthService authService, NavigationService navigationService)
+        {
+
+            _authService = authService;
+            _navigationService = navigationService;
+
+            SignUpImage = _authService.Account.ProfilePic;
+            ShowDefault = Visibility.Visible;
+
+            // Set initial button states
+            IsButtonBackEnabled = true;
+            IsButtonForwardEnabled = false;
+
+            LoginCommand = new LoginCommand(this, _authService, _navigationService);
+            GoogleLoginCommand = new GoogleLoginCommand(this, _authService);
+        }
+
+        public LoginViewModel(AuthService authService, NavigationService navigationService, string displayPicSource)
+        {
+
+            _authService = authService;
+            _navigationService = navigationService;
+
+            SignUpImage = displayPicSource;
+            ShowDefault = Visibility.Visible;
+
+            // Set initial button states
+            IsButtonBackEnabled = true;
+            IsButtonForwardEnabled = false;
+
+            LoginCommand = new LoginCommand(this, _authService, _navigationService);
+            GoogleLoginCommand = new GoogleLoginCommand(this, _authService);
+        }
+
+
+
+
+
+
         /* Member Variables */
 
         private string signUpImage;
@@ -29,6 +72,21 @@ namespace Data_Logger_1._3.ViewModels
             {
                 signUpImage = value;
                 OnPropertyChanged(nameof(SignUpImage));
+            }
+        }
+
+        private Visibility showDefault;
+        public Visibility ShowDefault
+        {
+            get
+            {
+                return showDefault;
+            }
+            set
+            {
+                showDefault = value;
+                //ShowDefault = SignUpImage != "" ? Visibility.Collapsed : Visibility.Visible;
+                OnPropertyChanged(nameof(ShowDefault));
             }
         }
 
@@ -93,20 +151,6 @@ namespace Data_Logger_1._3.ViewModels
         public ICommand LoginCommand { get; set; }
 
         public ICommand GoogleLoginCommand { get; set; }
-
-        public LoginViewModel(AuthService authService, NavigationService navigationService)
-        {
-
-            _authService = authService;
-            _navigationService = navigationService;
-
-            // Set initial button states
-            IsButtonBackEnabled = true;
-            IsButtonForwardEnabled = false;
-
-            LoginCommand = new LoginCommand(this, _authService, _navigationService);
-            GoogleLoginCommand = new GoogleLoginCommand(this, _authService);
-        }
 
         public void UpdateNavigationButtons()
         {

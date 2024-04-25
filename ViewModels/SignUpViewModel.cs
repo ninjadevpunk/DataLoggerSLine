@@ -1,6 +1,7 @@
 ﻿using Data_Logger_1._3.Commands;
 using Data_Logger_1._3.Services;
 using MVVMEssentials.ViewModels;
+using System.Windows;
 using System.Windows.Input;
 
 namespace Data_Logger_1._3.ViewModels
@@ -11,6 +12,18 @@ namespace Data_Logger_1._3.ViewModels
 
         private readonly AuthService _authService;
 		private readonly NavigationService _navigationService;
+
+		public SignUpViewModel(AuthService authService, NavigationService navigationService)
+        {
+            _authService = authService;
+			_navigationService = navigationService;
+
+            DisplayPicCommand = new DisplayPicCommand(this, _authService);
+			EmailSignUpCommand = new EmailSignUpCommand(this, _authService, _navigationService);
+            GoogleSignInCommand = new GoogleSignInCommand(this, _authService);
+
+			SignUpImage = _authService.Account.ProfilePic;
+		}
 
 		/* PROPERTIES */
 
@@ -25,6 +38,20 @@ namespace Data_Logger_1._3.ViewModels
 			{
 				signUpImage = value;
 				OnPropertyChanged(nameof(SignUpImage));
+			}
+		}
+
+		private Visibility showDefault;
+		public Visibility ShowDefault
+		{
+			get
+			{
+				return showDefault;
+			}
+			set
+			{
+                showDefault = value;
+				OnPropertyChanged(nameof(ShowDefault));
 			}
 		}
 
@@ -171,23 +198,11 @@ namespace Data_Logger_1._3.ViewModels
 			}
 		}
 
-		public ICommand DisplayCommand { get; set; }
+		public ICommand DisplayPicCommand { get; set; }
 
 		public ICommand EmailSignUpCommand { get; set; }
 
         public ICommand GoogleSignInCommand { get; set; }
-
-
-		public SignUpViewModel(AuthService authService, NavigationService navigationService)
-        {
-            _authService = authService;
-			_navigationService = navigationService;
-
-			// TODO
-			// DisplayCommand = new DisplayPicCommand(this, _authService);
-			EmailSignUpCommand = new EmailSignUpCommand(this, _authService, _navigationService);
-            GoogleSignInCommand = new GoogleSignInCommand(this, _authService);
-		}
 
 
     }

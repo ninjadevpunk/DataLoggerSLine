@@ -1,6 +1,7 @@
 ﻿using Data_Logger_1._3.Commands;
 using Data_Logger_1._3.Services;
 using MVVMEssentials.ViewModels;
+using System.Windows;
 using System.Windows.Input;
 
 namespace Data_Logger_1._3.ViewModels
@@ -8,6 +9,35 @@ namespace Data_Logger_1._3.ViewModels
     public class MainWindowViewModel : ViewModelBase
     {
         private readonly NavigationService _navigationService;
+        private readonly AuthService _authService;
+
+        public MainWindowViewModel(NavigationService navigationService)
+        {
+            _navigationService = navigationService;
+
+            SignUpImage = "/Assets/login/user.png";
+
+            CodingChecked = true;
+            CodingQtChecked = true;
+            NotesChecked = false;
+
+            GoBackCommand = new GoBackCommand(_navigationService);
+            GoForwardCommand = new GoForwardCommand(_navigationService);
+        }
+
+        public MainWindowViewModel(NavigationService navigationService, AuthService authService)
+        {
+            _navigationService = navigationService;
+            _authService = authService;
+
+
+            CodingChecked = true;
+            CodingQtChecked = true;
+            NotesChecked = false;
+
+            GoBackCommand = new GoBackCommand(_navigationService);
+            GoForwardCommand = new GoForwardCommand(_navigationService);
+        }
 
         private bool codingChecked;
         public bool CodingChecked
@@ -241,6 +271,35 @@ namespace Data_Logger_1._3.ViewModels
             }
         }
 
+        private string signupImage;
+        public string SignUpImage
+        {
+            get
+            {
+                return signupImage;
+            }
+            set
+            {
+                signupImage = value;
+                ShowDefault = Visibility.Collapsed;
+                OnPropertyChanged(nameof(SignUpImage));
+            }
+        }
+
+        private Visibility showDefault;
+        public Visibility ShowDefault
+        {
+            get
+            {
+                return showDefault;
+            }
+            set
+            {
+                showDefault = value;
+                OnPropertyChanged(nameof(ShowDefault));
+            }
+        }
+
         public void UncheckButtons()
         {
             GenericNotesChecked = false;
@@ -258,15 +317,5 @@ namespace Data_Logger_1._3.ViewModels
         public ICommand GoForwardCommand { get; set; }
 
 
-        public MainWindowViewModel(NavigationService navigationService)
-        {
-            _navigationService = navigationService;
-            CodingChecked = true;
-            CodingQtChecked = true;
-            NotesChecked = false;
-
-            GoBackCommand = new GoBackCommand(_navigationService);
-            GoForwardCommand = new GoForwardCommand(_navigationService);
-        }
     }
 }
