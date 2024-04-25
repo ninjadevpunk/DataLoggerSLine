@@ -4,7 +4,6 @@ using Data_Logger_1._3.ViewModels.Dashboard;
 using Data_Logger_1._3.ViewModels.Dialogs;
 using Data_Logger_1._3.ViewModels.LogViewModels;
 using MVVMEssentials.Commands;
-using System.Security;
 using System.Windows;
 
 namespace Data_Logger_1._3.Commands
@@ -12,13 +11,14 @@ namespace Data_Logger_1._3.Commands
     public class AnnotateCommand : CommandBase
     {
         private readonly NavigationService _navigationService;
+        private readonly DataService _dataService;
         private readonly LoggerCreateViewModel _viewModel;
         private readonly LogCacheViewModel _dashboard;
 
 
         public string _TYPE { get; set; }
 
-        public AnnotateCommand(string TYPE, NavigationService navigationService, LoggerCreateViewModel viewModel, LogCacheViewModel logCacheViewModel)
+        public AnnotateCommand(string TYPE, NavigationService navigationService, LoggerCreateViewModel viewModel, LogCacheViewModel logCacheViewModel, DataService dataService)
         {
 
 
@@ -28,6 +28,7 @@ namespace Data_Logger_1._3.Commands
                 _navigationService = navigationService ?? throw new ArgumentNullException(nameof(navigationService));
                 _viewModel = viewModel ?? throw new ArgumentNullException(nameof(viewModel));
                 _dashboard = logCacheViewModel ?? throw new ArgumentNullException(nameof(logCacheViewModel));
+                _dataService = dataService ?? throw new ArgumentNullException(nameof(dataService));
 
             }
             catch (Exception)
@@ -102,7 +103,7 @@ namespace Data_Logger_1._3.Commands
                                         _ASviewModel.LoadBuildTime,
                                         _ASviewModel.ConfigureBuildTime,
                                         _ASviewModel.AllProjectsTime
-                                        ), cavm, _ASviewModel.PostIts));
+                                        ), cavm, _ASviewModel.PostIts, _dataService));
                                 }
                                 else
                                 {
@@ -124,7 +125,7 @@ namespace Data_Logger_1._3.Commands
                                         _ASviewModel.LoadBuildTime,
                                         _ASviewModel.ConfigureBuildTime,
                                         _ASviewModel.AllProjectsTime
-                                        ), cavm, _ASviewModel.PostIts));
+                                        ), cavm, _ASviewModel.PostIts, _dataService));
                                 }
                                 
                                 
@@ -151,7 +152,7 @@ namespace Data_Logger_1._3.Commands
                                         posts,
                                         _QtviewModel.BugsFound,
                                         _QtviewModel.ApplicationOpened
-                                        ), qtvm, _QtviewModel.PostIts));
+                                        ), qtvm, _QtviewModel.PostIts, _dataService));
                                 }
                                 else
                                 {
@@ -166,7 +167,7 @@ namespace Data_Logger_1._3.Commands
                                         posts,
                                         _QtviewModel.BugsFound,
                                         _QtviewModel.ApplicationOpened
-                                        ), qtvm, _QtviewModel.PostIts));
+                                        ), qtvm, _QtviewModel.PostIts, _dataService));
                                 }
 
                                 qtvm.LogCount = qtvm.CacheItems.Count.ToString() + " qt logs cached | x total logs";
@@ -192,7 +193,7 @@ namespace Data_Logger_1._3.Commands
                                         posts,
                                         _GENviewModel.BugsFound,
                                         _GENviewModel.ApplicationOpened
-                                        ), genvm, _GENviewModel.PostIts));
+                                        ), genvm, _GENviewModel.PostIts, _dataService));
                                 }
                                 else
                                 {
@@ -207,7 +208,7 @@ namespace Data_Logger_1._3.Commands
                                         posts,
                                         _GENviewModel.BugsFound,
                                         _GENviewModel.ApplicationOpened
-                                        ), genvm, _GENviewModel.PostIts));
+                                        ), genvm, _GENviewModel.PostIts, _dataService));
                                 }
 
                                 genvm.LogCount = genvm.CacheItems.Count.ToString() + " coding logs cached | x total logs";
@@ -245,7 +246,7 @@ namespace Data_Logger_1._3.Commands
                                     _GRAviewModel.ColourDepth,
                                     _GRAviewModel.IsCompleted,
                                     _GRAviewModel.Source
-                                    ), gvm, _GRAviewModel.PostIts));
+                                    ), gvm, _GRAviewModel.PostIts, _dataService));
                             }
                             else
                             {
@@ -270,7 +271,7 @@ namespace Data_Logger_1._3.Commands
                                     _GRAviewModel.ColourDepth,
                                     _GRAviewModel.IsCompleted,
                                     _GRAviewModel.Source
-                                    ), gvm, _GRAviewModel.PostIts));
+                                    ), gvm, _GRAviewModel.PostIts, _dataService));
 
                             }
 
@@ -302,7 +303,7 @@ namespace Data_Logger_1._3.Commands
                                     _FILMviewModel.IsCompleted,
                                     _FILMviewModel.Source
                                     )
-                                    , fvm, _FILMviewModel.PostIts));
+                                    , fvm, _FILMviewModel.PostIts, _dataService));
                             }
                             else
                             {
@@ -322,7 +323,7 @@ namespace Data_Logger_1._3.Commands
                                     _FILMviewModel.IsCompleted,
                                     _FILMviewModel.Source
                                     )
-                                    , fvm, _FILMviewModel.PostIts));
+                                    , fvm, _FILMviewModel.PostIts, _dataService));
 
                             }
 
@@ -367,7 +368,7 @@ namespace Data_Logger_1._3.Commands
                                     _FLEXIviewModel.Source
                                     ),
                                     flexvm,
-                                    _FLEXIviewModel.PostIts));
+                                    _FLEXIviewModel.PostIts, _dataService));
                             }
                             else
                             {
@@ -390,7 +391,7 @@ namespace Data_Logger_1._3.Commands
                                     _FLEXIviewModel.Source
                                     ),
                                     flexvm,
-                                    _FLEXIviewModel.PostIts));
+                                    _FLEXIviewModel.PostIts, _dataService));
                             }
 
                             flexvm.LogCount = flexvm.CacheItems.Count.ToString() + " flexible logs cached | x total logs";
