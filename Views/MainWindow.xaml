@@ -348,8 +348,16 @@
                         <!-- ACCOUNT -->
                         <Button Grid.Column="0"  x:Name="button_ACCOUNT" Style="{DynamicResource button_SUPPORT}"
                                 >
-                            <Path Style="{DynamicResource path_USER}"
-                                  />
+                            <Grid>
+                                <Border x:Name="image_USER" Style="{DynamicResource image_displayPic}"
+                                        BorderThickness="0"
+                                        Height="25"
+                                        Width="25"
+                                        HorizontalAlignment="Left" />
+                                
+                                <Path Style="{DynamicResource path_USER}"
+                                      Visibility="{Binding ShowDefault}"/>
+                            </Grid>
                         </Button>
 
 

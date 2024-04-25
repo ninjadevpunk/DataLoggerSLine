@@ -22,7 +22,7 @@
             <Border x:Name="image_USER" Style="{DynamicResource image_displayPic}" />
 
             <Path x:Name="path_DEFAULT_DP" Style="{DynamicResource path_USER}"
-                  Visibility="{Binding}" />
+                  Visibility="{Binding ShowDefault}" />
 
         </Grid>
         
