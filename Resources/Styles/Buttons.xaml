@@ -631,7 +631,7 @@
                             Style="{DynamicResource image_displayPic}">
                         <Grid>
                             <Path x:Name="path_USER" Style="{DynamicResource path_USER}"
-                                  Visibility="{Binding}" />
+                                  Visibility="{Binding ShowDefault}" />
                             <Path x:Name="ACTIONCreateICON" Style="{DynamicResource ACTIONCreateICON}"
                                   Fill="{DynamicResource iconCOLOURAccent02}"
                                   Margin="0"
@@ -665,8 +665,8 @@
                         SnapsToDevicePixels="true"
                         Height="{TemplateBinding Height}"
                         Width="{TemplateBinding Width}"
-                        CornerRadius="2"
-                        >
+                        CornerRadius="2" >
+                        
                         <ContentPresenter x:Name="contentPresenter" Focusable="False" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" Margin="{TemplateBinding Padding}" RecognizesAccessKey="True" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
                     </Border>
                     <ControlTemplate.Triggers>
