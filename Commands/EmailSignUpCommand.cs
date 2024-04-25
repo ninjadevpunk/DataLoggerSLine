@@ -2,7 +2,6 @@
 using Data_Logger_1._3.ViewModels;
 using MVVMEssentials.Commands;
 using System.Windows;
-using System.Security;
 
 namespace Data_Logger_1._3.Commands
 {
@@ -39,8 +38,10 @@ namespace Data_Logger_1._3.Commands
                 var company = _signUpViewModel.CompanyName;
                 var address = _signUpViewModel.CompanyAddress;
 
+                _authService.Account.ProfilePic = _signUpViewModel.SignUpImage;
+
                 // Call the SignUp method in AuthService to handle user registration
-                var isSignedUp = _authService.SignUp(email, password, displayName, surname, IsHired, company, address);
+                var isSignedUp = await _authService.SignUp(email, password, displayName, surname, IsHired, company, address);
 
                 if(isSignedUp)
                 {
