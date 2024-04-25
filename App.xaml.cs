@@ -26,7 +26,8 @@ namespace Data_Logger_1._3
                     var firebaseApiKey = context.Configuration.GetValue<string>("FIREBASE_API_KEY");
                     var firebaseDomain = context.Configuration.GetValue<string>("FIREBASE_DOMAIN");
                     service.AddSingleton(new AuthService(firebaseApiKey, firebaseDomain));
-                    service.AddSingleton((services) => new NavigationService(services.GetRequiredService<AuthService>()));
+                    service.AddSingleton((services) => new DataService(firebaseApiKey, firebaseDomain, services.GetRequiredService<AuthService>()));
+                    service.AddSingleton((services) => new NavigationService(services.GetRequiredService<AuthService>(), services.GetRequiredService<DataService>()));
                     service.AddTransient<Splashscreen>();
                     service.AddSingleton<Login>();
                     service.AddTransient((services) => new loginPage01(services.GetRequiredService<NavigationService>())
