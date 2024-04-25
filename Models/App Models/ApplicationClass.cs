@@ -5,7 +5,7 @@ namespace Data_Logger_1._3.Models.App_Models
     {
         public int AppID { get; set; }
 
-        public ACCOUNT User { get; set; }
+        public ACCOUNT User { get; set; } = new();
 
         public string Name { get; set; } = "Unknown";
 
