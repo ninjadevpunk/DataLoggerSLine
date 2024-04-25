@@ -4,7 +4,7 @@ namespace Data_Logger_1._3.Models
     public class GraphicsLOG : LOG
     {
         /* ENUMS */
-        protected override CATEGORY Category => CATEGORY.GRAPHICS;
+        public override CATEGORY Category => CATEGORY.GRAPHICS;
 
         /* MEMBER VARIABLES */
         public string Medium { get; set; } = "Pencil";

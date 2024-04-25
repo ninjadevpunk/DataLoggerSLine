@@ -4,7 +4,7 @@ namespace Data_Logger_1._3.Models
     public class CodingLOG : LOG
     {
         /* ENUMS */
-        protected override CATEGORY Category => CATEGORY.CODING;
+        public override CATEGORY Category => CATEGORY.CODING;
 
         /* MEMBER VARIABLES */
 

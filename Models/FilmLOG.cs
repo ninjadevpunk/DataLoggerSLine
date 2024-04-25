@@ -4,7 +4,7 @@
     {
 
         /* ENUMS */
-        protected override CATEGORY Category => CATEGORY.FILM;
+        public override CATEGORY Category => CATEGORY.FILM;
 
 
 

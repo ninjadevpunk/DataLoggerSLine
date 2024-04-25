@@ -7,7 +7,7 @@ namespace Data_Logger_1._3.Models
         /* ENUMS */
 
 
-        protected enum CATEGORY {CODING, GRAPHICS, FILM, NOTES}
+        public enum CATEGORY {CODING, GRAPHICS, FILM, NOTES}
 
 
 
@@ -15,7 +15,7 @@ namespace Data_Logger_1._3.Models
         /* PROPERTIES */
 
 
-        protected abstract CATEGORY Category { get; }
+        public abstract CATEGORY Category { get; }
 
         private ACCOUNT author = new ACCOUNT();
         public ACCOUNT Author

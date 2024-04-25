@@ -12,7 +12,7 @@ namespace Data_Logger_1._3.Models
         /* ENUMS */
 
         // Log Category
-        protected override CATEGORY Category => CATEGORY.NOTES;
+        public override CATEGORY Category => CATEGORY.NOTES;
 
         // Generic Note or Flexi Note
         protected enum NOTELOGType { GENERIC, FLEXI }
