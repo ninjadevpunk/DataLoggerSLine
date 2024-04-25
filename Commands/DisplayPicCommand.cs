@@ -46,9 +46,9 @@ namespace Data_Logger_1._3.Commands
             }
             catch (Exception)
             {
-                _signUpViewModel.ShowDefault = Visibility.Collapsed;
-                _signUpViewModel.SignUpImage = "/Assets/login/user.png";
-                _authService.Account.ProfilePic = "/Assets/login/user.png";                
+                _signUpViewModel.ShowDefault = Visibility.Visible;
+                _signUpViewModel.SignUpImage = "";
+                _authService.Account.ProfilePic = "";                
             }
 
         }
