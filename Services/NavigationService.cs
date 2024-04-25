@@ -8,6 +8,7 @@ using Data_Logger_1._3.Views.Dialogs;
 using Data_Logger_1._3.Views.LogPages;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using System.Windows;
 using System.Windows.Controls;
 
 namespace Data_Logger_1._3.Services
@@ -267,21 +268,57 @@ namespace Data_Logger_1._3.Services
 
 
             var mainWindow = _host.Services.GetRequiredService<MainWindow>();
+            var displayPic = "/Assets/login/user.png";
+
             mainWindow.DataContext = Main;
+
             QtCodingLogger.SignUpImage = _authService.Account.ProfilePic;
-            QtCodingLogger.Author = _authService.Account.FirstName;
+
+            if (QtCodingLogger.SignUpImage == displayPic)
+                QtCodingLogger.SignUpImage = "";
+
+            QtCodingLogger.Author = $"{_authService.Account.FirstName} {_authService.Account.LastName}";
+
             ASCodingLogger.SignUpImage = _authService.Account.ProfilePic;
-            ASCodingLogger.Author = _authService.Account.FirstName;
+
+            if (ASCodingLogger.SignUpImage == displayPic)
+                ASCodingLogger.SignUpImage = "";
+
+            ASCodingLogger.Author = $"{_authService.Account.FirstName} {_authService.Account.LastName}";
+
             CodingLogger.SignUpImage = _authService.Account.ProfilePic;
-            CodingLogger.Author = _authService.Account.FirstName;
+
+            if (CodingLogger.SignUpImage == displayPic)
+                CodingLogger.SignUpImage = "";
+
+            CodingLogger.Author = $"{_authService.Account.FirstName} {_authService.Account.LastName}";
+
             GraphicsLogger.SignUpImage = _authService.Account.ProfilePic;
-            GraphicsLogger.Author = _authService.Account.FirstName;
+
+            if (GraphicsLogger.SignUpImage == displayPic)
+                GraphicsLogger.SignUpImage = "";
+
+            GraphicsLogger.Author = $"{_authService.Account.FirstName} {_authService.Account.LastName}";
+
             FilmLogger.SignUpImage = _authService.Account.ProfilePic;
-            FilmLogger.Author = _authService.Account.FirstName;
+
+            if (FilmLogger.SignUpImage == displayPic)
+                FilmLogger.SignUpImage = "";
+
+            FilmLogger.Author = $"{_authService.Account.FirstName} {_authService.Account.LastName}";
+
             FlexiLogger.SignUpImage = _authService.Account.ProfilePic;
-            FlexiLogger.Author = _authService.Account.FirstName;
+
+            if (FlexiLogger.SignUpImage == displayPic)
+                FlexiLogger.SignUpImage = "";
+
+            FlexiLogger.Author = $"{_authService.Account.FirstName} {_authService.Account.LastName}";
 
             Main.SignUpImage = _authService.Account.ProfilePic;
+
+            if (Main.SignUpImage == displayPic)
+                Main.SignUpImage = "";
+
             mainWindow.Show();
             _MainFrame = mainWindow.frame_MAINWINDOW;
             NavigateToLogCachePage();
