@@ -65,7 +65,7 @@ namespace Data_Logger_1._3.Models.App_Models
 
         public override int GetHashCode()
         {
-            return HashCode.Combine(ProjectID, User, Name, Application, Category);
+            return HashCode.Combine(ProjectID, User, Name, Application, Category, IsDefault);
         }
 
         public static bool operator ==(ProjectClass left, ProjectClass right)
