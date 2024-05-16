@@ -182,6 +182,23 @@
         <Setter Property="FontWeight" Value="Medium"/>
     </Style>
 
+    <Style x:Key="text_VIEWER_Author" TargetType="TextBlock">
+        <Setter Property="FontFamily" Value="{DynamicResource Red Hat Display}"/>
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="FontSize" Value="16"/>
+        <Setter Property="Foreground" Value="{DynamicResource BLACK}"/>
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="FontWeight" Value="Regular"/>
+        <Setter Property="FontStyle" Value="Normal"/>
+        <Setter Property="Padding" Value="0"/>
+    </Style>
+
+
+    <Style x:Key="text_VIEWER_Date" TargetType="TextBlock" BasedOn="{StaticResource text_VIEWER_Author}">
+        <Setter Property="FontSize" Value="12"/>
+        <Setter Property="Foreground" Value="{DynamicResource VIEWERDate}"/>
+    </Style>
+
 
     <!-- #endregion -->
     

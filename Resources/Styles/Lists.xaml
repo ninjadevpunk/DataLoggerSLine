@@ -6,7 +6,7 @@
     <!-- LOG CACHE LIST VIEW -->
     <Style x:Key="listView_LOGCACHE" TargetType="{x:Type ListView}">
         <Setter Property="Background" Value="Transparent"/>
-        <Setter Property="BorderBrush" Value="Transparent"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource STROKE}"/>
         <Setter Property="BorderThickness" Value="0.6"/>
         <Setter Property="Height" Value="auto"/>
         <Setter Property="MinWidth" Value="650"/>
@@ -33,15 +33,24 @@
                             <Grid>
                                 <ItemsPresenter SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"
                                             />
+                                <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Visibility="{Binding NoLogsMessageVisibility}" >
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="*"/>
+                                        <RowDefinition Height="30"/>
+                                        <RowDefinition Height="30"/>
+                                        <RowDefinition Height="*"/>
+                                    </Grid.RowDefinitions>
+
+                                    <TextBlock Grid.Row="1" Text="No Logs Cached" Style="{DynamicResource text_button02}" 
+                                               Foreground="{DynamicResource PlaceholderText}" />
+                                    <TextBlock Grid.Row="2" Text="Click &quot;Create Log&quot; to create logs and they will appear here." Style="{DynamicResource text_button01}"
+                                               Foreground="{DynamicResource PlaceholderText}" />
+                                    
+                                </Grid>
                             </Grid>
                         </ScrollViewer>
                     </Border>
                     <ControlTemplate.Triggers>
-                        <Trigger Property="IsEnabled" Value="false"/>
-                        <Trigger Property="IsMouseOver" Value="true">
-                            <Setter Property="BorderThickness" TargetName="Bd" Value="0.6"/>
-                            <Setter Property="BorderBrush" TargetName="Bd" Value="{DynamicResource STROKE}"/>
-                        </Trigger>
 
 
                         <MultiTrigger>
@@ -51,13 +60,14 @@
                             </MultiTrigger.Conditions>
                             <Setter Property="ScrollViewer.CanContentScroll" Value="false"/>
                         </MultiTrigger>
+                        
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
     </Style>
 
-    <Style x:Key="listView_LOGCACHE_ITEM" TargetType="{x:Type ListViewItem}">
+    <Style x:Key="listView_LOGCACHE_ITEM" TargetType="{x:Type ListViewItem}" >
         <Setter Property="SnapsToDevicePixels" Value="True"/>
         <Setter Property="Padding" Value="4,1"/>
         <Setter Property="Height" Value="170"/>
@@ -78,12 +88,10 @@
                         Padding="0"
                         SnapsToDevicePixels="true"
                         CornerRadius="3"
-                        HorizontalAlignment="{TemplateBinding HorizontalAlignment}"
-                        >
+                        HorizontalAlignment="{TemplateBinding HorizontalAlignment}" >
                         <Border Padding="30 5 30 0"
                             HorizontalAlignment="Stretch"
-                            VerticalAlignment="Bottom"
-                            >
+                            VerticalAlignment="Bottom" >
 
                             <StackPanel Orientation="Vertical" HorizontalAlignment="{TemplateBinding HorizontalAlignment}">
 
@@ -160,13 +168,29 @@
                                              Maximum="1200" 
                                              Value="{Binding TimeRemaining, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
                                              BorderThickness="0"
-                                             Foreground="{DynamicResource PANEL}"/>
+                                             Foreground="{DynamicResource PANEL}" />
 
 
                             </StackPanel>
                         </Border>
                     </Border>
+                    
+                    <!-- Context Menu -->
+                    <ControlTemplate.Resources>
+                        <ContextMenu x:Key="ItemContextMenu">
+                            <MenuItem Header="Edit" Command="{Binding EditCommand}"
+                                      CommandParameter="{Binding}" />
+                            <MenuItem Header="View" Command="{Binding ViewCommand}"
+                                      CommandParameter="{Binding}" />
+                            <MenuItem Header="Delete" Command="{Binding QuickDeleteCacheItemCommand}"
+                                      CommandParameter="{Binding}"/>
+                        </ContextMenu>
+                    </ControlTemplate.Resources>
+                    
                     <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter Property="ContextMenu" Value="{StaticResource ItemContextMenu}" />
+                        </Trigger>
                         <MultiTrigger>
                             <MultiTrigger.Conditions>
                                 <Condition Property="IsMouseOver" Value="True"/>
@@ -212,6 +236,22 @@
                             <Grid>
                                 <ItemsPresenter SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"
                                         />
+
+                                <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Visibility="{Binding NoLogsMessageVisibility}" >
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="*"/>
+                                        <RowDefinition Height="30"/>
+                                        <RowDefinition Height="30"/>
+                                        <RowDefinition Height="*"/>
+                                    </Grid.RowDefinitions>
+
+                                    <TextBlock Grid.Row="1" Text="No Reports to Show" Style="{DynamicResource text_button02}" 
+                                               Foreground="{DynamicResource PlaceholderText}" />
+                                    <TextBlock Grid.Row="2" Text="Logs that can be reported will show up here after you create them in the previous page."
+                                               Style="{DynamicResource text_button01}"
+               Foreground="{DynamicResource PlaceholderText}" />
+
+                                </Grid>
                             </Grid>
                         </ScrollViewer>
                     </Border>
@@ -365,11 +405,11 @@
 
 
     <!-- #region NOTES LIST VIEW -->
-    
-    
-    
-    
-    
+
+
+
+
+
     <Style x:Key="listView_NOTES_list" TargetType="{x:Type ListView}" BasedOn="{StaticResource listView_LOGCACHE}">
         <Setter Property="Template">
             <Setter.Value>
@@ -378,23 +418,33 @@
                             Padding="1"
                             SnapsToDevicePixels="true"
                             CornerRadius="3">
-                        
+
                         <ScrollViewer Focusable="false" Padding="{TemplateBinding Padding}">
                             <!-- Grid makes the items in ListView behave. -->
                             <Grid>
                                 <WrapPanel Orientation="Horizontal" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" IsItemsHost="True"
                                     />
+
+                                <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Visibility="{Binding NoLogsMessageVisibility}" >
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="*"/>
+                                        <RowDefinition Height="30"/>
+                                        <RowDefinition Height="30"/>
+                                        <RowDefinition Height="*"/>
+                                    </Grid.RowDefinitions>
+
+                                    <TextBlock Grid.Row="1" Text="No Notes" Style="{DynamicResource text_button02}"
+                                               Foreground="{DynamicResource PlaceholderText}" />
+                                    <TextBlock Grid.Row="2" Text="Click &quot;New Note&quot; to create notes and they will appear here." Style="{DynamicResource text_button01}"
+                                               Foreground="{DynamicResource PlaceholderText}" />
+
+                                </Grid>
+
                             </Grid>
                         </ScrollViewer>
                     </Border>
                     <ControlTemplate.Triggers>
-                        <Trigger Property="IsEnabled" Value="false"/>
 
-                        <Trigger Property="IsMouseOver" Value="true">
-                            <Setter Property="BorderThickness" TargetName="Bd" Value="0.6"/>
-                            <Setter Property="BorderBrush" TargetName="Bd" Value="{DynamicResource STROKE}"/>
-                        </Trigger>
-                        
                         <MultiTrigger>
                             <MultiTrigger.Conditions>
                                 <Condition Property="IsGrouping" Value="true"/>
@@ -408,9 +458,38 @@
         </Setter>
     </Style>
 
-       
 
-        <!-- CHECKLIST NOTE TEMPLATE -->
+    <Style x:Key="template_NOTE_checklist_ITEM_inner_checklist" TargetType="{x:Type ListViewItem}" >
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="VerticalAlignment" Value="Stretch" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type ListViewItem}">
+
+                    <Border Padding="10 0 10 0" >
+
+                        <Grid>
+
+                            <Ellipse Fill="{DynamicResource BLACK}"
+                                Height="8" Width="8" />
+                            <TextBlock Text="{Binding CheckListItem}"
+                                       Height="32"
+                                       HorizontalAlignment="Stretch"
+                                       VerticalAlignment="Center"
+                                       FontFamily="{DynamicResource Red Hat Display}"
+                                       FontWeight="Regular"
+                                       FontSize="13" />
+
+                        </Grid>
+
+                    </Border>                    
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+
+    </Style>
+
+    <!-- CHECKLIST NOTE TEMPLATE -->
     <ControlTemplate x:Key="template_NOTE_checklist_ITEM" TargetType="{x:Type ListViewItem}">
         <Border x:Name="Bd"
             Background="{TemplateBinding Background}"
@@ -461,8 +540,8 @@
                 <!-- NOTE CONTENT SNIPPET -->
                 <Border Grid.Row="2" Style="{StaticResource border_NOTES}">
                     <Grid>
-                        <ListView x:Name="note_CHECKLIST"
-                                  ItemsSource="{Binding}"/>
+                        <ListView x:Name="note_CHECKLIST" ItemContainerStyle="{StaticResource template_NOTE_checklist_ITEM_inner_checklist}"
+                                  ItemsSource="{Binding CheckListItems}"/>
 
                     </Grid>
                 </Border>
@@ -604,12 +683,11 @@
         </Setter>
         
     </Style>
+
     
-    
-    
-    
-    
-    <!--#endregion-->
+
+
+        <!--#endregion-->
     
     
     
@@ -780,9 +858,10 @@
 
     <Style x:Key="listView_POSTITS" TargetType="{x:Type ListView}">
         <Setter Property="Background" Value="Transparent"/>
-        <Setter Property="BorderBrush" Value="Transparent"/>
-        <Setter Property="MaxHeight" Value="470"/>
-        <Setter Property="BorderThickness" Value="0"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource STROKE}"/>
+        <Setter Property="MinHeight" Value="470"/>
+        <Setter Property="Margin" Value="5"/>
+        <Setter Property="BorderThickness" Value="0.6"/>
         <Setter Property="Foreground" Value="{DynamicResource BLACK}"/>
         <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Disabled"/>
         <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Auto"/>
@@ -791,6 +870,7 @@
         <Setter Property="Stylus.IsFlicksEnabled" Value="False"/>
         <Setter Property="VerticalContentAlignment" Value="Center"/>
         <Setter Property="HorizontalAlignment" Value="Stretch"/>
+        <Setter Property="VerticalAlignment" Value="Stretch"/>
         <Setter Property="ItemContainerStyle" Value="{StaticResource listViewITEM_POSTITS}"/>
         <Setter Property="Template">
             <Setter.Value>
@@ -801,6 +881,7 @@
                             BorderThickness="{TemplateBinding BorderThickness}"
                             Padding="5"
                             SnapsToDevicePixels="true"
+                            CornerRadius="3"
                             >
                         <ScrollViewer Focusable="false" Padding="{TemplateBinding Padding}">
                             <ItemsPresenter SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"/>
@@ -992,9 +1073,9 @@
 
     <Style x:Key="listView_POSTITS_View" TargetType="{x:Type ListView}">
         <Setter Property="Background" Value="Transparent"/>
-        <Setter Property="BorderBrush" Value="Transparent"/>
-        <Setter Property="MaxHeight" Value="470"/>
-        <Setter Property="BorderThickness" Value="0"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource STROKE}"/>
+        <Setter Property="MinHeight" Value="470"/>
+        <Setter Property="BorderThickness" Value="0.6"/>
         <Setter Property="Foreground" Value="{DynamicResource BLACK}"/>
         <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Disabled"/>
         <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Auto"/>
@@ -1008,12 +1089,12 @@
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type ListView}">
                     <Border x:Name="Bd"
-                        Background="{TemplateBinding Background}"
-                        BorderBrush="{TemplateBinding BorderBrush}"
-                        BorderThickness="{TemplateBinding BorderThickness}"
-                        Padding="5"
-                        SnapsToDevicePixels="true"
-                        >
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            Padding="5"
+                            SnapsToDevicePixels="true"
+                            CornerRadius="3" >
                         <ScrollViewer Focusable="false" Padding="{TemplateBinding Padding}">
                             <ItemsPresenter SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"/>
                         </ScrollViewer>
