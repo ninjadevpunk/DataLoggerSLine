@@ -85,6 +85,7 @@
                                 <Setter Property="BorderBrush" TargetName="templateRoot" Value="{DynamicResource PrimaryColour}"/>
                             </MultiDataTrigger>
                             <Trigger Property="IsEnabled" Value="false">
+                                <Setter Property="Background" TargetName="templateRoot" Value="Transparent"/>
                                 <Setter Property="Fill" TargetName="arrow" Value="{StaticResource ComboBox.Disabled.Glyph}"/>
                             </Trigger>
                             <MultiDataTrigger>
@@ -92,8 +93,9 @@
                                     <Condition Binding="{Binding IsEnabled, RelativeSource={RelativeSource Self}}" Value="false"/>
                                     <Condition Binding="{Binding IsEditable, RelativeSource={RelativeSource AncestorType={x:Type ComboBox}}}" Value="false"/>
                                 </MultiDataTrigger.Conditions>
-                                <Setter Property="Background" TargetName="templateRoot" Value="{StaticResource ComboBox.Disabled.Background}"/>
+                                <Setter Property="Background" TargetName="templateRoot" Value="Transparent"/>
                                 <Setter Property="BorderBrush" TargetName="templateRoot" Value="{StaticResource ComboBox.Disabled.Border}"/>
+                                <Setter Property="Fill" TargetName="arrow" Value="{StaticResource ComboBox.Disabled.Glyph}"/>
                             </MultiDataTrigger>
                             <MultiDataTrigger>
                                 <MultiDataTrigger.Conditions>
@@ -142,6 +144,7 @@
                     </Popup>
 
 
+
                     <ToggleButton x:Name="toggleButton"
                                   Grid.ColumnSpan="2"
                                   HorizontalAlignment="Stretch"
@@ -150,12 +153,13 @@
                                   IsChecked="{Binding IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}"
                                   Style="{StaticResource comboBox_TOGGLEBUTTON}"
                                   Cursor="Hand" />
-
+                    
 
                     <Border x:Name="border" Grid.Column="0">
                         <Grid>
 
                             <TextBox x:Name="PART_EditableTextBox"
+                                     Text="{Binding UserComboInput, ElementName=control_COMBOBOX_textbox, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
                                      Style="{Binding UserTextBoxStyle, ElementName=control_COMBOBOX_textbox}"
                                      TextChanged="on_EditableTextBox_changed"
                                      LostFocus="on_EditableTextBox_lostfocus" />
@@ -163,7 +167,6 @@
                             
                         </Grid>
                     </Border>
-                    
                     
                 </Grid>
             </Border>
@@ -237,7 +240,8 @@
                                   IsHitTestVisible="false"
                                   Margin="10 0 10 0"
                                   SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"
-                                  VerticalAlignment="Center" />
+                                  VerticalAlignment="Center"
+                                  />
             
             
             
@@ -276,7 +280,7 @@
         <Style x:Key="comboBox_LOGGER" TargetType="{x:Type ComboBox}">
             <Setter Property="FocusVisualStyle" Value="{StaticResource FocusVisual}"/>
             <Setter Property="FontFamily" Value="{DynamicResource Red Hat Display}"/>
-            <Setter Property="Background" Value="{DynamicResource WHITE}"/>
+            <Setter Property="Background" Value="Transparent"/>
             <Setter Property="Foreground" Value="{DynamicResource BLACK}"/>
             <Setter Property="Height" Value="40"/>
             <Setter Property="BorderThickness" Value="0.6"/>
@@ -285,7 +289,7 @@
             <Setter Property="ScrollViewer.CanContentScroll" Value="true"/>
             <Setter Property="ScrollViewer.PanningMode" Value="Both"/>
             <Setter Property="Stylus.IsFlicksEnabled" Value="False"/>
-            <Setter Property="Template" Value="{StaticResource static_comboBox_template}"/>
+            <Setter Property="Template" Value="{StaticResource comboBox_template}"/>
             <Style.Triggers>
                 <Trigger Property="IsEditable" Value="True">
                     <Setter Property="IsTabStop" Value="False"/>
@@ -368,6 +372,11 @@
             </Style.Triggers>
         </Style>
         
+        
+        
+        <!-- DEFAULT -->
+
+
     </UserControl.Resources>
     
     
@@ -375,15 +384,15 @@
         
         <!-- PLACEHOLDER TEXT -->
         <TextBlock x:Name="text_PLACEHOLDERTEXT" Style="{Binding UserTextBlockStyle, ElementName=control_COMBOBOX_textbox}"
-                   Text="{Binding PlaceholderText, ElementName=control_COMBOBOX_textbox}"
+                   Text="{Binding PlaceholderText, ElementName=control_COMBOBOX_textbox, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
                    Loaded="on_PLACEHOLDERTEXT_loaded" />
 
         <!-- USER TEXT -->
         <ComboBox x:Name="comboBox_TEXTBOX" Style="{DynamicResource comboBox_LOGGER}"
+                  Text="{Binding UserComboInput, ElementName=control_COMBOBOX_textbox, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
                   ItemContainerStyle="{DynamicResource comboBox_ITEM_template}" 
-                  IsEditable="{Binding Enabled, ElementName=control_COMBOBOX_textbox}"
-                  Text="{Binding UserComboInput, ElementName=control_COMBOBOX_textbox}"                  
-                  ItemsSource="{Binding Items, ElementName=control_COMBOBOX_textbox}" />
+                  ItemsSource="{Binding Items, ElementName=control_COMBOBOX_textbox}"
+                  IsEnabled="{Binding Enabled, ElementName=control_COMBOBOX_textbox}" />
 
     </Grid>
     

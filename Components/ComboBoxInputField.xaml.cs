@@ -130,11 +130,11 @@ namespace Data_Logger_1._3.Components
             
 
             // If the combobox text is null return
-            if (this.comboBox_TEXTBOX.Text == null)
+            if (UserComboInput == null)
             {
                 return;
             }
-            else if (this.comboBox_TEXTBOX.Text == "" && this.text_PLACEHOLDERTEXT.Text == "")
+            else if (UserComboInput == "" && this.text_PLACEHOLDERTEXT.Text == "")
             {
                 this.text_PLACEHOLDERTEXT.Text = Temp;
                 Status = true;
@@ -150,7 +150,7 @@ namespace Data_Logger_1._3.Components
                 this.text_PLACEHOLDERTEXT.Text = Temp;
                 Status = true;
             }
-            else if (show && assert || this.comboBox_TEXTBOX.Text == "")
+            else if (show && assert || UserComboInput == "")
             {
                 this.text_PLACEHOLDERTEXT.Text = PlaceholderText;
                 Status = true;
