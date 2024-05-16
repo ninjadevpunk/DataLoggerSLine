@@ -9,6 +9,7 @@ namespace Data_Logger_1._3.Commands.LogCacheCommands
     {
         private readonly LogCacheViewModel _viewModel;
         private readonly DataService _dataService;
+        private readonly bool _timeUp;
 
         public DeleteCodingCacheItemCommand(LogCacheViewModel logCacheViewModel, DataService dataService)
         {
@@ -16,6 +17,7 @@ namespace Data_Logger_1._3.Commands.LogCacheCommands
             {
                 _viewModel = logCacheViewModel ?? throw new ArgumentNullException(nameof(logCacheViewModel));
                 _dataService = dataService ?? throw new ArgumentNullException( nameof(dataService));
+                _timeUp = true;
             }
             catch (Exception)
             {
@@ -24,19 +26,51 @@ namespace Data_Logger_1._3.Commands.LogCacheCommands
             
         }
 
+        public DeleteCodingCacheItemCommand(LogCacheViewModel logCacheViewModel, DataService dataService, bool timeIsUp)
+        {
+            try
+            {
+                _viewModel = logCacheViewModel ?? throw new ArgumentNullException(nameof(logCacheViewModel));
+                _dataService = dataService ?? throw new ArgumentNullException(nameof(dataService));
+                _timeUp = timeIsUp;
+            }
+            catch (Exception)
+            {
+                // TODO
+            }
+        }
+
         public override async void Execute(object parameter)
         {
             try
             {
-                // Send data to Firebase first
                 var item = parameter as CodeLOGViewModel;
                 CodingGenericViewModel list = (CodingGenericViewModel)_viewModel;
+                bool isLogged = false;
 
-                var isLogged = await _dataService.StoreCodingLog(item);
+                if (list is not null && item is not null)
+                {
+                    var temp = list.CacheItems;
 
-                // Remove item
-                if(isLogged)
-                    list.CacheItems.Remove(item);
+                    // Remove item
+                    if (_timeUp)
+                    {
+                        // Send data to Firebase first
+                        isLogged = await _dataService.StoreCodingLog(item._CodeLOG);
+
+                        if (isLogged)
+                        {
+                            temp.Remove(item);
+                            list.CacheItems = temp;
+                        }
+                    }
+                    else
+                    {
+                        temp.Remove(item);
+                        list.CacheItems = temp;
+                    }
+
+                }
             }
             catch (Exception)
             {

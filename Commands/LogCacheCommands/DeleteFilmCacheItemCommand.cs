@@ -9,14 +9,15 @@ namespace Data_Logger_1._3.Commands.LogCacheCommands
     {
         private readonly LogCacheViewModel _viewModel;
         private readonly DataService _dataService;
+        private readonly bool _timeUp;
 
-        public DeleteFilmCacheItemCommand(LogCacheViewModel logCacheViewModel, DataService dataService)
+        public DeleteFilmCacheItemCommand(LogCacheViewModel logCacheViewModel, DataService dataService, bool timeUp)
         {
             try
             {
                 _viewModel = logCacheViewModel ?? throw new ArgumentNullException(nameof(logCacheViewModel));
                 _dataService = dataService ?? throw new ArgumentNullException(nameof(dataService));
-
+                _timeUp = timeUp;
             }
             catch (Exception)
             {
@@ -28,16 +29,33 @@ namespace Data_Logger_1._3.Commands.LogCacheCommands
         {
             try
             {
-                // Send data to Firebase first
-                var item = parameter as FilmLOGViewModel;
                 FilmViewModel list = (FilmViewModel)_viewModel;
+                var item = parameter as FilmLOGViewModel;
+                bool isLogged = false;
 
-                var isLogged = await _dataService.StoreFilmLog(item);
+                if (list is not null && item is not null)
+                {
+                    var temp = list.CacheItems;
 
+                    // Remove item
+                    if (_timeUp)
+                    {
+                        // Send data to Firebase first
+                        isLogged = await _dataService.StoreFilmLog(item._FilmLOG);
 
-                // Remove item
-                if(isLogged)
-                    list.CacheItems.Remove(item);
+                        if (isLogged)
+                        {
+                            temp.Remove(item);
+                            list.CacheItems = temp;
+                        }
+                    }
+                    else
+                    {
+                        temp.Remove(item);
+                        list.CacheItems = temp;
+                    }
+
+                }
             }
             catch (Exception e)
             {
