@@ -8,28 +8,29 @@
              d:Background="White"
              x:Name="control_CODING_fields_View" >
 
-    <Grid Width="380">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="*" />
-            <RowDefinition Height="5" />
-            <RowDefinition Height="*" />
-        </Grid.RowDefinitions>
+    <StackPanel Width="380">
 
-        <TextBlock Grid.Row="0" x:Name="text_BUGS" Style="{DynamicResource text_Placeholder}"
-                   Foreground="{DynamicResource BLACK}"
-                   Height="35"
-                   Margin="0 5"
-                   Padding="10"
-                   Text="{Binding}"/>
+        <!-- BUGS -->        
+        <Border
+            Padding="20 0"
+            Height="35" >
 
-        <TextBlock Grid.Row="2" x:Name="text_IsLAUNCHSUCCESSFUL" Style="{DynamicResource text_Placeholder}"
-                   Foreground="{DynamicResource BLACK}"
-                   Height="35"
-                   Margin="0 5"
-                   Padding="10"
-                   Text="{Binding}" />
+            <TextBlock x:Name="text_BUGS" Style="{DynamicResource text_LABEL03}"
+                       Text="{Binding BugsFound, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
+
+        </Border>
+
+        <!-- LAUNCH SUCCESFUL -->
+        <Border
+            Padding="20 0"
+            Height="35" >
+
+            <TextBlock x:Name="text_LAUNCHSUCCESFUL" Style="{DynamicResource text_LABEL03}"
+                       Text="{Binding ApplicationOpened, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
+
+        </Border>
 
 
-    </Grid>
+    </StackPanel>
 
 </UserControl>

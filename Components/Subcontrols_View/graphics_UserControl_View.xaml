@@ -9,94 +9,74 @@
              x:Name="control_GRAPHICS_fields_View">
 
 
-    <Grid Width="380">
+    <StackPanel Width="380">
 
-        <Grid.RowDefinitions>
 
-            <RowDefinition Height="*" />
-            <!-- H x W -->
-            <RowDefinition Height="5" />
-            <RowDefinition Height="*" />
-            <!-- UNIT -->
-            <RowDefinition Height="5" />
-            <RowDefinition Height="*" />
-            <!-- SIZE -->
-            <RowDefinition Height="5" />
-            <RowDefinition Height="*" />
-            <!-- DPI -->
-            <RowDefinition Height="5" />
-            <RowDefinition Height="*" />
-            <!-- Colour Depth -->
-            <RowDefinition Height="5" />
-            <RowDefinition Height="*" />
-            <!-- IsCompleted? -->
-            <RowDefinition Height="5" />
-            <RowDefinition Height="*" />
-            <!-- Source -->
+        <!-- HEIGHT x WIDTH MEASURING UNIT -->
+        <Border
+            Padding="20 0"
+            Height="35" >
 
-        </Grid.RowDefinitions>
+            <TextBlock x:Name="text_HxW" Style="{DynamicResource text_LABEL03}"
+               Text="{Binding HxW, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
 
-        <!-- HEIGHT x WIDTH -->
-        <TextBlock x:Name="text_HEIGHTxWIDTH" Style="{DynamicResource text_Placeholder}"
-                   Foreground="{DynamicResource BLACK}"
-                   Height="35"
-                   Margin="0 5"
-                   Padding="10"
-                   Text="{Binding}"/>
-
-        <!-- MEASURING UNIT -->
-        <TextBlock Grid.Row="2" x:Name="text_UNIT" Style="{DynamicResource text_Placeholder}"
-                   Foreground="{DynamicResource BLACK}"
-                   Height="35"
-                   Margin="0 5"
-                   Padding="10"
-                   Text="{Binding}" />
+        </Border>
 
         <!-- SIZE -->
-        <TextBlock Grid.Row="4" x:Name="text_SIZE" Style="{DynamicResource text_Placeholder}"
-                   Foreground="{DynamicResource BLACK}"
-                   Height="35"
-                   Margin="0 5"
-                   Padding="10"
-                   Text="{Binding}" />
+        <Border
+            Padding="20 0"
+            Height="35" >
+
+            <TextBlock x:Name="text_SIZE" Style="{DynamicResource text_LABEL03}"
+                       Text="{Binding Size, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
+
+        </Border>
 
         <!-- DPI -->
-        <TextBlock Grid.Row="6" x:Name="text_DPI" Style="{DynamicResource text_Placeholder}"
-                   Foreground="{DynamicResource BLACK}"
-                   Height="35"
-                   Margin="0 5"
-                   Padding="10"
-                   Text="{Binding}" />
+        <Border
+            Padding="20 0"
+            Height="35" >
+
+            <TextBlock x:Name="text_DPI" Style="{DynamicResource text_LABEL03}"
+                       Text="{Binding DPI, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
+
+        </Border>
 
         <!-- COLOUR DEPTH -->
-        <TextBlock Grid.Row="8" x:Name="text_DEPTH" Style="{DynamicResource text_Placeholder}"
-                   Foreground="{DynamicResource BLACK}"
-                   Height="35"
-                   Margin="0 5"
-                   Padding="10"
-                   Text="{Binding}" />
+        <Border
+            Padding="20 0"
+            Height="35" >
+
+            <TextBlock x:Name="text_DEPTH" Style="{DynamicResource text_LABEL03}"
+                       Text="{Binding ColourDepth, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
+
+        </Border>
 
         <!-- COMPLETED -->
-        <TextBlock Grid.Row="10" x:Name="text_IsCOMPLETED" Style="{DynamicResource text_Placeholder}"
-                   Foreground="{DynamicResource BLACK}"
-                   Height="35"
-                   Margin="0 5"
-                   Padding="10"
-                   Text="{Binding}" />
+        <Border
+            Padding="20 0"
+            Height="35" >
+
+            <TextBlock x:Name="text_COMPLETED" Style="{DynamicResource text_LABEL03}"
+                       Text="{Binding IsCompleted, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
+
+        </Border>
 
 
         <!-- SOURCE -->
-        <TextBlock Grid.Row="12" x:Name="text_SOURCE" Style="{DynamicResource text_Placeholder}"
-                   Foreground="{DynamicResource BLACK}"
-                   Height="35"
-                   Margin="0 5"
-                   Padding="10"
-                   Text="{Binding}" />
+        <Border
+            Padding="20 0"
+            Height="35" >
+
+            <TextBlock x:Name="text_SOURCE" Style="{DynamicResource text_LABEL03}"
+                       Text="{Binding Source, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
+
+        </Border>
 
 
 
 
-    </Grid>
+    </StackPanel>
 
 
 </UserControl>

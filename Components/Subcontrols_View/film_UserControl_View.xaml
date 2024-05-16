@@ -8,74 +8,66 @@
              d:Background="White"
              x:Name="control_FILM_fields_View" >
 
-    <Grid Width="380">
+    <StackPanel Width="380">
 
-        <Grid.RowDefinitions>
 
-            <RowDefinition Height="*" />
-            <!-- H x W -->
-            <RowDefinition Height="5" />
-            <RowDefinition Height="*" />
-            <!-- RESOLUTION -->
-            <RowDefinition Height="5" />
-            <RowDefinition Height="*" />
-            <!-- LENGTH -->
-            <RowDefinition Height="5" />
-            <RowDefinition Height="*" />
-            <!-- IsCompleted? -->
-            <RowDefinition Height="5" />
-            <RowDefinition Height="*" />
-            <!-- Source -->
+        <!-- HEIGHT x WIDTH MEASURING UNIT -->
+        <Border
+            Padding="20 0"
+            Height="35" >
 
-        </Grid.RowDefinitions>
+            <TextBlock x:Name="text_text_HxW" Style="{DynamicResource text_LABEL03}"
+                       Text="{Binding HxW, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
 
-        <!-- HEIGHT x WIDTH -->
-        <TextBlock x:Name="text_HEIGHTxWIDTH" Style="{DynamicResource text_Placeholder}"
-               Foreground="{DynamicResource BLACK}"
-               Height="35"
-               Margin="0 5"
-               Padding="10"
-               Text="{Binding}"/>
-        
+        </Border>
+
 
         <!-- RESOLUTION -->
-        <TextBlock Grid.Row="2" x:Name="text_RESOLUTION" Style="{DynamicResource text_Placeholder}"
-               Foreground="{DynamicResource BLACK}"
-               Height="35"
-               Margin="0 5"
-               Padding="10"
-               Text="{Binding}" />
-        
+        <Border
+            Padding="20 0"
+            Height="35" >
+
+            <TextBlock x:Name="text_RESOLUTION" Style="{DynamicResource text_LABEL03}"
+                       Text="{Binding Resolution, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
+
+        </Border>
+
 
         <!-- LENGTH -->
-        <TextBlock Grid.Row="4" x:Name="text_LENGTH" Style="{DynamicResource text_Placeholder}"
-               Foreground="{DynamicResource BLACK}"
-               Height="35"
-               Margin="0 5"
-               Padding="10"
-               Text="{Binding}" />
-        
+        <Border
+            Padding="20 0"
+            Height="35" >
+
+            <TextBlock x:Name="text_LENGTH" Style="{DynamicResource text_LABEL03}"
+                       Text="{Binding Length, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
+
+        </Border>
+
 
         <!-- COMPLETED -->
-        <TextBlock Grid.Row="6" x:Name="text_IsCOMPLETED" Style="{DynamicResource text_Placeholder}"
-               Foreground="{DynamicResource BLACK}"
-               Height="35"
-               Margin="0 5"
-               Padding="10"
-               Text="{Binding}" />
+        <Border
+            Padding="20 0"
+            Height="35" >
+
+            <TextBlock x:Name="text_COMPLETED" Style="{DynamicResource text_LABEL03}"
+                       Text="{Binding IsCompleted, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
+
+        </Border>
 
 
         <!-- SOURCE -->
-        <TextBlock Grid.Row="8" x:Name="text_SOURCE" Style="{DynamicResource text_Placeholder}"
-               Foreground="{DynamicResource BLACK}"
-               Height="35"
-               Margin="0 5"
-               Padding="10"
-               Text="{Binding}" />
+        <Border
+            Padding="20 0"
+            Height="35" >
+
+            <TextBlock x:Name="text_SOURCE" Style="{DynamicResource text_LABEL03}"
+                       Text="{Binding Source, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
+
+        </Border>
 
 
 
 
-    </Grid>
+    </StackPanel>
 
 </UserControl>

@@ -9,93 +9,83 @@
              x:Name="control_FLEXI_fields_View" >
 
 
-    <Grid Width="380">
+    <StackPanel Width="380">
 
-        <Grid.RowDefinitions>
-
-            <RowDefinition Height="*" />
-            <!-- H x W -->
-            <RowDefinition Height="5" />
-            <RowDefinition Height="*" />
-            <!-- UNIT -->
-            <RowDefinition Height="5" />
-            <RowDefinition Height="*" />
-            <!-- SIZE -->
-            <RowDefinition Height="5" />
-            <RowDefinition Height="*" />
-            <!-- DPI -->
-            <RowDefinition Height="5" />
-            <RowDefinition Height="*" />
-            <!-- Colour Depth -->
-            <RowDefinition Height="5" />
-            <RowDefinition Height="*" />
-            <!-- IsCompleted? -->
-            <RowDefinition Height="5" />
-            <RowDefinition Height="*" />
-            <!-- Source -->
-
-        </Grid.RowDefinitions>
 
         <!-- FLEXI-NOTE CATEGORY -->
-        <TextBlock x:Name="text_FLEXINOTE_CATEGORY" Style="{DynamicResource text_Placeholder}"
-               Foreground="{DynamicResource BLACK}"
-               Height="35"
-               Margin="0 5"
-               Padding="10"
-               Text="{Binding}"/>
+        <Border
+            Padding="20 0"
+            Height="35" >
+
+            <TextBlock x:Name="text_FLEXINOTECATEGORY" Style="{DynamicResource text_LABEL03}"
+                       Text="{Binding FlexiNoteCategory, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
+
+        </Border>
 
         <!-- MEDIUM -->
-        <TextBlock Grid.Row="2" x:Name="text_MEDIUM" Style="{DynamicResource text_Placeholder}"
-               Foreground="{DynamicResource BLACK}"
-               Height="35"
-               Margin="0 5"
-               Padding="10"
-               Text="{Binding}" />
+        <Border
+            Padding="20 0"
+            Height="35" >
+
+            <TextBlock x:Name="text_MEDIUM" Style="{DynamicResource text_LABEL03}"
+                       Text="{Binding Medium, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
+
+        </Border>
 
         <!-- FORMAT -->
-        <TextBlock Grid.Row="4" x:Name="text_FORMAT" Style="{DynamicResource text_Placeholder}"
-               Foreground="{DynamicResource BLACK}"
-               Height="35"
-               Margin="0 5"
-               Padding="10"
-               Text="{Binding}" />
+        <Border
+            Padding="20 0"
+            Height="35" >
+
+            <TextBlock x:Name="text_FORMAT" Style="{DynamicResource text_LABEL03}"
+                       Text="{Binding Format, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
+
+        </Border>
 
         <!-- BITRATE -->
-        <TextBlock Grid.Row="6" x:Name="text_BITRATE" Style="{DynamicResource text_Placeholder}"
-               Foreground="{DynamicResource BLACK}"
-               Height="35"
-               Margin="0 5"
-               Padding="10"
-               Text="{Binding}" />
+        <Border
+            Padding="20 0"
+            Height="35" >
+
+            <TextBlock x:Name="text_BITRATE" Style="{DynamicResource text_LABEL03}"
+                       Text="{Binding Bitrate, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
+
+        </Border>
 
         <!-- DUARTION -->
-        <TextBlock Grid.Row="8" x:Name="text_DEPTH" Style="{DynamicResource text_Placeholder}"
-               Foreground="{DynamicResource BLACK}"
-               Height="35"
-               Margin="0 5"
-               Padding="10"
-               Text="{Binding}" />
+        <Border
+            Padding="20 0"
+            Height="35" >
+
+            <TextBlock x:Name="text_DURATION" Style="{DynamicResource text_LABEL03}"
+                       Text="{Binding Duration, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
+
+        </Border>
 
         <!-- COMPLETED -->
-        <TextBlock Grid.Row="10" x:Name="text_IsCOMPLETED" Style="{DynamicResource text_Placeholder}"
-               Foreground="{DynamicResource BLACK}"
-               Height="35"
-               Margin="0 5"
-               Padding="10"
-               Text="{Binding}" />
+        <Border
+            Padding="20 0"
+            Height="35" >
+
+            <TextBlock x:Name="text_COMPLETED" Style="{DynamicResource text_LABEL03}"
+                       Text="{Binding IsCompleted, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
+
+        </Border>
 
 
         <!-- SOURCE -->
-        <TextBlock Grid.Row="12" x:Name="text_SOURCE" Style="{DynamicResource text_Placeholder}"
-               Foreground="{DynamicResource BLACK}"
-               Height="35"
-               Margin="0 5"
-               Padding="10"
-               Text="{Binding}" />
+        <Border
+            Padding="20 0"
+            Height="35" >
+
+            <TextBlock x:Name="text_SOURCE" Style="{DynamicResource text_LABEL03}"
+                       Text="{Binding Source, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
+
+        </Border>
 
 
 
 
-    </Grid>
+    </StackPanel>
 
 </UserControl>
