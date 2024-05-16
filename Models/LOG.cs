@@ -78,6 +78,7 @@ namespace Data_Logger_1._3.Models
             set { postItList = value; }
         }
 
+        public string Content { get; set; } = "";
 
 
         /** CONSTRUCTOR */
@@ -96,6 +97,19 @@ namespace Data_Logger_1._3.Models
             this.output = output;
             this.type = type;
             this.postItList = postItList;
+        }
+
+        protected LOG(ACCOUNT author, string projectName, string applicationName, DateTime startTime, DateTime endTime, string output, string type, List<PostIt> postItList, string content)
+        {
+            this.author = author;
+            this.projectName = projectName;
+            this.applicationName = applicationName;
+            this.startTime = startTime;
+            this.endTime = endTime;
+            this.output = output;
+            this.type = type;
+            this.postItList = postItList;
+            this.Content = content;
         }
 
 
@@ -172,7 +186,61 @@ namespace Data_Logger_1._3.Models
             return helper("comment");
         }
 
+        public override bool Equals(object? obj)
+        {
+            return obj is LOG lOG &&
+                   Category == lOG.Category &&
+                   Author.Equals(lOG.Author) &&
+                   author.Equals(lOG.author) &&
+                   projectName == lOG.projectName &&
+                   ProjectName == lOG.ProjectName &&
+                   applicationName == lOG.applicationName &&
+                   ApplicationName == lOG.ApplicationName &&
+                   startTime == lOG.startTime &&
+                   StartTime == lOG.StartTime &&
+                   endTime == lOG.endTime &&
+                   EndTime == lOG.EndTime &&
+                   output == lOG.output &&
+                   Output == lOG.Output &&
+                   type == lOG.type &&
+                   Type == lOG.Type &&
+                   EqualityComparer<List<PostIt>>.Default.Equals(postItList, lOG.postItList) &&
+                   EqualityComparer<List<PostIt>>.Default.Equals(PostItList, lOG.PostItList) &&
+                   Content == lOG.Content;
+        }
 
+        public override int GetHashCode()
+        {
+            HashCode hash = new HashCode();
+            hash.Add(Category);
+            hash.Add(author);
+            hash.Add(Author);
+            hash.Add(projectName);
+            hash.Add(ProjectName);
+            hash.Add(applicationName);
+            hash.Add(ApplicationName);
+            hash.Add(startTime);
+            hash.Add(StartTime);
+            hash.Add(endTime);
+            hash.Add(EndTime);
+            hash.Add(output);
+            hash.Add(Output);
+            hash.Add(type);
+            hash.Add(Type);
+            hash.Add(postItList);
+            hash.Add(PostItList);
+            hash.Add(Content);
+            return hash.ToHashCode();
+        }
 
+        public static bool operator ==(LOG left, LOG right)
+        {
+            return left.Equals(right);
+        }
+
+        public static bool operator !=(LOG left, LOG right)
+        {
+            return !left.Equals(right);
+        }
     }
 }
