@@ -130,6 +130,11 @@ namespace Data_Logger_1._3.Services
             try
             {
 
+                // TODO
+                // Remove when testing is done
+                email = "andambambo@gmail.com";
+                password = "jujitsukaisen";
+
                 var userCredential = _firebaseAuthClient.SignInWithEmailAndPasswordAsync(email, password);
                 await userCredential;
 

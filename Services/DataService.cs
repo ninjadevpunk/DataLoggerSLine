@@ -1,5 +1,6 @@
 ﻿using Data_Logger_1._3.Models;
 using Data_Logger_1._3.Models.App_Models;
+using Data_Logger_1._3.ViewModels.Dashboard;
 using Data_Logger_1._3.ViewModels.LogViewModels;
 using Firebase.Auth;
 using Firebase.Auth.Providers;
@@ -29,13 +30,37 @@ namespace Data_Logger_1._3.Services
         private readonly string firebaseBaseUrl; // Set your Firebase base URL here
         private readonly FirebaseClient _firebaseDatabase;
         private readonly FirebaseAuthClient _firebaseAuthClient;
-        private readonly ACCOUNT _account;
+        private ACCOUNT _account;
+        private const string Qt = "Qt Creator";
+        private const string Android = "Android Studio Hedgehog 2023.1.1";
 
         // Retrieve Project Names for the Logger Create Page here
         public ProjectsLIST FIREBASE_PROJECTS { get; set; } = new();
 
         // Retrieve Application Names here
         public ApplicationsLIST FIREBASE_APPLICATIONS { get; set; } = new();
+
+        public DataService(string APIKey, string Domain)
+        {
+            // Initialize FirebaseAuthClient with provided Firebase API key and domain
+            _firebaseAuthClient = new FirebaseAuthClient(new FirebaseAuthConfig
+            {
+                ApiKey = APIKey,
+                AuthDomain = Domain,
+                Providers =
+                [
+                new GoogleProvider().AddScopes("email", "profile"),
+                new EmailProvider(),
+                new MicrosoftProvider(),
+                ],
+                UserRepository = new FileUserRepository("Data Logger")
+            });
+
+            _firebaseDatabase = new(@"https://dls03-d1959-default-rtdb.europe-west1.firebasedatabase.app/");
+
+
+            setup();
+        }
 
         public DataService(string APIKey, string Domain, AuthService authService)
         {
@@ -84,7 +109,12 @@ namespace Data_Logger_1._3.Services
             return false;
         }
 
-        public string GetUser()
+        public ACCOUNT GetUser()
+        {
+            return _account;
+        }
+
+        public string GetAuthorName()
         {
             return _account.FirstName + " " + _account.LastName;
         }
@@ -92,6 +122,11 @@ namespace Data_Logger_1._3.Services
         public string GetDisplayPic()
         {
             return _account.ProfilePic;
+        }
+
+        public void SetAccount(AuthService authService)
+        {
+            _account = authService.Account;
         }
 
         /* Use this to retrieve projects from Firebase. Use the total count of projects to create project IDs.
@@ -106,7 +141,7 @@ namespace Data_Logger_1._3.Services
 
             foreach(ProjectClass pro in collection)
             {
-                if(pro is not null)
+                if(pro is not null && pro.Name != "Unknown")
                     FIREBASE_PROJECTS.Add(pro);
             }
 
@@ -114,7 +149,7 @@ namespace Data_Logger_1._3.Services
 
             foreach (ProjectClass pro in collection)
             {
-                if (pro is not null)
+                if (pro is not null && pro.Name != "Unknown")
                     FIREBASE_PROJECTS.Add(pro);
             }
 
@@ -122,7 +157,7 @@ namespace Data_Logger_1._3.Services
 
             foreach (ProjectClass pro in collection)
             {
-                if (pro is not null)
+                if (pro is not null && pro.Name != "Unknown")
                     FIREBASE_PROJECTS.Add(pro);
             }
 
@@ -130,7 +165,7 @@ namespace Data_Logger_1._3.Services
 
             foreach (ProjectClass pro in collection)
             {
-                if (pro is not null)
+                if (pro is not null && pro.Name != "Unknown")
                     FIREBASE_PROJECTS.Add(pro);
             }
 
@@ -148,16 +183,16 @@ namespace Data_Logger_1._3.Services
                     FIREBASE_APPLICATIONS.Add(app);
             }
 
-            CheckDefaults(new(1, "Qt Creator", LOG.CATEGORY.CODING));
-            CheckDefaults(new(2, "Android Studio Hedgehog 2023.1.1", LOG.CATEGORY.CODING));
-            CheckDefaults(new(3, "Unknown", LOG.CATEGORY.CODING));
-            CheckDefaults(new(4, "Microsoft Visual Studio Community 2022", LOG.CATEGORY.CODING));
-            CheckDefaults(new(5, "Apache NetBeans", LOG.CATEGORY.CODING));
-            CheckDefaults(new(6, "Google Chrome", LOG.CATEGORY.CODING));
-            CheckDefaults(new(7, "Notepad", LOG.CATEGORY.CODING));
-            CheckDefaults(new(8, "Microsoft Edge", LOG.CATEGORY.CODING));
-            CheckDefaults(new(9, "WAMPP", LOG.CATEGORY.CODING));
-            CheckDefaults(new(10, "Visual Studio Code", LOG.CATEGORY.CODING));
+            CheckDefaults(new(1, _account, Qt, LOG.CATEGORY.CODING, true));
+            CheckDefaults(new(2, _account, Android, LOG.CATEGORY.CODING, true));
+            CheckDefaults(new(3, _account, "Unknown", LOG.CATEGORY.CODING, true));
+            CheckDefaults(new(4, _account, "Microsoft Visual Studio Community 2022", LOG.CATEGORY.CODING, true));
+            CheckDefaults(new(5, _account, "Apache NetBeans", LOG.CATEGORY.CODING, true));
+            CheckDefaults(new(6, _account, "Google Chrome", LOG.CATEGORY.CODING, true));
+            CheckDefaults(new(7, _account, "Notepad", LOG.CATEGORY.CODING, true));
+            CheckDefaults(new(8, _account, "Microsoft Edge", LOG.CATEGORY.CODING, true));
+            CheckDefaults(new(9, _account, "WAMPP", LOG.CATEGORY.CODING, true));
+            CheckDefaults(new(10, _account, "Visual Studio Code", LOG.CATEGORY.CODING, true));
 
             collection = await RetrieveApplications(Branch.Graphics);
 
@@ -167,11 +202,11 @@ namespace Data_Logger_1._3.Services
                     FIREBASE_APPLICATIONS.Add(app);
             }
 
-            CheckDefaults(new(11, "Inkscape", LOG.CATEGORY.GRAPHICS));
-            CheckDefaults(new(12, "Krita", LOG.CATEGORY.GRAPHICS));
-            CheckDefaults(new(13, "Unknown", LOG.CATEGORY.GRAPHICS));
-            CheckDefaults(new(14, "Blender", LOG.CATEGORY.GRAPHICS));
-            CheckDefaults(new(15, "Figma", LOG.CATEGORY.GRAPHICS));
+            CheckDefaults(new(11, _account, "Inkscape", LOG.CATEGORY.GRAPHICS, true));
+            CheckDefaults(new(12, _account, "Krita", LOG.CATEGORY.GRAPHICS, true));
+            CheckDefaults(new(13, _account, "Unknown", LOG.CATEGORY.GRAPHICS, true));
+            CheckDefaults(new(14, _account, "Blender", LOG.CATEGORY.GRAPHICS, true));
+            CheckDefaults(new(15, _account, "Figma", LOG.CATEGORY.GRAPHICS, true));
 
             collection = await RetrieveApplications(Branch.Film);
 
@@ -181,10 +216,10 @@ namespace Data_Logger_1._3.Services
                     FIREBASE_APPLICATIONS.Add(app);
             }
 
-            CheckDefaults(new(16, "Blender", LOG.CATEGORY.FILM));
-            CheckDefaults(new(17, "DaVinci Resolve 18", LOG.CATEGORY.FILM));
-            CheckDefaults(new(18, "Unknown", LOG.CATEGORY.FILM));
-            CheckDefaults(new(19, "Adobe Premiere Pro", LOG.CATEGORY.FILM));
+            CheckDefaults(new(16, _account, "Blender", LOG.CATEGORY.FILM, true));
+            CheckDefaults(new(17, _account, "DaVinci Resolve 18", LOG.CATEGORY.FILM, true));
+            CheckDefaults(new(18, _account, "Unknown", LOG.CATEGORY.FILM, true));
+            CheckDefaults(new(19, _account, "Adobe Premiere Pro", LOG.CATEGORY.FILM, true));
 
 
             collection = await RetrieveApplications(Branch.Flexible);
@@ -195,12 +230,12 @@ namespace Data_Logger_1._3.Services
                     FIREBASE_APPLICATIONS.Add(app);
             }
 
-            CheckDefaults(new(20, "Unity", LOG.CATEGORY.NOTES));
-            CheckDefaults(new(21, "Microsoft Word (Office 365)", LOG.CATEGORY.NOTES));
-            CheckDefaults(new(22, "Microsoft Word | Office Home & Student 2021", LOG.CATEGORY.NOTES));
-            CheckDefaults(new(23, "Unknown", LOG.CATEGORY.NOTES));
-            CheckDefaults(new(24, "Musescore 4.2.1", LOG.CATEGORY.NOTES));
-            CheckDefaults(new(25, "Blender", LOG.CATEGORY.NOTES));
+            CheckDefaults(new(20, _account, "Unity", LOG.CATEGORY.NOTES, true));
+            CheckDefaults(new(21, _account, "Microsoft Word (Office 365)", LOG.CATEGORY.NOTES, true));
+            CheckDefaults(new(22, _account, "Microsoft Word | Office Home & Student 2021", LOG.CATEGORY.NOTES, true));
+            CheckDefaults(new(23, _account, "Unknown", LOG.CATEGORY.NOTES, true));
+            CheckDefaults(new(24, _account, "Musescore 4.2.1", LOG.CATEGORY.NOTES, true));
+            CheckDefaults(new(25, _account, "Blender", LOG.CATEGORY.NOTES, true));
         }
 
         // Ensure default apps like Qt Creator exist even before the user creates their first log
@@ -246,23 +281,32 @@ namespace Data_Logger_1._3.Services
 
         /* CODING */
 
-        public async Task<bool> StoreCodingLog(CodeLOGViewModel codingLog)
+        public async Task<bool> StoreCodingLog(CodingLOG codingLog)
         {
             try
             {
-                if(codingLog._CodeLOG.Category == LOG.CATEGORY.CODING)
+                if(codingLog.Category == LOG.CATEGORY.CODING)
                 {
                     // STORE THE LOG
                     await _firebaseDatabase.Child("Log").Child("Coding").PostAsync(codingLog);
 
 
                     // Store the app
-                    ApplicationClass app = new(FIREBASE_APPLICATIONS.Count()+1, _account, codingLog._CodeLOG.ApplicationName, LOG.CATEGORY.CODING);
+                    ApplicationClass app = new(FIREBASE_APPLICATIONS.Count()+1, _account, codingLog.ApplicationName, LOG.CATEGORY.CODING, false);
 
                     // Store the project
-                    ProjectClass project = new(FIREBASE_PROJECTS.Count() + 1, _account, codingLog._CodeLOG.ProjectName, app, LOG.CATEGORY.CODING);
+                    string name;
 
-                    FirebaseAppProjectStore(app, project, "Coding", LOG.CATEGORY.CODING);
+                    if (codingLog.ProjectName != "")
+                    {
+                        name = codingLog.ProjectName;
+
+                        ProjectClass project = new(FIREBASE_PROJECTS.Count() + 1, _account, name, app, LOG.CATEGORY.CODING);
+
+                        FirebaseAppProjectStore(app, project, "Coding", LOG.CATEGORY.CODING);
+                    }
+
+                    
 
                     
                 }
@@ -280,24 +324,32 @@ namespace Data_Logger_1._3.Services
 
         /* Qt */
 
-        public async Task<bool> StoreQtCodingLog(QtLOGViewModel QtcodingLog)
+        public async Task<bool> StoreQtCodingLog(CodingLOG QtcodingLog)
         {
             try
             {
 
-                if (QtcodingLog._QtcodingLOG.Category == LOG.CATEGORY.CODING)
+                if (QtcodingLog.Category == LOG.CATEGORY.CODING)
                 {
                     // STORE THE LOG
-                    await _firebaseDatabase.Child("Log").Child("Coding").PostAsync(QtcodingLog);
+                    await _firebaseDatabase.Child("Log").Child("Coding").Child("Qt").PostAsync(QtcodingLog);
 
 
                     // No need to store Qt in ApplicationsList. It's stored by default.
 
                     // Store the project
-                    ProjectClass project = new(FIREBASE_PROJECTS.Count() + 1, _account, QtcodingLog._QtcodingLOG.ProjectName,
-                        new(1, "Qt Creator", LOG.CATEGORY.CODING), LOG.CATEGORY.CODING);
+                    ProjectClass project = new(FIREBASE_PROJECTS.Count() + 1, _account, QtcodingLog.ProjectName,
+                        new(1, Qt, LOG.CATEGORY.CODING), LOG.CATEGORY.CODING, true);
 
-                    if (QtcodingLog._QtcodingLOG.ApplicationName == "Qt Creator" && !FIREBASE_PROJECTS.Contains(project))
+                    Dictionary<string, string> pairs = new();
+
+                    foreach (ProjectClass pro in FIREBASE_PROJECTS)
+                    {
+                        pairs.Add(pro.Application.Name, pro.Name);
+                    }
+
+                    if (QtcodingLog.ApplicationName == Qt && 
+                        !(pairs.ContainsKey(project.Application.Name) && pairs[project.Application.Name] == project.Name))
                     {
                         await _firebaseDatabase.Child("Projects").Child("Coding").Child("Qt").PostAsync(project);
 
@@ -317,26 +369,26 @@ namespace Data_Logger_1._3.Services
 
         /* Android Studio */
 
-        public async Task<bool> StoreASCodingLog(AndroidLOGViewModel AScodingLog)
+        public async Task<bool> StoreASCodingLog(AndroidCodingLOG AScodingLog)
         {
             try
             {
-                if (AScodingLog._AndroidCodingLOG.Category == LOG.CATEGORY.CODING)
+                if (AScodingLog.Category == LOG.CATEGORY.CODING)
                 {
                     // STORE THE LOG
-                    await _firebaseDatabase.Child("Log").Child("Coding").PostAsync(AScodingLog);
+                    await _firebaseDatabase.Child("Log").Child("Coding").Child("AS").PostAsync(AScodingLog);
 
                     // No need to store the Android Studio app in the ApplicationsList. It's stored by default.
 
                     // Store the project
-                    ProjectClass project = new(FIREBASE_PROJECTS.Count() + 1, _account, AScodingLog._AndroidCodingLOG.ProjectName,
-                        new(2, "Android Studio Hedgehog 2023.1.1", LOG.CATEGORY.CODING), LOG.CATEGORY.CODING);
+                    ProjectClass project = new(FIREBASE_PROJECTS.Count() + 1, _account, AScodingLog.ProjectName,
+                        new(2, Android, LOG.CATEGORY.CODING), LOG.CATEGORY.CODING, true);
 
-                    if (AScodingLog._AndroidCodingLOG.ApplicationName == "Android Studio Hedgehog 2023.1.1" && !FIREBASE_PROJECTS.Contains(project))
+                    if (AScodingLog.ApplicationName == Android && !FIREBASE_PROJECTS.Contains(project))
                     {
                         await _firebaseDatabase.Child("Projects").Child("Coding").Child("Android").PostAsync(project);
 
-                        InitialiseProjectsLIST();
+                        await InitialiseProjectsLIST();
                     }
                     
                 }
@@ -353,21 +405,21 @@ namespace Data_Logger_1._3.Services
 
         /* GRAPHICS */
 
-        public async Task<bool> StoreGraphicsLog(GraphicsLOGViewModel graphicsLog)
+        public async Task<bool> StoreGraphicsLog(GraphicsLOG graphicsLog)
         {
             try
             {
 
-                if (graphicsLog._GraphicsLOG.Category == LOG.CATEGORY.GRAPHICS)
+                if (graphicsLog.Category == LOG.CATEGORY.GRAPHICS)
                 {
                     // STORE THE LOG
                     await _firebaseDatabase.Child("Log").Child("Graphics").PostAsync(graphicsLog);
 
                     // Store the app
-                    ApplicationClass app = new(FIREBASE_APPLICATIONS.Count() + 1, _account, graphicsLog._GraphicsLOG.ApplicationName, LOG.CATEGORY.GRAPHICS);
+                    ApplicationClass app = new(FIREBASE_APPLICATIONS.Count() + 1, _account, graphicsLog.ApplicationName, LOG.CATEGORY.GRAPHICS);
 
                     // Store the project
-                    ProjectClass project = new(FIREBASE_PROJECTS.Count() + 1, _account, graphicsLog._GraphicsLOG.ProjectName,
+                    ProjectClass project = new(FIREBASE_PROJECTS.Count() + 1, _account, graphicsLog.ProjectName,
                         app, LOG.CATEGORY.GRAPHICS);
 
 
@@ -388,22 +440,22 @@ namespace Data_Logger_1._3.Services
 
         /* FILM */
 
-        public async Task<bool> StoreFilmLog(FilmLOGViewModel filmLog)
+        public async Task<bool> StoreFilmLog(FilmLOG filmLog)
         {
             try
             {
 
-                if (filmLog._FilmLOG.Category == LOG.CATEGORY.FILM)
+                if (filmLog.Category == LOG.CATEGORY.FILM)
                 {
                     // STORE THE LOG
                     await _firebaseDatabase.Child("Log").Child("Film").PostAsync(filmLog);
 
 
                     // Store the app
-                    ApplicationClass app = new(FIREBASE_APPLICATIONS.Count() + 1, _account, filmLog._FilmLOG.ApplicationName, LOG.CATEGORY.FILM);
+                    ApplicationClass app = new(FIREBASE_APPLICATIONS.Count() + 1, _account, filmLog.ApplicationName, LOG.CATEGORY.FILM);
 
                     // Store the project
-                    ProjectClass project = new(FIREBASE_PROJECTS.Count() + 1, _account, filmLog._FilmLOG.ProjectName, app, LOG.CATEGORY.FILM);
+                    ProjectClass project = new(FIREBASE_PROJECTS.Count() + 1, _account, filmLog.ProjectName, app, LOG.CATEGORY.FILM);
 
                     FirebaseAppProjectStore(app, project, "Film", LOG.CATEGORY.FILM);
 
@@ -423,21 +475,21 @@ namespace Data_Logger_1._3.Services
 
         /* FLEXIBLE */
 
-        public async Task<bool> StoreFlexibleLog(FlexiLOGViewModel flexiLog)
+        public async Task<bool> StoreFlexibleLog(FlexiNotesLOG flexiLog)
         {
             try
             {
 
-                if (flexiLog._FlexiLOG.Category == LOG.CATEGORY.NOTES)
+                if (flexiLog.Category == LOG.CATEGORY.NOTES)
                 {
                     // STORE THE LOG
                     await _firebaseDatabase.Child("Log").Child("Flexi").PostAsync(flexiLog);
 
                     // Store the app
-                    ApplicationClass app = new(FIREBASE_APPLICATIONS.Count() + 1, _account, flexiLog._FlexiLOG.ApplicationName, LOG.CATEGORY.NOTES);
+                    ApplicationClass app = new(FIREBASE_APPLICATIONS.Count() + 1, _account, flexiLog.ApplicationName, LOG.CATEGORY.NOTES);
 
                     // Store the project
-                    ProjectClass project = new(FIREBASE_PROJECTS.Count() + 1, _account, flexiLog._FlexiLOG.ProjectName, app, LOG.CATEGORY.NOTES);
+                    ProjectClass project = new(FIREBASE_PROJECTS.Count() + 1, _account, flexiLog.ProjectName, app, LOG.CATEGORY.NOTES);
 
                     FirebaseAppProjectStore(app, project, "Flexi", LOG.CATEGORY.NOTES);
                 }
@@ -473,11 +525,19 @@ namespace Data_Logger_1._3.Services
 
 
             // Store the project
-
-            if(category == LOG.CATEGORY.CODING)
+            Dictionary<string, string> pairs = new();
+            
+            foreach(ProjectClass pro in FIREBASE_PROJECTS)
             {
-                if (project.Application.Name != "Qt Creator" && project.Application.Name != "Android Studio Hedgehog 2023.1.1" &&
-                !FIREBASE_PROJECTS.Contains(project))
+                pairs.Add(pro.Application.Name, pro.Name);
+            }
+
+            if (category == LOG.CATEGORY.CODING)
+            {
+
+
+                if (project.Application.Name != Qt && project.Application.Name != Android &&
+                        !(pairs.ContainsKey(project.Application.Name) && pairs[project.Application.Name] == project.Name))
                 {
                     await _firebaseDatabase.Child("Projects").Child("Coding").Child("Generic").PostAsync(project);
 
@@ -486,7 +546,7 @@ namespace Data_Logger_1._3.Services
             }
             else
             {
-                if(!FIREBASE_PROJECTS.Contains(project))
+                if(!(pairs.ContainsKey(project.Application.Name) && pairs[project.Application.Name] == project.Name))
                 {
                     await _firebaseDatabase.Child("Projects").Child(branch).PostAsync(project);
 
@@ -519,19 +579,22 @@ namespace Data_Logger_1._3.Services
 
 
 
-        public async Task<List<CodeLOGViewModel>> RetrieveCodingLogs()
+        public async Task<List<CodeLOGViewModel>> RetrieveCodingLogs(LogCacheViewModel logCacheViewModel)
         {
             List<CodeLOGViewModel> list = new();
 
             try
             {
-                var items = await _firebaseDatabase.Child("Log").Child("Coding").OrderByKey().OnceAsync<CodeLOGViewModel>();
+                var items = await _firebaseDatabase.Child("Log").Child("Coding").OrderByKey().OnceAsync<CodingLOG>();
 
                 foreach (var item in items)
                 {
-                    if (item.Object._CodeLOG.ApplicationName != "Qt Creator" && item.Object._CodeLOG.ApplicationName != "Android Studio Hedgehog 2023.1.1"
-                        && item.Object._CodeLOG.Author == _account)
-                        list.Add(item.Object);
+                    if (item.Object.ApplicationName != Qt && item.Object.ApplicationName != Android
+                        && item.Object.Author == _account)
+                    {
+                        
+                        list.Add(new(item.Object, logCacheViewModel, this));
+                    }
                 }
             }
             catch (Exception)
@@ -542,18 +605,18 @@ namespace Data_Logger_1._3.Services
             return list;
         }
 
-        public async Task<List<QtLOGViewModel>> RetrieveQtCodingLogs()
+        public async Task<List<QtLOGViewModel>> RetrieveQtCodingLogs(LogCacheViewModel logCacheViewModel)
         {
             List<QtLOGViewModel> list = new();
 
             try
             {
-                var items = await _firebaseDatabase.Child("Log").Child("Coding").OrderByKey().OnceAsync<QtLOGViewModel>();
+                var items = await _firebaseDatabase.Child("Log").Child("Coding").Child("Qt").OrderByKey().OnceAsync<CodingLOG>();
 
                 foreach (var item in items)
                 {
-                    if (item.Object._QtcodingLOG.ApplicationName == "Qt Creator" && item.Object._QtcodingLOG.Author == _account)
-                        list.Add(item.Object);
+                    if (item.Object.ApplicationName == Qt && item.Object.Author == _account)
+                        list.Add(new(item.Object, logCacheViewModel, this));
                 }
             }
             catch (Exception)
@@ -564,18 +627,18 @@ namespace Data_Logger_1._3.Services
             return list;
         }
 
-        public async Task<List<AndroidLOGViewModel>> RetrieveASCodingLogs()
+        public async Task<List<AndroidLOGViewModel>> RetrieveASCodingLogs(LogCacheViewModel logCacheViewModel)
         {
             List<AndroidLOGViewModel> list = new();
 
             try
             {
-                var items = await _firebaseDatabase.Child("Log").Child("Coding").OrderByKey().OnceAsync<AndroidLOGViewModel>();
+                var items = await _firebaseDatabase.Child("Log").Child("Coding").Child("AS").OrderByKey().OnceAsync<AndroidCodingLOG>();
 
                 foreach (var item in items)
                 {
-                    if (item.Object._AndroidCodingLOG.ApplicationName == "Android Studio Hedgehog 2023.1.1" && item.Object._AndroidCodingLOG.Author == _account)
-                        list.Add(item.Object);
+                    if (item.Object.ApplicationName == Android && item.Object.Author == _account)
+                        list.Add(new(item.Object, logCacheViewModel, this));
                 }
             }
             catch (Exception)
@@ -587,18 +650,18 @@ namespace Data_Logger_1._3.Services
         }
 
 
-        public async Task<List<GraphicsLOGViewModel>> RetrieveGraphicsLogs()
+        public async Task<List<GraphicsLOGViewModel>> RetrieveGraphicsLogs(LogCacheViewModel logCacheViewModel)
         {
             List<GraphicsLOGViewModel> list = new();
 
             try
             {
-                var items = await _firebaseDatabase.Child("Log").Child("Graphics").OrderByKey().OnceAsync<GraphicsLOGViewModel>();
+                var items = await _firebaseDatabase.Child("Log").Child("Graphics").OrderByKey().OnceAsync<GraphicsLOG>();
 
                 foreach (var item in items)
                 {
-                    if(item.Object._GraphicsLOG.Category == LOG.CATEGORY.GRAPHICS && item.Object._GraphicsLOG.Author == _account)
-                        list.Add(item.Object);
+                    if(item.Object.Category == LOG.CATEGORY.GRAPHICS && item.Object.Author == _account)
+                        list.Add(new(item.Object, logCacheViewModel, this));
                 }
             }
             catch (Exception)
@@ -609,18 +672,18 @@ namespace Data_Logger_1._3.Services
             return list;
         }
 
-        public async Task<List<FilmLOGViewModel>> RetrieveFilmLogs()
+        public async Task<List<FilmLOGViewModel>> RetrieveFilmLogs(LogCacheViewModel logCacheViewModel)
         {
             List<FilmLOGViewModel> list = new();
 
             try
             {
-                var items = await _firebaseDatabase.Child("Log").Child("Film").OrderByKey().OnceAsync<FilmLOGViewModel>();
+                var items = await _firebaseDatabase.Child("Log").Child("Film").OrderByKey().OnceAsync<FilmLOG>();
 
                 foreach (var item in items)
                 {
-                    if (item.Object._FilmLOG.Category == LOG.CATEGORY.FILM && item.Object._FilmLOG.Author == _account)
-                        list.Add(item.Object);
+                    if (item.Object.Category == LOG.CATEGORY.FILM && item.Object.Author == _account)
+                        list.Add(new(item.Object, logCacheViewModel, this));
                 }
             }
             catch (Exception)
@@ -631,18 +694,18 @@ namespace Data_Logger_1._3.Services
             return list;
         }
 
-        public async Task<List<FlexiLOGViewModel>> RetrieveFlexibleLogs()
+        public async Task<List<FlexiLOGViewModel>> RetrieveFlexibleLogs(LogCacheViewModel logCacheViewModel)
         {
             List<FlexiLOGViewModel> list = new();
 
             try
             {
-                var items = await _firebaseDatabase.Child("Log").Child("Flexi").OrderByKey().OnceAsync<FlexiLOGViewModel>();
+                var items = await _firebaseDatabase.Child("Log").Child("Flexi").OrderByKey().OnceAsync<FlexiNotesLOG>();
 
                 foreach (var item in items)
                 {
-                    if (item.Object._FlexiLOG.Category == LOG.CATEGORY.NOTES && item.Object._FlexiLOG.Author == _account)
-                        list.Add(item.Object);
+                    if (item.Object.Category == LOG.CATEGORY.NOTES && item.Object.Author == _account)
+                        list.Add(new(item.Object, logCacheViewModel, this));
                 }
             }
             catch (Exception)
