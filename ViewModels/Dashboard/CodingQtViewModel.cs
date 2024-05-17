@@ -2,11 +2,32 @@
 using Data_Logger_1._3.Services;
 using Data_Logger_1._3.ViewModels.Dashboard;
 using System.Collections.ObjectModel;
+using System.Windows;
 
 namespace Data_Logger_1._3.ViewModels.LogViewModels
 {
     public class CodingQtViewModel : LogCacheViewModel
     {
+
+
+        public CodingQtViewModel(NavigationService navigationService, DataService dataService) : base(navigationService, dataService)
+        {
+            CacheItems = new ObservableCollection<QtLOGViewModel>();
+
+            CreateLogCommand = new CreateQtLogCommand(_navigationService);
+            ReportLogCommand = new ReportQtLogCommand(_navigationService);
+        }
+
+        public CodingQtViewModel(string logCount, NavigationService navigationService, DataService dataService) : base(navigationService, dataService)
+        {
+            CacheItems = new ObservableCollection<QtLOGViewModel>();
+            LogCount = logCount;
+
+            CreateLogCommand = new CreateQtLogCommand(_navigationService);
+            ReportLogCommand = new ReportQtLogCommand(_navigationService);
+        }
+
+
         private ObservableCollection<QtLOGViewModel> cacheItems;
         public ObservableCollection<QtLOGViewModel> CacheItems
         {
@@ -17,27 +38,33 @@ namespace Data_Logger_1._3.ViewModels.LogViewModels
             set
             {
                 cacheItems = value;
-                LogCount = CacheItems.Count.ToString() + " qt logs cached | x total logs";
+
+                NoLogsMessageVisibility = CacheItems.Count == 0 ? Visibility.Visible : Visibility.Hidden;
+                UpdateLogCount();
+
                 OnPropertyChanged(nameof(CacheItems));
             }
         }
 
-
-        public CodingQtViewModel(NavigationService navigationService) : base(navigationService)
+        private Visibility noLogsMessageVisibility;
+        public Visibility NoLogsMessageVisibility
         {
-            CacheItems = new ObservableCollection<QtLOGViewModel>();
-
-            CreateLogCommand = new CreateQtLogCommand(_navigationService);
-            ReportLogCommand = new ReportQtLogCommand(_navigationService);
+            get
+            {
+                return noLogsMessageVisibility;
+            }
+            set
+            {
+                noLogsMessageVisibility = value;
+                OnPropertyChanged(nameof(NoLogsMessageVisibility));
+            }
         }
 
-        public CodingQtViewModel(string logCount, NavigationService navigationService) : base(navigationService)
+        private async void UpdateLogCount()
         {
-            CacheItems = new ObservableCollection<QtLOGViewModel>();
-            LogCount = logCount;
-
-            CreateLogCommand = new CreateQtLogCommand(_navigationService);
-            ReportLogCommand = new ReportQtLogCommand(_navigationService);
+            var temp = await _dataService.RetrieveQtCodingLogs(this);
+            var count = temp.Count;
+            LogCount = $"{CacheItems.Count} qt logs cached | {count} total logs";
         }
 
     }

@@ -23,7 +23,7 @@ namespace Data_Logger_1._3.ViewModels.LogViewModels
         }
 
 
-        public FilmViewModel(NavigationService navigationService) : base(navigationService)
+        public FilmViewModel(NavigationService navigationService, DataService _dataService) : base(navigationService, _dataService)
         {
             CacheItems = new ObservableCollection<FilmLOGViewModel>();
 
@@ -31,7 +31,7 @@ namespace Data_Logger_1._3.ViewModels.LogViewModels
             ReportLogCommand = new ReportFilmLogCommand(_navigationService);
         }
 
-        public FilmViewModel(string logCount, NavigationService navigationService) : base(navigationService)
+        public FilmViewModel(string logCount, NavigationService navigationService, DataService _dataService) : base(navigationService, _dataService)
         {
             CacheItems = new ObservableCollection<FilmLOGViewModel>();
 

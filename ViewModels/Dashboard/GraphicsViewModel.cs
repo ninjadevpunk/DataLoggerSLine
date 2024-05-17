@@ -23,7 +23,7 @@ namespace Data_Logger_1._3.ViewModels.LogViewModels
         }
 
 
-        public GraphicsViewModel(NavigationService navigationService) : base(navigationService)
+        public GraphicsViewModel(NavigationService navigationService, DataService _dataService) : base(navigationService, _dataService)
         {
             CacheItems = new ObservableCollection<GraphicsLOGViewModel>();
 
@@ -32,7 +32,7 @@ namespace Data_Logger_1._3.ViewModels.LogViewModels
         }
 
 
-        public GraphicsViewModel(string logCount, NavigationService navigationService) : base(navigationService)
+        public GraphicsViewModel(string logCount, NavigationService navigationService, DataService _dataService) : base(navigationService, _dataService)
         {
             CacheItems = new ObservableCollection<GraphicsLOGViewModel>();
 

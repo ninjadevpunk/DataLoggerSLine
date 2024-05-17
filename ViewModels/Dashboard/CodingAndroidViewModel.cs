@@ -26,7 +26,7 @@ namespace Data_Logger_1._3.ViewModels.LogViewModels
         }
 
 
-        public CodingAndroidViewModel(NavigationService navigationService) : base(navigationService)
+        public CodingAndroidViewModel(NavigationService navigationService, DataService dataService) : base(navigationService, dataService)
         {
             CacheItems = new ObservableCollection<AndroidLOGViewModel>();
 
@@ -34,7 +34,7 @@ namespace Data_Logger_1._3.ViewModels.LogViewModels
             ReportLogCommand = new ReportASLogCommand(_navigationService);
         }
 
-        public CodingAndroidViewModel(string logCount, NavigationService navigationService) : base(navigationService)
+        public CodingAndroidViewModel(string logCount, NavigationService navigationService, DataService dataService) : base(navigationService, dataService)
         {
             CacheItems = new ObservableCollection<AndroidLOGViewModel>();
 

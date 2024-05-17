@@ -23,7 +23,7 @@ namespace Data_Logger_1._3.ViewModels.LogViewModels
         }
 
 
-        public CodingGenericViewModel(NavigationService navigationService) : base(navigationService)
+        public CodingGenericViewModel(NavigationService navigationService, DataService _dataService) : base(navigationService, _dataService)
         {
             CacheItems = new ObservableCollection<CodeLOGViewModel>();
 
@@ -31,7 +31,7 @@ namespace Data_Logger_1._3.ViewModels.LogViewModels
             ReportLogCommand = new ReportCodingLogCommand(_navigationService);
         }
 
-        public CodingGenericViewModel(string logCount, NavigationService navigationService) : base(navigationService)
+        public CodingGenericViewModel(string logCount, NavigationService navigationService, DataService _dataService) : base(navigationService, _dataService)
         {
             CacheItems = new ObservableCollection<CodeLOGViewModel>();
 
@@ -41,5 +41,11 @@ namespace Data_Logger_1._3.ViewModels.LogViewModels
             ReportLogCommand = new ReportCodingLogCommand(_navigationService);
         }
 
+        public async void UpdateLogCount()
+        {
+            var temp = await _dataService.RetrieveCodingLogs(this);
+            var count = temp.Count;
+            LogCount = $"{CacheItems.Count} qt logs cached | {count} total logs";
+        }
     }
 }
