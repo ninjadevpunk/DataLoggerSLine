@@ -40,7 +40,7 @@
            Text="LOG CACHE" />
 
         <TextBlock Grid.Column="0" Grid.Row="1" x:Name="text_logCACHE_COUNT" Style="{DynamicResource text_SUB HEADING1}"
-           Text="{Binding LogCount, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
+           Text="{Binding LogCount, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay, BindsDirectlyToSource=True}" />
 
 
 

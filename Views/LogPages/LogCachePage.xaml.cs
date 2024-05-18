@@ -12,9 +12,7 @@ namespace Data_Logger_1._3.Views.LogPages
             InitializeComponent();
         }
 
-        private void ListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
 
-        }
     }
 }
+
