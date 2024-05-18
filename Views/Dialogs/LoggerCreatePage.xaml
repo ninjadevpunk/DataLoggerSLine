@@ -63,7 +63,9 @@
                         
                         <!-- AUTHOR -->
                         <Border Padding="20 2"
-                            Height="30">
+                                BorderThickness="0.6"
+                                BorderBrush="{DynamicResource STROKE}"
+                                Height="30" >
                         <Grid>
 
                             <Grid.ColumnDefinitions>
@@ -78,7 +80,7 @@
                                     HorizontalAlignment="Left" />
                             
                             <Path x:Name="path_DEFAULT_DP" Style="{DynamicResource path_AUTHOR}"
-                                  Visibility="{Binding DisplayPicVisibility}" />
+                                  Visibility="{Binding DisplayPicVisibility, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
 
                             <TextBlock x:Name="text_AUTHOR" Grid.Column="1" Style="{DynamicResource text_Placeholder}"
                                        Text="{Binding Author, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
@@ -99,7 +101,7 @@
                         
                         <!-- APPLICATION -->
                         <components:ComboBoxInputField x:Name="inputText_APP"
-                                                       Enabled="{Binding AppFieldEnabled}"
+                                                       Enabled="{Binding AppFieldEnabled, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
                                                        PlaceholderText="Application Name"
                                                        UserTextBoxStyle="{DynamicResource inputText_APP}"
                                                        UserTextBlockStyle="{DynamicResource text_APP_Placeholder}"
@@ -322,7 +324,11 @@
                             <Button x:Name="toolbutton_DELETE" Style="{DynamicResource toolbutton_DELETE}"
                                     HorizontalAlignment="Left" 
                                     Command="{Binding ClearPostItListCommand}" />
-                            
+
+                            <Button x:Name="toolbutton_RESET" Style="{DynamicResource toolbutton_RESET}"
+                                    HorizontalAlignment="Left"
+                                    Command="{Binding ClearLoggerCommand}" />
+
                         </ToolBar>
 
 
