@@ -19,9 +19,16 @@ namespace Data_Logger_1._3.ViewModels.LogViewModels
 
         public bool IsDisposed { get; set; } = false;
 
-        private Timer _timer;
+        public Timer _timer;
+
+        public ICommand EditCommand { get; set; }
+
+        public ICommand ViewCommand { get; set; }
 
         public ICommand DeleteCacheItemCommand { get; set; }
+        public ICommand QuickDeleteCacheItemCommand { get; set; }
+
+
 
 
         #region Constructors
@@ -34,11 +41,26 @@ namespace Data_Logger_1._3.ViewModels.LogViewModels
             _createPostItViewModels = createPostItViewModels;
 
             _CodeLOG = codingLOG;
-
+            NotaryContent = content();
+            _CodeLOG.Content = content();
             TimeRemaining = 1200;
             StartCountdown();
 
             DeleteCacheItemCommand = new DeleteCodingCacheItemCommand(_vm, dataService);
+            QuickDeleteCacheItemCommand = new DeleteCodingCacheItemCommand(_vm, dataService, false);
+        }
+
+        public CodeLOGViewModel(CodingLOG codingLOG, LogCacheViewModel logCacheViewModel, DataService dataService)
+        {
+            _vm = logCacheViewModel;
+
+            _CodeLOG = codingLOG;
+            NotaryContent = _CodeLOG.Content;
+            TimeRemaining = 10;
+            StartCountdown();
+
+            DeleteCacheItemCommand = new DeleteCodingCacheItemCommand(_vm, dataService);
+            QuickDeleteCacheItemCommand = new DeleteCodingCacheItemCommand(_vm, dataService, false);
         }
 
 
@@ -68,8 +90,7 @@ namespace Data_Logger_1._3.ViewModels.LogViewModels
             $"{_CodeLOG.EndTime.ToString("dddd, d MMMM yyyy HH:mm:ss.fff")}";
 
         /** Store the first occurence of a note with acceptable input only. **/
-        public string NotaryContent => content();
-
+        public string NotaryContent { get; set; } = "No Notes";
 
 
         private double timeRemaining;

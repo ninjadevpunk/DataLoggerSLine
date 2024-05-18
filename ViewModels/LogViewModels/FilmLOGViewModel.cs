@@ -19,9 +19,17 @@ namespace Data_Logger_1._3.ViewModels.LogViewModels
 
         public bool IsDisposed { get; set; } = false;
 
-        private Timer _timer;
+        public Timer _timer;
+
+        public ICommand EditCommand { get; set; }
+
+        public ICommand ViewCommand { get; set; }
 
         public ICommand DeleteCacheItemCommand { get; set; }
+        public ICommand QuickDeleteCacheItemCommand { get; set; }
+
+
+
 
         #region Constructor
 
@@ -32,13 +40,25 @@ namespace Data_Logger_1._3.ViewModels.LogViewModels
             _createPostItViewModels = createPostItViewModels;
 
             _FilmLOG = filmLOG;
+            NotaryContent = content();
+            _FilmLOG.Content = content();
             TimeRemaining = 1200;
             StartCountdown();
 
-            DeleteCacheItemCommand = new DeleteFilmCacheItemCommand(_vm, dataService);
+            DeleteCacheItemCommand = new DeleteFilmCacheItemCommand(_vm, dataService, true);
         }
 
+        public FilmLOGViewModel(FilmLOG filmLOG, LogCacheViewModel logCacheViewModel, DataService dataService)
+        {
+            _vm = logCacheViewModel;
 
+            _FilmLOG = filmLOG;
+            NotaryContent = _FilmLOG.Content;
+            TimeRemaining = 1200;
+            StartCountdown();
+
+            DeleteCacheItemCommand = new DeleteFilmCacheItemCommand(_vm, dataService, true);
+        }
 
 
 
@@ -71,7 +91,7 @@ namespace Data_Logger_1._3.ViewModels.LogViewModels
             $"{_FilmLOG.EndTime.ToString("dddd, d MMMM yyyy HH:mm:ss.fff")}";
 
         /** Store the first occurence of a note with acceptable input only. **/
-        public string NotaryContent => content();
+        public string NotaryContent { get; set; }
 
 
 

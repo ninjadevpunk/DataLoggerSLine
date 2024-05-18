@@ -19,9 +19,16 @@ namespace Data_Logger_1._3.ViewModels.LogViewModels
 
         public bool IsDisposed { get; set; } = false;
 
-        private Timer _timer;
+        public Timer _timer;
+
+        public ICommand EditCommand { get; set; }
+
+        public ICommand ViewCommand { get; set; }
 
         public ICommand DeleteCacheItemCommand { get; set; }
+        public ICommand QuickDeleteCacheItemCommand { get; set; }
+
+
 
 
         #region Constructors
@@ -34,10 +41,24 @@ namespace Data_Logger_1._3.ViewModels.LogViewModels
             _createPostItViewModels = createPostItViewModels;
 
             _FlexiLOG = flexiLOG;
+            NotaryContent = content();
+            _FlexiLOG.Content = content();
             TimeRemaining = 1200;
             StartCountdown();
 
-            DeleteCacheItemCommand = new DeleteFlexiCacheItemCommand(_vm, dataService);
+            DeleteCacheItemCommand = new DeleteFlexiCacheItemCommand(_vm, dataService, true);
+        }
+
+        public FlexiLOGViewModel(FlexiNotesLOG flexiLOG, LogCacheViewModel logCacheViewModel, DataService dataService)
+        {
+            _vm = logCacheViewModel;
+
+            _FlexiLOG = flexiLOG;
+            NotaryContent = _FlexiLOG.Content;
+            TimeRemaining = 1200;
+            StartCountdown();
+
+            DeleteCacheItemCommand = new DeleteFlexiCacheItemCommand(_vm, dataService, true);
         }
 
 
@@ -66,7 +87,7 @@ namespace Data_Logger_1._3.ViewModels.LogViewModels
             $"{_FlexiLOG.EndTime.ToString("dddd, d MMMM yyyy HH:mm:ss.fff")}";
 
         /** Store the first occurence of a note with acceptable input only. **/
-        public string NotaryContent => content();
+        public string NotaryContent { get; set; }
 
 
 
