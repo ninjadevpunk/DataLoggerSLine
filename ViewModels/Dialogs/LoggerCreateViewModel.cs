@@ -27,7 +27,7 @@ namespace Data_Logger_1._3.ViewModels.Dialogs
 			_logCacheViewModel = logCacheViewModel;
 			_dataService = dataService;
 
-			Author = _dataService.GetUser();
+			Author = _dataService.GetAuthorName();
 
 			DisplayPicVisibility = Visibility.Visible;
 
@@ -54,7 +54,10 @@ namespace Data_Logger_1._3.ViewModels.Dialogs
 			EndDate = DateTime.Now;
 
 			Output = "";
+			_outputs = new();
 			Type = "";
+			_types = new();
+
 
 			PostIts = new ObservableCollection<CreatePostItViewModel>();
 
@@ -454,6 +457,15 @@ namespace Data_Logger_1._3.ViewModels.Dialogs
         #region Member Functions 
 
 
+        public virtual void Setup()
+        {
+            ProjectName = "";
+            ApplicationName = "";
+			TimeNow(true);
+            Output = "";
+            Type = "";
+            PostIts = new();
+        }
 
         public void UpdateDateControl()
 		{
@@ -492,6 +504,23 @@ namespace Data_Logger_1._3.ViewModels.Dialogs
 			{
 				//
 			}
+        }
+
+		public void TimeNow(bool updateStart)
+		{
+            if(updateStart)
+			{
+                StartHours = DateTime.Now.Hour;
+                StartMinutes = DateTime.Now.Minute;
+                StartSeconds = DateTime.Now.Second;
+                StartMilliseconds = DateTime.Now.Millisecond;
+            }
+
+            EndHours = DateTime.Now.Hour;
+			EndMinutes = DateTime.Now.Minute;
+			EndSeconds = DateTime.Now.Second;
+			EndMilliseconds = DateTime.Now.Millisecond;
+
         }
 
         #endregion

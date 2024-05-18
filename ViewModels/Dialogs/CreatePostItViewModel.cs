@@ -13,8 +13,58 @@ namespace Data_Logger_1._3.ViewModels.Dialogs
         private readonly NavigationService _navigationService;
 		private readonly LoggerCreateViewModel _loggerCreateViewModel;
 
+        public CreatePostItViewModel(NavigationService navigationService, LoggerCreateViewModel loggerCreateViewModel)
+        {
+            _navigationService = navigationService;
+            _loggerCreateViewModel = loggerCreateViewModel;
 
-		private readonly ObservableCollection<string> _subjects;
+            Subject = "";
+            Error = "";
+
+            ErrorVisible = Visibility.Collapsed;
+            SolutionVisible = Visibility.Collapsed;
+            SuggestionVisible = Visibility.Collapsed;
+            CommentVisible = Visibility.Collapsed;
+
+            Solution = "";
+            Suggestion = "";
+            Comment = "";
+
+            Option1Check = true;
+
+            PostCommand = new PostCommand(_navigationService, _loggerCreateViewModel, this);
+            DeletePostItCommand = new DeletePostItCommand(_loggerCreateViewModel);
+        }
+
+        public CreatePostItViewModel(NavigationService navigationService, LoggerCreateViewModel loggerCreateViewModel, string Subject, string Error, 
+			DateTime DateFound,
+			string Solution,
+			DateTime DateDolved,
+			string Suggestion, string Comment)
+        {
+            _navigationService = navigationService;
+            _loggerCreateViewModel = loggerCreateViewModel;
+
+            Subject = "";
+            Error = "";
+
+            ErrorVisible = Visibility.Collapsed;
+            SolutionVisible = Visibility.Collapsed;
+            SuggestionVisible = Visibility.Collapsed;
+            CommentVisible = Visibility.Collapsed;
+
+            Solution = "";
+            Suggestion = "";
+            Comment = "";
+
+            Option1Check = true;
+
+            PostCommand = new PostCommand(_navigationService, _loggerCreateViewModel, this);
+            DeletePostItCommand = new DeletePostItCommand(_loggerCreateViewModel);
+        }
+
+
+        private readonly ObservableCollection<string> _subjects;
         public bool FoundDateCaptured { get; set; } = false;
         public bool SolvedDateCaptured { get; set; } = false;
 
@@ -455,28 +505,7 @@ namespace Data_Logger_1._3.ViewModels.Dialogs
         #endregion
 
 
-        public CreatePostItViewModel(NavigationService navigationService, LoggerCreateViewModel loggerCreateViewModel)
-        {
-            _navigationService = navigationService;
-			_loggerCreateViewModel = loggerCreateViewModel;
-
-			Subject = "";
-			Error = "";
-
-			ErrorVisible = Visibility.Collapsed;
-			SolutionVisible = Visibility.Collapsed;
-			SuggestionVisible = Visibility.Collapsed;
-			CommentVisible = Visibility.Collapsed;
-
-			Solution = "";
-			Suggestion = "";
-			Comment = "";
-
-			Option1Check = true;
-
-			PostCommand = new PostCommand(_navigationService, _loggerCreateViewModel, this);
-			DeletePostItCommand = new DeletePostItCommand(_loggerCreateViewModel);
-        }
+        
 
         #region Member Functions
 

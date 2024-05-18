@@ -1,4 +1,6 @@
 ﻿using Data_Logger_1._3.Commands;
+using Data_Logger_1._3.Models.App_Models;
+using Data_Logger_1._3.Models;
 using Data_Logger_1._3.Services;
 using Data_Logger_1._3.ViewModels.Dashboard;
 using Data_Logger_1._3.ViewModels.LogViewModels;
@@ -12,8 +14,10 @@ namespace Data_Logger_1._3.ViewModels.Dialogs
 
         public AScodeCreateViewModel(NavigationService navigationService, LogCacheViewModel logCacheViewModel, DataService dataService) : base(navigationService, logCacheViewModel, dataService)
         {
-            ApplicationName = "Android Studio Hedgehog 2023.1.1";
-			//AppFieldEnabled = false;
+            ApplicationName = AndroidStudio;
+			ASOnly = true;
+
+			AppFieldEnabled = false;
 
 			FullORSimple = false;
 
@@ -21,7 +25,46 @@ namespace Data_Logger_1._3.ViewModels.Dialogs
 
             _ASviewModel = (CodingAndroidViewModel)logCacheViewModel;
 
-			_applications.Clear();
+			_projects.Clear();
+            var items = _dataService.FIREBASE_PROJECTS;
+
+
+            foreach (ProjectClass project in items)
+            {
+                if (project.Category == LOG.CATEGORY.CODING && project.Application.Name == AndroidStudio)
+                    _projects.Add(project.Name);
+            }
+
+            _applications.Clear();
+
+			_outputs.Clear();
+			_outputs.Add("APK (*.apk)");
+			_outputs.Add("USB");
+			_outputs.Add("Emulator (*.exe)");
+
+			_types.Clear();
+			_types.Add("Sync");
+			_types.Add("Build");
+			_types.Add("Runtime");
+
+			UpdateLogCount();
+			
+        }
+
+        public override void Setup()
+        {
+			base.Setup();
+
+            ApplicationName = AndroidStudio;
+			AppFieldEnabled = false;
+
+            FullORSimple = false;
+			SyncTime = DateTime.Now;
+			GradleDaemonTime = DateTime.Now;
+			RunBuildTime = DateTime.Now;
+			LoadBuildTime = DateTime.Now;
+			ConfigureBuildTime = DateTime.Now;
+			AllProjectsTime = DateTime.Now;
         }
 
         private bool fullORsimple;
@@ -693,7 +736,11 @@ namespace Data_Logger_1._3.ViewModels.Dialogs
 			AllProjectsTime = DateTime.Parse(DateTime.Now.ToLongDateString() + " " + AllProjectsHours + ":" + AllProjectsMinutes + ":" + AllProjectsSeconds + "." + AllProjectsMilliseconds);
         }
 
-
+        public override void UpdateLogCount()
+        {
+            if (ApplicationName == AndroidStudio && _ASviewModel is not null)
+                LogCount = _ASviewModel.CacheItems.Count.ToString() + " Logs Cached";            
+        }
 
 
 
