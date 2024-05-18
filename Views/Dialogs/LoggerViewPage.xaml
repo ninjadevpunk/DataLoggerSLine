@@ -11,7 +11,7 @@
       d:Width="1145"
       Title="View Log" >
 
-    <Border Padding="40 60" >
+    <Border Style="{DynamicResource image_viewer_background}" >
 
         <Grid>
 
@@ -24,24 +24,30 @@
             <!-- #region LOG FIELDS SIDE -->
 
 
-            <Grid Margin="20 10 0 10">
+            <Grid Margin="20 10 0 10" VerticalAlignment="Center">
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="30" />
-                    <RowDefinition Height="25" />
+                    <RowDefinition Height="55" />
                     <RowDefinition Height="45" />
                     <RowDefinition Height="505" />
-                    <RowDefinition Height="auto" />
                     <RowDefinition Height="auto" />
                     <RowDefinition Height="*" />
                 </Grid.RowDefinitions>
 
 
-                <!-- HEADING -->
-                <TextBlock Grid.Column="0" Grid.Row="0" Style="{DynamicResource HEADING5}"
-               Text="VIEW" />
+                <!-- PROJECT -->
+                <Border
+                    Padding="20 0" >
+                    
+                    <StackPanel Orientation="Vertical" >
+                        
+                        <TextBlock x:Name="text_PROJECT" Style="{DynamicResource HEADING5}"
+                                   Text="{Binding ProjectName, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
 
-                <TextBlock Grid.Column="0" Grid.Row="1" x:Name="text_LOG_CATEGORY" Style="{DynamicResource text_SUB HEADING1}"
-               Text="{Binding}" />
+
+                        <TextBlock x:Name="text_APPLICATION" Style="{DynamicResource text_SUB HEADING1}"
+                                   Text="{Binding ApplicationName, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
+                    </StackPanel>
+                </Border>
 
 
 
@@ -53,89 +59,76 @@
                 <!--#region INPUT FIELDS -->
 
 
-                <ScrollViewer Grid.Row="3"
+                <ScrollViewer Grid.Row="2"
                           HorizontalScrollBarVisibility="Disabled"
                           VerticalScrollBarVisibility="Auto"
                           Padding="5" >
 
-                    <StackPanel VerticalAlignment="Stretch" >
+                    <StackPanel>
 
 
                         <!-- AUTHOR -->
-                        <Border Padding="20 2"
-                                Height="30" >
+                        <Border Padding="10 0"
+                                Height="40" >
                             
                             <Grid>
 
                                 <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="auto"/>
+                                    <ColumnDefinition Width="50"/>
                                     <ColumnDefinition Width="*"/>
                                 </Grid.ColumnDefinitions >
 
                                 <Border x:Name="image_USER" Style="{DynamicResource image_displayPic}"
-                                BorderThickness="0"
-                                Height="20"
-                                Width="20"
-                                HorizontalAlignment="Left" />
+                                        BorderThickness="0.6"
+                                        BorderBrush="{DynamicResource STROKE}"
+                                        Height="35"
+                                        Width="35"
+                                        HorizontalAlignment="Center" />
 
                                 <Path x:Name="path_DEFAULT_DP" Style="{DynamicResource path_AUTHOR}"
-                              Visibility="{Binding}" />
+                                      HorizontalAlignment="Center"
+                                      Visibility="{Binding DisplayPicVisibility}" />
 
-                                <TextBlock x:Name="text_AUTHOR" Grid.Column="1" Style="{DynamicResource text_Placeholder}"
-                                   Text="{Binding}"
-                                   Foreground="{DynamicResource BLACK}"
-                                   HorizontalAlignment="Left" />
+                                <TextBlock x:Name="text_AUTHOR" Grid.Column="1" Style="{DynamicResource text_VIEWER_Author}"
+                                           Text="{Binding Author, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                                           HorizontalAlignment="Left" />
                             </Grid>
                         </Border>
 
 
-                        <!-- PROJECT -->
-                        <TextBlock x:Name="text_PROJECT" Style="{DynamicResource text_PROJECT_Placeholder}"
-                                   Foreground="{DynamicResource BLACK}"
-                                   Height="35"
-                                   Margin="0 5"
-                                   Text="{Binding}"/>
+                        
+                        <!-- DATE -->
+                        <Border Padding="20 10">
 
-                        <!-- APPLICATION -->
-                        <TextBlock x:Name="text_APP" Style="{DynamicResource text_APP_Placeholder}"
-                                   Foreground="{DynamicResource BLACK}"
-                                   Height="35"
-                                   Margin="0 5"
-                                   Text="{Binding}"/>
-
-                        <!-- #region DATE START -->
-                        <TextBlock x:Name="text_START" Style="{DynamicResource text_Placeholder}"
-                                   Foreground="{DynamicResource BLACK}"
-                                   Height="35"
-                                   Margin="0 5"
-                                   Text="{Binding}"/>
-
-                        <!--#endregion-->
+                            <TextBlock x:Name="text_APP" Style="{DynamicResource text_VIEWER_Date}"
+                                       Margin="0 5"
+                                       Text="{Binding Date, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
+                            
+                        </Border>
 
 
-                        <!-- #region DATE END -->
-                        <TextBlock x:Name="text_END" Style="{DynamicResource text_Placeholder}"
-                                   Foreground="{DynamicResource BLACK}"
-                                   Height="35"
-                                   Margin="0 5"
-                                   Text="{Binding}" />
 
-                        <!--#endregion-->
 
 
                         <!-- OUTPUT -->
-                        <TextBlock x:Name="text_OUTPUT" Style="{DynamicResource text_Placeholder}"
-                                   Foreground="{DynamicResource BLACK}"
-                                   Height="35"
-                                   Margin="0 5"
-                                   Text="{Binding}"/>
+                        <Border
+                            Padding="20 0"
+                            Height="35" >
+                            <TextBlock x:Name="text_OUTPUT" Style="{DynamicResource text_LABEL03}"
+                                       Foreground="{DynamicResource BLACK}"
+                                       Text="{Binding Output, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
+                        </Border>
 
                         <!-- TYPE -->
-                        <TextBlock x:Name="text_TYPE" Style="{DynamicResource text_Placeholder}"
-                                   Foreground="{DynamicResource BLACK}"
-                                   Height="35"
-                                   Margin="0 5"
-                                   Text="{Binding}"/>
+                        <Border
+                            Padding="20 0"
+                            Height="35" >
+                            
+                            <TextBlock x:Name="text_TYPE" Style="{DynamicResource text_LABEL03}"
+                                       Foreground="{DynamicResource BLACK}"
+                                       Text="{Binding Type, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
+                            
+                        </Border>
 
 
 
@@ -147,7 +140,7 @@
 
                         <!-- LOG VARIED FIELDS -->
                         <Frame x:Name="frame_VARIATIONS"
-                           Source="/Components/Subcontrols/coding_UserControl.xaml"/>
+                           Source="/Components/Subcontrols/coding_UserControl_View.xaml"/>
 
                         <!-- ANDROID STUDIO ONLY -->
                         <Frame x:Name="frame_ANDROIDSTUDIO" />
@@ -170,7 +163,7 @@
                 
                 
                 <!-- OK -->
-                <Border Grid.Row="5"
+                <Border Grid.Row="4"
                         Padding="10 5"
                         HorizontalAlignment="Stretch" >
 
@@ -198,37 +191,16 @@
             <!-- #region POST ITS SIDE -->
 
             <Grid Grid.Column="2" Margin="0 10 20 10"
-              HorizontalAlignment="Stretch" >
+                  HorizontalAlignment="Stretch" >
 
                 <Grid.RowDefinitions>
                     <RowDefinition Height="30" />
                     <RowDefinition Height="25" />
                     <RowDefinition Height="45" />
                     <RowDefinition Height="505" />
-                    <RowDefinition Height="auto" />
-                    <RowDefinition Height="auto" />
-                    <RowDefinition Height="*" />
                 </Grid.RowDefinitions>
 
 
-                <!-- HEADING -->
-                <TextBlock Grid.Column="0" Grid.Row="0" Style="{DynamicResource HEADING5}"
-                       Text="{Binding}" />
-
-                <!-- FIREBASE STATUS -->
-                <StackPanel Orientation="Horizontal"
-                        HorizontalAlignment="Right"
-                        VerticalAlignment="Center" >
-
-                    <Ellipse x:Name="ellipse_FIREBASE_CONNECTION" Style="{DynamicResource ellipse_FIREBASE_CONNECTION}"
-                         Fill="{Binding}"
-                         VerticalAlignment="Center" />
-
-                    <TextBlock x:Name="text_FIREBASE_CONNECTION" Style="{DynamicResource text_minorHEADING1}"
-                           Text="{Binding}"
-                           Padding="10 0" />
-
-                </StackPanel>
 
                 <!--#region LIST OF POST ITS -->
 
@@ -246,9 +218,8 @@
                              Height="30"
                              BorderThickness="0" >
 
-                            <Button x:Name="toolbutton_DELETE" Style="{DynamicResource toolbutton_DELETE}"
-                                HorizontalAlignment="Left" 
-                                Command="{Binding}" />
+                            <TextBlock x:Name="text_NOTES" Style="{DynamicResource HEADING6}"
+                                       Text="NOTES" />
 
                         </ToolBar>
 
@@ -273,22 +244,6 @@
                 <!--#endregion-->
 
 
-                <!-- ADD POST IT -->
-
-                <Border Grid.Row="5"
-                    Padding="10 5"
-                    HorizontalAlignment="Stretch" >
-
-                    <Button x:Name="button_POST_IT" Style="{DynamicResource ACTIONCreate}"
-                        Width="auto"
-                        HorizontalAlignment="Right"
-                        Command="{Binding}" >
-
-                        <TextBlock Style="{DynamicResource text_button01}"
-                               Text="Sticky Note" />
-
-                    </Button>
-                </Border>
 
 
 
