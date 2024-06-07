@@ -65,7 +65,7 @@
             <components:PlainInputField x:Name="inputText_USER"
                                         HorizontalAlignment="Stretch"
                                         VerticalAlignment="Center"
-                                        PlaceholderText="Username"
+                                        PlaceholderText="Email"
                                         UserTextBoxStyle="{DynamicResource inputText_LOGIN}"
                                         UserTextBlockStyle="{DynamicResource text_login_PLACEHOLDER}"
                                         UserInput="{Binding Username, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"

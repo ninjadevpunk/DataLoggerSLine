@@ -44,5 +44,6 @@ namespace Data_Logger_1._3.Views
                 MessageBox.Show($"An error occurred: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
+
     }
 }
