@@ -4,15 +4,15 @@ namespace Data_Logger_1._3.Models.App_Models
     public class ProjectClass
     {
 
-        public int ProjectID { get; set; }
+        public int ProjectID { get; set; } = 1;
 
-        public ACCOUNT User { get; set; } = new();
+        public ACCOUNT User { get; set; }
 
         public string Name { get; set; } = "Unknown";
 
         public ApplicationClass Application{ get; set; } = new();
 
-        public LOG.CATEGORY Category { get; set; }
+        public LOG.CATEGORY Category { get; set; } = LOG.CATEGORY.CODING;
 
         public bool IsDefault { get; set; } = false;
 
