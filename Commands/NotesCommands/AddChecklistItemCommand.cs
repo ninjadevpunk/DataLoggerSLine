@@ -1,6 +1,5 @@
 ﻿using Data_Logger_1._3.Models;
 using Data_Logger_1._3.ViewModels.Dialogs;
-using Data_Logger_1._3.ViewModels.LogViewModels;
 using MVVMEssentials.Commands;
 
 namespace Data_Logger_1._3.Commands.NotesCommands
