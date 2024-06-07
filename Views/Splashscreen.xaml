@@ -8,7 +8,7 @@
         Background="Transparent"
         mc:Ignorable="d"
         Title="Splash screen" 
-        Height="805" 
+        Height="700" 
         Width="398"
         WindowStyle="None"
         Loaded="Window_Loaded"
@@ -23,9 +23,9 @@
             </Border>
         </ControlTemplate>
     </Window.Template>
-    
-    
-    <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="10 0">
+
+
+    <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="10 0 0 0">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="2.5*"/>
@@ -36,33 +36,36 @@
         <TextBlock Margin="0 10 0 0" HorizontalAlignment="Left" VerticalAlignment="Top" Grid.Column="0" Text="version 1.3" Style="{DynamicResource text_VERSION}"/>
 
         <!--#region Data Logger LOGO -->
-        
+
         <StackPanel HorizontalAlignment="Center"
                     VerticalAlignment="Center"
-                    Margin="40 0 0 0"
+                    Margin="0"
                     Grid.Column="1">
-        
-        
-        
-        <Grid HorizontalAlignment="Center" Height="38.1" Width="40">
-            <Path Style="{DynamicResource pathLOGO1}"/>
-            <Path Style="{DynamicResource pathLOGO2}"/>
-            <Path Style="{DynamicResource pathLOGO3}"/>
-            <Path Style="{DynamicResource pathLOGO4}"/>
-            <Path Style="{DynamicResource pathLOGO5}"/>
-            <Path Style="{DynamicResource pathLOGO6}"/>
-        </Grid>
 
-        <TextBlock Text="DATA LOGGER" Style="{DynamicResource text_logoSPLASHscreen}"/>
 
-</StackPanel>
+
+            <Grid HorizontalAlignment="Center" Height="38.1" Width="40">
+                <Path Style="{DynamicResource pathLOGO1}"/>
+                <Path Style="{DynamicResource pathLOGO2}"/>
+                <Path Style="{DynamicResource pathLOGO3}"/>
+                <Path Style="{DynamicResource pathLOGO4}"/>
+                <Path Style="{DynamicResource pathLOGO5}"/>
+                <Path Style="{DynamicResource pathLOGO6}"/>
+            </Grid>
+
+            <TextBlock Text="DATA LOGGER" Style="{DynamicResource text_logoSPLASHscreen}"/>
+
+        </StackPanel>
         <!--#endregion-->
-            
-        
+
+
 
         <StackPanel Orientation="Horizontal" Grid.Column="2"
                     Margin="0" >
-            
+
+
+            <TextBlock x:Name="text_progress" Style="{DynamicResource text_progressVALUE}" />
+
             <ProgressBar x:Name="progressBar_splashscreen"
                          Width="10"
                          FlowDirection="RightToLeft"
@@ -70,22 +73,19 @@
                          Background="Transparent"
                          BorderThickness="0"
                          Orientation="Vertical"
-                         Margin="20 0"
+                         Margin="37 0"
                          Minimum="0"
                          Maximum="100"
                          Value="0"
                          VerticalAlignment="Stretch" >
-                
+
                 <ProgressBar.LayoutTransform>
                     <RotateTransform Angle="180"/>
                 </ProgressBar.LayoutTransform>
-                
-            </ProgressBar>
 
-            <TextBlock x:Name="text_progress" Style="{DynamicResource text_progressVALUE}"
-                       Text="{Binding}" />
+            </ProgressBar>
         </StackPanel>
-        
+
 
 
     </Grid>
