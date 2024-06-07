@@ -30,6 +30,8 @@ namespace Data_Logger_1._3.Services
         private readonly AuthService _authService;
         private readonly DataService _dataService;
 
+        public LOG.CATEGORY CurrentCategory { get; set; } = LOG.CATEGORY.CODING;
+
         private IHost _host;
         private Frame _MainFrame; // MainWindow Frame
         private Frame _frame; // Sub class Logs Logger Frame
@@ -168,45 +170,52 @@ namespace Data_Logger_1._3.Services
 
         public void setup()
         {
-            Main = new MainWindowViewModel(this, _authService);
-            Dashboard = new LogCachePage();
-            Logger = new LoggerCreatePage();
-            Editor = new LoggerEditPage();
-            _frame = Logger.frame_VARIATIONS;
-            _ASframe = Logger.frame_ANDROIDSTUDIO;
-            _EDS_frame = Editor.frame_VARIATIONS;
-            _EDS_ASframe = Editor.frame_ANDROIDSTUDIO;
+            try
+            {
+                Main = new MainWindowViewModel(this, _authService);
+                Dashboard = new LogCachePage();
+                Logger = new LoggerCreatePage();
+                Editor = new LoggerEditPage();
+                _frame = Logger.frame_VARIATIONS;
+                _ASframe = Logger.frame_ANDROIDSTUDIO;
+                _EDS_frame = Editor.frame_VARIATIONS;
+                _EDS_ASframe = Editor.frame_ANDROIDSTUDIO;
 
-            codingQtDashboard = new CodingQtViewModel(this, _dataService);
-            codingAndroidDashboard = new CodingAndroidViewModel(this, _dataService);
-            codingDashboard = new CodingGenericViewModel(this, _dataService);
-            graphicsDashboard = new GraphicsViewModel(this, _dataService);
-            filmDashboard = new FilmViewModel(this, _dataService);
-            flexiDashboard = new FlexiViewModel(this, _dataService);
+                codingQtDashboard = new CodingQtViewModel(this, _dataService);
+                codingAndroidDashboard = new CodingAndroidViewModel(this, _dataService);
+                codingDashboard = new CodingGenericViewModel(this, _dataService);
+                graphicsDashboard = new GraphicsViewModel(this, _dataService);
+                filmDashboard = new FilmViewModel(this, _dataService);
+                flexiDashboard = new FlexiViewModel(this, _dataService);
 
-            notesDashboard = new NOTESViewModel(this);
+                notesDashboard = new NOTESViewModel(this);
 
-            QtCodingLogger = new codeCreateViewModel(this, codingQtDashboard, "Qt", _dataService);
-            ASCodingLogger = new AScodeCreateViewModel(this, codingAndroidDashboard, _dataService);
-            CodingLogger = new codeCreateViewModel(this, codingDashboard, _dataService);
-            GraphicsLogger = new graphicCreateViewModel(this, graphicsDashboard, _dataService);
-            FilmLogger = new filmCreateViewModel(this, filmDashboard, _dataService);
-            FlexiLogger = new flexiCreateViewModel(this, flexiDashboard, _dataService);
+                QtCodingLogger = new codeCreateViewModel(this, codingQtDashboard, "Qt", _dataService);
+                ASCodingLogger = new AScodeCreateViewModel(this, codingAndroidDashboard, _dataService);
+                CodingLogger = new codeCreateViewModel(this, codingDashboard, _dataService);
+                GraphicsLogger = new graphicCreateViewModel(this, graphicsDashboard, _dataService);
+                FilmLogger = new filmCreateViewModel(this, filmDashboard, _dataService);
+                FlexiLogger = new flexiCreateViewModel(this, flexiDashboard, _dataService);
 
 
-            CodingFrame = new coding_UserControl();
-            AndroidStudioFrame = new androidStudio_UserControl();
-            AndroidStudioFrame.DataContext = ASCodingLogger;
-            GraphicsFrame = new graphics_UserControl();
-            FilmFrame = new film_UserControl();
-            FlexiFrame = new flexi_UserControl();
+                CodingFrame = new coding_UserControl();
+                AndroidStudioFrame = new androidStudio_UserControl();
+                AndroidStudioFrame.DataContext = ASCodingLogger;
+                GraphicsFrame = new graphics_UserControl();
+                FilmFrame = new film_UserControl();
+                FlexiFrame = new flexi_UserControl();
 
-            NOTESList = new NOTESPage();
-            NOTESList.DataContext = notesDashboard;
-            createNotesPage = new CreateNotePage();
-            createNotesPage.DataContext = new CreateNoteViewModel(this);
-            createCheckListPage = new CreateCheckListPage();
-            createCheckListPage.DataContext = new CreateCheckListViewModel(this);
+                NOTESList = new NOTESPage();
+                NOTESList.DataContext = notesDashboard;
+                createNotesPage = new CreateNotePage();
+                createNotesPage.DataContext = new CreateNoteViewModel(this);
+                createCheckListPage = new CreateCheckListPage();
+                createCheckListPage.DataContext = new CreateCheckListViewModel(this);
+            }
+            catch (Exception)
+            {
+                // TODO
+            }
         }
 
 
@@ -287,11 +296,22 @@ namespace Data_Logger_1._3.Services
 
         public void NavigateToMainWindow()
         {
+
+            _dataService.SetAccount(_authService.Account);
+
+            _dataService.InitialiseApplicationsLIST();
+            _dataService.InitialiseProjectsLIST();
+
             setup();
+
 
             if (LoginWindow is null)
                 return;
 
+            var list = _dataService.RetrieveQtCache(codingQtDashboard, _dataService);
+
+            if(list is not null && list.Count > 0)
+                codingQtDashboard.CacheItems = list;
 
             var mainWindow = _host.Services.GetRequiredService<MainWindow>();
             var displayPic = "/Assets/login/user.png";
@@ -345,7 +365,6 @@ namespace Data_Logger_1._3.Services
             if (Main.SignUpImage == displayPic)
                 Main.SignUpImage = "";
 
-            _dataService.SetAccount(_authService);
 
             mainWindow.Show();
             _MainFrame = mainWindow.frame_MAINWINDOW;
@@ -362,76 +381,97 @@ namespace Data_Logger_1._3.Services
 
         public void NavigateToLogCachePage(CacheContext context)
         {
-            if (codingQtDashboard is null)
-                return;
+            try
+            {
+                if (codingQtDashboard is null)
+                    return;
 
-            ChangeData(context);
-            _MainFrame.Navigate(Dashboard);
+                ChangeData(context);
+                _MainFrame.Navigate(Dashboard);
+            }
+            catch (Exception)
+            {
+                // TODO
+            }
         }
 
         public void ChangeData(CacheContext context)
         {
 
-            if (codingQtDashboard is null || _frame is null)
-                return;
-            
-            _frame.Navigate(CodingFrame);
 
-            Logger.inputText_APP.UserComboInput = "";
-            Logger.inputText_APP.showPlaceholderText();
-
-            switch (context)
+            try
             {
-                case CacheContext.Qt:
-                    Dashboard.DataContext = codingQtDashboard;
-                    QtCodingLogger.UpdateLogCount();
-                    QtCodingLogger.Setup();
-                    Logger.DataContext = QtCodingLogger;
-                    showLOGGERPLACEHOLDERS(false);
-                    CodingFrame.DataContext = QtCodingLogger;
-                    _ASframe.Navigate(null);
-                    break;
 
-                case CacheContext.AndroidStudio:
-                    Dashboard.DataContext = codingAndroidDashboard;
-                    ASCodingLogger.UpdateLogCount();
-                    ASCodingLogger.Setup();
-                    Logger.DataContext = ASCodingLogger;
-                    showLOGGERPLACEHOLDERS(false);
-                    CodingFrame.DataContext = ASCodingLogger;
-                    _ASframe.Navigate(AndroidStudioFrame);
-                    break;
-                case CacheContext.Generic:
-                    Dashboard.DataContext = codingDashboard;
-                    CodingLogger.UpdateLogCount();
-                    CodingLogger.Setup();
-                    Logger.DataContext = CodingLogger;
-                    showLOGGERPLACEHOLDERS(true);
-                    CodingFrame.DataContext = CodingLogger;
-                    _ASframe.Navigate(null);
-                    break;
-                case CacheContext.Graphics:
-                    Dashboard.DataContext = graphicsDashboard;
-                    Logger.DataContext = GraphicsLogger;
-                    GraphicsFrame.DataContext = GraphicsLogger;
-                    _frame.Navigate(GraphicsFrame);
-                    _ASframe.Navigate(null);
-                    break;
-                case CacheContext.Film:
-                    Dashboard.DataContext = filmDashboard;
-                    Logger.DataContext = FilmLogger;
-                    FilmFrame.DataContext = FilmLogger;
-                    _frame.Navigate(FilmFrame);
-                    _ASframe.Navigate(null);
-                    break;
-                case CacheContext.Flexi:
-                    Dashboard.DataContext = flexiDashboard;
-                    Logger.DataContext = FlexiLogger;
-                    FlexiFrame.DataContext = FlexiLogger;
-                    _frame.Navigate(FlexiFrame);
-                    _ASframe.Navigate(null);
-                    break;
+                if (codingQtDashboard is null || _frame is null)
+                    return;
 
+                _frame.Navigate(CodingFrame);
+
+                Logger.inputText_APP.UserComboInput = "";
+                Logger.inputText_APP.showPlaceholderText();
+                CurrentCategory = LOG.CATEGORY.CODING;
+
+                switch (context)
+                {
+                    case CacheContext.Qt:
+                        Dashboard.DataContext = codingQtDashboard;
+                        QtCodingLogger.UpdateLogCount();
+                        QtCodingLogger.Setup();
+                        Logger.DataContext = QtCodingLogger;
+                        showLOGGERPLACEHOLDERS(false);
+                        CodingFrame.DataContext = QtCodingLogger;
+                        _ASframe.Navigate(null);
+                        break;
+
+                    case CacheContext.AndroidStudio:
+                        Dashboard.DataContext = codingAndroidDashboard;
+                        ASCodingLogger.UpdateLogCount();
+                        ASCodingLogger.Setup();
+                        Logger.DataContext = ASCodingLogger;
+                        showLOGGERPLACEHOLDERS(false);
+                        CodingFrame.DataContext = ASCodingLogger;
+                        _ASframe.Navigate(AndroidStudioFrame);
+                        break;
+                    case CacheContext.Generic:
+                        Dashboard.DataContext = codingDashboard;
+                        CodingLogger.UpdateLogCount();
+                        CodingLogger.Setup();
+                        Logger.DataContext = CodingLogger;
+                        showLOGGERPLACEHOLDERS(true);
+                        CodingFrame.DataContext = CodingLogger;
+                        _ASframe.Navigate(null);
+                        break;
+                    case CacheContext.Graphics:
+                        CurrentCategory = LOG.CATEGORY.GRAPHICS;
+                        Dashboard.DataContext = graphicsDashboard;
+                        Logger.DataContext = GraphicsLogger;
+                        GraphicsFrame.DataContext = GraphicsLogger;
+                        _frame.Navigate(GraphicsFrame);
+                        _ASframe.Navigate(null);
+                        break;
+                    case CacheContext.Film:
+                        CurrentCategory = LOG.CATEGORY.FILM;
+                        Dashboard.DataContext = filmDashboard;
+                        Logger.DataContext = FilmLogger;
+                        FilmFrame.DataContext = FilmLogger;
+                        _frame.Navigate(FilmFrame);
+                        _ASframe.Navigate(null);
+                        break;
+                    case CacheContext.Flexi:
+                        CurrentCategory = LOG.CATEGORY.NOTES;
+                        Dashboard.DataContext = flexiDashboard;
+                        Logger.DataContext = FlexiLogger;
+                        FlexiFrame.DataContext = FlexiLogger;
+                        _frame.Navigate(FlexiFrame);
+                        _ASframe.Navigate(null);
+                        break;
+
+                }
+            }
+            catch (Exception)
+            {
+                // TODO
+                return;
             }
         }
 
@@ -489,16 +529,16 @@ namespace Data_Logger_1._3.Services
                         QtCodingEditor = new(this, logCacheViewModel, "Qt", _dataService, log);
 
 
-                        QtCodingEditor.ProjectName = log._QtcodingLOG.ProjectName;
-                        QtCodingEditor.ApplicationName = log._QtcodingLOG.ApplicationName;
+                        QtCodingEditor.ProjectName = log._QtcodingLOG.Project.Name;
+                        QtCodingEditor.ApplicationName = log._QtcodingLOG.Application.Name;
                         QtCodingEditor.StartDate = log._QtcodingLOG.StartTime;
                         QtCodingEditor.EndDate = log._QtcodingLOG.EndTime;
-                        QtCodingEditor.Output = log._QtcodingLOG.Output;
-                        QtCodingEditor.Type = log._QtcodingLOG.Type;
+                        QtCodingEditor.Output = log._QtcodingLOG.Output.Name;
+                        QtCodingEditor.Type = log._QtcodingLOG.Type.Name;
 
                         foreach (PostIt p in log._QtcodingLOG.PostItList)
                         {
-                            QtCodingEditor.PostIts.Add(new CreatePostItViewModel(this, QtCodingEditor, p.Subject, p.Error, p.ERCaptureTime, p.Solution,
+                            QtCodingEditor.PostIts.Add(new CreatePostItViewModel(this, QtCodingEditor, p.Subject.Subject, p.Error, p.ERCaptureTime, p.Solution,
                                 p.SOCaptureTime, p.Suggestion, p.Comment));
                         }
 
@@ -517,14 +557,15 @@ namespace Data_Logger_1._3.Services
 
         public void NavigateToPostItCreator(LoggerCreateViewModel loggerCreator)
         {
-            var postItPage = new PostItPage(new CreatePostItViewModel(this, loggerCreator));
+            PostItPage postItPage = _dataService.CurrentProject is null ? postItPage = new PostItPage(new CreatePostItViewModel(this, _dataService, loggerCreator, CurrentCategory)) :
+                postItPage = new PostItPage(new CreatePostItViewModel(this, _dataService, loggerCreator, _dataService.CurrentProject));
 
             _MainFrame.Navigate(postItPage);
         }
 
         public void NavigateToReporter()
         {
-            _MainFrame.Navigate(new Uri("/Views/Dialogs/ReportPage.xaml", UriKind.Relative));
+            //
         }
 
 
