@@ -1,9 +1,9 @@
 ﻿using Data_Logger_1._3.Services;
 using Data_Logger_1._3.ViewModels;
 using Data_Logger_1._3.Views;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using System;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media.Animation;
@@ -23,10 +23,13 @@ namespace Data_Logger_1._3
             _host = Host.CreateDefaultBuilder()
                 .ConfigureServices((context, service) =>
                 {
-                    var firebaseApiKey = context.Configuration.GetValue<string>("FIREBASE_API_KEY");
-                    var firebaseDomain = context.Configuration.GetValue<string>("FIREBASE_DOMAIN");
-                    service.AddSingleton(new AuthService(firebaseApiKey, firebaseDomain));
-                    service.AddSingleton((services) => new DataService(firebaseApiKey, firebaseDomain, services.GetRequiredService<AuthService>()));
+                    
+                    service.AddSingleton<Cachemaster>((services) => new());
+                    service.AddSingleton<DATAWRITER>((services) => new());
+                    service.AddSingleton<DATAREADER>();
+                    service.AddSingleton((services) => new AuthService(services.GetRequiredService<DATAWRITER>(), services.GetRequiredService<DATAREADER>()));
+                    service.AddSingleton((services) => new DataService(services.GetRequiredService<DATAWRITER>(), services.GetRequiredService<DATAREADER>(), services.GetRequiredService<Cachemaster>(),
+                        services.GetRequiredService<AuthService>()));
                     service.AddSingleton((services) => new NavigationService(services.GetRequiredService<AuthService>(), services.GetRequiredService<DataService>()));
                     service.AddTransient<Splashscreen>();
                     service.AddSingleton<Login>();
@@ -56,14 +59,14 @@ namespace Data_Logger_1._3
             splash.Show();
 
 
-            await AnimateProgressBar(splash.progressBar_splashscreen, 33);
+            await AnimateProgressBar(splash.progressBar_splashscreen, 33, splash.text_progress);
 
 
             var navigationService = _host.Services.GetRequiredService<NavigationService>();
 
             navigationService.SetHost(_host);
-            await AnimateProgressBar(splash.progressBar_splashscreen, 66);
-            await AnimateProgressBar(splash.progressBar_splashscreen, 100);
+            await AnimateProgressBar(splash.progressBar_splashscreen, 66, splash.text_progress);
+            await AnimateProgressBar(splash.progressBar_splashscreen, 100, splash.text_progress);
 
             navigationService.NavigateToLogin();
 
@@ -78,17 +81,35 @@ namespace Data_Logger_1._3
             base.OnStartup(e);
         }
 
-        private async Task AnimateProgressBar(ProgressBar progressBar, double targetValue)
+        private async Task AnimateProgressBar(ProgressBar progressBar, double targetValue, TextBlock textBlock)
         {
-            DoubleAnimation animation = new DoubleAnimation(targetValue, TimeSpan.FromSeconds(1));
+            var duration = TimeSpan.FromSeconds(1);
+            var animation = new DoubleAnimation(targetValue, duration);
+            var textAnimation = new DoubleAnimation(targetValue, duration);
 
             var tcs = new TaskCompletionSource<bool>();
-            animation.Completed += (s, e) => tcs.SetResult(true);
 
+            animation.Completed += (s, e) => tcs.SetResult(true);
             progressBar.BeginAnimation(ProgressBar.ValueProperty, animation);
 
+            var currentValue = progressBar.Value;
+            var stepValue = (targetValue - currentValue) / (duration.TotalMilliseconds / 100);
+
+            for (var i = currentValue; i <= targetValue; i += stepValue)
+            {
+                textBlock.Text = $"{(int)i}%";
+                await Task.Delay(100);
+            }
+
             await tcs.Task;
-            await Task.Delay(random.Next(350, 1300)); // Wait for a short duration after each animation
+        }
+
+        protected override void OnExit(ExitEventArgs e)
+        {
+            var dataService = _host.Services.GetRequiredService<DataService>();
+            dataService.SignOutUser();
+
+            base.OnExit(e);
         }
     }
 
