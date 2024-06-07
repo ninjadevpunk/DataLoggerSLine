@@ -1,15 +1,16 @@
 ﻿
+
 namespace Data_Logger_1._3.Models.App_Models
 {
     public class ApplicationClass
     {
-        public int AppID { get; set; }
+        public int AppID { get; set; } = 3;
 
-        public ACCOUNT User { get; set; } = new();
+        public ACCOUNT User { get; set; }
 
         public string Name { get; set; } = "Unknown";
 
-        public LOG.CATEGORY Category { get; set; }
+        public LOG.CATEGORY Category { get; set; } = LOG.CATEGORY.CODING;
 
         public bool IsDefault { get; set; } = false;
 
@@ -20,7 +21,6 @@ namespace Data_Logger_1._3.Models.App_Models
 
         public ApplicationClass(string applicationName)
         {
-            AppID = -1;
             Name = applicationName;
         }
 
@@ -35,6 +35,13 @@ namespace Data_Logger_1._3.Models.App_Models
             AppID = appID;
             Name = name;
             Category = category;
+        }
+
+        public ApplicationClass(int appID, ACCOUNT user, string name, bool isDefault)
+        {
+            AppID = appID;
+            Name = name;
+            IsDefault = isDefault;
         }
 
         public ApplicationClass(int appID, ACCOUNT user, string name, LOG.CATEGORY category)
@@ -58,9 +65,15 @@ namespace Data_Logger_1._3.Models.App_Models
         {
             return obj is ApplicationClass @class &&
                    AppID == @class.AppID &&
+                   User == @class.User &&
                    Name == @class.Name &&
                    Category == @class.Category &&
                    IsDefault == @class.IsDefault;
+        }
+
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(AppID, User, Name, Category, IsDefault);
         }
 
         public static bool operator ==(ApplicationClass left, ApplicationClass right)
