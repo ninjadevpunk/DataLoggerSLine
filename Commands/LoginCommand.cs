@@ -4,7 +4,7 @@ using MVVMEssentials.Commands;
 
 namespace Data_Logger_1._3.Commands
 {
-    public class LoginCommand : AsyncCommandBase
+    public class LoginCommand : CommandBase
     {
 
         private readonly LoginViewModel _loginViewModel;
@@ -19,14 +19,14 @@ namespace Data_Logger_1._3.Commands
             _navigationService = navigationService;
         }
 
-        protected override async Task ExecuteAsync(object parameter)
+        public override void Execute(object parameter)
         {           
 
             try
             {
-                bool signInResult = await Task.Run(() => _authService.SignIn(_loginViewModel.Username, _loginViewModel.Password));
+                bool SignInSuccessful = _authService.SignIn(_loginViewModel.Username, _loginViewModel.Password);
 
-                if (signInResult)
+                if (SignInSuccessful)
                 {
                     _navigationService.NavigateToMainWindow();
                 }
@@ -34,8 +34,7 @@ namespace Data_Logger_1._3.Commands
             }
             catch (Exception)
             {
-
-                throw;
+                // TODO
             }
         }
     }

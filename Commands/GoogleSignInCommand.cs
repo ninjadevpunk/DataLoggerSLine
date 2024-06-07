@@ -27,7 +27,7 @@ namespace Data_Logger_1._3.Commands
         {
             try
             {
-                _authService.GoogleSignIn().Wait();
+                //_authService.GoogleSignIn().Wait();
             }
             catch (Exception e)
             {
@@ -36,28 +36,5 @@ namespace Data_Logger_1._3.Commands
         }
 
 
-        /* PASSWORD SUPPORT */
-
-        public static String sha526_hash(String value, string userID)
-        {
-            StringBuilder Sb = new StringBuilder();
-
-            using (SHA256 hash = SHA256Managed.Create())
-            {
-                Encoding enc = Encoding.UTF8;
-
-                //the user id is the salt. 
-                //So 2 users with same password have different hashes. 
-                //For example if someone knows his own hash he can't see who has same password
-                string input = value + userID;
-                Byte[] result = hash.ComputeHash(enc.GetBytes(input));
-
-                foreach (Byte b in result)
-                    Sb.Append(b.ToString("x2")); //You could also use other encodingslike BASE64 
-            }
-
-
-            return Sb.ToString();
-        }
     }
 }

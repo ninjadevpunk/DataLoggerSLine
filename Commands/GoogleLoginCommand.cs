@@ -26,7 +26,7 @@ namespace Data_Logger_1._3.Commands
         {
             try
             {
-                _authService.GoogleSignIn().Wait();
+                //_authService.GoogleSignIn().Wait();
             }
             catch (Exception)
             {

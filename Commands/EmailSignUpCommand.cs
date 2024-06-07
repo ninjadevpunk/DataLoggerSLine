@@ -5,7 +5,7 @@ using System.Windows;
 
 namespace Data_Logger_1._3.Commands
 {
-    public class EmailSignUpCommand : AsyncCommandBase
+    public class EmailSignUpCommand : CommandBase
     {
 
 
@@ -25,7 +25,7 @@ namespace Data_Logger_1._3.Commands
             _navigationService = navigationService;
         }
 
-        protected override async Task ExecuteAsync(object parameter)
+        public override void Execute(object parameter)
         {
             try
             {
@@ -34,14 +34,15 @@ namespace Data_Logger_1._3.Commands
                 string password = _signUpViewModel.Password;
                 string displayName = _signUpViewModel.Name;
                 string surname = _signUpViewModel.Surname;
-                var IsHired = _signUpViewModel.YesBox ? true : false;
+                var IsHired = _signUpViewModel.YesBox;
                 var company = _signUpViewModel.CompanyName;
                 var address = _signUpViewModel.CompanyAddress;
+                var logo = _signUpViewModel.CompanyLogo;
 
                 _authService.Account.ProfilePic = _signUpViewModel.SignUpImage;
 
                 // Call the SignUp method in AuthService to handle user registration
-                var isSignedUp = await _authService.SignUp(email, password, displayName, surname, IsHired, company, address);
+                var isSignedUp = _authService.SignUp(email, password, displayName, surname, IsHired, company, address, logo);
 
                 if(isSignedUp)
                 {
