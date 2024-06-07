@@ -2038,5 +2038,27 @@ namespace Data_Logger_1._3.Services
 
 
         // ---END MEMBER FUNCTIONS
+
+        public string UpdateProfilePic(string emailAddress)
+        {
+            string filePath = "";
+
+            var profilePicColumn = 1;
+
+            SQLiteCommand query = _con.CreateCommand();
+            query.CommandText = @"SELECT * FROM ACCOUNT WHERE email = @emailAddress;";
+            query.Parameters.AddWithValue("@emailAddress", emailAddress);
+
+            SQLiteDataReader read = query.ExecuteReader();
+
+            while(read.Read())
+            {
+                filePath = read.GetString(profilePicColumn);
+                break;
+            }
+
+
+            return filePath;
+        }
     }
 }

@@ -18,6 +18,14 @@ namespace Data_Logger_1._3.ViewModels
             _authService = authService;
 			_navigationService = navigationService;
 
+			SignUpImage = "";
+			Name = "";
+			Surname = "";
+			NoBox = true;
+			CompanyName = "";
+			CompanyAddress = "";
+			CompanyLogo = "";
+
             DisplayPicCommand = new DisplayPicCommand(this, _authService);
 			EmailSignUpCommand = new EmailSignUpCommand(this, _authService, _navigationService);
             GoogleSignInCommand = new GoogleSignInCommand(this, _authService);
@@ -181,6 +189,20 @@ namespace Data_Logger_1._3.ViewModels
 			{
 				companyAddress = value;
 				OnPropertyChanged(nameof(CompanyAddress));
+			}
+		}
+
+		private string companyLogo;
+		public string CompanyLogo
+		{
+			get
+			{
+				return companyLogo;
+			}
+			set
+			{
+				companyLogo = value;
+				OnPropertyChanged(nameof(CompanyLogo));
 			}
 		}
 

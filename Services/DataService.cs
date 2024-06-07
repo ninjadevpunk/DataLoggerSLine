@@ -3,6 +3,7 @@ using Data_Logger_1._3.Models.App_Models;
 using Data_Logger_1._3.ViewModels.Dashboard;
 using Data_Logger_1._3.ViewModels.LogViewModels;
 using System.Collections.ObjectModel;
+using System.Text.RegularExpressions;
 
 namespace Data_Logger_1._3.Services
 {
@@ -75,6 +76,20 @@ namespace Data_Logger_1._3.Services
         {
             if(_account is not null)
                 _writer.UnsetCurrentUser(_account);
+        }
+
+        public static bool IsValidEmail(string email)
+        {
+            // Regular expression pattern for email validation
+            string pattern = @"^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$";
+
+            // Check if the email matches the pattern
+            return Regex.IsMatch(email, pattern);
+        }
+
+        public string UpdateProfilePic(string emailAddress)
+        {
+            return _reader.UpdateProfilePic(emailAddress);
         }
 
 

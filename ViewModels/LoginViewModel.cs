@@ -26,6 +26,7 @@ namespace Data_Logger_1._3.ViewModels
             _authService = authService;
             _navigationService = navigationService;
 
+            SignUpImage = "";
             ShowDefault = Visibility.Visible;
 
             // Set initial button states
@@ -84,7 +85,6 @@ namespace Data_Logger_1._3.ViewModels
             set
             {
                 showDefault = value;
-                //ShowDefault = SignUpImage != "" ? Visibility.Collapsed : Visibility.Visible;
                 OnPropertyChanged(nameof(ShowDefault));
             }
         }
@@ -99,6 +99,10 @@ namespace Data_Logger_1._3.ViewModels
             set
             {
                 username = value;
+
+                SignUpImage = _navigationService.UpdateProfilePic(username);
+                ShowDefault = SignUpImage != "" ? Visibility.Collapsed : Visibility.Visible;
+
                 OnPropertyChanged(nameof(Username));
             }
         }

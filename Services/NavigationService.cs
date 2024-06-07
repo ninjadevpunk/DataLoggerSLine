@@ -571,5 +571,39 @@ namespace Data_Logger_1._3.Services
 
 
         #endregion
+
+
+
+
+        #region DataService Functions
+
+
+
+
+        public string UpdateProfilePic(string email)
+        {
+            if(DataService.IsValidEmail(email))
+            {
+                return _dataService.UpdateProfilePic(email);
+            }
+
+            return string.Empty;
+
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        #endregion
     }
 }
