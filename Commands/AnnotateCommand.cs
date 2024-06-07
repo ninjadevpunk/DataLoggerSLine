@@ -1,11 +1,11 @@
 ﻿using Data_Logger_1._3.Models;
+using Data_Logger_1._3.Models.App_Models;
 using Data_Logger_1._3.Services;
 using Data_Logger_1._3.ViewModels.Dashboard;
 using Data_Logger_1._3.ViewModels.Dialogs;
 using Data_Logger_1._3.ViewModels.LogViewModels;
 using MVVMEssentials.Commands;
 using MVVMEssentials.ViewModels;
-using System;
 using System.Windows;
 
 namespace Data_Logger_1._3.Commands
@@ -24,7 +24,9 @@ namespace Data_Logger_1._3.Commands
         private readonly LogCacheViewModel _dashboard;
 
         private const string Qt = "Qt Creator";
+        private readonly ApplicationClass QtCreator;
         private const string Android = "Android Studio Hedgehog 2023.1.1";
+        private readonly ApplicationClass AndroidStudio;
 
         // Edit Only
         private readonly ViewModelBase _viewModelBase;
@@ -46,6 +48,9 @@ namespace Data_Logger_1._3.Commands
                 _dashboard = logCacheViewModel ?? throw new ArgumentNullException(nameof(logCacheViewModel));
                 _dataService = dataService ?? throw new ArgumentNullException(nameof(dataService));
                 _actionType = ActionType.Add;
+
+                QtCreator = _dataService.FindApplicationByID(1);
+                AndroidStudio = _dataService.FindApplicationByID(2);
             }
             catch (Exception)
             {
@@ -89,6 +94,9 @@ namespace Data_Logger_1._3.Commands
                 _dataService = dataService ?? throw new ArgumentNullException(nameof(dataService));
                 _actionType = actionType;
                 _viewModelBase = viewModelBase ?? throw new ArgumentNullException(nameof(viewModelBase));
+
+                QtCreator = _dataService.FindApplicationByID(1);
+                AndroidStudio = _dataService.FindApplicationByID(2);
             }
             catch (Exception)
             {
@@ -105,14 +113,36 @@ namespace Data_Logger_1._3.Commands
             {
                 var account = _dataService.GetUser();
 
+                LOG.CATEGORY category;
+                Enum.TryParse(_TYPE, out category);
 
                 List<PostIt> posts = new();
-                
+                ApplicationClass application = new(_dataService.CreateAppID(category, account, _viewModel.ApplicationName), _viewModel.ApplicationName);
+                ProjectClass project = new(_dataService.CreateProjectID(account, application, _viewModel.ProjectName), account, _viewModel.ProjectName, application, category);
+                OutputClass output = new(_dataService.CreateOutputID(account, application, _viewModel.Output), account, _viewModel.Output, application, category);
+                TypeClass type = new(_dataService.CreateTypeID(account, application, _viewModel.Type), account, _viewModel.Type, application, category);
+                SubjectClass subject;
+                PostIt p;
+                bool DateIsWrong = _viewModel.StartDate.Equals(_viewModel.EndDate) || _viewModel.StartDate > _viewModel.EndDate;
+
+
+
+
+
                 foreach (var item in _viewModel.PostIts)
                 {
-                    PostIt p = new();
+                    p = new();
 
-                    p.Subject = item.Subject;
+                    p.ID = _dataService.CreatePostItID(_viewModel.PostIts.Count);
+
+                    subject = new(_dataService.CreateSubjectID(project, item.Subject, _viewModel.PostIts.Count),
+                                    category,
+                                    account,
+                                    item.Subject,
+                                    project,
+                                    application);
+
+                    p.Subject = subject;
 
                     p.Error = item.Error;
                     p.ERCaptureTime = item.DateFound;
@@ -123,6 +153,7 @@ namespace Data_Logger_1._3.Commands
 
                     posts.Add(p);
                 }
+
 
 
                 if (_actionType == ActionType.Add)
@@ -136,23 +167,33 @@ namespace Data_Logger_1._3.Commands
                                 {
                                     AScodeCreateViewModel _ASviewModel = (AScodeCreateViewModel)_viewModel;
                                     CodingAndroidViewModel cavm = (CodingAndroidViewModel)_dashboard;
+                                    project.Application = AndroidStudio;
+                                    output.Application = AndroidStudio;
+                                    type.Application = AndroidStudio;
+
+                                    foreach (PostIt postIt in posts)
+                                    {
+                                        postIt.Subject.Application = AndroidStudio;
+                                        postIt.Subject.Project.Application = AndroidStudio;
+                                    }
 
                                     AndroidCodingLOG.SCOPE s;
                                     s = _ASviewModel.FullORSimple ? AndroidCodingLOG.SCOPE.SIMPLE : AndroidCodingLOG.SCOPE.FULL;
 
 
-                                    if (_viewModel.StartDate.Equals(_viewModel.EndDate))
+                                    if (DateIsWrong)
                                     {
                                         var list = cavm.CacheItems;
 
                                         list.Add(new AndroidLOGViewModel(new AndroidCodingLOG(
+                                            _dataService.CreateLogID(),
                                             account,
-                                            _ASviewModel.ProjectName,
-                                            _ASviewModel.ApplicationName,
-                                            _ASviewModel.StartDate,
+                                            project,
+                                            AndroidStudio,
                                             DateTime.Now,
-                                            _ASviewModel.Output,
-                                            _ASviewModel.Type,
+                                            DateTime.Now,
+                                            output,
+                                            type,
                                             posts,
                                             _ASviewModel.BugsFound,
                                             _ASviewModel.ApplicationOpened,
@@ -172,13 +213,14 @@ namespace Data_Logger_1._3.Commands
                                         var list = cavm.CacheItems;
 
                                         list.Add(new AndroidLOGViewModel(new AndroidCodingLOG(
+                                            _dataService.CreateLogID(),
                                             account,
-                                            _ASviewModel.ProjectName,
-                                            _ASviewModel.ApplicationName,
+                                            project,
+                                            AndroidStudio,
                                             _ASviewModel.StartDate,
                                             _ASviewModel.EndDate,
-                                            _ASviewModel.Output,
-                                            _ASviewModel.Type,
+                                            output,
+                                            type,
                                             posts,
                                             _ASviewModel.BugsFound,
                                             _ASviewModel.ApplicationOpened,
@@ -202,19 +244,29 @@ namespace Data_Logger_1._3.Commands
                                 {
                                     codeCreateViewModel _QtviewModel = (codeCreateViewModel)_viewModel;
                                     CodingQtViewModel qtvm = (CodingQtViewModel)_dashboard;
+                                    project.Application = QtCreator;
+                                    output.Application = QtCreator;
+                                    type.Application = QtCreator;
 
-                                    if (_viewModel.StartDate.Equals(_viewModel.EndDate))
+                                    foreach(PostIt postIt in posts)
+                                    {
+                                        postIt.Subject.Application = QtCreator;
+                                        postIt.Subject.Project.Application = QtCreator;
+                                    }
+
+                                    if (DateIsWrong)
                                     {
                                         var list = qtvm.CacheItems;
 
                                         list.Add(new QtLOGViewModel(new CodingLOG(
+                                            _dataService.CreateLogID(),
                                             account,
-                                            _QtviewModel.ProjectName,
-                                            Qt,
-                                            _QtviewModel.StartDate,
+                                            project,
+                                            QtCreator,
                                             DateTime.Now,
-                                            _QtviewModel.Output,
-                                            _QtviewModel.Type,
+                                            DateTime.Now,
+                                            output,
+                                            type,
                                             posts,
                                             _QtviewModel.BugsFound,
                                             _QtviewModel.ApplicationOpened
@@ -227,13 +279,14 @@ namespace Data_Logger_1._3.Commands
                                         var list = qtvm.CacheItems;
 
                                         list.Add(new QtLOGViewModel(new CodingLOG(
+                                            _dataService.CreateLogID(),
                                             account,
-                                            _QtviewModel.ProjectName,
-                                            Qt,
+                                            project,
+                                            QtCreator,
                                             _QtviewModel.StartDate,
                                             _QtviewModel.EndDate,
-                                            _QtviewModel.Output,
-                                            _QtviewModel.Type,
+                                            output,
+                                            type,
                                             posts,
                                             _QtviewModel.BugsFound,
                                             _QtviewModel.ApplicationOpened
@@ -250,18 +303,19 @@ namespace Data_Logger_1._3.Commands
                                     codeCreateViewModel _GENviewModel = (codeCreateViewModel)_viewModel;
                                     CodingGenericViewModel genvm = (CodingGenericViewModel)_dashboard;
 
-                                    if (_viewModel.StartDate.Equals(_viewModel.EndDate))
+                                    if (DateIsWrong)
                                     {
                                         var list = genvm.CacheItems;
 
                                         list.Add(new CodeLOGViewModel(new CodingLOG(
+                                            _dataService.CreateLogID(),
                                             account,
-                                            _GENviewModel.ProjectName,
-                                            _GENviewModel.ApplicationName,
-                                            _GENviewModel.StartDate,
+                                            project,
+                                            application,
                                             DateTime.Now,
-                                            _GENviewModel.Output,
-                                            _GENviewModel.Type,
+                                            DateTime.Now,
+                                            output,
+                                            type,
                                             posts,
                                             _GENviewModel.BugsFound,
                                             _GENviewModel.ApplicationOpened
@@ -274,13 +328,14 @@ namespace Data_Logger_1._3.Commands
                                         var list = genvm.CacheItems;
 
                                         list.Add(new CodeLOGViewModel(new CodingLOG(
+                                            _dataService.CreateLogID(),
                                             account,
-                                            _GENviewModel.ProjectName,
-                                            _GENviewModel.ApplicationName,
+                                            project,
+                                            application,
                                             _GENviewModel.StartDate,
                                             _GENviewModel.EndDate,
-                                            _GENviewModel.Output,
-                                            _GENviewModel.Type,
+                                            output,
+                                            type,
                                             posts,
                                             _GENviewModel.BugsFound,
                                             _GENviewModel.ApplicationOpened
@@ -299,19 +354,20 @@ namespace Data_Logger_1._3.Commands
                                 graphicCreateViewModel _GRAviewModel = (graphicCreateViewModel)_viewModel;
                                 GraphicsViewModel gvm = (GraphicsViewModel)_dashboard;
 
-                                if (_viewModel.StartDate.Equals(_viewModel.EndDate))
+                                if (DateIsWrong)
                                 {
 
                                     var list = gvm.CacheItems;
 
                                     list.Add(new GraphicsLOGViewModel(new GraphicsLOG(
+                                        _dataService.CreateLogID(),
                                         account,
-                                        _GRAviewModel.ProjectName,
-                                        _GRAviewModel.ApplicationName,
-                                        _GRAviewModel.StartDate,
+                                        project,
+                                        application,
                                         DateTime.Now,
-                                        _GRAviewModel.Output,
-                                        _GRAviewModel.Type,
+                                        DateTime.Now,
+                                        output,
+                                        type,
                                         posts,
                                         _GRAviewModel.Medium,
                                         _GRAviewModel.Format,
@@ -334,26 +390,27 @@ namespace Data_Logger_1._3.Commands
                                     var list = gvm.CacheItems;
 
                                     list.Add(new GraphicsLOGViewModel(new GraphicsLOG(
-                                    account,
-                                    _GRAviewModel.ProjectName,
-                                    _GRAviewModel.ApplicationName,
-                                    _GRAviewModel.StartDate,
-                                    _GRAviewModel.EndDate,
-                                    _GRAviewModel.Output,
-                                    _GRAviewModel.Type,
-                                    posts,
-                                    _GRAviewModel.Medium,
-                                    _GRAviewModel.Format,
-                                    _GRAviewModel.Brush,
-                                    double.Parse(_GRAviewModel.Height),
-                                    double.Parse(_GRAviewModel.Width),
-                                    _GRAviewModel.MeasuringUnit,
-                                    _GRAviewModel.Size,
-                                    double.Parse(_GRAviewModel.DPI),
-                                    _GRAviewModel.ColourDepth,
-                                    _GRAviewModel.IsCompleted,
-                                    _GRAviewModel.Source
-                                    ), gvm, _GRAviewModel.PostIts, _dataService));
+                                        _dataService.CreateLogID(),
+                                        account,
+                                        project,
+                                        application,
+                                        _GRAviewModel.StartDate,
+                                        _GRAviewModel.EndDate,
+                                        output,
+                                        type,
+                                        posts,
+                                        _GRAviewModel.Medium,
+                                        _GRAviewModel.Format,
+                                        _GRAviewModel.Brush,
+                                        double.Parse(_GRAviewModel.Height),
+                                        double.Parse(_GRAviewModel.Width),
+                                        _GRAviewModel.MeasuringUnit,
+                                        _GRAviewModel.Size,
+                                        double.Parse(_GRAviewModel.DPI),
+                                        _GRAviewModel.ColourDepth,
+                                        _GRAviewModel.IsCompleted,
+                                        _GRAviewModel.Source
+                                        ), gvm, _GRAviewModel.PostIts, _dataService));
 
                                     gvm.CacheItems = list;
 
@@ -368,18 +425,19 @@ namespace Data_Logger_1._3.Commands
                                 filmCreateViewModel _FILMviewModel = (filmCreateViewModel)_viewModel;
                                 FilmViewModel fvm = (FilmViewModel)_dashboard;
 
-                                if (_viewModel.StartDate.Equals(_viewModel.EndDate))
+                                if (DateIsWrong)
                                 {
                                     var list = fvm.CacheItems;
 
                                     list.Add(new FilmLOGViewModel(new FilmLOG(
+                                        _dataService.CreateLogID(),
                                         account,
-                                        _FILMviewModel.ProjectName,
-                                        _FILMviewModel.ApplicationName,
-                                        _FILMviewModel.StartDate,
+                                        project,
+                                        application,
                                         DateTime.Now,
-                                        _FILMviewModel.Output,
-                                        _FILMviewModel.Type,
+                                        DateTime.Now,
+                                        output,
+                                        type,
                                         posts,
                                         double.Parse(_FILMviewModel.Height),
                                         double.Parse(_FILMviewModel.Width),
@@ -397,13 +455,14 @@ namespace Data_Logger_1._3.Commands
                                     var list = fvm.CacheItems;
 
                                     list.Add(new FilmLOGViewModel(new FilmLOG(
+                                        _dataService.CreateLogID(),
                                         account,
-                                        _FILMviewModel.ProjectName,
-                                        _FILMviewModel.ApplicationName,
+                                        project,
+                                        application,
                                         _FILMviewModel.StartDate,
                                         _FILMviewModel.EndDate,
-                                        _FILMviewModel.Output,
-                                        _FILMviewModel.Type,
+                                        output,
+                                        type,
                                         posts,
                                         double.Parse(_FILMviewModel.Height),
                                         double.Parse(_FILMviewModel.Width),
@@ -438,18 +497,19 @@ namespace Data_Logger_1._3.Commands
                                 // FlexiNotesLOG.GAMINGContext context;
 
 
-                                if (_viewModel.StartDate.Equals(_viewModel.EndDate))
+                                if (DateIsWrong)
                                 {
                                     var list = flexvm.CacheItems;
 
                                     list.Add(new FlexiLOGViewModel(new FlexiNotesLOG(
+                                        _dataService.CreateLogID(),
                                         account,
-                                        _FLEXIviewModel.ProjectName,
-                                        _FLEXIviewModel.ApplicationName,
-                                        _FLEXIviewModel.StartDate,
+                                        project,
+                                        application,
                                         DateTime.Now,
-                                        _FLEXIviewModel.Output,
-                                        _FLEXIviewModel.Type,
+                                        DateTime.Now,
+                                        output,
+                                        type,
                                         posts,
                                         temp,
                                         FlexiNotesLOG.GAMINGContext.Create,
@@ -470,13 +530,14 @@ namespace Data_Logger_1._3.Commands
                                     var list = flexvm.CacheItems;
 
                                     list.Add(new FlexiLOGViewModel(new FlexiNotesLOG(
+                                        _dataService.CreateLogID(),
                                         account,
-                                        _FLEXIviewModel.ProjectName,
-                                        _FLEXIviewModel.ApplicationName,
+                                        project,
+                                        application,
                                         _FLEXIviewModel.StartDate,
                                         _FLEXIviewModel.EndDate,
-                                        _FLEXIviewModel.Output,
-                                        _FLEXIviewModel.Type,
+                                        output,
+                                        type,
                                         posts,
                                         temp,
                                         FlexiNotesLOG.GAMINGContext.Create,
@@ -494,12 +555,11 @@ namespace Data_Logger_1._3.Commands
                                 }
 
 
-                                _navigationService.NavigateToLogCachePage(CacheContext.Film);
+                                _navigationService.NavigateToLogCachePage(CacheContext.Flexi);
 
                                 break;
                             }
                     }
-
 
                 }
                 else
@@ -517,6 +577,15 @@ namespace Data_Logger_1._3.Commands
                                     AScodeEditViewModel _ASviewModel = (AScodeEditViewModel)_viewModel;
                                     CodingAndroidViewModel cavm = (CodingAndroidViewModel)_dashboard;
                                     AndroidLOGViewModel oldLOG = (AndroidLOGViewModel)_viewModelBase;
+                                    project.Application = AndroidStudio;
+                                    output.Application = AndroidStudio;
+                                    type.Application = AndroidStudio;
+
+                                    foreach (PostIt postIt in posts)
+                                    {
+                                        postIt.Subject.Application = AndroidStudio;
+                                        postIt.Subject.Project.Application = AndroidStudio;
+                                    }
 
                                     index = cavm.CacheItems.IndexOf(oldLOG);
 
@@ -530,16 +599,17 @@ namespace Data_Logger_1._3.Commands
 
                                         AndroidLOGViewModel newLOG;
 
-                                        if (_viewModel.StartDate.Equals(_viewModel.EndDate) || _viewModel.StartDate > _viewModel.EndDate)
+                                        if (DateIsWrong)
                                         {
                                             newLOG = new(new AndroidCodingLOG(
+                                                _dataService.CreateLogID(),
                                                 account,
-                                                _ASviewModel.ProjectName,
-                                                _ASviewModel.ApplicationName,
+                                                project,
+                                                application,
                                                 DateTime.Now,
                                                 DateTime.Now,
-                                                _ASviewModel.Output,
-                                                _ASviewModel.Type,
+                                                output,
+                                                type,
                                                 posts,
                                                 _ASviewModel.BugsFound,
                                                 _ASviewModel.ApplicationOpened,
@@ -555,13 +625,14 @@ namespace Data_Logger_1._3.Commands
                                         else
                                         {
                                             newLOG = new(new AndroidCodingLOG(
+                                                _dataService.CreateLogID(),
                                                 account,
-                                                _ASviewModel.ProjectName,
-                                                _ASviewModel.ApplicationName,
+                                                project,
+                                                application,
                                                 _ASviewModel.StartDate,
                                                 _ASviewModel.EndDate,
-                                                _ASviewModel.Output,
-                                                _ASviewModel.Type,
+                                                output,
+                                                type,
                                                 posts,
                                                 _ASviewModel.BugsFound,
                                                 _ASviewModel.ApplicationOpened,
@@ -580,7 +651,7 @@ namespace Data_Logger_1._3.Commands
                                         list[index] = newLOG;
 
                                         cavm.CacheItems = list;
-                                    }                                    
+                                    }
 
 
                                     _navigationService.NavigateToLogCachePage(CacheContext.AndroidStudio);
@@ -591,11 +662,20 @@ namespace Data_Logger_1._3.Commands
                                     codeCreateViewModel _QtviewModel = (codeCreateViewModel)_viewModel;
                                     CodingQtViewModel qtvm = (CodingQtViewModel)_dashboard;
                                     QtLOGViewModel oldLOG = (QtLOGViewModel)_viewModelBase;
+                                    project.Application = QtCreator;
+                                    output.Application = QtCreator;
+                                    type.Application = QtCreator;
+
+                                    foreach (PostIt postIt in posts)
+                                    {
+                                        postIt.Subject.Application = QtCreator;
+                                        postIt.Subject.Project.Application = QtCreator;
+                                    }
 
                                     index = qtvm.CacheItems.IndexOf(oldLOG);
 
-                                    
-                                    if(index != -1)
+
+                                    if (index != -1)
                                     {
                                         var list = qtvm.CacheItems;
 
@@ -604,13 +684,14 @@ namespace Data_Logger_1._3.Commands
                                         if (_viewModel.StartDate.Equals(_viewModel.EndDate) || _viewModel.StartDate > _viewModel.EndDate)
                                         {
                                             newLOG = new(new CodingLOG(
+                                                _dataService.CreateLogID(),
                                                 account,
-                                                _QtviewModel.ProjectName,
-                                                Qt,
+                                                project,
+                                                QtCreator,
                                                 DateTime.Now,
                                                 DateTime.Now,
-                                                _QtviewModel.Output,
-                                                _QtviewModel.Type,
+                                                output,
+                                                type,
                                                 posts,
                                                 _QtviewModel.BugsFound,
                                                 _QtviewModel.ApplicationOpened
@@ -619,16 +700,17 @@ namespace Data_Logger_1._3.Commands
                                         else
                                         {
                                             newLOG = new(new CodingLOG(
-                                               account,
-                                               _QtviewModel.ProjectName,
-                                               Qt,
-                                               _QtviewModel.StartDate,
-                                               _QtviewModel.EndDate,
-                                               _QtviewModel.Output,
-                                               _QtviewModel.Type,
-                                               posts,
-                                               _QtviewModel.BugsFound,
-                                               _QtviewModel.ApplicationOpened
+                                                _dataService.CreateLogID(),
+                                                account,
+                                                project,
+                                                QtCreator,
+                                                _QtviewModel.StartDate,
+                                                _QtviewModel.EndDate,
+                                                output,
+                                                type,
+                                                posts,
+                                                _QtviewModel.BugsFound,
+                                                _QtviewModel.ApplicationOpened
                                                ), qtvm, _QtviewModel.PostIts, _dataService);
                                         }
                                         oldLOG._timer.Dispose();
@@ -637,7 +719,7 @@ namespace Data_Logger_1._3.Commands
 
                                         qtvm.CacheItems = list;
                                     }
-                                    
+
 
                                     _navigationService.NavigateToLogCachePage(CacheContext.Qt);
 
@@ -650,7 +732,7 @@ namespace Data_Logger_1._3.Commands
 
                                     index = genvm.CacheItems.IndexOf(oldLOG);
 
-                                    if(index != -1)
+                                    if (index != -1)
                                     {
                                         var list = genvm.CacheItems;
 
@@ -660,13 +742,14 @@ namespace Data_Logger_1._3.Commands
                                         {
 
                                             newLOG = new(new CodingLOG(
+                                                _dataService.CreateLogID(),
                                                 account,
-                                                _GENviewModel.ProjectName,
-                                                _GENviewModel.ApplicationName,
+                                                project,
+                                                application,
                                                 DateTime.Now,
                                                 DateTime.Now,
-                                                _GENviewModel.Output,
-                                                _GENviewModel.Type,
+                                                output,
+                                                type,
                                                 posts,
                                                 _GENviewModel.BugsFound,
                                                 _GENviewModel.ApplicationOpened
@@ -676,18 +759,20 @@ namespace Data_Logger_1._3.Commands
                                         else
                                         {
                                             newLOG = new(new CodingLOG(
+                                                _dataService.CreateLogID(),
                                                 account,
-                                                _GENviewModel.ProjectName,
-                                                _GENviewModel.ApplicationName,
+                                                project,
+                                                application,
                                                 _GENviewModel.StartDate,
                                                 _GENviewModel.EndDate,
-                                                _GENviewModel.Output,
-                                                _GENviewModel.Type,
+                                                output,
+                                                type,
                                                 posts,
                                                 _GENviewModel.BugsFound,
                                                 _GENviewModel.ApplicationOpened
                                                 ), genvm, _GENviewModel.PostIts, _dataService);
                                         }
+
                                         oldLOG._timer.Dispose();
                                         newLOG.TimeRemaining = oldLOG.TimeRemaining;
                                         list[index] = newLOG;
@@ -718,13 +803,14 @@ namespace Data_Logger_1._3.Commands
                                     {
 
                                         newLOG = new(new GraphicsLOG(
+                                            _dataService.CreateLogID(),
                                             account,
-                                            _GRAviewModel.ProjectName,
-                                            _GRAviewModel.ApplicationName,
+                                            project,
+                                            application,
                                             DateTime.Now,
                                             DateTime.Now,
-                                            _GRAviewModel.Output,
-                                            _GRAviewModel.Type,
+                                            output,
+                                            type,
                                             posts,
                                             _GRAviewModel.Medium,
                                             _GRAviewModel.Format,
@@ -743,13 +829,14 @@ namespace Data_Logger_1._3.Commands
                                     else
                                     {
                                         newLOG = new(new GraphicsLOG(
+                                            _dataService.CreateLogID(),
                                             account,
-                                            _GRAviewModel.ProjectName,
-                                            _GRAviewModel.ApplicationName,
+                                            project,
+                                            application,
                                             _GRAviewModel.StartDate,
                                             _GRAviewModel.EndDate,
-                                            _GRAviewModel.Output,
-                                            _GRAviewModel.Type,
+                                            output,
+                                            type,
                                             posts,
                                             _GRAviewModel.Medium,
                                             _GRAviewModel.Format,
@@ -764,6 +851,7 @@ namespace Data_Logger_1._3.Commands
                                             _GRAviewModel.Source
                                             ), gvm, _GRAviewModel.PostIts, _dataService);
                                     }
+
                                     oldLOG._timer.Dispose();
                                     newLOG.TimeRemaining = oldLOG.TimeRemaining;
                                     list[index] = newLOG;
@@ -793,13 +881,14 @@ namespace Data_Logger_1._3.Commands
                                     {
 
                                         newLOG = new(new FilmLOG(
+                                            _dataService.CreateLogID(),
                                             account,
-                                            _FILMviewModel.ProjectName,
-                                            _FILMviewModel.ApplicationName,
+                                            project,
+                                            application,
                                             DateTime.Now,
                                             DateTime.Now,
-                                            _FILMviewModel.Output,
-                                            _FILMviewModel.Type,
+                                            output,
+                                            type,
                                             posts,
                                             double.Parse(_FILMviewModel.Height),
                                             double.Parse(_FILMviewModel.Width),
@@ -812,13 +901,14 @@ namespace Data_Logger_1._3.Commands
                                     else
                                     {
                                         newLOG = new(new FilmLOG(
+                                            _dataService.CreateLogID(),
                                             account,
-                                            _FILMviewModel.ProjectName,
-                                            _FILMviewModel.ApplicationName,
+                                            project,
+                                            application,
                                             _FILMviewModel.StartDate,
                                             _FILMviewModel.EndDate,
-                                            _FILMviewModel.Output,
-                                            _FILMviewModel.Type,
+                                            output,
+                                            type,
                                             posts,
                                             double.Parse(_FILMviewModel.Height),
                                             double.Parse(_FILMviewModel.Width),
@@ -864,17 +954,18 @@ namespace Data_Logger_1._3.Commands
                                     // FlexiNotesLOG.GAMINGContext context;
 
 
-                                    if (_viewModel.StartDate.Equals(_viewModel.EndDate))
+                                    if (DateIsWrong)
                                     {
 
                                         newLOG = new(new FlexiNotesLOG(
+                                            _dataService.CreateLogID(),
                                             account,
-                                            _FLEXIviewModel.ProjectName,
-                                            _FLEXIviewModel.ApplicationName,
+                                            project,
+                                            application,
                                             DateTime.Now,
                                             DateTime.Now,
-                                            _FLEXIviewModel.Output,
-                                            _FLEXIviewModel.Type,
+                                            output,
+                                            type,
                                             posts,
                                             temp,
                                             FlexiNotesLOG.GAMINGContext.Create,
@@ -892,13 +983,14 @@ namespace Data_Logger_1._3.Commands
                                     {
 
                                         newLOG = new FlexiLOGViewModel(new FlexiNotesLOG(
+                                            _dataService.CreateLogID(),
                                             account,
-                                            _FLEXIviewModel.ProjectName,
-                                            _FLEXIviewModel.ApplicationName,
+                                            project,
+                                            application,
                                             _FLEXIviewModel.StartDate,
                                             _FLEXIviewModel.EndDate,
-                                            _FLEXIviewModel.Output,
-                                            _FLEXIviewModel.Type,
+                                            output,
+                                            type,
                                             posts,
                                             temp,
                                             FlexiNotesLOG.GAMINGContext.Create,
@@ -920,7 +1012,7 @@ namespace Data_Logger_1._3.Commands
                                 }
 
 
-                                _navigationService.NavigateToLogCachePage(CacheContext.Film);
+                                _navigationService.NavigateToLogCachePage(CacheContext.Flexi);
 
                                 break;
                             }
