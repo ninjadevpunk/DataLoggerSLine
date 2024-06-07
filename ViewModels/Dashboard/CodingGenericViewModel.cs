@@ -1,9 +1,11 @@
 ﻿using Data_Logger_1._3.Commands.CodingCommands;
+using Data_Logger_1._3.Models;
 using Data_Logger_1._3.Services;
-using Data_Logger_1._3.ViewModels.Dashboard;
+using Data_Logger_1._3.ViewModels.LogViewModels;
 using System.Collections.ObjectModel;
+using System.Windows;
 
-namespace Data_Logger_1._3.ViewModels.LogViewModels
+namespace Data_Logger_1._3.ViewModels.Dashboard
 {
     public class CodingGenericViewModel : LogCacheViewModel
     {
@@ -17,7 +19,10 @@ namespace Data_Logger_1._3.ViewModels.LogViewModels
             set
             {
                 cacheItems = value;
-                LogCount = CacheItems.Count.ToString() + " coding logs cached | x total logs";
+
+                NoLogsMessageVisibility = CacheItems.Count == 0 ? Visibility.Visible : Visibility.Hidden;
+                UpdateLogCount();
+
                 OnPropertyChanged(nameof(CacheItems));
             }
         }
@@ -41,11 +46,10 @@ namespace Data_Logger_1._3.ViewModels.LogViewModels
             ReportLogCommand = new ReportCodingLogCommand(_navigationService);
         }
 
-        public async void UpdateLogCount()
+        public virtual void UpdateLogCount()
         {
-            var temp = await _dataService.RetrieveCodingLogs(this);
-            var count = temp.Count;
-            LogCount = $"{CacheItems.Count} qt logs cached | {count} total logs";
+            var count = _dataService.LogCount(LOG.CATEGORY.CODING);
+            LogCount = $"{CacheItems.Count} coding logs cached | {count} total logs";
         }
     }
 }

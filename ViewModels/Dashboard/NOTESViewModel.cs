@@ -1,10 +1,11 @@
 ﻿using Data_Logger_1._3.Commands.NotesCommands;
 using Data_Logger_1._3.Services;
+using Data_Logger_1._3.ViewModels.LogViewModels;
 using MVVMEssentials.ViewModels;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
 
-namespace Data_Logger_1._3.ViewModels.LogViewModels
+namespace Data_Logger_1._3.ViewModels.Dashboard
 {
     public enum NoteItemType
     {

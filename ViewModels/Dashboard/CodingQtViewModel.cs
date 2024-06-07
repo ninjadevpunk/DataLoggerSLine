@@ -1,10 +1,10 @@
 ﻿using Data_Logger_1._3.Commands.QtCommands;
 using Data_Logger_1._3.Services;
-using Data_Logger_1._3.ViewModels.Dashboard;
+using Data_Logger_1._3.ViewModels.LogViewModels;
 using System.Collections.ObjectModel;
 using System.Windows;
 
-namespace Data_Logger_1._3.ViewModels.LogViewModels
+namespace Data_Logger_1._3.ViewModels.Dashboard
 {
     public class CodingQtViewModel : LogCacheViewModel
     {
@@ -46,24 +46,9 @@ namespace Data_Logger_1._3.ViewModels.LogViewModels
             }
         }
 
-        private Visibility noLogsMessageVisibility;
-        public Visibility NoLogsMessageVisibility
+        private void UpdateLogCount()
         {
-            get
-            {
-                return noLogsMessageVisibility;
-            }
-            set
-            {
-                noLogsMessageVisibility = value;
-                OnPropertyChanged(nameof(NoLogsMessageVisibility));
-            }
-        }
-
-        private async void UpdateLogCount()
-        {
-            var temp = await _dataService.RetrieveQtCodingLogs(this);
-            var count = temp.Count;
+            var count = _dataService.QtLogCount();
             LogCount = $"{CacheItems.Count} qt logs cached | {count} total logs";
         }
 

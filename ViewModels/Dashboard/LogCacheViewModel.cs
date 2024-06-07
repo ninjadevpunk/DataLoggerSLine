@@ -1,5 +1,6 @@
 ﻿using Data_Logger_1._3.Services;
 using MVVMEssentials.ViewModels;
+using System.Windows;
 using System.Windows.Input;
 
 namespace Data_Logger_1._3.ViewModels.Dashboard
@@ -21,6 +22,21 @@ namespace Data_Logger_1._3.ViewModels.Dashboard
             {
                 logCount = value;
                 OnPropertyChanged(nameof(LogCount));
+            }
+        }
+
+
+        private Visibility noLogsMessageVisibility;
+        public Visibility NoLogsMessageVisibility
+        {
+            get
+            {
+                return noLogsMessageVisibility;
+            }
+            set
+            {
+                noLogsMessageVisibility = value;
+                OnPropertyChanged(nameof(NoLogsMessageVisibility));
             }
         }
 

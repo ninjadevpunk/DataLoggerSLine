@@ -1,12 +1,14 @@
 ﻿using Data_Logger_1._3.Commands.ASCommands;
+using Data_Logger_1._3.Models;
 using Data_Logger_1._3.Services;
-using Data_Logger_1._3.ViewModels.Dashboard;
+using Data_Logger_1._3.ViewModels.LogViewModels;
 using System.Collections.ObjectModel;
+using System.Windows;
 
 
-namespace Data_Logger_1._3.ViewModels.LogViewModels
+namespace Data_Logger_1._3.ViewModels.Dashboard
 {
-    public class CodingAndroidViewModel : LogCacheViewModel
+    public class CodingAndroidViewModel : CodingGenericViewModel
     {
 
 
@@ -20,7 +22,11 @@ namespace Data_Logger_1._3.ViewModels.LogViewModels
             set
             {
                 cacheItems = value;
-                LogCount = CacheItems.Count.ToString() + " android logs cached | x total logs";
+
+                NoLogsMessageVisibility = CacheItems.Count == 0 ? Visibility.Visible : Visibility.Hidden;
+                if(CacheItems is not null)
+                    UpdateLogCount();
+
                 OnPropertyChanged(nameof(CacheItems));
             }
         }
@@ -42,6 +48,15 @@ namespace Data_Logger_1._3.ViewModels.LogViewModels
 
             CreateLogCommand = new CreateASLogCommand(_navigationService);
             ReportLogCommand = new ReportASLogCommand(_navigationService);
+        }
+
+        public override void UpdateLogCount()
+        {
+            if(CacheItems is not null)
+            {
+                var count = _dataService.ASLogCount();
+                LogCount = $"{CacheItems.Count} android logs cached | {count} total logs";
+            }
         }
 
     }

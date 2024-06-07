@@ -1,9 +1,9 @@
 ﻿using Data_Logger_1._3.Commands.GraphicsCommands;
 using Data_Logger_1._3.Services;
-using Data_Logger_1._3.ViewModels.Dashboard;
+using Data_Logger_1._3.ViewModels.LogViewModels;
 using System.Collections.ObjectModel;
 
-namespace Data_Logger_1._3.ViewModels.LogViewModels
+namespace Data_Logger_1._3.ViewModels.Dashboard
 {
     public class GraphicsViewModel : LogCacheViewModel
     {
