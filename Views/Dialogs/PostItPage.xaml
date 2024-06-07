@@ -532,7 +532,7 @@
                                                UserTextBlockStyle="{DynamicResource text_Placeholder}"
                                                UserTextBoxStyle="{DynamicResource inputText}"
                                                UserComboInput="{Binding Subject, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
-                                               Items="{Binding Subjects}"/>
+                                               Items="{Binding Subjects, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"/>
 
                 <!-- REPLACE -->
                 <components:PlainInputField Grid.Column="2" Grid.Row="0" x:Name="POSTIT_REPLACE"
