@@ -3,7 +3,6 @@ using Data_Logger_1._3.Models.App_Models;
 using Data_Logger_1._3.Models;
 using Data_Logger_1._3.Services;
 using Data_Logger_1._3.ViewModels.Dashboard;
-using Data_Logger_1._3.ViewModels.LogViewModels;
 using System.Windows;
 
 namespace Data_Logger_1._3.ViewModels.Dialogs
@@ -21,12 +20,12 @@ namespace Data_Logger_1._3.ViewModels.Dialogs
 
 			FullORSimple = false;
 
-            AnnotateCommand = new AnnotateCommand(LogType, _navigationService, this, _logCacheViewModel, _dataService);
 
-            _ASviewModel = (CodingAndroidViewModel)logCacheViewModel;
+            _ASviewModel = (CodingAndroidViewModel)_viewModel;
+            AnnotateCommand = new AnnotateCommand(LogType, _navigationService, this, _ASviewModel, _dataService);
 
-			_projects.Clear();
-            var items = _dataService.FIREBASE_PROJECTS;
+            _projects.Clear();
+            var items = _dataService.SQLITE_PROJECTS;
 
 
             foreach (ProjectClass project in items)
@@ -738,8 +737,12 @@ namespace Data_Logger_1._3.ViewModels.Dialogs
 
         public override void UpdateLogCount()
         {
-            if (ApplicationName == AndroidStudio && _ASviewModel is not null)
-                LogCount = _ASviewModel.CacheItems.Count.ToString() + " Logs Cached";            
+            if (ASOnly && _ASviewModel is not null)
+			{
+                var count = _dataService.ASLogCount();
+                LogCount = $"{_ASviewModel.CacheItems.Count} Logs Cached";
+                _ASviewModel.LogCount = $"{_ASviewModel.CacheItems.Count} android logs cached | {count} total logs";
+            }           
         }
 
 

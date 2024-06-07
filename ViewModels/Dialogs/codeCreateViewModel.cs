@@ -3,13 +3,12 @@ using Data_Logger_1._3.Models;
 using Data_Logger_1._3.Models.App_Models;
 using Data_Logger_1._3.Services;
 using Data_Logger_1._3.ViewModels.Dashboard;
-using Data_Logger_1._3.ViewModels.LogViewModels;
 
 namespace Data_Logger_1._3.ViewModels.Dialogs
 {
     public class codeCreateViewModel : LoggerCreateViewModel
     {
-        private readonly CodingGenericViewModel _viewModel;
+        protected readonly CodingGenericViewModel _viewModel;
         private readonly CodingQtViewModel? _QtviewModel;
         private const string Qt = "Qt Creator";
         protected const string AndroidStudio = "Android Studio Hedgehog 2023.1.1";
@@ -23,21 +22,26 @@ namespace Data_Logger_1._3.ViewModels.Dialogs
             _viewModel = (CodingGenericViewModel)logCacheViewModel;
 
 
-            var items = _dataService.FIREBASE_PROJECTS;
+            _dataService.InitialiseProjectsLIST(LOG.CATEGORY.CODING);
+            var items = _dataService.SQLITE_PROJECTS;
 
 
             foreach (ProjectClass project in items)
             {
-                if(project.Category == LOG.CATEGORY.CODING && project.Application.Name != Qt)
+                if(project.Application.Name != Qt && project.Application.Name != AndroidStudio)
                     _projects.Add(project.Name);
             }
 
-            var apps = _dataService.FIREBASE_APPLICATIONS;
+            var apps = _dataService.SQLITE_APPLICATIONS;
 
             foreach(ApplicationClass app in apps)
             {
-                if(app.Category == LOG.CATEGORY.CODING && app.Name != Qt && app.Name != AndroidStudio)
+                var IsGenericApp = app.Name != Qt && app.Name != AndroidStudio;
+
+                if (app.Category == LOG.CATEGORY.CODING && IsGenericApp)
                     _applications.Add(app.Name);
+
+                
             }
 
             _outputs.Add("C# Application (*.exe)");
@@ -54,13 +58,18 @@ namespace Data_Logger_1._3.ViewModels.Dialogs
             BugsFound = 0;
             ApplicationOpened = false;
 
-            AnnotateCommand = new AnnotateCommand(LogType, _navigationService, this, _logCacheViewModel, _dataService);
+            AnnotateCommand = new AnnotateCommand(LogType, _navigationService, this, _viewModel, _dataService);
 
         }
 
-        public codeCreateViewModel(NavigationService navigationService, LogCacheViewModel logCacheViewModel, string app, DataService dataService) : base(navigationService, logCacheViewModel, dataService)
+        public codeCreateViewModel(NavigationService navigationService, LogCacheViewModel logCacheViewModel, string application, DataService dataService) : base(navigationService, logCacheViewModel, dataService)
         {
-            if (app == "Qt")
+            _dataService.InitialiseProjectsLIST(LOG.CATEGORY.CODING);
+            var items = _dataService.SQLITE_PROJECTS;
+
+            var apps = _dataService.SQLITE_APPLICATIONS;
+
+            if (application == "Qt")
             {
                 AppFieldEnabled = false;
                 ApplicationName = Qt;
@@ -68,12 +77,10 @@ namespace Data_Logger_1._3.ViewModels.Dialogs
                 
                 _QtviewModel = (CodingQtViewModel)logCacheViewModel;
 
-                var items = _dataService.FIREBASE_PROJECTS;
-
 
                 foreach (ProjectClass project in items)
                 {
-                    if (project.Category == LOG.CATEGORY.CODING && project.Application.Name == Qt)
+                    if (project.Application.Name == Qt)
                         _projects.Add(project.Name);
                 }
 
@@ -84,12 +91,49 @@ namespace Data_Logger_1._3.ViewModels.Dialogs
                 _types.Add("NONE");
                 _types.Add("Build");
                 _types.Add("Runtime");
+
+
+                AnnotateCommand = new AnnotateCommand(LogType, _navigationService, this, _QtviewModel, _dataService);
             }
             else
+            {
+                AppFieldEnabled = true;
+                ApplicationName = "";
                 _viewModel = (CodingGenericViewModel)logCacheViewModel;
 
 
-            AnnotateCommand = new AnnotateCommand(LogType, _navigationService, this, _logCacheViewModel, _dataService);
+                foreach (ProjectClass project in items)
+                {
+                    if (project.Application.Name != Qt && project.Application.Name != AndroidStudio)
+                        _projects.Add(project.Name);
+                }
+
+                foreach (ApplicationClass app in apps)
+                {
+                    var IsGenericApp = app.Name != Qt && app.Name != AndroidStudio;
+
+                    if (app.Category == LOG.CATEGORY.CODING && IsGenericApp)
+                        _applications.Add(app.Name);
+
+                }
+
+
+
+                _outputs.Add("C# Application (*.exe)");
+                _outputs.Add("C++ Application (*.exe)");
+                _outputs.Add("C Application (*.exe)");
+                _outputs.Add("Java Application (*.exe)");
+                _outputs.Add("Database (*.db)");
+                _outputs.Add("Database (SQL, Oracle)");
+
+                _types.Add("NONE");
+                _types.Add("Compilation");
+                _types.Add("Runtime");
+
+                AnnotateCommand = new AnnotateCommand(LogType, _navigationService, this, _viewModel, _dataService);
+            }
+
+
 
         }
 
@@ -145,21 +189,19 @@ namespace Data_Logger_1._3.ViewModels.Dialogs
 
 
 
-        public virtual async void UpdateLogCount()
+        public virtual void UpdateLogCount()
         {
             if(QtOnly && _QtviewModel is not null)
             {
-                var temp = await _dataService.RetrieveQtCodingLogs(_QtviewModel);
-                var count = temp.Count;
+                var count = _dataService.QtLogCount();
                 LogCount = $"{_QtviewModel.CacheItems.Count} Logs Cached";
                 _QtviewModel.LogCount = $"{_QtviewModel.CacheItems.Count} qt logs cached | {count} total logs";
             }
             else if(_viewModel is not null)
             {
-                var temp = await _dataService.RetrieveCodingLogs(_viewModel);
-                var count = temp.Count;
+                var count = _dataService.LogCount(LOG.CATEGORY.CODING);
                 LogCount = $"{_viewModel.CacheItems.Count} Logs Cached";
-                _viewModel.LogCount = $"{_viewModel.CacheItems.Count} logs cached | {count} total logs";
+                _viewModel.LogCount = $"{_viewModel.CacheItems.Count} coding logs cached | {count} total logs";
             }
         }
 

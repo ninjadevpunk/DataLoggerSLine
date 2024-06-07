@@ -3,7 +3,7 @@ using Data_Logger_1._3.Services;
 using MVVMEssentials.ViewModels;
 using System.Windows.Input;
 
-namespace Data_Logger_1._3.ViewModels.LogViewModels
+namespace Data_Logger_1._3.ViewModels.Dialogs
 {
     public class CreateNoteViewModel : ViewModelBase
     {
@@ -11,43 +11,43 @@ namespace Data_Logger_1._3.ViewModels.LogViewModels
         private readonly DataService _dataService;
         private readonly NavigationService _navigationService;
 
-		private string noteSubject;
-		public string NoteSubject
-		{
-			get
-			{
-				return noteSubject;
-			}
-			set
-			{
-				noteSubject = value;
-				OnPropertyChanged(nameof(NoteSubject));
-			}
-		}
+        private string noteSubject;
+        public string NoteSubject
+        {
+            get
+            {
+                return noteSubject;
+            }
+            set
+            {
+                noteSubject = value;
+                OnPropertyChanged(nameof(NoteSubject));
+            }
+        }
 
-		private string date;
-		public string Date
-		{
-			get
-			{
-				return date;
-			}
-			set
-			{
-				date = value;
-				OnPropertyChanged(nameof(Date));
-			}
-		}
+        private string date;
+        public string Date
+        {
+            get
+            {
+                return date;
+            }
+            set
+            {
+                date = value;
+                OnPropertyChanged(nameof(Date));
+            }
+        }
 
-		public ICommand SaveNoteCommand { get; set; }
+        public ICommand SaveNoteCommand { get; set; }
 
-		public CreateNoteViewModel(NavigationService navigationService)
-		{
-			_navigationService = navigationService;
+        public CreateNoteViewModel(NavigationService navigationService)
+        {
+            _navigationService = navigationService;
 
-			NoteSubject = "No Subject";
+            NoteSubject = "No Subject";
 
-			SaveNoteCommand = new SaveNoteCommand(_navigationService);
-		}
-	}
+            SaveNoteCommand = new SaveNoteCommand(_navigationService);
+        }
+    }
 }

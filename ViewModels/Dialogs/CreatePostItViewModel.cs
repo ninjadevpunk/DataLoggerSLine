@@ -1,4 +1,6 @@
 ﻿using Data_Logger_1._3.Commands.PostItCommands;
+using Data_Logger_1._3.Models;
+using Data_Logger_1._3.Models.App_Models;
 using Data_Logger_1._3.Services;
 using MVVMEssentials.ViewModels;
 using System.Collections.ObjectModel;
@@ -11,15 +13,59 @@ namespace Data_Logger_1._3.ViewModels.Dialogs
     {
 
         private readonly NavigationService _navigationService;
+        private readonly DataService _dataService;
 		private readonly LoggerCreateViewModel _loggerCreateViewModel;
 
-        public CreatePostItViewModel(NavigationService navigationService, LoggerCreateViewModel loggerCreateViewModel)
+        public CreatePostItViewModel(NavigationService navigationService, DataService dataService, LoggerCreateViewModel loggerCreateViewModel, LOG.CATEGORY category)
         {
             _navigationService = navigationService;
+			_dataService = dataService;
             _loggerCreateViewModel = loggerCreateViewModel;
 
             Subject = "";
             Error = "";
+
+			Subjects = new();
+
+			_dataService.InitialiseSubjectsLIST(category);
+
+			foreach(SubjectClass subject in _dataService.SQLITE_SUBJECTS)
+			{
+				Subjects.Add(subject.Subject);
+			}
+
+            ErrorVisible = Visibility.Collapsed;
+            SolutionVisible = Visibility.Collapsed;
+            SuggestionVisible = Visibility.Collapsed;
+            CommentVisible = Visibility.Collapsed;
+
+            Solution = "";
+            Suggestion = "";
+            Comment = "";
+
+            Option1Check = true;
+
+            PostCommand = new PostCommand(_navigationService, _loggerCreateViewModel, this);
+            DeletePostItCommand = new DeletePostItCommand(_loggerCreateViewModel);
+        }
+
+        public CreatePostItViewModel(NavigationService navigationService, DataService dataService, LoggerCreateViewModel loggerCreateViewModel, ProjectClass project)
+        {
+            _navigationService = navigationService;
+            _dataService = dataService;
+            _loggerCreateViewModel = loggerCreateViewModel;
+
+            Subject = "";
+            Error = "";
+
+            Subjects = new();
+
+            _dataService.InitialiseSubjectsLIST(project);
+
+            foreach (SubjectClass subject in _dataService.SQLITE_SUBJECTS)
+            {
+                Subjects.Add(subject.Subject);
+            }
 
             ErrorVisible = Visibility.Collapsed;
             SolutionVisible = Visibility.Collapsed;
@@ -64,11 +110,9 @@ namespace Data_Logger_1._3.ViewModels.Dialogs
         }
 
 
-        private readonly ObservableCollection<string> _subjects;
         public bool FoundDateCaptured { get; set; } = false;
         public bool SolvedDateCaptured { get; set; } = false;
 
-        public IEnumerable<string> Subjects => _subjects;
 
 		public int Error_RTFLength { get; set; } = 0;
 		public int Solution_RTFLength { get; set; } = 0;
@@ -82,7 +126,6 @@ namespace Data_Logger_1._3.ViewModels.Dialogs
 		public bool Comment_LengthIsSet { get; set; } = false;
 
 
-        public int PostItID { get; set; }
 
 		private string subject;
 		public string Subject
@@ -95,6 +138,21 @@ namespace Data_Logger_1._3.ViewModels.Dialogs
 			{
 				subject = value;
 				OnPropertyChanged(nameof(Subject));
+			}
+		}
+
+
+		private ObservableCollection<string> subjects;
+		public ObservableCollection<string> Subjects
+		{
+			get
+			{
+				return subjects;
+			}
+			set
+			{
+				subjects = value;
+				OnPropertyChanged(nameof(Subjects));
 			}
 		}
 

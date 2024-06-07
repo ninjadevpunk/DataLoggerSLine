@@ -1,12 +1,11 @@
 ﻿using Data_Logger_1._3.Commands.NotesCommands;
 using Data_Logger_1._3.Services;
-using Data_Logger_1._3.ViewModels.Dialogs;
 using MVVMEssentials.Services;
 using MVVMEssentials.ViewModels;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
 
-namespace Data_Logger_1._3.ViewModels.LogViewModels
+namespace Data_Logger_1._3.ViewModels.Dialogs
 {
     public class CreateCheckListViewModel : ViewModelBase
     {
