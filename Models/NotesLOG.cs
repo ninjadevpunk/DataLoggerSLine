@@ -1,6 +1,11 @@
 ﻿
+using Data_Logger_1._3.Models.App_Models;
+using System.Runtime.Serialization;
+
 namespace Data_Logger_1._3.Models
 {
+
+    [DataContract]
     public abstract class NotesLOG : LOG
     {
         /* DOCUMENTATION
@@ -15,14 +20,15 @@ namespace Data_Logger_1._3.Models
         public override CATEGORY Category => CATEGORY.NOTES;
 
         // Generic Note or Flexi Note
-        protected enum NOTELOGType { GENERIC, FLEXI }
+        public enum NOTELOGType { GENERIC, FLEXI }
 
 
         /* PROPERTIES */
 
 
 
-        protected abstract NOTELOGType notelogtype { get; }
+        [DataMember]
+        public abstract NOTELOGType notelogtype { get; }
 
 
 
@@ -36,8 +42,8 @@ namespace Data_Logger_1._3.Models
         }
         
 
-        public NotesLOG(ACCOUNT author, string projectName, string applicationName, DateTime startTime, DateTime endTime, 
-            string output, string type, List<PostIt> postItList) : base(author, projectName, applicationName, startTime, endTime, output, type, postItList)
+        public NotesLOG(int id, ACCOUNT author, ProjectClass projectName, ApplicationClass applicationName, DateTime startTime, DateTime endTime, 
+            OutputClass output, TypeClass type, List<PostIt> postItList) : base(id, author, projectName, applicationName, startTime, endTime, output, type, postItList)
         {
         }
 
@@ -45,9 +51,10 @@ namespace Data_Logger_1._3.Models
         {
             return obj is NotesLOG lOG &&
                    Category == lOG.Category &&
+                   ID == lOG.ID &&
                    Author == lOG.Author &&
-                   ProjectName == lOG.ProjectName &&
-                   ApplicationName == lOG.ApplicationName &&
+                   Project == lOG.Project &&
+                   Application == lOG.Application &&
                    StartTime == lOG.StartTime &&
                    EndTime == lOG.EndTime &&
                    Output == lOG.Output &&
@@ -59,9 +66,10 @@ namespace Data_Logger_1._3.Models
         {
             HashCode hash = new HashCode();
             hash.Add(Category);
+            hash.Add(ID);
             hash.Add(Author);
-            hash.Add(ProjectName);
-            hash.Add(ApplicationName);
+            hash.Add(Project);
+            hash.Add(Application);
             hash.Add(StartTime);
             hash.Add(EndTime);
             hash.Add(Output);

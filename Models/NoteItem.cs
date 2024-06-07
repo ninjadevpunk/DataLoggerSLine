@@ -1,4 +1,6 @@
 ﻿
+using Data_Logger_1._3.Models.App_Models;
+
 namespace Data_Logger_1._3.Models
 {
     public class NoteItem : NotesLOG
@@ -12,21 +14,28 @@ namespace Data_Logger_1._3.Models
         
 
         /* MEMBER VARIABLES */
-        /** This is a generic note.
-         */
-        protected override NOTELOGType notelogtype => NOTELOGType.GENERIC;
+
+
+
+        /// <summary>
+        /// This log is strictly a generic notes log.
+        /// </summary>
+        public override NOTELOGType notelogtype => NOTELOGType.GENERIC;
 
         public string Subject { get; set; } = "No Subject";
 
-        /** The note should be stored here.
-         *  The checklist items must be stored in this variable and the items variable!
-         *  */
+        /// <summary>
+        /// The note's content.
+        /// </summary>
         public string Content { get; set; } = "";
 
-        /** Check list items must be stored here!
-         *  Use the bool key to store whether an item has been checked or not.
-         *  */
-        public CheckList Items { get; set; } = new CheckList();
+
+        /// <summary>
+        /// If the note is meant as a checklist note, this property 
+        /// will be used to store CheckListItems. In the event that a 
+        /// checklist is not created it will remain null.
+        /// </summary>
+        public CheckList? Items { get; set; } = null;
 
 
 
@@ -53,17 +62,17 @@ namespace Data_Logger_1._3.Models
             Items = items;
         }
 
-        public NoteItem(ACCOUNT author, string projectName, string applicationName, DateTime startTime, DateTime endTime, 
-            string output, string type, List<PostIt> postItList,
-            string subject, string genericNote) : base(author, projectName, applicationName, startTime, endTime, output, type, postItList)
+        public NoteItem(int id, ACCOUNT author, ProjectClass projectName, ApplicationClass applicationName, DateTime startTime, DateTime endTime, 
+            OutputClass output, TypeClass type, List<PostIt> postItList,
+            string subject, string genericNote) : base(id, author, projectName, applicationName, startTime, endTime, output, type, postItList)
         {
             Subject = subject;
             Content = genericNote;
         }
         
-        public NoteItem(ACCOUNT author, string projectName, string applicationName, DateTime startTime, DateTime endTime, 
-            string output, string type, List<PostIt> postItList,
-            string subject, string genericNote, CheckList items) : base(author, projectName, applicationName, startTime, endTime, output, type, postItList)
+        public NoteItem(int id, ACCOUNT author, ProjectClass projectName, ApplicationClass applicationName, DateTime startTime, DateTime endTime, 
+            OutputClass output, TypeClass type, List<PostIt> postItList,
+            string subject, string genericNote, CheckList items) : base(id, author, projectName, applicationName, startTime, endTime, output, type, postItList)
         {
             Subject = subject;
             Content = genericNote;
@@ -81,8 +90,8 @@ namespace Data_Logger_1._3.Models
                    base.Equals(obj) &&
                    Category == item.Category &&
                    Author == item.Author &&
-                   ProjectName == item.ProjectName &&
-                   ApplicationName == item.ApplicationName &&
+                   Project == item.Project &&
+                   Application == item.Application &&
                    StartTime == item.StartTime &&
                    EndTime == item.EndTime &&
                    Output == item.Output &&
@@ -100,8 +109,8 @@ namespace Data_Logger_1._3.Models
             hash.Add(base.GetHashCode());
             hash.Add(Category);
             hash.Add(Author);
-            hash.Add(ProjectName);
-            hash.Add(ApplicationName);
+            hash.Add(Project);
+            hash.Add(Application);
             hash.Add(StartTime);
             hash.Add(EndTime);
             hash.Add(Output);

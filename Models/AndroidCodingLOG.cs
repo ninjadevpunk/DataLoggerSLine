@@ -1,6 +1,11 @@
 ﻿
+using Data_Logger_1._3.Models.App_Models;
+using System.Runtime.Serialization;
+
 namespace Data_Logger_1._3.Models
 {
+
+    [DataContract]
     public class AndroidCodingLOG : CodingLOG
     {
         /* DOCUMENTATION 
@@ -10,6 +15,12 @@ namespace Data_Logger_1._3.Models
          */
 
         /* ENUMS */
+
+
+
+        /// <summary>
+        /// Scope of the Android Studio logging. Full for all details, and simple for quick jotting.
+        /// </summary>
         public enum SCOPE { FULL, SIMPLE }
 
 
@@ -17,30 +28,47 @@ namespace Data_Logger_1._3.Models
 
 
 
-        /** Store the selection between a simple Android LOG and full Android LOG **/
+        /// <summary>
+        /// Store the selection between a simple Android LOG and full Android LOG
+        /// </summary>
+        [DataMember]
         public SCOPE Scope { get; set; } = SCOPE.FULL;
 
-        /** Store the sync times as well as times for the build 
-         * 
-         * Sync/Build
-         * Starting Gradle Daemon
-         * Run Build
-         * Load Build 
-         * Configure Build 
-         * allProjects 
-         * 
-         * */
-
+        
+        /// <summary>
+        /// Sync time.
+        /// </summary>
+        [DataMember]
         public DateTime Sync { get; set; } = new DateTime();
 
+        /// <summary>
+        /// The duration of the Gradle Daemon's ignition.
+        /// </summary>
+        [DataMember]
         public DateTime StartingGradleDaemon { get; set; }
 
+        /// <summary>
+        /// How long it takes for Android Studio to run build.
+        /// </summary>
+        [DataMember]
         public DateTime RunBuild { get; set; }
 
+        /// <summary>
+        /// How long it takes for Android Studio to load build.
+        /// </summary>
+        [DataMember]
         public DateTime LoadBuild { get; set; }
 
+        /// <summary>
+        /// How long it takes for Android Studio to configure build.
+        /// </summary>
+        [DataMember]
         public DateTime ConfigureBuild { get; set; }
 
+        /// <summary>
+        /// How long it takes for Android Studio to finish the last sync step.
+        /// </summary>
+        [DataMember]
         public DateTime AllProjects { get; set; }
 
 
@@ -78,10 +106,10 @@ namespace Data_Logger_1._3.Models
             AllProjects = allProjects;
         }
 
-        public AndroidCodingLOG(ACCOUNT author, string projectName, string applicationName, DateTime startTime, DateTime endTime, 
-            string output, string type, List<PostIt> postItList, int bugs, bool success,
+        public AndroidCodingLOG(int id, ACCOUNT author, ProjectClass projectName, ApplicationClass applicationName, DateTime startTime, DateTime endTime, 
+            OutputClass output, TypeClass type, List<PostIt> postItList, int bugs, bool success,
             SCOPE scope, DateTime sync, DateTime startingGradleDaemon,
-            DateTime runBuild, DateTime loadBuild, DateTime configureBuild, DateTime allProjects) : base(author, projectName, applicationName, startTime, endTime, output, type, postItList, bugs, success)
+            DateTime runBuild, DateTime loadBuild, DateTime configureBuild, DateTime allProjects) : base(id, author, projectName, applicationName, startTime, endTime, output, type, postItList, bugs, success)
         {
             Scope = scope;
             Sync = sync;
@@ -103,9 +131,10 @@ namespace Data_Logger_1._3.Models
             return obj is AndroidCodingLOG lOG &&
                    base.Equals(obj) &&
                    Category == lOG.Category &&
+                   ID == lOG.ID &&
                    Author == lOG.Author &&
-                   ProjectName == lOG.ProjectName &&
-                   ApplicationName == lOG.ApplicationName &&
+                   Project == lOG.Project &&
+                   Application == lOG.Application &&
                    StartTime == lOG.StartTime &&
                    EndTime == lOG.EndTime &&
                    Output == lOG.Output &&
@@ -125,11 +154,11 @@ namespace Data_Logger_1._3.Models
         public override int GetHashCode()
         {
             HashCode hash = new HashCode();
-            hash.Add(base.GetHashCode());
             hash.Add(Category);
+            hash.Add(ID);
             hash.Add(Author);
-            hash.Add(ProjectName);
-            hash.Add(ApplicationName);
+            hash.Add(Project);
+            hash.Add(Application);
             hash.Add(StartTime);
             hash.Add(EndTime);
             hash.Add(Output);

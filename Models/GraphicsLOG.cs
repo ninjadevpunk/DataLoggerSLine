@@ -1,32 +1,50 @@
 ﻿
+using Data_Logger_1._3.Models.App_Models;
+using System.Runtime.Serialization;
+
 namespace Data_Logger_1._3.Models
 {
+    /// <summary>
+    /// This class is reserved for graphics such as drawing, painting and logging for those kinds of projects.
+    /// </summary>
+    [DataContract]
     public class GraphicsLOG : LOG
     {
         /* ENUMS */
         public override CATEGORY Category => CATEGORY.GRAPHICS;
 
         /* MEMBER VARIABLES */
+        [DataMember]
         public string Medium { get; set; } = "Pencil";
 
+        [DataMember]
         public string Format { get; set; } = "Digital Canvas";
 
+        [DataMember]
         public string Brush { get; set; } = "";
 
+        [DataMember]
         public double Height { get; set; } = 0.0;
 
+        [DataMember]
         public double Width { get; set; } = 0.0;
 
+        [DataMember]
         public string Unit { get; set; } = "cm";
 
+        [DataMember]
         public string Size { get; set; } = "A4";
 
+        [DataMember]
         public double DPI { get; set; } = 0.0;
 
+        [DataMember]
         public string Depth { get; set; } = "8-bit";
 
+        [DataMember]
         public bool IsCompleted { get; set; } = false;
 
+        [DataMember]
         public string Source { get; set; } = @"C:\";
 
 
@@ -53,10 +71,10 @@ namespace Data_Logger_1._3.Models
             Source = source;
         }
 
-        public GraphicsLOG(ACCOUNT author, string projectName, string applicationName, DateTime startTime, DateTime endTime, 
-            string output, string type, List<PostIt> postItList,
+        public GraphicsLOG(int id, ACCOUNT author, ProjectClass projectName, ApplicationClass applicationName, DateTime startTime, DateTime endTime, 
+            OutputClass output, TypeClass type, List<PostIt> postItList,
             string medium, string format, string brush, double height, double width, 
-            string unit, string size, double dPI, string depth, bool isCompleted, string source) : base(author, projectName, applicationName, 
+            string unit, string size, double dPI, string depth, bool isCompleted, string source) : base(id, author, projectName, applicationName, 
                                                                                                             startTime, endTime, output, type, postItList)
         {
             Medium = medium;
@@ -82,9 +100,10 @@ namespace Data_Logger_1._3.Models
         {
             return obj is GraphicsLOG lOG &&
                    Category == lOG.Category &&
+                   ID == lOG.ID &&
                    Author == lOG.Author &&
-                   ProjectName == lOG.ProjectName &&
-                   ApplicationName == lOG.ApplicationName &&
+                   Project == lOG.Project &&
+                   Application == lOG.Application &&
                    StartTime == lOG.StartTime &&
                    EndTime == lOG.EndTime &&
                    Output == lOG.Output &&
@@ -107,9 +126,10 @@ namespace Data_Logger_1._3.Models
         {
             HashCode hash = new HashCode();
             hash.Add(Category);
+            hash.Add(ID);
             hash.Add(Author);
-            hash.Add(ProjectName);
-            hash.Add(ApplicationName);
+            hash.Add(Project);
+            hash.Add(Application);
             hash.Add(StartTime);
             hash.Add(EndTime);
             hash.Add(Output);

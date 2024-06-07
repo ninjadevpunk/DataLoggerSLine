@@ -1,6 +1,16 @@
 ﻿
+using Data_Logger_1._3.Models.App_Models;
+using System.Runtime.Serialization;
+
 namespace Data_Logger_1._3.Models
 {
+
+    /// <summary>
+    /// The primary LOG sub class. The Coding class has the most Data Logger support 
+    /// and is used for coding projects in any coding app - 
+    /// especially Qt Creator and Android Studio.
+    /// </summary>
+    [DataContract]
     public class CodingLOG : LOG
     {
         /* ENUMS */
@@ -9,23 +19,17 @@ namespace Data_Logger_1._3.Models
         /* MEMBER VARIABLES */
 
 
-        /** Store the number of bugs **/
-        private int bugs = 0;
-		public int Bugs
-		{
-			get { return bugs; }
-			set { bugs = value; }
-		}
+        /// <summary>
+        /// Store the number of bugs found.
+        /// </summary>
+        [DataMember]
+        public int Bugs { get; set; } = 0;
 
-        /** Store the application launch details here
-         *  Did it execute?
-         *  False by default. **/
-        private bool success = false;
-        public bool Success
-        {
-            get { return success; }
-            set { success = value; }
-        }
+        /// <summary>
+        /// Store the application launch details here like whether the app opened or not.
+        /// </summary>
+        [DataMember]
+        public bool Success { get; set; } = false;
 
 
         /* CONSTRUCTORS */
@@ -37,15 +41,15 @@ namespace Data_Logger_1._3.Models
 
         public CodingLOG(int bugs, bool success)
         {
-            this.bugs = bugs;
-            this.success = success;
+            Bugs = bugs;
+            Success = success;
         }
 
-        public CodingLOG(ACCOUNT author, string projectName, string applicationName, DateTime startTime, DateTime endTime, 
-            string output, string type, List<PostIt> postItList, int bugs, bool success) : base(author, projectName, applicationName, startTime, endTime, output, type, postItList)
+        public CodingLOG(int id, ACCOUNT author, ProjectClass projectName, ApplicationClass applicationName, DateTime startTime, DateTime endTime, 
+            OutputClass output, TypeClass type, List<PostIt> postItList, int bugs, bool success) : base(id, author, projectName, applicationName, startTime, endTime, output, type, postItList)
         {
-            this.bugs = bugs;
-            this.success = success;
+            Bugs = bugs;
+            Success = success;
         }
 
         public override bool Equals(object? obj)
@@ -55,26 +59,25 @@ namespace Data_Logger_1._3.Models
 
             return obj is CodingLOG lOG &&
                    Category == lOG.Category &&
+                   ID == lOG.ID &&
                    Author == lOG.Author &&
-                   ProjectName == lOG.ProjectName &&
-                   ApplicationName == lOG.ApplicationName &&
+                   Project == lOG.Project &&
+                   Application == lOG.Application &&
                    StartTime == lOG.StartTime &&
                    EndTime == lOG.EndTime &&
                    Output == lOG.Output &&
                    Type == lOG.Type &&
                    PostItList.Equals(lOG.PostItList) &&
                    Category == lOG.Category &&
-                   bugs == lOG.bugs &&
                    Bugs == lOG.Bugs &&
-                   success == lOG.success &&
                    Success == lOG.Success;
         }
 
         public override int GetHashCode()
         {
             HashCode hash = new HashCode();
-            hash.Add(bugs);
-            hash.Add(success);
+            hash.Add(Bugs);
+            hash.Add(Success);
             return hash.ToHashCode();
         }
 

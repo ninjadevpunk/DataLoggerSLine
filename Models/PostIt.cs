@@ -1,67 +1,77 @@
 ﻿
+using Data_Logger_1._3.Models.App_Models;
+using System.Runtime.Serialization;
+
 namespace Data_Logger_1._3.Models
 {
+
+    [DataContract]
     public class PostIt
     {
         /* MEMBER VARIABLES */
 
 
-        /** What is the subject? 
-         *  Usually to describe an error like unaligned widgets in a GUI **/
-
-        private string subject = "No Subject";
-        public string Subject
-        {
-            get { return subject; }
-            set { subject = value; }
-        }
 
 
-        private string error = "";
-        public string Error
-        {
-            get { return error; }
-            set { error = value; }
-        }
+        /// <summary>
+        /// The PostIt's identifier.
+        /// </summary>
+        [DataMember]
+        public int ID { get; set; } = -1;
 
-        private string solution = "";
-        public string Solution
-        {
-            get { return solution; }
-            set { solution = value; }
-        }
+        
+        /// <summary>
+        /// The PostIt's subject. Gives context to the PostIt's content.
+        /// </summary>
+        [DataMember]
+        public SubjectClass Subject { get; set; }
 
-        private string suggestion = "";
-        public string Suggestion
-        {
-            get { return suggestion; }
-            set { suggestion = value; }
-        }
+        /// <summary>
+        /// The error section. For explaining bug occurences or problems that 
+        /// need to be addressed in a project.
+        /// </summary>
+        [DataMember]
+        public string Error { get; set; } = string.Empty;
 
-        private string comment = "";
-        public string Comment
-        {
-            get { return comment; }
-            set { comment = value; }
-        }
+        /// <summary>
+        /// The solution section. Strictly in relationship with the Error 
+        /// property. Explains how to solve a previously mentioned error.
+        /// </summary>
+        [DataMember]
+        public string Solution { get; set; } = string.Empty;
+
+        /// <summary>
+        /// The suggestion section. For giving suggestions on errors or 
+        /// solutions or even general project advice or possible ideas.
+        /// </summary>
+        [DataMember]
+        public string Suggestion { get; set; } = string.Empty;
+
+        /// <summary>
+        /// The comment section, somewhat akin to suggestions, provides a 
+        /// user the option to write down thoughts on errors, solutions 
+        /// and suggestions. Comments can also be carefree and off-topic 
+        /// to allow more freedom for the user.
+        /// </summary>
+        [DataMember]
+        public string Comment { get; set; } = string.Empty;
 
 
-        /** When was the particular note category created.
-         *  Ensure the time of the particular category is 
-         *  captured and not the time for all the notes! **/
-        private DateTime ercapturetime = new DateTime();
-        public DateTime ERCaptureTime
-        {
-            get { return ercapturetime; }
-            set { ercapturetime = value; }
-        }
+        /// <summary>
+        /// When was the particular note category created. This only captures 
+        /// the error's "found" date and time. The other PostIt field edit times will 
+        /// not be recorded here.
+        /// </summary>
+        [DataMember]
+        public DateTime ERCaptureTime { get; set; }
 
-        private DateTime socapturetime = new DateTime();
-        public DateTime SOCaptureTime
-        {
-            get { return socapturetime; }
-            set { socapturetime = value; }
-        }
+
+        /// <summary>
+        /// When the solution was added. Like the error date time capture, 
+        /// this field only records when a solution was found.
+        /// </summary>
+        [DataMember]
+        public DateTime SOCaptureTime { get; set; }
 
 
 
@@ -71,24 +81,26 @@ namespace Data_Logger_1._3.Models
             // EMPTY
         }
 
-        public PostIt(string subject, string error, string solution, string suggestion, string comment)
+        public PostIt(int id, SubjectClass subject, string error, string solution, string suggestion, string comment)
         {
-            this.subject = subject;
-            this.error = error;
-            this.solution = solution;
-            this.suggestion = suggestion;
-            this.comment = comment;
+            ID = id;
+            Subject = subject;
+            Error = error;
+            Solution = solution;
+            Suggestion = suggestion;
+            Comment = comment;
         }
 
-        public PostIt(string subject, string error, string solution, string suggestion, string comment, DateTime ercapturetime, DateTime socapturetime)
+        public PostIt(int id, SubjectClass subject, string error, string solution, string suggestion, string comment, DateTime ercapturetime, DateTime socapturetime)
         {
-            this.subject = subject;
-            this.error = error;
-            this.solution = solution;
-            this.suggestion = suggestion;
-            this.comment = comment;
-            this.ercapturetime = ercapturetime;
-            this.socapturetime = socapturetime;
+            ID = id;
+            Subject = subject;
+            Error = error;
+            Solution = solution;
+            Suggestion = suggestion;
+            Comment = comment;
+            ERCaptureTime = ercapturetime;
+            SOCaptureTime = socapturetime;
         }
 
 
@@ -99,38 +111,26 @@ namespace Data_Logger_1._3.Models
         public override bool Equals(object? obj)
         {
             return obj is PostIt it &&
-                   subject == it.subject &&
+                   ID == it.ID &&
                    Subject == it.Subject &&
-                   error == it.error &&
                    Error == it.Error &&
-                   solution == it.solution &&
                    Solution == it.Solution &&
-                   suggestion == it.suggestion &&
                    Suggestion == it.Suggestion &&
-                   comment == it.comment &&
                    Comment == it.Comment &&
-                   ercapturetime == it.ercapturetime &&
                    ERCaptureTime == it.ERCaptureTime &&
-                   socapturetime == it.socapturetime &&
                    SOCaptureTime == it.SOCaptureTime;
         }
 
         public override int GetHashCode()
         {
             HashCode hash = new HashCode();
-            hash.Add(subject);
+            hash.Add(ID);
             hash.Add(Subject);
-            hash.Add(error);
             hash.Add(Error);
-            hash.Add(solution);
             hash.Add(Solution);
-            hash.Add(suggestion);
             hash.Add(Suggestion);
-            hash.Add(comment);
             hash.Add(Comment);
-            hash.Add(ercapturetime);
             hash.Add(ERCaptureTime);
-            hash.Add(socapturetime);
             hash.Add(SOCaptureTime);
             return hash.ToHashCode();
         }

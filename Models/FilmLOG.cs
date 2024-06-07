@@ -1,5 +1,13 @@
-﻿namespace Data_Logger_1._3.Models
+﻿using Data_Logger_1._3.Models.App_Models;
+using System.Runtime.Serialization;
+
+namespace Data_Logger_1._3.Models
 {
+
+    /// <summary>
+    /// The LOG class for video projects.
+    /// </summary>
+    [DataContract]
     public class FilmLOG : LOG
     {
 
@@ -11,15 +19,34 @@
         /* MEMBER VARIABLES */
 
 
-
+        /// <summary>
+        /// The height of the footage.
+        /// </summary>
+        [DataMember]
         public double Height { get; set; } = 0.0;
 
+        /// <summary>
+        /// The width of the footage.
+        /// </summary>
+        [DataMember]
         public double Width { get; set; } = 0.0;
 
+        /// <summary>
+        /// The length of the footage. Please use video time format. e.g. 00:00
+        /// </summary>
+        [DataMember]
         public string Length { get; set; } = "0:00";
 
+        /// <summary>
+        /// Whether the video has been completed or filmed.
+        /// </summary>
+        [DataMember]
         public bool IsCompleted { get; set; } = false;
 
+        /// <summary>
+        /// The location of the video regardless of it being online or not.
+        /// </summary>
+        [DataMember]
         public string Source { get; set; } = @"C:\";
 
 
@@ -41,9 +68,9 @@
             Source = source;
         }
 
-        public FilmLOG(ACCOUNT author, string projectName, string applicationName, DateTime startTime, DateTime endTime,
-            string output, string type, List<PostIt> postItList,
-            double height, double width, string length, bool isCompleted, string source) : base(author, projectName, applicationName,
+        public FilmLOG(int id, ACCOUNT author, ProjectClass projectName, ApplicationClass applicationName, DateTime startTime, DateTime endTime,
+            OutputClass output, TypeClass type, List<PostIt> postItList,
+            double height, double width, string length, bool isCompleted, string source) : base(id, author, projectName, applicationName,
                                                                                                             startTime, endTime, output, type, postItList)
         {
             Height = height;
@@ -64,9 +91,10 @@
         {
             return obj is FilmLOG lOG &&
                    Category == lOG.Category &&
+                   ID == lOG.ID &&
                    Author == lOG.Author &&
-                   ProjectName == lOG.ProjectName &&
-                   ApplicationName == lOG.ApplicationName &&
+                   Project == lOG.Project &&
+                   Application == lOG.Application &&
                    StartTime == lOG.StartTime &&
                    EndTime == lOG.EndTime &&
                    Output == lOG.Output &&
@@ -83,9 +111,10 @@
         {
             HashCode hash = new HashCode();
             hash.Add(Category);
+            hash.Add(ID);
             hash.Add(Author);
-            hash.Add(ProjectName);
-            hash.Add(ApplicationName);
+            hash.Add(Project);
+            hash.Add(Application);
             hash.Add(StartTime);
             hash.Add(EndTime);
             hash.Add(Output);

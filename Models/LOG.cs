@@ -1,13 +1,25 @@
-﻿using System.Text.RegularExpressions;
+﻿using Data_Logger_1._3.Models.App_Models;
+using System.Runtime.Serialization;
+using System.Text.RegularExpressions;
 
 namespace Data_Logger_1._3.Models
 {
+
+    /// <summary>
+    /// The parent class. Defines all common log properties.
+    /// </summary>
+    [DataContract]
     public abstract class LOG
     {
         /* ENUMS */
 
 
+        /// <summary>
+        /// Log categories. All LOGs can only be Coding, Graphics, 
+        /// Film or Notes types.
+        /// </summary>
         public enum CATEGORY {CODING, GRAPHICS, FILM, NOTES}
+
 
 
 
@@ -15,69 +27,68 @@ namespace Data_Logger_1._3.Models
         /* PROPERTIES */
 
 
+
+
+
+        [DataMember]
         public abstract CATEGORY Category { get; }
 
-        private ACCOUNT author = new ACCOUNT();
-        public ACCOUNT Author
-        {
-            get { return author; }
-            set { author = value; }
-        }
+        /// <summary>
+        /// The log's identifier. Important for database and caching operations.
+        /// </summary>
+        [DataMember]
+        public int ID { get; set; }
 
+        /// <summary>
+        /// The creator of a log.
+        /// </summary>
+        [DataMember]
+        public ACCOUNT Author { get; set; }
 
-        private string projectName = "Unknown";
-        public string ProjectName
-        {
-            get { return projectName; }
-            set { projectName = value; }
-        }
+        /// <summary>
+        /// The project that is associated with the log.
+        /// </summary>
+        [DataMember]
+        public ProjectClass Project { get; set; }
 
-        private string applicationName = "Unknown";
-        public string ApplicationName
-        {
-            get { return applicationName; }
-            set { applicationName = value; }
-        }
+        /// <summary>
+        /// The application in which the project was created in.
+        /// </summary>
+        [DataMember]
+        public ApplicationClass Application { get; set; }
 
+        /// <summary>
+        /// The start date and time of the project.
+        /// </summary>
+        [DataMember]
+        public DateTime StartTime { get; set; } = DateTime.Now;
 
-        private DateTime startTime = DateTime.Now;
-        public DateTime StartTime
-        {
-            get { return startTime; }
-            set { startTime = value; }
-        }
+        /// <summary>
+        /// The end date and time of the project.
+        /// </summary>
+        [DataMember]
+        public DateTime EndTime { get; set; } = DateTime.Now;
 
+        /// <summary>
+        /// The deliverable for the project.
+        /// </summary>
+        [DataMember]
+        public OutputClass Output { get; set; }
 
-        private DateTime endTime = DateTime.Now;
-        public DateTime EndTime
-        {
-            get { return endTime; }
-            set { endTime = value; }
-        }
+        /// <summary>
+        /// What type of build is created in this project.
+        /// </summary>
+        [DataMember]
+        public TypeClass Type { get; set; }
 
-        private string output = "C# Application (*.exe)";
-        public string Output
-        {
-            get { return output; }
-            set { output = value; }
-        }
+        /// <summary>
+        /// The most important property of the log. All the thoughts, 
+        /// suggestions and details of the project are described on PostIts.
+        /// </summary>
+        [DataMember]
+        public List<PostIt> PostItList { get; set; } = new();
 
-
-        private string type = "NONE";
-        public string Type
-        {
-            get { return type; }
-            set { type = value; }
-        }
-
-
-        private List<PostIt> postItList;
-        public List<PostIt> PostItList
-        {
-            get { return postItList; }
-            set { postItList = value; }
-        }
-
+        [DataMember]
         public string Content { get; set; } = "";
 
 
@@ -87,29 +98,30 @@ namespace Data_Logger_1._3.Models
             // Blank
         }
 
-        protected LOG(ACCOUNT author, string projectName, string applicationName, DateTime startTime, DateTime endTime, string output, string type, List<PostIt> postItList)
+        protected LOG(int id, ACCOUNT author, ProjectClass projectName, ApplicationClass applicationName, DateTime startTime, DateTime endTime, OutputClass output, TypeClass type, List<PostIt> postItList)
         {
-            this.author = author;
-            this.projectName = projectName;
-            this.applicationName = applicationName;
-            this.startTime = startTime;
-            this.endTime = endTime;
-            this.output = output;
-            this.type = type;
-            this.postItList = postItList;
+            ID = id;
+            Author = author;
+            Project = projectName;
+            Application = applicationName;
+            StartTime = startTime;
+            EndTime = endTime;
+            Output = output;
+            Type = type;
+            PostItList = postItList;
         }
 
-        protected LOG(ACCOUNT author, string projectName, string applicationName, DateTime startTime, DateTime endTime, string output, string type, List<PostIt> postItList, string content)
+        protected LOG(int id, ACCOUNT author, ProjectClass projectName, ApplicationClass applicationName, DateTime startTime, DateTime endTime, OutputClass output, TypeClass type, List<PostIt> postItList, string content)
         {
-            this.author = author;
-            this.projectName = projectName;
-            this.applicationName = applicationName;
-            this.startTime = startTime;
-            this.endTime = endTime;
-            this.output = output;
-            this.type = type;
-            this.postItList = postItList;
-            this.Content = content;
+            ID = id;
+            Author = author;
+            Project = projectName;
+            Application = applicationName;
+            StartTime = startTime;
+            EndTime = endTime;
+            Output = output;
+            Type = type;
+            PostItList = postItList;
         }
 
 
@@ -123,7 +135,7 @@ namespace Data_Logger_1._3.Models
             string pattern = "[A-Za-z]{5}[0-9]{0}";
             Regex xp = new Regex(pattern);
 
-            foreach (PostIt n in postItList)
+            foreach (PostIt n in PostItList)
             {
                 switch (type)
                 {
@@ -190,21 +202,14 @@ namespace Data_Logger_1._3.Models
         {
             return obj is LOG lOG &&
                    Category == lOG.Category &&
+                   ID == lOG.ID &&
                    Author.Equals(lOG.Author) &&
-                   author.Equals(lOG.author) &&
-                   projectName == lOG.projectName &&
-                   ProjectName == lOG.ProjectName &&
-                   applicationName == lOG.applicationName &&
-                   ApplicationName == lOG.ApplicationName &&
-                   startTime == lOG.startTime &&
+                   Project == lOG.Project &&
+                   Application == lOG.Application &&
                    StartTime == lOG.StartTime &&
-                   endTime == lOG.endTime &&
                    EndTime == lOG.EndTime &&
-                   output == lOG.output &&
                    Output == lOG.Output &&
-                   type == lOG.type &&
                    Type == lOG.Type &&
-                   EqualityComparer<List<PostIt>>.Default.Equals(postItList, lOG.postItList) &&
                    EqualityComparer<List<PostIt>>.Default.Equals(PostItList, lOG.PostItList) &&
                    Content == lOG.Content;
         }
@@ -213,21 +218,14 @@ namespace Data_Logger_1._3.Models
         {
             HashCode hash = new HashCode();
             hash.Add(Category);
-            hash.Add(author);
+            hash.Add(ID);
             hash.Add(Author);
-            hash.Add(projectName);
-            hash.Add(ProjectName);
-            hash.Add(applicationName);
-            hash.Add(ApplicationName);
-            hash.Add(startTime);
+            hash.Add(Project);
+            hash.Add(Application);
             hash.Add(StartTime);
-            hash.Add(endTime);
             hash.Add(EndTime);
-            hash.Add(output);
             hash.Add(Output);
-            hash.Add(type);
             hash.Add(Type);
-            hash.Add(postItList);
             hash.Add(PostItList);
             hash.Add(Content);
             return hash.ToHashCode();
