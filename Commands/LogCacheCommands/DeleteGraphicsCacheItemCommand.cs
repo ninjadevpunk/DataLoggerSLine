@@ -25,37 +25,37 @@ namespace Data_Logger_1._3.Commands.LogCacheCommands
             }
         }
 
-        public override async void Execute(object parameter)
+        public override void Execute(object parameter)
         {
             try
             {
-                GraphicsViewModel list = (GraphicsViewModel)_viewModel;
+                GraphicsViewModel GraphicsDashboard = (GraphicsViewModel)_viewModel;
                 var item = parameter as GraphicsLOGViewModel;
                 var isLogged = false;
 
                 
 
 
-                if (list is not null && item is not null)
+                if (GraphicsDashboard is not null && item is not null)
                 {
-                    var temp = list.CacheItems;
+                    var tempGraphicsDashboard = GraphicsDashboard.CacheItems;
 
                     // Remove item
                     if (_timeUp)
                     {
                         // Send data to Firebase first
-                        isLogged = await _dataService.StoreGraphicsLog(item._GraphicsLOG);
+                        isLogged = _dataService.StoreLog(item._GraphicsLOG);
 
                         if (isLogged)
                         {
-                            temp.Remove(item);
-                            list.CacheItems = temp;
+                            tempGraphicsDashboard.Remove(item);
+                            GraphicsDashboard.CacheItems = tempGraphicsDashboard;
                         }
                     }
                     else
                     {
-                        temp.Remove(item);
-                        list.CacheItems = temp;
+                        tempGraphicsDashboard.Remove(item);
+                        GraphicsDashboard.CacheItems = tempGraphicsDashboard;
                     }
 
                 }

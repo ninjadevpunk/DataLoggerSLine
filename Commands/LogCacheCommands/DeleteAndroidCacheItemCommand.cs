@@ -39,34 +39,34 @@ namespace Data_Logger_1._3.Commands.LogCacheCommands
             }
         }
 
-        public override async void Execute(object parameter)
+        public override void Execute(object parameter)
         {
             try
             {
-                CodingAndroidViewModel list = (CodingAndroidViewModel)_viewModel;
+                CodingAndroidViewModel ASDashboard = (CodingAndroidViewModel)_viewModel;
                 var item = parameter as AndroidLOGViewModel;
                 bool isLogged = false;
 
-                if (list is not null && item is not null)
+                if (ASDashboard is not null && item is not null)
                 {
-                    var temp = list.CacheItems;
+                    var tempASDashboardItems = ASDashboard.CacheItems;
 
                     // Remove item
                     if (_timeUp)
                     {
                         // Send data to Firebase first
-                        isLogged = await _dataService.StoreASCodingLog(item._AndroidCodingLOG);
+                        isLogged = _dataService.StoreLog(item._AndroidCodingLOG);
 
                         if (isLogged)
                         {
-                            temp.Remove(item);
-                            list.CacheItems = temp;
+                            tempASDashboardItems.Remove(item);
+                            ASDashboard.CacheItems = tempASDashboardItems;
                         }
                     }
                     else
                     {
-                        temp.Remove(item);
-                        list.CacheItems = temp;
+                        tempASDashboardItems.Remove(item);
+                        ASDashboard.CacheItems = tempASDashboardItems;
                     }
 
                 }

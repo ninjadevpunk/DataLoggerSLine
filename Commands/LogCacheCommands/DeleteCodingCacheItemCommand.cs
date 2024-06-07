@@ -40,34 +40,34 @@ namespace Data_Logger_1._3.Commands.LogCacheCommands
             }
         }
 
-        public override async void Execute(object parameter)
+        public override void Execute(object parameter)
         {
             try
             {
+                CodingGenericViewModel CodingDashboard = (CodingGenericViewModel)_viewModel;
                 var item = parameter as CodeLOGViewModel;
-                CodingGenericViewModel list = (CodingGenericViewModel)_viewModel;
                 bool isLogged = false;
 
-                if (list is not null && item is not null)
+                if (CodingDashboard is not null && item is not null)
                 {
-                    var temp = list.CacheItems;
+                    var tempCodingDashboardItems = CodingDashboard.CacheItems;
 
                     // Remove item
                     if (_timeUp)
                     {
                         // Send data to Firebase first
-                        isLogged = await _dataService.StoreCodingLog(item._CodeLOG);
+                        isLogged = _dataService.StoreLog(item._CodeLOG);
 
                         if (isLogged)
                         {
-                            temp.Remove(item);
-                            list.CacheItems = temp;
+                            tempCodingDashboardItems.Remove(item);
+                            CodingDashboard.CacheItems = tempCodingDashboardItems;
                         }
                     }
                     else
                     {
-                        temp.Remove(item);
-                        list.CacheItems = temp;
+                        tempCodingDashboardItems.Remove(item);
+                        CodingDashboard.CacheItems = tempCodingDashboardItems;
                     }
 
                 }

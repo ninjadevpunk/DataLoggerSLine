@@ -25,34 +25,34 @@ namespace Data_Logger_1._3.Commands.LogCacheCommands
             }
         }
 
-        public override async void Execute(object parameter)
+        public override void Execute(object parameter)
         {
             try
             {
-                FilmViewModel list = (FilmViewModel)_viewModel;
+                FilmViewModel FilmDashboard = (FilmViewModel)_viewModel;
                 var item = parameter as FilmLOGViewModel;
                 bool isLogged = false;
 
-                if (list is not null && item is not null)
+                if (FilmDashboard is not null && item is not null)
                 {
-                    var temp = list.CacheItems;
+                    var tempFilmDashboardItems = FilmDashboard.CacheItems;
 
                     // Remove item
                     if (_timeUp)
                     {
                         // Send data to Firebase first
-                        isLogged = await _dataService.StoreFilmLog(item._FilmLOG);
+                        isLogged = _dataService.StoreLog(item._FilmLOG);
 
                         if (isLogged)
                         {
-                            temp.Remove(item);
-                            list.CacheItems = temp;
+                            tempFilmDashboardItems.Remove(item);
+                            FilmDashboard.CacheItems = tempFilmDashboardItems;
                         }
                     }
                     else
                     {
-                        temp.Remove(item);
-                        list.CacheItems = temp;
+                        tempFilmDashboardItems.Remove(item);
+                        FilmDashboard.CacheItems = tempFilmDashboardItems;
                     }
 
                 }

@@ -26,34 +26,34 @@ namespace Data_Logger_1._3.Commands.LogCacheCommands
             }
         }
 
-        public override async void Execute(object parameter)
+        public override void Execute(object parameter)
         {
             try
             {
-                FlexiViewModel list = (FlexiViewModel)_viewModel;
+                FlexiViewModel FlexiDashboard = (FlexiViewModel)_viewModel;
                 var item = parameter as FlexiLOGViewModel;
                 bool isLogged = false;
 
-                if (list is not null && item is not null)
+                if (FlexiDashboard is not null && item is not null)
                 {
-                    var temp = list.CacheItems;
+                    var tempFlexiDashboardItems = FlexiDashboard.CacheItems;
 
                     // Remove item
                     if (_timeUp)
                     {
                         // Send data to Firebase first
-                        isLogged = await _dataService.StoreFlexibleLog(item._FlexiLOG);
+                        isLogged = _dataService.StoreLog(item._FlexiLOG);
 
                         if (isLogged)
                         {
-                            temp.Remove(item);
-                            list.CacheItems = temp;
+                            tempFlexiDashboardItems.Remove(item);
+                            FlexiDashboard.CacheItems = tempFlexiDashboardItems;
                         }
                     }
                     else
                     {
-                        temp.Remove(item);
-                        list.CacheItems = temp;
+                        tempFlexiDashboardItems.Remove(item);
+                        FlexiDashboard.CacheItems = tempFlexiDashboardItems;
                     }
 
                 }
