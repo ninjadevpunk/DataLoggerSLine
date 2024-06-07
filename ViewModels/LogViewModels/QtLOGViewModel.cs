@@ -17,6 +17,7 @@ namespace Data_Logger_1._3.ViewModels.LogViewModels
         public CodingLOG _QtcodingLOG;
         private readonly LogCacheViewModel _vm;
         private readonly ObservableCollection<CreatePostItViewModel> _createPostItViewModels;
+        private readonly Cachemaster _cacheMaster;
 
         public bool IsDisposed { get; set; } = false;
 
@@ -36,6 +37,11 @@ namespace Data_Logger_1._3.ViewModels.LogViewModels
 
 
 
+        public QtLOGViewModel()
+        {
+            // Blank
+        }
+
         public QtLOGViewModel(CodingLOG QtcodingLOG, LogCacheViewModel logCacheViewModel, ObservableCollection<CreatePostItViewModel> createPostItViewModels, DataService dataService)
         {
             _vm = logCacheViewModel;
@@ -54,6 +60,10 @@ namespace Data_Logger_1._3.ViewModels.LogViewModels
 
             DeleteCacheItemCommand = new DeleteQtCacheItemCommand(_vm, dataService, true);
             QuickDeleteCacheItemCommand = new DeleteQtCacheItemCommand(_vm, dataService, false);
+
+            _cacheMaster =  dataService.GetCachemaster();
+            _cacheMaster.IdentifiersChecked(_QtcodingLOG.ID);
+            _cacheMaster.SaveQtViewModel(this);
         }
 
         public QtLOGViewModel(CodingLOG QtcodingLOG, LogCacheViewModel logCacheViewModel, DataService dataService)
@@ -72,6 +82,8 @@ namespace Data_Logger_1._3.ViewModels.LogViewModels
 
             DeleteCacheItemCommand = new DeleteQtCacheItemCommand(_vm, dataService, true);
             QuickDeleteCacheItemCommand = new DeleteQtCacheItemCommand(_vm, dataService, false);
+
+            _cacheMaster = dataService.GetCachemaster();
         }
 
 
@@ -85,7 +97,7 @@ namespace Data_Logger_1._3.ViewModels.LogViewModels
 
 
 
-        public string ProjectName => $"{_QtcodingLOG.ProjectName} ({_QtcodingLOG.ApplicationName})";
+        public string ProjectName => $"{_QtcodingLOG.Project.Name} ({_QtcodingLOG.Application.Name})";
 
         public string ErrorCount => _QtcodingLOG.errorCount().ToString();
 
@@ -147,14 +159,15 @@ namespace Data_Logger_1._3.ViewModels.LogViewModels
                         {
                             if (TimeRemaining == 0)
                             {
-                                // Trigger removal logic
-                                // TODO
+                                DeleteQtCacheFile(_QtcodingLOG.ID);
                                 DeleteCacheItemCommand.Execute(this);
                                 _timer.Dispose();
                                 IsDisposed = true;
                             }
                             else
+                            {
                                 TimeRemaining--;
+                            }
                         }
                     });
                 }
@@ -165,7 +178,10 @@ namespace Data_Logger_1._3.ViewModels.LogViewModels
             }
         }
 
-
+        public void DeleteQtCacheFile(int id)
+        {
+            _cacheMaster.DeleteQtViewModel(id);
+        }
 
         public string content()
         {

@@ -75,7 +75,7 @@ namespace Data_Logger_1._3.ViewModels.LogViewModels
 
 
 
-        public string ProjectName => $"{_CodeLOG.ProjectName} ({_CodeLOG.ApplicationName})";
+        public string ProjectName => $"{_CodeLOG.Project.Name} ({_CodeLOG.Application.Name})";
 
         public string ErrorCount => _CodeLOG.errorCount().ToString();
 

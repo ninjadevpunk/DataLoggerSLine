@@ -76,7 +76,7 @@ namespace Data_Logger_1._3.ViewModels.LogViewModels
 
 
 
-        public string ProjectName => $"{_FilmLOG.ProjectName} ({_FilmLOG.ApplicationName})";
+        public string ProjectName => $"{_FilmLOG.Project.Name} ({_FilmLOG.Application.Name})";
 
         public string ErrorCount => _FilmLOG.errorCount().ToString();
 

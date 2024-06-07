@@ -59,8 +59,8 @@ namespace Data_Logger_1._3.ViewModels.LogViewModels
             _vm = logCacheViewModel;
 
             _AndroidCodingLOG = androidCodingLOG;
-            NotaryContent = _AndroidCodingLOG.Content;
             _AndroidCodingLOG.Content = content();
+            NotaryContent = _AndroidCodingLOG.Content;
             TimeRemaining = 1200;
             StartCountdown();
 
@@ -81,7 +81,7 @@ namespace Data_Logger_1._3.ViewModels.LogViewModels
 
 
 
-        public string ProjectName => $"{_AndroidCodingLOG.ProjectName} ({_AndroidCodingLOG.ApplicationName})";
+        public string ProjectName => $"{_AndroidCodingLOG.Project.Name} ({_AndroidCodingLOG.Application.Name})";
 
         public string ErrorCount => _AndroidCodingLOG.errorCount().ToString();
 

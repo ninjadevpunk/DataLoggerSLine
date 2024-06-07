@@ -69,7 +69,7 @@ namespace Data_Logger_1._3.ViewModels.LogViewModels
         #region Properties
 
 
-        public string ProjectName => $"{_GraphicsLOG.ProjectName} ({_GraphicsLOG.ApplicationName})";
+        public string ProjectName => $"{_GraphicsLOG.Project.Name} ({_GraphicsLOG.Application.Name})";
 
         public string ErrorCount => _GraphicsLOG.errorCount().ToString();
 

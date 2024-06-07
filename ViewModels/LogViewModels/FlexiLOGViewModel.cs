@@ -72,7 +72,7 @@ namespace Data_Logger_1._3.ViewModels.LogViewModels
 
 
 
-        public string ProjectName => $"{_FlexiLOG.ProjectName} ({_FlexiLOG.ApplicationName})";
+        public string ProjectName => $"{_FlexiLOG.Project.Name} ({_FlexiLOG.Application.Name})";
 
         public string ErrorCount => _FlexiLOG.errorCount().ToString();
 
