@@ -11,20 +11,6 @@ namespace Data_Logger_1._3.Commands.LogCacheCommands
         private readonly DataService _dataService;
         private readonly bool _timeUp;
 
-        public DeleteAndroidCacheItemCommand(LogCacheViewModel logCacheViewModel, DataService dataService)
-        {
-            try
-            {
-                _viewModel = logCacheViewModel ?? throw new ArgumentNullException(nameof(logCacheViewModel));
-                _dataService = dataService ?? throw new ArgumentNullException(nameof(dataService));
-                _timeUp = true;
-            }
-            catch (Exception)
-            {
-                // TODO
-            }
-        }
-
         public DeleteAndroidCacheItemCommand(LogCacheViewModel logCacheViewModel, DataService dataService, bool timeIsUp)
         {
             try
@@ -54,7 +40,7 @@ namespace Data_Logger_1._3.Commands.LogCacheCommands
                     // Remove item
                     if (_timeUp)
                     {
-                        // Send data to Firebase first
+                        // Send data to database first
                         isLogged = _dataService.StoreLog(item._AndroidCodingLOG);
 
                         if (isLogged)
@@ -65,6 +51,8 @@ namespace Data_Logger_1._3.Commands.LogCacheCommands
                     }
                     else
                     {
+                        _dataService.DeleteCacheFile(item._AndroidCodingLOG.ID, CacheContext.AndroidStudio);
+                        item._timer.Dispose();
                         tempASDashboardItems.Remove(item);
                         ASDashboard.CacheItems = tempASDashboardItems;
                     }

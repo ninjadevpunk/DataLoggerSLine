@@ -16,7 +16,7 @@ namespace Data_Logger_1._3.Commands.LogCacheCommands
             try
             {
                 _viewModel = logCacheViewModel ?? throw new ArgumentNullException(nameof(logCacheViewModel));
-                _dataService = dataService ?? throw new ArgumentNullException( nameof(dataService));
+                _dataService = dataService ?? throw new ArgumentNullException(nameof(dataService));
                 _timeUp = timeIsUp;
             }
             catch (Exception)
@@ -33,7 +33,7 @@ namespace Data_Logger_1._3.Commands.LogCacheCommands
                 var item = parameter as GraphicsLOGViewModel;
                 var isLogged = false;
 
-                
+
 
 
                 if (GraphicsDashboard is not null && item is not null)

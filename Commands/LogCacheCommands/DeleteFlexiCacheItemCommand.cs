@@ -1,5 +1,4 @@
-﻿using Data_Logger_1._3.Models;
-using Data_Logger_1._3.Services;
+﻿using Data_Logger_1._3.Services;
 using Data_Logger_1._3.ViewModels.Dashboard;
 using Data_Logger_1._3.ViewModels.LogViewModels;
 using MVVMEssentials.Commands;
@@ -17,7 +16,7 @@ namespace Data_Logger_1._3.Commands.LogCacheCommands
             try
             {
                 _viewModel = viewModel ?? throw new ArgumentNullException(nameof(viewModel));
-                _dataService = dataService ?? throw new ArgumentNullException( nameof(dataService));
+                _dataService = dataService ?? throw new ArgumentNullException(nameof(dataService));
                 _timeUp = timeIsUp;
             }
             catch (Exception)

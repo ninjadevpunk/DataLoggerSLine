@@ -16,14 +16,14 @@ namespace Data_Logger_1._3.Commands.LogCacheCommands
             try
             {
                 _viewModel = logCacheViewModel ?? throw new ArgumentNullException(nameof(logCacheViewModel));
-                _dataService = dataService ?? throw new ArgumentNullException( nameof(dataService));
+                _dataService = dataService ?? throw new ArgumentNullException(nameof(dataService));
                 _timeUp = true;
             }
             catch (Exception)
             {
                 // TODO
             }
-            
+
         }
 
         public DeleteCodingCacheItemCommand(LogCacheViewModel logCacheViewModel, DataService dataService, bool timeIsUp)
@@ -44,7 +44,7 @@ namespace Data_Logger_1._3.Commands.LogCacheCommands
         {
             try
             {
-                CodingGenericViewModel CodingDashboard = (CodingGenericViewModel)_viewModel;
+                CodingViewModel CodingDashboard = (CodingViewModel)_viewModel;
                 var item = parameter as CodeLOGViewModel;
                 bool isLogged = false;
 

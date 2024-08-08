@@ -29,19 +29,19 @@ namespace Data_Logger_1._3.Commands.LogCacheCommands
         public override void Execute(object parameter)
         {
             try
-            {                
+            {
                 CodingQtViewModel QtDashboard = (CodingQtViewModel)_viewModel;
                 var item = parameter as QtLOGViewModel;
                 bool isLogged = false;
 
-                if(QtDashboard is not null && item is not null)
+                if (QtDashboard is not null && item is not null)
                 {
                     var tempQtDashBoardItems = QtDashboard.CacheItems;
 
                     // Remove item
                     if (_timeUp)
                     {
-                        // Send data to Firebase first
+                        // Send data to database first
                         isLogged = _dataService.StoreLog(item._QtcodingLOG);
 
                         if (isLogged)
@@ -52,7 +52,10 @@ namespace Data_Logger_1._3.Commands.LogCacheCommands
                     }
                     else
                     {
-                        _dataService.DeleteQtCacheFile(item._QtcodingLOG.ID);
+                        // TODO
+
+
+                        _dataService.DeleteCacheFile(item._QtcodingLOG.ID, CacheContext.Qt);
                         item._timer.Dispose();
                         tempQtDashBoardItems.Remove(item);
                         QtDashboard.CacheItems = tempQtDashBoardItems;
@@ -61,7 +64,7 @@ namespace Data_Logger_1._3.Commands.LogCacheCommands
                 }
 
 
-                
+
 
 
             }
