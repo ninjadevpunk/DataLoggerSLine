@@ -22,7 +22,7 @@ namespace Data_Logger_1._3.Commands.NotesCommands
                 //
             }
         }
-        
+
         public SaveChecklistCommand(NavigationService navigationService, CreateCheckListViewModel createCheckListViewModel)
         {
             try
