@@ -1,13 +1,13 @@
 ﻿using Data_Logger_1._3.Services;
 using MVVMEssentials.Commands;
 
-namespace Data_Logger_1._3.Commands.FlexiCommands
+namespace Data_Logger_1._3.Commands.LogCacheCommands.CodingCommands
 {
-    public class CreateFlexiNotesLogCommand : CommandBase
+    public class CreateCodingLogCommand : CommandBase
     {
         private readonly NavigationService _navigationService;
 
-        public CreateFlexiNotesLogCommand(NavigationService navigationService)
+        public CreateCodingLogCommand(NavigationService navigationService)
         {
             try
             {
@@ -22,7 +22,6 @@ namespace Data_Logger_1._3.Commands.FlexiCommands
 
         public override void Execute(object parameter)
         {
-
             try
             {
                 _navigationService.NavigateToLoggerCreator();
@@ -31,8 +30,8 @@ namespace Data_Logger_1._3.Commands.FlexiCommands
             {
 
                 //
-            }
 
+            }
         }
     }
 }

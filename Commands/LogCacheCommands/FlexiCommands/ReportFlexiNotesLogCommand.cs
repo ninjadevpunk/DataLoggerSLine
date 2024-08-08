@@ -1,15 +1,14 @@
 ﻿using Data_Logger_1._3.Services;
 using MVVMEssentials.Commands;
 
-namespace Data_Logger_1._3.Commands.ASCommands
+namespace Data_Logger_1._3.Commands.LogCacheCommands.FlexiCommands
 {
-    public class ReportASLogCommand : CommandBase
+    public class ReportFlexiNotesLogCommand : CommandBase
     {
         private readonly NavigationService _navigationService;
 
-        public ReportASLogCommand(NavigationService navigationService)
+        public ReportFlexiNotesLogCommand(NavigationService navigationService)
         {
-
 
             try
             {
@@ -36,7 +35,6 @@ namespace Data_Logger_1._3.Commands.ASCommands
             {
                 //
             }
-
 
 
         }

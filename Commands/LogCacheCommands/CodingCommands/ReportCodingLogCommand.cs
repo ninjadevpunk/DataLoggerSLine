@@ -1,7 +1,7 @@
 ﻿using Data_Logger_1._3.Services;
 using MVVMEssentials.Commands;
 
-namespace Data_Logger_1._3.Commands.CodingCommands
+namespace Data_Logger_1._3.Commands.LogCacheCommands.CodingCommands
 {
     public class ReportCodingLogCommand : CommandBase
     {

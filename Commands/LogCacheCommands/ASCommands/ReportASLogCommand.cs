@@ -1,15 +1,15 @@
 ﻿using Data_Logger_1._3.Services;
 using MVVMEssentials.Commands;
 
-namespace Data_Logger_1._3.Commands.GraphicsCommands
+namespace Data_Logger_1._3.Commands.LogCacheCommands.ASCommands
 {
-    public class ReportGraphicsLogCommand : CommandBase
+    public class ReportASLogCommand : CommandBase
     {
         private readonly NavigationService _navigationService;
 
-
-        public ReportGraphicsLogCommand(NavigationService navigationService)
+        public ReportASLogCommand(NavigationService navigationService)
         {
+
 
             try
             {
@@ -27,6 +27,7 @@ namespace Data_Logger_1._3.Commands.GraphicsCommands
         public override void Execute(object parameter)
         {
 
+
             try
             {
                 _navigationService.NavigateToReporter();
@@ -35,6 +36,8 @@ namespace Data_Logger_1._3.Commands.GraphicsCommands
             {
                 //
             }
+
+
 
         }
     }

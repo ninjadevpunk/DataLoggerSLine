@@ -1,14 +1,16 @@
 ﻿using Data_Logger_1._3.Services;
 using MVVMEssentials.Commands;
 
-namespace Data_Logger_1._3.Commands.GraphicsCommands
+namespace Data_Logger_1._3.Commands.LogCacheCommands.FilmCommands
 {
-    public class CreateGraphicsLogCommand : CommandBase
+    public class ReportFilmLogCommand : CommandBase
     {
         private readonly NavigationService _navigationService;
 
-        public CreateGraphicsLogCommand(NavigationService navigationService)
+
+        public ReportFilmLogCommand(NavigationService navigationService)
         {
+
             try
             {
                 _navigationService = navigationService ?? throw new ArgumentNullException(nameof(navigationService));
@@ -18,18 +20,20 @@ namespace Data_Logger_1._3.Commands.GraphicsCommands
             {
                 //
             }
+
+
         }
 
         public override void Execute(object parameter)
         {
 
+
             try
             {
-                _navigationService.NavigateToLoggerCreator();
+                _navigationService.NavigateToReporter();
             }
             catch (Exception)
             {
-
                 //
             }
 
