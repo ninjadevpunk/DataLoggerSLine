@@ -14,7 +14,12 @@ namespace Data_Logger_1._3.Models.App_Models
         public LOG.CATEGORY Category { get; set; } = LOG.CATEGORY.CODING;
 
         public OutputClass()
-        {            
+        {
+        }
+
+        public OutputClass(string outputName)
+        {
+            Name = outputName;
         }
 
         public OutputClass(int outputID, ACCOUNT user, string name, ApplicationClass application, LOG.CATEGORY category)

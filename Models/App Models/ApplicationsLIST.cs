@@ -9,7 +9,7 @@
 
         public void Add(string applicationName)
         {
-            ApplicationClass app = new(this.Count+1, applicationName);
+            ApplicationClass app = new(this.Count + 1, applicationName);
             this.Add(app);
         }
 

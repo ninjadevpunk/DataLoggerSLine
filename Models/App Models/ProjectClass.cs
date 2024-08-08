@@ -10,7 +10,7 @@ namespace Data_Logger_1._3.Models.App_Models
 
         public string Name { get; set; } = "Unknown";
 
-        public ApplicationClass Application{ get; set; } = new();
+        public ApplicationClass Application { get; set; } = new();
 
         public LOG.CATEGORY Category { get; set; } = LOG.CATEGORY.CODING;
 
@@ -23,11 +23,16 @@ namespace Data_Logger_1._3.Models.App_Models
         {
         }
 
+        public ProjectClass(string projectName)
+        {
+            Name = projectName;
+        }
+
         public ProjectClass(int projectID, string name, ApplicationClass application)
         {
             ProjectID = projectID;
             Name = name;
-            Application= application;
+            Application = application;
             Category = LOG.CATEGORY.CODING;
         }
 

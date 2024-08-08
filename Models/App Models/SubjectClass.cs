@@ -20,6 +20,11 @@ namespace Data_Logger_1._3.Models.App_Models
         {
         }
 
+        public SubjectClass(string subjectName)
+        {
+            Subject = subjectName;
+        }
+
         public SubjectClass(int subjectID, LOG.CATEGORY category, ACCOUNT user, string subject, ProjectClass project, ApplicationClass application)
         {
             SubjectID = subjectID;
@@ -43,7 +48,7 @@ namespace Data_Logger_1._3.Models.App_Models
 
         public override int GetHashCode()
         {
-            return HashCode.Combine(SubjectID,Category, User, Subject, Project, Application);
+            return HashCode.Combine(SubjectID, Category, User, Subject, Project, Application);
         }
 
         public static bool operator ==(SubjectClass left, SubjectClass right)
