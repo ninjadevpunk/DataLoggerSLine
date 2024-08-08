@@ -1,11 +1,11 @@
 ﻿
 using Data_Logger_1._3.Models.App_Models;
-using System.Runtime.Serialization;
+
 
 namespace Data_Logger_1._3.Models
 {
 
-    [DataContract]
+
     public class AndroidCodingLOG : CodingLOG
     {
         /* DOCUMENTATION 
@@ -31,48 +31,48 @@ namespace Data_Logger_1._3.Models
         /// <summary>
         /// Store the selection between a simple Android LOG and full Android LOG
         /// </summary>
-        [DataMember]
+
         public SCOPE Scope { get; set; } = SCOPE.FULL;
 
-        
+
         /// <summary>
         /// Sync time.
         /// </summary>
-        [DataMember]
+
         public DateTime Sync { get; set; } = new DateTime();
 
         /// <summary>
         /// The duration of the Gradle Daemon's ignition.
         /// </summary>
-        [DataMember]
+
         public DateTime StartingGradleDaemon { get; set; }
 
         /// <summary>
         /// How long it takes for Android Studio to run build.
         /// </summary>
-        [DataMember]
+
         public DateTime RunBuild { get; set; }
 
         /// <summary>
         /// How long it takes for Android Studio to load build.
         /// </summary>
-        [DataMember]
+
         public DateTime LoadBuild { get; set; }
 
         /// <summary>
         /// How long it takes for Android Studio to configure build.
         /// </summary>
-        [DataMember]
+
         public DateTime ConfigureBuild { get; set; }
 
         /// <summary>
         /// How long it takes for Android Studio to finish the last sync step.
         /// </summary>
-        [DataMember]
+
         public DateTime AllProjects { get; set; }
 
 
-        
+
         /* CONSTRUCTORS */
 
 
@@ -81,7 +81,7 @@ namespace Data_Logger_1._3.Models
         {
         }
 
-        public AndroidCodingLOG(SCOPE scope, DateTime sync, DateTime startingGradleDaemon, 
+        public AndroidCodingLOG(SCOPE scope, DateTime sync, DateTime startingGradleDaemon,
             DateTime runBuild, DateTime loadBuild, DateTime configureBuild, DateTime allProjects)
         {
             Scope = scope;
@@ -106,7 +106,7 @@ namespace Data_Logger_1._3.Models
             AllProjects = allProjects;
         }
 
-        public AndroidCodingLOG(int id, ACCOUNT author, ProjectClass projectName, ApplicationClass applicationName, DateTime startTime, DateTime endTime, 
+        public AndroidCodingLOG(int id, ACCOUNT author, ProjectClass projectName, ApplicationClass applicationName, DateTime startTime, DateTime endTime,
             OutputClass output, TypeClass type, List<PostIt> postItList, int bugs, bool success,
             SCOPE scope, DateTime sync, DateTime startingGradleDaemon,
             DateTime runBuild, DateTime loadBuild, DateTime configureBuild, DateTime allProjects) : base(id, author, projectName, applicationName, startTime, endTime, output, type, postItList, bugs, success)
@@ -135,8 +135,8 @@ namespace Data_Logger_1._3.Models
                    Author == lOG.Author &&
                    Project == lOG.Project &&
                    Application == lOG.Application &&
-                   StartTime == lOG.StartTime &&
-                   EndTime == lOG.EndTime &&
+                   Start == lOG.Start &&
+                   End == lOG.End &&
                    Output == lOG.Output &&
                    Type == lOG.Type &&
                    PostItList.Equals(lOG.PostItList) &&
@@ -159,8 +159,8 @@ namespace Data_Logger_1._3.Models
             hash.Add(Author);
             hash.Add(Project);
             hash.Add(Application);
-            hash.Add(StartTime);
-            hash.Add(EndTime);
+            hash.Add(Start);
+            hash.Add(End);
             hash.Add(Output);
             hash.Add(Type);
             hash.Add(PostItList);

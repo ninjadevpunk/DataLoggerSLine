@@ -11,7 +11,7 @@ namespace Data_Logger_1._3.Models
          * 
          */
 
-        
+
 
         /* MEMBER VARIABLES */
 
@@ -25,7 +25,7 @@ namespace Data_Logger_1._3.Models
         public string Subject { get; set; } = "No Subject";
 
         /// <summary>
-        /// The note's content.
+        /// The note's PostIt content.
         /// </summary>
         public string Content { get; set; } = "";
 
@@ -62,15 +62,15 @@ namespace Data_Logger_1._3.Models
             Items = items;
         }
 
-        public NoteItem(int id, ACCOUNT author, ProjectClass projectName, ApplicationClass applicationName, DateTime startTime, DateTime endTime, 
+        public NoteItem(int id, ACCOUNT author, ProjectClass projectName, ApplicationClass applicationName, DateTime startTime, DateTime endTime,
             OutputClass output, TypeClass type, List<PostIt> postItList,
             string subject, string genericNote) : base(id, author, projectName, applicationName, startTime, endTime, output, type, postItList)
         {
             Subject = subject;
             Content = genericNote;
         }
-        
-        public NoteItem(int id, ACCOUNT author, ProjectClass projectName, ApplicationClass applicationName, DateTime startTime, DateTime endTime, 
+
+        public NoteItem(int id, ACCOUNT author, ProjectClass projectName, ApplicationClass applicationName, DateTime startTime, DateTime endTime,
             OutputClass output, TypeClass type, List<PostIt> postItList,
             string subject, string genericNote, CheckList items) : base(id, author, projectName, applicationName, startTime, endTime, output, type, postItList)
         {
@@ -92,8 +92,8 @@ namespace Data_Logger_1._3.Models
                    Author == item.Author &&
                    Project == item.Project &&
                    Application == item.Application &&
-                   StartTime == item.StartTime &&
-                   EndTime == item.EndTime &&
+                   Start == item.Start &&
+                   End == item.End &&
                    Output == item.Output &&
                    Type == item.Type &&
                    PostItList.Equals(item.PostItList) &&
@@ -111,8 +111,8 @@ namespace Data_Logger_1._3.Models
             hash.Add(Author);
             hash.Add(Project);
             hash.Add(Application);
-            hash.Add(StartTime);
-            hash.Add(EndTime);
+            hash.Add(Start);
+            hash.Add(End);
             hash.Add(Output);
             hash.Add(Type);
             hash.Add(PostItList);

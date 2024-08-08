@@ -1,11 +1,11 @@
 ﻿
 using Data_Logger_1._3.Models.App_Models;
-using System.Runtime.Serialization;
+
 
 namespace Data_Logger_1._3.Models
 {
 
-    [DataContract]
+
     public class PostIt
     {
         /* MEMBER VARIABLES */
@@ -16,35 +16,35 @@ namespace Data_Logger_1._3.Models
         /// <summary>
         /// The PostIt's identifier.
         /// </summary>
-        [DataMember]
+
         public int ID { get; set; } = -1;
 
-        
+
         /// <summary>
         /// The PostIt's subject. Gives context to the PostIt's content.
         /// </summary>
-        [DataMember]
+
         public SubjectClass Subject { get; set; }
 
         /// <summary>
         /// The error section. For explaining bug occurences or problems that 
         /// need to be addressed in a project.
         /// </summary>
-        [DataMember]
+
         public string Error { get; set; } = string.Empty;
 
         /// <summary>
         /// The solution section. Strictly in relationship with the Error 
         /// property. Explains how to solve a previously mentioned error.
         /// </summary>
-        [DataMember]
+
         public string Solution { get; set; } = string.Empty;
 
         /// <summary>
         /// The suggestion section. For giving suggestions on errors or 
         /// solutions or even general project advice or possible ideas.
         /// </summary>
-        [DataMember]
+
         public string Suggestion { get; set; } = string.Empty;
 
         /// <summary>
@@ -53,7 +53,7 @@ namespace Data_Logger_1._3.Models
         /// and suggestions. Comments can also be carefree and off-topic 
         /// to allow more freedom for the user.
         /// </summary>
-        [DataMember]
+
         public string Comment { get; set; } = string.Empty;
 
 
@@ -62,7 +62,7 @@ namespace Data_Logger_1._3.Models
         /// the error's "found" date and time. The other PostIt field edit times will 
         /// not be recorded here.
         /// </summary>
-        [DataMember]
+
         public DateTime ERCaptureTime { get; set; }
 
 
@@ -70,7 +70,7 @@ namespace Data_Logger_1._3.Models
         /// When the solution was added. Like the error date time capture, 
         /// this field only records when a solution was found.
         /// </summary>
-        [DataMember]
+
         public DateTime SOCaptureTime { get; set; }
 
 

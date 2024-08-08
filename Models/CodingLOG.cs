@@ -1,6 +1,6 @@
 ﻿
 using Data_Logger_1._3.Models.App_Models;
-using System.Runtime.Serialization;
+
 
 namespace Data_Logger_1._3.Models
 {
@@ -10,7 +10,7 @@ namespace Data_Logger_1._3.Models
     /// and is used for coding projects in any coding app - 
     /// especially Qt Creator and Android Studio.
     /// </summary>
-    [DataContract]
+
     public class CodingLOG : LOG
     {
         /* ENUMS */
@@ -22,13 +22,13 @@ namespace Data_Logger_1._3.Models
         /// <summary>
         /// Store the number of bugs found.
         /// </summary>
-        [DataMember]
+
         public int Bugs { get; set; } = 0;
 
         /// <summary>
         /// Store the application launch details here like whether the app opened or not.
         /// </summary>
-        [DataMember]
+
         public bool Success { get; set; } = false;
 
 
@@ -45,7 +45,7 @@ namespace Data_Logger_1._3.Models
             Success = success;
         }
 
-        public CodingLOG(int id, ACCOUNT author, ProjectClass projectName, ApplicationClass applicationName, DateTime startTime, DateTime endTime, 
+        public CodingLOG(int id, ACCOUNT author, ProjectClass projectName, ApplicationClass applicationName, DateTime startTime, DateTime endTime,
             OutputClass output, TypeClass type, List<PostIt> postItList, int bugs, bool success) : base(id, author, projectName, applicationName, startTime, endTime, output, type, postItList)
         {
             Bugs = bugs;
@@ -63,8 +63,8 @@ namespace Data_Logger_1._3.Models
                    Author == lOG.Author &&
                    Project == lOG.Project &&
                    Application == lOG.Application &&
-                   StartTime == lOG.StartTime &&
-                   EndTime == lOG.EndTime &&
+                   Start == lOG.Start &&
+                   End == lOG.End &&
                    Output == lOG.Output &&
                    Type == lOG.Type &&
                    PostItList.Equals(lOG.PostItList) &&

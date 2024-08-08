@@ -1,5 +1,5 @@
 ﻿using Data_Logger_1._3.Models.App_Models;
-using System.Runtime.Serialization;
+
 using System.Text.RegularExpressions;
 
 namespace Data_Logger_1._3.Models
@@ -8,7 +8,7 @@ namespace Data_Logger_1._3.Models
     /// <summary>
     /// The parent class. Defines all common log properties.
     /// </summary>
-    [DataContract]
+
     public abstract class LOG
     {
         /* ENUMS */
@@ -18,7 +18,7 @@ namespace Data_Logger_1._3.Models
         /// Log categories. All LOGs can only be Coding, Graphics, 
         /// Film or Notes types.
         /// </summary>
-        public enum CATEGORY {CODING, GRAPHICS, FILM, NOTES}
+        public enum CATEGORY { CODING, GRAPHICS, FILM, NOTES }
 
 
 
@@ -30,65 +30,65 @@ namespace Data_Logger_1._3.Models
 
 
 
-        [DataMember]
+
         public abstract CATEGORY Category { get; }
 
         /// <summary>
         /// The log's identifier. Important for database and caching operations.
         /// </summary>
-        [DataMember]
+
         public int ID { get; set; }
 
         /// <summary>
         /// The creator of a log.
         /// </summary>
-        [DataMember]
+
         public ACCOUNT Author { get; set; }
 
         /// <summary>
         /// The project that is associated with the log.
         /// </summary>
-        [DataMember]
+
         public ProjectClass Project { get; set; }
 
         /// <summary>
         /// The application in which the project was created in.
         /// </summary>
-        [DataMember]
+
         public ApplicationClass Application { get; set; }
 
         /// <summary>
         /// The start date and time of the project.
         /// </summary>
-        [DataMember]
-        public DateTime StartTime { get; set; } = DateTime.Now;
+
+        public DateTime Start { get; set; } = DateTime.Now;
 
         /// <summary>
         /// The end date and time of the project.
         /// </summary>
-        [DataMember]
-        public DateTime EndTime { get; set; } = DateTime.Now;
+
+        public DateTime End { get; set; } = DateTime.Now;
 
         /// <summary>
         /// The deliverable for the project.
         /// </summary>
-        [DataMember]
+
         public OutputClass Output { get; set; }
 
         /// <summary>
         /// What type of build is created in this project.
         /// </summary>
-        [DataMember]
+
         public TypeClass Type { get; set; }
 
         /// <summary>
         /// The most important property of the log. All the thoughts, 
         /// suggestions and details of the project are described on PostIts.
         /// </summary>
-        [DataMember]
+
         public List<PostIt> PostItList { get; set; } = new();
 
-        [DataMember]
+
         public string Content { get; set; } = "";
 
 
@@ -104,8 +104,8 @@ namespace Data_Logger_1._3.Models
             Author = author;
             Project = projectName;
             Application = applicationName;
-            StartTime = startTime;
-            EndTime = endTime;
+            Start = startTime;
+            End = endTime;
             Output = output;
             Type = type;
             PostItList = postItList;
@@ -117,8 +117,8 @@ namespace Data_Logger_1._3.Models
             Author = author;
             Project = projectName;
             Application = applicationName;
-            StartTime = startTime;
-            EndTime = endTime;
+            Start = startTime;
+            End = endTime;
             Output = output;
             Type = type;
             PostItList = postItList;
@@ -172,28 +172,28 @@ namespace Data_Logger_1._3.Models
 
         /** Count how many errors there are
          */
-        public int errorCount()
+        public int ErrorCount()
         {
             return helper("error");
         }
 
         /** Count how many solutions there are
          */
-        public int solutionCount()
+        public int SolutionCount()
         {
             return helper("solution");
         }
 
         /** Count how many suggestions there are
          */
-        public int suggestionCount()
+        public int SuggestionCount()
         {
             return helper("suggestion");
         }
 
         /** Count how many comments there are
          */
-        public int commentCount()
+        public int CommentCount()
         {
             return helper("comment");
         }
@@ -206,8 +206,8 @@ namespace Data_Logger_1._3.Models
                    Author.Equals(lOG.Author) &&
                    Project == lOG.Project &&
                    Application == lOG.Application &&
-                   StartTime == lOG.StartTime &&
-                   EndTime == lOG.EndTime &&
+                   Start == lOG.Start &&
+                   End == lOG.End &&
                    Output == lOG.Output &&
                    Type == lOG.Type &&
                    EqualityComparer<List<PostIt>>.Default.Equals(PostItList, lOG.PostItList) &&
@@ -222,8 +222,8 @@ namespace Data_Logger_1._3.Models
             hash.Add(Author);
             hash.Add(Project);
             hash.Add(Application);
-            hash.Add(StartTime);
-            hash.Add(EndTime);
+            hash.Add(Start);
+            hash.Add(End);
             hash.Add(Output);
             hash.Add(Type);
             hash.Add(PostItList);

@@ -1,11 +1,11 @@
 ﻿
 using Data_Logger_1._3.Models.App_Models;
-using System.Runtime.Serialization;
+
 
 namespace Data_Logger_1._3.Models
 {
 
-    [DataContract]
+
     public abstract class NotesLOG : LOG
     {
         /* DOCUMENTATION
@@ -27,7 +27,7 @@ namespace Data_Logger_1._3.Models
 
 
 
-        [DataMember]
+
         public abstract NOTELOGType notelogtype { get; }
 
 
@@ -38,11 +38,11 @@ namespace Data_Logger_1._3.Models
 
         public NotesLOG()
         {
-            
-        }
-        
 
-        public NotesLOG(int id, ACCOUNT author, ProjectClass projectName, ApplicationClass applicationName, DateTime startTime, DateTime endTime, 
+        }
+
+
+        public NotesLOG(int id, ACCOUNT author, ProjectClass projectName, ApplicationClass applicationName, DateTime startTime, DateTime endTime,
             OutputClass output, TypeClass type, List<PostIt> postItList) : base(id, author, projectName, applicationName, startTime, endTime, output, type, postItList)
         {
         }
@@ -55,8 +55,8 @@ namespace Data_Logger_1._3.Models
                    Author == lOG.Author &&
                    Project == lOG.Project &&
                    Application == lOG.Application &&
-                   StartTime == lOG.StartTime &&
-                   EndTime == lOG.EndTime &&
+                   Start == lOG.Start &&
+                   End == lOG.End &&
                    Output == lOG.Output &&
                    Type == lOG.Type &&
                    PostItList.Equals(lOG.PostItList);
@@ -70,8 +70,8 @@ namespace Data_Logger_1._3.Models
             hash.Add(Author);
             hash.Add(Project);
             hash.Add(Application);
-            hash.Add(StartTime);
-            hash.Add(EndTime);
+            hash.Add(Start);
+            hash.Add(End);
             hash.Add(Output);
             hash.Add(Type);
             hash.Add(PostItList);

@@ -1,4 +1,4 @@
-﻿using System.Runtime.Serialization;
+﻿
 
 namespace Data_Logger_1._3.Models
 {
@@ -6,42 +6,42 @@ namespace Data_Logger_1._3.Models
     /// <summary>
     /// The main authoring class. Represents Data Logger users.
     /// </summary>
-    [DataContract]
+
     public class ACCOUNT
     {
         /* PROPERTIES */
 
-        [DataMember]
+
         public int ID { get; set; }
 
-        [DataMember]
+
         public string ProfilePic { get; set; } = "/Assets/login/user.png";
 
-        [DataMember]
+
         public string FirstName { get; set; } = "";
 
-        [DataMember]
+
         public string LastName { get; set; } = "";
 
-        [DataMember]
+
         public string Email { get; set; } = "";
 
-        [DataMember]
+
         public string Password { get; set; } = "";
 
-        [DataMember]
+
         public bool IsEmployee { get; set; } = false;
 
-        [DataMember]
+
         public string? CompanyName { get; set; } = "";
 
-        [DataMember]
+
         public string? CompanyAddress { get; set; } = "";
 
-        [DataMember]
+
         public string? CompanyLogo { get; set; } = "";
 
-        [DataMember]
+
         public bool Online { get; set; } = false;
 
 
@@ -80,7 +80,7 @@ namespace Data_Logger_1._3.Models
             CompanyAddress = companyAddress;
         }
 
-        public ACCOUNT(int id, string firstName, string lastName, string email,  bool isEmplyee, string companyName, string companyAddress, string companyLogo, bool status)
+        public ACCOUNT(int id, string firstName, string lastName, string email, bool isEmplyee, string companyName, string companyAddress, string companyLogo, bool status)
         {
             ID = id;
             FirstName = firstName;
