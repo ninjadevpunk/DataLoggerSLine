@@ -1,0 +1,129 @@
+﻿using Data_Logger_1._3.Models;
+using Data_Logger_1._3.ViewModels.Dialogs;
+using MVVMEssentials.Commands;
+
+namespace Data_Logger_1._3.Commands
+{
+    public class ResetLoggerCommand : CommandBase
+    {
+        private readonly LoggerCreateViewModel _viewModel;
+        private const string Qt = "Qt Creator";
+        private const string Android = "Android Studio Hedgehog 2023.1.1";
+        private const string VisualStudio = "Visual Studio Community 2022";
+
+        public LOG.CATEGORY Category { get; set; } = LOG.CATEGORY.CODING;
+
+        public ResetLoggerCommand(LoggerCreateViewModel viewModel, LOG.CATEGORY category)
+        {
+            try
+            {
+                _viewModel = viewModel ?? throw new ArgumentNullException(nameof(viewModel));
+                Category = category;
+            }
+            catch (Exception)
+            {
+                // TODO
+            }
+        }
+
+        public ResetLoggerCommand()
+        {
+
+        }
+
+        public override void Execute(object parameter)
+        {
+            try
+            {
+                var isQt = _viewModel.ApplicationName.Equals(Qt);
+                var isAndroidStudio = _viewModel.ApplicationName.Equals(Android);
+                var isVisualStudio = _viewModel.ApplicationName.Equals(VisualStudio);
+
+                _viewModel.ProjectName = string.Empty;
+                _viewModel.ApplicationName = string.Empty;
+                _viewModel.StartDate = DateTime.Now;
+                _viewModel.StartHours = DateTime.Now.Hour;
+                _viewModel.StartMinutes = DateTime.Now.Minute;
+                _viewModel.StartSeconds = DateTime.Now.Second;
+                _viewModel.StartMilliseconds = DateTime.Now.Millisecond;
+
+                _viewModel.EndDate = DateTime.Now;
+                _viewModel.EndHours = DateTime.Now.Hour;
+                _viewModel.EndMinutes = DateTime.Now.Minute;
+                _viewModel.EndSeconds = DateTime.Now.Second;
+                _viewModel.EndMilliseconds = DateTime.Now.Millisecond;
+                _viewModel.PostIts.Clear();
+
+                switch (Category)
+                {
+                    case LOG.CATEGORY.CODING:
+                        {
+                            var codingViewModel = (codeCreateViewModel)_viewModel;
+
+                            if (isQt)
+                                codingViewModel.ApplicationName = Qt;
+                            else if (isAndroidStudio)
+                                codingViewModel.ApplicationName = Android;
+                            else if (isVisualStudio)
+                                codingViewModel.ApplicationName = VisualStudio;
+
+                            codingViewModel.Output = "Widgets Application";
+                            codingViewModel.Type = "Build";
+                            codingViewModel.BugsFound = 0;
+                            codingViewModel.ApplicationOpened = false;
+                            break;
+                        }
+                    case LOG.CATEGORY.GRAPHICS:
+                        {
+                            var graphicsViewModel = (graphicCreateViewModel)_viewModel;
+                            graphicsViewModel.Output = "Portable Network Graphics (*.PNG)";
+                            graphicsViewModel.Type = "NONE";
+                            graphicsViewModel.Medium = "Pencil";
+                            graphicsViewModel.Format = "Paper";
+                            graphicsViewModel.Brush = string.Empty;
+                            graphicsViewModel.Height = string.Empty;
+                            graphicsViewModel.Width = string.Empty;
+                            graphicsViewModel.MeasuringUnit = "cm";
+                            graphicsViewModel.Size = "A4 (29,7 cm x 21 cm)";
+                            graphicsViewModel.DPI = string.Empty;
+                            graphicsViewModel.ColourDepth = string.Empty;
+                            graphicsViewModel.IsCompleted = false;
+                            graphicsViewModel.Source = string.Empty;
+
+                            break;
+                        }
+                    case LOG.CATEGORY.FILM:
+                        {
+                            var filmViewModel = (filmCreateViewModel)_viewModel;
+                            filmViewModel.Height = string.Empty;
+                            filmViewModel.Width = string.Empty;
+                            filmViewModel.Resolution = string.Empty;
+                            filmViewModel.Length = string.Empty;
+                            filmViewModel.IsCompleted = false;
+                            filmViewModel.Source = string.Empty;
+
+                            break;
+                        }
+                    case LOG.CATEGORY.NOTES:
+                        {
+                            var flexiViewModel = (flexiCreateViewModel)_viewModel;
+                            flexiViewModel.FlexibleLogCategory = string.Empty;
+                            flexiViewModel.Medium = "Song";
+                            flexiViewModel.Format = "CD";
+                            flexiViewModel.BitRate = string.Empty;
+                            flexiViewModel.Duration = string.Empty;
+                            flexiViewModel.IsCompleted = false;
+                            flexiViewModel.Source = string.Empty;
+
+                            break;
+                        }
+                }
+
+            }
+            catch (Exception)
+            {
+                // TODO
+            }
+        }
+    }
+}

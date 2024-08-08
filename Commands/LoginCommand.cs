@@ -12,7 +12,7 @@ namespace Data_Logger_1._3.Commands
         private readonly NavigationService _navigationService;
 
 
-        public LoginCommand(LoginViewModel loginViewModel, AuthService authService, NavigationService navigationService) 
+        public LoginCommand(LoginViewModel loginViewModel, AuthService authService, NavigationService navigationService)
         {
             _loginViewModel = loginViewModel;
             _authService = authService;
@@ -20,7 +20,7 @@ namespace Data_Logger_1._3.Commands
         }
 
         public override void Execute(object parameter)
-        {           
+        {
 
             try
             {

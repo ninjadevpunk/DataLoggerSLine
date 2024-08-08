@@ -1,8 +1,6 @@
 ﻿using Data_Logger_1._3.Services;
 using Data_Logger_1._3.ViewModels;
 using MVVMEssentials.Commands;
-using System.Security.Cryptography;
-using System.Text;
 
 namespace Data_Logger_1._3.Commands
 {

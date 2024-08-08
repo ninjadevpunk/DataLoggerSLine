@@ -5,7 +5,7 @@ using System.Windows;
 
 namespace Data_Logger_1._3.Commands
 {
-    public class DisplayPicCommand : AsyncCommandBase
+    public class DisplayPicCommand : CommandBase
     {
 
         private readonly SignUpViewModel _signUpViewModel;
@@ -22,7 +22,7 @@ namespace Data_Logger_1._3.Commands
             _authService = authService;
         }
 
-        protected override async Task ExecuteAsync(object parameter)
+        public override void Execute(object parameter)
         {
             try
             {
@@ -48,7 +48,7 @@ namespace Data_Logger_1._3.Commands
             {
                 _signUpViewModel.ShowDefault = Visibility.Visible;
                 _signUpViewModel.SignUpImage = "";
-                _authService.Account.ProfilePic = "";                
+                _authService.Account.ProfilePic = "";
             }
 
         }

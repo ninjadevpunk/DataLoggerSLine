@@ -44,7 +44,7 @@ namespace Data_Logger_1._3.Commands
                 // Call the SignUp method in AuthService to handle user registration
                 var isSignedUp = _authService.SignUp(email, password, displayName, surname, IsHired, company, address, logo);
 
-                if(isSignedUp)
+                if (isSignedUp)
                 {
                     _navigationService.NavigateToMainWindow();
                 }
