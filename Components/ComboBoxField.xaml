@@ -1,4 +1,4 @@
-﻿<UserControl x:Class="Data_Logger_1._3.Components.ComboBoxInputField"
+﻿<UserControl x:Class="Data_Logger_1._3.Components.ComboBoxField"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -8,7 +8,7 @@
              HorizontalAlignment="Stretch"
              Margin="0 5"
              d:Background="White"
-             x:Name="control_COMBOBOX_textbox" >
+             x:Name="control_COMBOBOX" >
 
     <UserControl.Resources>
 
@@ -28,10 +28,10 @@
                                 CornerRadius="2"
                                 SnapsToDevicePixels="true">
                             <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="6*"/>
-                                <ColumnDefinition Width="93"/>
-                            </Grid.ColumnDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="6*"/>
+                                    <ColumnDefinition Width="93"/>
+                                </Grid.ColumnDefinitions>
                                 <Path Grid.Column="1" x:Name="arrow" Style="{DynamicResource path_DROPDOWN_ICON}"/>
                             </Grid>
                         </Border>
@@ -118,16 +118,16 @@
         <ControlTemplate x:Key="comboBox_template" TargetType="{x:Type ComboBox}">
             <Border SnapsToDevicePixels="true"
                     CornerRadius="3" >
-                
+
                 <Grid x:Name="templateRoot" SnapsToDevicePixels="true">
-                    
+
                     <Grid.ColumnDefinitions>
-                        
+
                         <ColumnDefinition Width="6*"/>
                         <ColumnDefinition Width="93"/>
-                        
+
                     </Grid.ColumnDefinitions>
-                    
+
                     <Popup x:Name="PART_Popup" AllowsTransparency="true" Grid.ColumnSpan="2" IsOpen="{Binding IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}" Margin="1" Placement="Bottom" PopupAnimation="{DynamicResource {x:Static SystemParameters.ComboBoxPopupAnimationKey}}">
                         <theme:SystemDropShadowChrome x:Name="shadow" Color="{DynamicResource STROKE}" MinWidth="{Binding ActualWidth, ElementName=templateRoot}" MaxHeight="{TemplateBinding MaxDropDownHeight}">
                             <Border x:Name="dropDownBorder" Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}" BorderBrush="{DynamicResource STROKE}" BorderThickness="1">
@@ -153,21 +153,19 @@
                                   IsChecked="{Binding IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}"
                                   Style="{StaticResource comboBox_TOGGLEBUTTON}"
                                   Cursor="Hand" />
-                    
+
 
                     <Border x:Name="border" Grid.Column="0">
                         <Grid>
 
                             <TextBox x:Name="PART_EditableTextBox"
-                                     Text="{Binding UserComboInput, ElementName=control_COMBOBOX_textbox, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
-                                     Style="{Binding UserTextBoxStyle, ElementName=control_COMBOBOX_textbox}"
-                                     TextChanged="on_EditableTextBox_changed"
-                                     LostFocus="on_EditableTextBox_lostfocus" />
-                            
-                            
+                                     Text="{Binding UserComboInput, ElementName=control_COMBOBOX, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                                     Style="{Binding UserTextBoxStyle, ElementName=control_COMBOBOX}" />
+
+
                         </Grid>
                     </Border>
-                    
+
                 </Grid>
             </Border>
             <ControlTemplate.Triggers>
@@ -200,8 +198,8 @@
         <ControlTemplate x:Key="static_comboBox_template" TargetType="{x:Type ComboBox}">
             <Grid x:Name="templateRoot" SnapsToDevicePixels="true">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition MinWidth="{DynamicResource {x:Static SystemParameters.VerticalScrollBarWidthKey}}" Width="0"/>
+                    <ColumnDefinition Width="6*"/>
+                    <ColumnDefinition Width="93"/>
                 </Grid.ColumnDefinitions>
                 <Popup x:Name="PART_Popup" AllowsTransparency="true" Grid.ColumnSpan="2" IsOpen="{Binding IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}" Margin="1" Placement="Bottom" PopupAnimation="{DynamicResource {x:Static SystemParameters.ComboBoxPopupAnimationKey}}">
                     <theme:SystemDropShadowChrome x:Name="shadow" Color="Transparent" MinWidth="{Binding ActualWidth, ElementName=templateRoot}" MaxHeight="{TemplateBinding MaxDropDownHeight}">
@@ -217,9 +215,9 @@
                         </Border>
                     </theme:SystemDropShadowChrome>
                 </Popup>
-                
-                
-                
+
+
+
                 <ToggleButton x:Name="toggleButton"
                               Grid.ColumnSpan="2"
                               HorizontalAlignment="Stretch"
@@ -229,8 +227,8 @@
                               Background="{TemplateBinding Background}"
                               Style="{StaticResource comboBox_TOGGLEBUTTON}"
                               Cursor="Hand" />
-                
-                
+
+
                 <ContentPresenter x:Name="contentPresenter"
                                   ContentStringFormat="{TemplateBinding SelectionBoxItemStringFormat}"
                                   ContentTemplate="{TemplateBinding SelectionBoxItemTemplate}"
@@ -242,9 +240,9 @@
                                   SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"
                                   VerticalAlignment="Center"
                                   />
-            
-            
-            
+
+
+
             </Grid>
             <ControlTemplate.Triggers>
                 <Trigger Property="HasDropShadow" SourceName="PART_Popup" Value="true">
@@ -267,16 +265,16 @@
                 </Trigger>
             </ControlTemplate.Triggers>
         </ControlTemplate>
-        
-        
-        
-        
-        
-        
-        
-        
+
+
+
+
+
+
+
+
         <!-- COMBOBOX TEMPLATE -->
-        
+
         <Style x:Key="comboBox_LOGGER" TargetType="{x:Type ComboBox}">
             <Setter Property="FocusVisualStyle" Value="{StaticResource FocusVisual}"/>
             <Setter Property="FontFamily" Value="{DynamicResource Red Hat Display}"/>
@@ -289,7 +287,7 @@
             <Setter Property="ScrollViewer.CanContentScroll" Value="true"/>
             <Setter Property="ScrollViewer.PanningMode" Value="Both"/>
             <Setter Property="Stylus.IsFlicksEnabled" Value="False"/>
-            <Setter Property="Template" Value="{StaticResource comboBox_template}"/>
+            <Setter Property="Template" Value="{StaticResource static_comboBox_template}"/>
             <Style.Triggers>
                 <Trigger Property="IsEditable" Value="True">
                     <Setter Property="IsTabStop" Value="False"/>
@@ -371,29 +369,25 @@
                 </Trigger>
             </Style.Triggers>
         </Style>
-        
-        
-        
+
+
+
         <!-- DEFAULT -->
 
 
     </UserControl.Resources>
-    
-    
-    <Grid>
-        
-        <!-- PLACEHOLDER TEXT -->
-        <TextBlock x:Name="text_PLACEHOLDERTEXT" Style="{Binding UserTextBlockStyle, ElementName=control_COMBOBOX_textbox}"
-                   Text="{Binding DynamicPlaceholderText, ElementName=control_COMBOBOX_textbox, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
-                   Loaded="on_PLACEHOLDERTEXT_loaded" />
 
-        <!-- USER TEXT -->
+
+    <Grid>
+
+        <!-- TEXT -->
         <ComboBox x:Name="comboBox_TEXTBOX" Style="{DynamicResource comboBox_LOGGER}"
-                  Text="{Binding UserComboInput, ElementName=control_COMBOBOX_textbox, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                  SelectedItem="{Binding UserSelection, ElementName=control_COMBOBOX}"
                   ItemContainerStyle="{DynamicResource comboBox_ITEM_template}" 
-                  ItemsSource="{Binding Items, ElementName=control_COMBOBOX_textbox}"
-                  IsEnabled="{Binding Enabled, ElementName=control_COMBOBOX_textbox}" />
+                  ItemsSource="{Binding Items, ElementName=control_COMBOBOX}"
+                  IsEnabled="{Binding Enabled, ElementName=control_COMBOBOX}"
+                  IsEditable="false" />
 
     </Grid>
-    
+
 </UserControl>

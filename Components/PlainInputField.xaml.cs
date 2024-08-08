@@ -141,7 +141,7 @@ namespace Data_Logger_1._3.Components
             RaiseEvent(ev);
         }
 
-        
+
 
 
 

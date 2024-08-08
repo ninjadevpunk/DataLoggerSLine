@@ -1,17 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace Data_Logger_1._3.Components
 {
@@ -24,7 +12,7 @@ namespace Data_Logger_1._3.Components
         {
             InitializeComponent();
             this.datePicker_DATE.SelectedDateFormat = DatePickerFormat.Long;
-            
+
         }
 
         #region Dependency Properties
@@ -38,7 +26,7 @@ namespace Data_Logger_1._3.Components
 
         public static readonly DependencyProperty TheDateProperty =
             DependencyProperty.Register("Date", typeof(DateTime), typeof(DateInputField),
-                
+
                 new PropertyMetadata(DateTime.Now)
                 );
 

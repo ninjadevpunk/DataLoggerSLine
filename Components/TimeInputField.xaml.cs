@@ -11,7 +11,6 @@ namespace Data_Logger_1._3.Components
         public TimeInputField()
         {
             InitializeComponent();
-            setTime();
 
         }
 
@@ -28,9 +27,9 @@ namespace Data_Logger_1._3.Components
         }
 
         public static readonly DependencyProperty HoursProperty =
-            DependencyProperty.Register("Hours", typeof(string), typeof(TimeInputField), 
-                
-                
+            DependencyProperty.Register("Hours", typeof(string), typeof(TimeInputField),
+
+
                 new PropertyMetadata("00")
                 );
 
@@ -43,9 +42,9 @@ namespace Data_Logger_1._3.Components
         }
 
         public static readonly DependencyProperty MinutesProperty =
-            DependencyProperty.Register("Minutes", typeof(string), typeof(TimeInputField), 
-                
-                
+            DependencyProperty.Register("Minutes", typeof(string), typeof(TimeInputField),
+
+
                 new PropertyMetadata("00")
                 );
 
@@ -58,9 +57,9 @@ namespace Data_Logger_1._3.Components
         }
 
         public static readonly DependencyProperty SecondsProperty =
-            DependencyProperty.Register("Seconds", typeof(string), typeof(TimeInputField), 
-                
-                
+            DependencyProperty.Register("Seconds", typeof(string), typeof(TimeInputField),
+
+
                 new PropertyMetadata("00")
                 );
 
@@ -73,9 +72,9 @@ namespace Data_Logger_1._3.Components
         }
 
         public static readonly DependencyProperty MillisecondsProperty =
-            DependencyProperty.Register("Milliseconds", typeof(string), typeof(TimeInputField), 
-                
-                
+            DependencyProperty.Register("Milliseconds", typeof(string), typeof(TimeInputField),
+
+
                 new PropertyMetadata("000")
                 );
 
@@ -86,9 +85,9 @@ namespace Data_Logger_1._3.Components
         }
 
         public static readonly DependencyProperty TimeProperty =
-            DependencyProperty.Register("Time", typeof(DateTime), typeof(TimeInputField), 
-                
-                
+            DependencyProperty.Register("Time", typeof(DateTime), typeof(TimeInputField),
+
+
                 new PropertyMetadata(DateTime.Now)
                 );
 
@@ -126,6 +125,10 @@ namespace Data_Logger_1._3.Components
 
         #region Event Handlers
 
+
+
+
+
         private void updateTime(object sender, RoutedEventArgs e)
         {
             if (this.spinner_MILLISECONDS is null)
@@ -141,7 +144,7 @@ namespace Data_Logger_1._3.Components
                 return;
 
             try
-            {               
+            {
 
                 Milliseconds = NumberFormatter(this.spinner_MILLISECONDS.Digits - Milliseconds.Length, Milliseconds);
 
@@ -169,7 +172,7 @@ namespace Data_Logger_1._3.Components
         public string NumberFormatter(int realLength, string currentNumber)
         {
 
-            if(realLength != 0 && realLength > 0)
+            if (realLength != 0 && realLength > 0)
             {
                 const string zero = "0";
 

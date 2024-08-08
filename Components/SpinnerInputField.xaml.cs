@@ -2,7 +2,6 @@
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using System.Windows.Media;
 
 namespace Data_Logger_1._3.Components
 {
@@ -18,16 +17,16 @@ namespace Data_Logger_1._3.Components
             buttonCheck();
             SetLeader();
 
-            if(Number != null)
+            if (Number != null)
             {
 
-                if(IsInteger)
+                if (IsInteger)
                     Number = $"{Leader}{0}";
                 else
                     Number = $"{Leader}{0,00}";
             }
 
-            
+
         }
 
         #region Dependency Properties
@@ -42,12 +41,12 @@ namespace Data_Logger_1._3.Components
         }
 
         public static readonly DependencyProperty IsIntegerProperty =
-            DependencyProperty.Register("IsInteger", typeof(bool), typeof(SpinnerInputField), 
+            DependencyProperty.Register("IsInteger", typeof(bool), typeof(SpinnerInputField),
 
 
                 new PropertyMetadata(true)
                 );
-        
+
         // How many digits are in the control?
         // Be careful of double values. This control accepts both integers and doubles so doubles include the decimal points.
         public int Digits
@@ -67,7 +66,7 @@ namespace Data_Logger_1._3.Components
         }
 
         public static readonly DependencyProperty LeaderProperty =
-            DependencyProperty.Register("Leader", typeof(string), typeof(SpinnerInputField), 
+            DependencyProperty.Register("Leader", typeof(string), typeof(SpinnerInputField),
 
 
                 new PropertyMetadata("")
@@ -81,8 +80,8 @@ namespace Data_Logger_1._3.Components
         }
 
         public static readonly DependencyProperty NumberProperty =
-            DependencyProperty.Register("Number", typeof(string), typeof(SpinnerInputField),        
-                
+            DependencyProperty.Register("Number", typeof(string), typeof(SpinnerInputField),
+
 
                 new PropertyMetadata("0")
                 );
@@ -95,7 +94,7 @@ namespace Data_Logger_1._3.Components
         }
 
         public static readonly DependencyProperty MinimumValueProperty =
-            DependencyProperty.Register("MinimumValue", typeof(int), typeof(SpinnerInputField), 
+            DependencyProperty.Register("MinimumValue", typeof(int), typeof(SpinnerInputField),
 
 
                 new PropertyMetadata(0)
@@ -111,7 +110,7 @@ namespace Data_Logger_1._3.Components
         }
 
         public static readonly DependencyProperty MaximumValueProperty =
-            DependencyProperty.Register("MaximumValue", typeof(int), typeof(SpinnerInputField), 
+            DependencyProperty.Register("MaximumValue", typeof(int), typeof(SpinnerInputField),
 
 
                 new PropertyMetadata(100)
@@ -128,7 +127,7 @@ namespace Data_Logger_1._3.Components
 
         public void SetLeader()
         {
-            if(Leader is null)
+            if (Leader is null)
                 return;
 
             if (Digits == 5)
@@ -265,9 +264,9 @@ namespace Data_Logger_1._3.Components
         // When the scroll wheel is rolled over the spinner, increment/decrement
         private void on_SPINNER_rotate(object sender, MouseWheelEventArgs e)
         {
-            
 
-            
+
+
 
             try
             {
@@ -308,7 +307,7 @@ namespace Data_Logger_1._3.Components
                 }
 
 
-                    buttonCheck();
+                buttonCheck();
 
 
 
@@ -332,7 +331,7 @@ namespace Data_Logger_1._3.Components
             {
                 if (IsInteger)
                 {
-                    
+
 
                     // INCREMENT
                     if (int.Parse(Number) == this.MaximumValue)
@@ -394,7 +393,7 @@ namespace Data_Logger_1._3.Components
             {
                 if (this.spinner_NUMBERS.Text == "" || this.spinner_NUMBERS.Text == null)
                 {
-                    if(IsInteger)
+                    if (IsInteger)
                         this.spinner_NUMBERS.Text = $"{Leader}0";
                     else
                         this.spinner_NUMBERS.Text = $"{Leader}0,0";
@@ -444,7 +443,7 @@ namespace Data_Logger_1._3.Components
                     temp += Leader.Substring(0, 1);
                 }
 
-                if(IsInteger)
+                if (IsInteger)
                     this.spinner_NUMBERS.Text = temp;
                 else
                     this.spinner_NUMBERS.Text = $"{temp},0";

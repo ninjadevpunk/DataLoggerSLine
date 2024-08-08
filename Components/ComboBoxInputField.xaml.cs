@@ -8,8 +8,6 @@ namespace Data_Logger_1._3.Components
     /// </summary>
     public partial class ComboBoxInputField : UserControl
     {
-        public bool Status { get; set; } = true;
-        public string? Temp { get; set; } = "";
 
         public ComboBoxInputField()
         {
@@ -25,7 +23,9 @@ namespace Data_Logger_1._3.Components
         #region Dependency Properties
 
 
-        // Placeholder text
+        /// <summary>
+        /// Static placeholder text. NOT to be modified.
+        /// </summary>
         public string PlaceholderText
         {
             get { return (string)GetValue(PlaceholderTextProperty); }
@@ -34,6 +34,15 @@ namespace Data_Logger_1._3.Components
 
         public static readonly DependencyProperty PlaceholderTextProperty =
             DependencyProperty.Register("PlaceholderText", typeof(string), typeof(ComboBoxInputField));
+
+        public string DynamicPlaceholderText
+        {
+            get { return (string)GetValue(DynamicPlaceholderTextProperty); }
+            set { SetValue(DynamicPlaceholderTextProperty, value); }
+        }
+
+        public static readonly DependencyProperty DynamicPlaceholderTextProperty =
+            DependencyProperty.Register("DynamicPlaceholderText", typeof(string), typeof(ComboBoxInputField));
 
 
         // User's input
@@ -77,7 +86,7 @@ namespace Data_Logger_1._3.Components
         }
 
         public static readonly DependencyProperty UserTextBoxStyleProperty =
-            DependencyProperty.Register("UserTextBoxStyle", typeof(Style), typeof(ComboBoxInputField) );
+            DependencyProperty.Register("UserTextBoxStyle", typeof(Style), typeof(ComboBoxInputField));
 
 
         // TextBlock Style
@@ -105,60 +114,37 @@ namespace Data_Logger_1._3.Components
         #region Member Functions
 
 
+
         private void on_PLACEHOLDERTEXT_loaded(object sender, RoutedEventArgs e)
         {
 
             // If the combobox is not Editable, show no placeholder text.
-            if (!Enabled)
-            {
-                text_PLACEHOLDERTEXT.Visibility = Visibility.Hidden;
-                Status = false;
+            //if (!Enabled)
+            //{
+            //    text_PLACEHOLDERTEXT.Visibility = Visibility.Hidden;
+            //    InputChanged = false;
 
-                return;
-            }
+            //    return;
+            //}
 
 
         }
 
         private void on_EditableTextBox_lostfocus(object sender, RoutedEventArgs e)
         {
-            showPlaceholderText();
+            UpdatePlaceholderText();
         }
 
         public void showPlaceholderText()
         {
-            
-
-            // If the combobox text is null return
-            if (UserComboInput == null)
-            {
-                return;
-            }
-            else if (UserComboInput == "" && this.text_PLACEHOLDERTEXT.Text == "")
-            {
-                this.text_PLACEHOLDERTEXT.Text = Temp;
-                Status = true;
-            }
-
-
+            DynamicPlaceholderText = PlaceholderText;
         }
 
-        public void showPlaceholderText(bool show, bool assert)
+
+        public void UpdatePlaceholderText()
         {
-            if (show)
-            {
-                this.text_PLACEHOLDERTEXT.Text = Temp;
-                Status = true;
-            }
-            else if (show && assert || UserComboInput == "")
-            {
-                this.text_PLACEHOLDERTEXT.Text = PlaceholderText;
-                Status = true;
-            }
+            DynamicPlaceholderText = UserComboInput is not null && UserComboInput.Equals(string.Empty) ? PlaceholderText : string.Empty;
         }
-
-
-
 
 
 
@@ -175,19 +161,14 @@ namespace Data_Logger_1._3.Components
         #region Event Handlers
 
 
+
         private void on_EditableTextBox_changed(object sender, TextChangedEventArgs e)
         {
-            if(Status)
-            {
-                Temp = this.text_PLACEHOLDERTEXT.Text;
-                this.text_PLACEHOLDERTEXT.Text = "";
-                Status = false;
-            }
+            UpdatePlaceholderText();
 
             var ev = new RoutedEventArgs(TextChangedEvent);
             RaiseEvent(ev);
         }
-
 
 
 
@@ -224,6 +205,6 @@ namespace Data_Logger_1._3.Components
 
         #endregion
 
-        
+
     }
 }
