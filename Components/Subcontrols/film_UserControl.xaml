@@ -41,7 +41,7 @@
                             PlaceholderText="Height"
                             UserTextBoxStyle="{DynamicResource inputText_LOGIN}"
                             UserTextBlockStyle="{DynamicResource text_login_PLACEHOLDER}"
-                            UserInput="{Binding Height}" />
+                            UserInput="{Binding Height, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
 
             <!-- WIDTH -->
             <components:PlainInputField x:Name="inputText_WIDTH" Grid.Column="2"
@@ -50,7 +50,7 @@
                             PlaceholderText="Width"
                             UserTextBoxStyle="{DynamicResource inputText_LOGIN}"
                             UserTextBlockStyle="{DynamicResource text_login_PLACEHOLDER}"
-                            UserInput="{Binding Width}" />
+                            UserInput="{Binding Width, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
 
 
         </Grid>
@@ -61,7 +61,7 @@
                                 PlaceholderText="Resolution"
                                 UserTextBoxStyle="{DynamicResource inputText_LOGIN}"
                                 UserTextBlockStyle="{DynamicResource text_login_PLACEHOLDER}"
-                                UserInput="{Binding Resolution}" />
+                                UserInput="{Binding Resolution, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
 
         <!-- LENGTH -->
         <components:PlainInputField Grid.Row="3" x:Name="inputText_LENGTH"
@@ -69,7 +69,7 @@
                                 PlaceholderText="Length"
                                 UserTextBoxStyle="{DynamicResource inputText_LOGIN}"
                                 UserTextBlockStyle="{DynamicResource text_login_PLACEHOLDER}"
-                                UserInput="{Binding Length}" />
+                                UserInput="{Binding Length, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
 
         <!-- COMPLETED -->
         <Border Grid.Row="5"
@@ -96,7 +96,7 @@
 
                 <CheckBox Grid.Column="2" x:Name="checkBox_IsCOMPLETED" Style="{DynamicResource check_SIGNUP}"
                       HorizontalAlignment="Right"
-                          IsChecked="{Binding IsCompleted}" />
+                          IsChecked="{Binding IsCompleted, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
 
 
             </Grid>
@@ -119,7 +119,7 @@
                                     PlaceholderText="Source"
                                     UserTextBoxStyle="{DynamicResource inputText_LOGIN}"
                                     UserTextBlockStyle="{DynamicResource text_login_PLACEHOLDER}"
-                                    UserInput="{Binding Source}" />
+                                    UserInput="{Binding Source, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
 
             <Button Grid.Column="3" Style="{DynamicResource ACTIONBrowse}"
                     Height="auto"

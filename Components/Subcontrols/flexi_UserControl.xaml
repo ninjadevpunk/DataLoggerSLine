@@ -31,25 +31,30 @@
         </Grid.RowDefinitions>
         
         <!-- FLEXI NOTE CATEGORY -->
-        <components:ComboBoxInputField Grid.Row="0" x:Name="input_FLEXINOTE_CATEGORY"
-                                       Enabled="False" />
+        <components:ComboBoxField Grid.Row="0" x:Name="input_FLEXINOTE_CATEGORY"
+                                       UserTextBoxStyle="{DynamicResource inputText}"
+                                       UserSelection="{Binding FlexibleLogCategory, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                                       Enabled="False"
+                                       Items="{Binding FlexiLogCategories}"/>
         
         <!-- MEDIUM -->
         <components:ComboBoxInputField Grid.Row="2" x:Name="inputText_MEDIUM"
                                        Enabled="True"
                                        PlaceholderText="Medium"
+                                       DynamicPlaceholderText="Medium"
                                        UserTextBoxStyle="{DynamicResource inputText}"
                                        UserTextBlockStyle="{DynamicResource text_Placeholder}"
-                                       UserComboInput="{Binding Medium}"
+                                       UserComboInput="{Binding Medium, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
                                        Items="{Binding Mediums}"/>
         
         <!-- FORMAT -->
         <components:ComboBoxInputField Grid.Row="4" x:Name="inputText_FORMAT"
                                        Enabled="True"
                                        PlaceholderText="Format"
+                                       DynamicPlaceholderText="Format"
                                        UserTextBoxStyle="{DynamicResource inputText}"
                                        UserTextBlockStyle="{DynamicResource text_Placeholder}"
-                                       UserComboInput="{Binding Format}"
+                                       UserComboInput="{Binding Format, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
                                        Items="{Binding Formats}"/>
         
         <!-- BITRATE -->
@@ -57,14 +62,14 @@
                                     PlaceholderText="Bitrate (kbps)"
                                     UserTextBoxStyle="{DynamicResource inputText_LOGIN}"
                                     UserTextBlockStyle="{DynamicResource text_login_PLACEHOLDER}"
-                                    UserInput="{Binding Bitrate}" />
+                                    UserInput="{Binding Bitrate, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
         
         <!-- DURATION -->
         <components:PlainInputField Grid.Row="8" x:Name="inputText_DURATION"
                                     PlaceholderText="Duration"
                                     UserTextBoxStyle="{DynamicResource inputText_LOGIN}"
                                     UserTextBlockStyle="{DynamicResource text_login_PLACEHOLDER}"
-                                    UserInput="{Binding Duration}" />
+                                    UserInput="{Binding Duration, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
 
         <!-- COMPLETED -->
         <Border Grid.Row="10"
@@ -91,7 +96,7 @@
 
                 <CheckBox Grid.Column="2" x:Name="checkBox_IsCOMPLETED" Style="{DynamicResource check_SIGNUP}"
                           HorizontalAlignment="Right"
-                          IsChecked="{Binding IsCompleted}"/>
+                          IsChecked="{Binding IsCompleted, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"/>
 
 
             </Grid>
@@ -113,7 +118,7 @@
                                         PlaceholderText="Source"
                                         UserTextBoxStyle="{DynamicResource inputText_LOGIN}"
                                         UserTextBlockStyle="{DynamicResource text_login_PLACEHOLDER}"
-                                        UserInput="{Binding Source}" />
+                                        UserInput="{Binding Source, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
 
             <Button Grid.Column="3" Style="{DynamicResource ACTIONBrowse}"
                     Height="auto"

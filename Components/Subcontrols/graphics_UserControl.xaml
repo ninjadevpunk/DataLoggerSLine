@@ -12,33 +12,46 @@
 
 
     <Grid>
-        
+
         <Grid.RowDefinitions>
-            
-            <RowDefinition Height="*" /> <!-- H x W -->
+
+            <RowDefinition Height="*" />
+            <!-- H x W -->
             <RowDefinition Height="auto" />
-            <RowDefinition Height="*" /> <!-- UNIT -->
+            <RowDefinition Height="*" />
+            <!-- Medium -->
             <RowDefinition Height="auto" />
-            <RowDefinition Height="*" /> <!-- SIZE -->
+            <RowDefinition Height="*" />
+            <!-- Format -->
             <RowDefinition Height="auto" />
-            <RowDefinition Height="*" /> <!-- DPI -->
+            <RowDefinition Height="*" />
+            <!-- UNIT -->
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="*" />
+            <!-- SIZE -->
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="*" />
+            <!-- DPI -->
             <RowDefinition Height="5" />
-            <RowDefinition Height="*" /> <!-- Colour Depth -->
+            <RowDefinition Height="*" />
+            <!-- Colour Depth -->
             <RowDefinition Height="5" />
-            <RowDefinition Height="*" /> <!-- IsCompleted? -->
+            <RowDefinition Height="*" />
+            <!-- IsCompleted? -->
             <RowDefinition Height="5" />
-            <RowDefinition Height="*" /> <!-- Source -->
+            <RowDefinition Height="*" />
+            <!-- Source -->
 
         </Grid.RowDefinitions>
 
         <Grid Margin="0 5">
-            
+
             <Grid.ColumnDefinitions>
-                
+
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="10" />
                 <ColumnDefinition Width="*" />
-                
+
             </Grid.ColumnDefinitions>
 
             <!-- HEIGHT -->
@@ -48,7 +61,7 @@
                                         PlaceholderText="Height"
                                         UserTextBoxStyle="{DynamicResource inputText_LOGIN}"
                                         UserTextBlockStyle="{DynamicResource text_login_PLACEHOLDER}"
-                                        UserInput="{Binding Height}" />
+                                        UserInput="{Binding Height, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
 
             <!-- WIDTH -->
             <components:PlainInputField x:Name="inputText_WIDTH" Grid.Column="2"
@@ -57,47 +70,66 @@
                                         PlaceholderText="Width"
                                         UserTextBoxStyle="{DynamicResource inputText_LOGIN}"
                                         UserTextBlockStyle="{DynamicResource text_login_PLACEHOLDER}"
-                                        UserInput="{Binding Width}" />
+                                        UserInput="{Binding Width, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
 
 
         </Grid>
 
+
+        <!-- MEDIUM -->
+        <components:ComboBoxInputField Grid.Row="2" x:Name="inputText_MEDIUM"
+                               Enabled="True"
+                               PlaceholderText="Medium"
+                               UserTextBoxStyle="{DynamicResource inputText}"
+                               UserTextBlockStyle="{DynamicResource text_Placeholder}"
+                               UserComboInput="{Binding Medium, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                               Items="{Binding Mediums}" />
+
+        <!-- FORMAT -->
+        <components:ComboBoxInputField Grid.Row="4" x:Name="inputText_FORMAT"
+                       Enabled="True"
+                       PlaceholderText="Surface"
+                       UserTextBoxStyle="{DynamicResource inputText}"
+                       UserTextBlockStyle="{DynamicResource text_Placeholder}"
+                       UserComboInput="{Binding Format, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                       Items="{Binding Formats}" />
+
         <!-- MEASURING UNIT -->
-        <components:ComboBoxInputField Grid.Row="2" x:Name="inputText_UNIT"
+        <components:ComboBoxInputField Grid.Row="6" x:Name="inputText_UNIT"
                                        Enabled="True"
                                        PlaceholderText="Measuring Unit"
                                        UserTextBoxStyle="{DynamicResource inputText}"
                                        UserTextBlockStyle="{DynamicResource text_Placeholder}"
-                                       UserComboInput="{Binding MeasuringUnit}"
+                                       UserComboInput="{Binding MeasuringUnit, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
                                        Items="{Binding Units}" />
 
         <!-- SIZE -->
-        <components:ComboBoxInputField Grid.Row="4" x:Name="inputText_SIZE"
+        <components:ComboBoxInputField Grid.Row="8" x:Name="inputText_SIZE"
                                        Enabled="True"
                                        PlaceholderText="Page Size"
                                        UserTextBoxStyle="{DynamicResource inputText}"
                                        UserTextBlockStyle="{DynamicResource text_Placeholder}"
-                                       UserComboInput="{Binding Size}"
+                                       UserComboInput="{Binding Size, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
                                        Items="{Binding Sizes}" />
 
         <!-- DPI -->
-        <components:PlainInputField Grid.Row="6" x:Name="inputText_DPI"
+        <components:PlainInputField Grid.Row="10" x:Name="inputText_DPI"
                                     Margin="0 5 0 0"
                                     PlaceholderText="DPI"
                                     UserTextBoxStyle="{DynamicResource inputText_LOGIN}"
                                     UserTextBlockStyle="{DynamicResource text_login_PLACEHOLDER}"
-                                    UserInput="{Binding DPI}" />
-        
+                                    UserInput="{Binding DPI, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
+
         <!-- COLOUR DEPTH -->
-        <components:PlainInputField Grid.Row="8" x:Name="inputText_DEPTH"
+        <components:PlainInputField Grid.Row="12" x:Name="inputText_DEPTH"
                                     Margin="0 5"
                                     PlaceholderText="Colour Depth"
                                     UserTextBoxStyle="{DynamicResource inputText_LOGIN}"
                                     UserTextBlockStyle="{DynamicResource text_login_PLACEHOLDER}"
-                                    UserInput="{Binding ColourDepth}" />
-        
+                                    UserInput="{Binding ColourDepth, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
+
         <!-- COMPLETED -->
-        <Border Grid.Row="10"
+        <Border Grid.Row="14"
                 Margin="0 0 0 5"
                 Height="40"
                 Padding="12 5 10 5"
@@ -121,16 +153,16 @@
 
                 <CheckBox Grid.Column="2" x:Name="checkBox_IsCOMPLETED" Style="{DynamicResource check_SIGNUP}"
                           HorizontalAlignment="Right"
-                          IsChecked="{Binding IsCompleted}" />
-                
+                          IsChecked="{Binding IsCompleted, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
+
 
             </Grid>
 
         </Border>
-        
-        
+
+
         <!-- SOURCE -->
-        <Grid Grid.Row="12">
+        <Grid Grid.Row="16">
 
             <Grid.ColumnDefinitions>
 
@@ -144,16 +176,16 @@
                                         PlaceholderText="Source"
                                         UserTextBoxStyle="{DynamicResource inputText_LOGIN}"
                                         UserTextBlockStyle="{DynamicResource text_login_PLACEHOLDER}"
-                                        UserInput="{Binding Source}" />
+                                        UserInput="{Binding Source, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
 
             <Button Grid.Column="3" Style="{DynamicResource ACTIONBrowse}"
                     Height="auto"
                     Width="auto"
                     Command="{Binding BrowseCommand}" >
-                
+
                 <TextBlock Style="{DynamicResource text_button01}"
                            Text="Open" />
-                
+
             </Button>
 
 
