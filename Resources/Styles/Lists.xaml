@@ -45,7 +45,7 @@
                                                Foreground="{DynamicResource PlaceholderText}" />
                                     <TextBlock Grid.Row="2" Text="Click &quot;Create Log&quot; to create logs and they will appear here." Style="{DynamicResource text_button01}"
                                                Foreground="{DynamicResource PlaceholderText}" />
-                                    
+
                                 </Grid>
                             </Grid>
                         </ScrollViewer>
@@ -60,7 +60,7 @@
                             </MultiTrigger.Conditions>
                             <Setter Property="ScrollViewer.CanContentScroll" Value="false"/>
                         </MultiTrigger>
-                        
+
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
             </Setter.Value>
@@ -174,7 +174,7 @@
                             </StackPanel>
                         </Border>
                     </Border>
-                    
+
                     <!-- Context Menu -->
                     <ControlTemplate.Resources>
                         <ContextMenu x:Key="ItemContextMenu">
@@ -186,7 +186,7 @@
                                       CommandParameter="{Binding}"/>
                         </ContextMenu>
                     </ControlTemplate.Resources>
-                    
+
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsMouseOver" Value="True">
                             <Setter Property="ContextMenu" Value="{StaticResource ItemContextMenu}" />
@@ -482,7 +482,7 @@
 
                         </Grid>
 
-                    </Border>                    
+                    </Border>
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
@@ -518,7 +518,7 @@
                 <!-- NOTE SUBJECT -->
                 <Border Style="{StaticResource border_NOTES}"
                         Padding="10 0">
-                    
+
                     <Grid Height="40">
 
                         <Grid.ColumnDefinitions>
@@ -616,7 +616,7 @@
                             <!-- NOTE SUBJECT -->
                             <Border Style="{StaticResource border_NOTES}"
                                     Padding="10 0">
-                                
+
                                 <Grid Height="40">
 
                                     <Grid.ColumnDefinitions>
@@ -681,16 +681,16 @@
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
-        
+
     </Style>
 
-    
 
 
-        <!--#endregion-->
-    
-    
-    
+
+    <!--#endregion-->
+
+
+
     <!-- POST ITS LIST -->
 
     <Style x:Key="listViewITEM_POSTITS" TargetType="{x:Type ListViewItem}">
@@ -730,14 +730,14 @@
                                        Height="27"
                                        HorizontalAlignment="Stretch"
                                        Text="{Binding Subject, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
-                                
-                                
-                                
-                                
+
+
+
+
 
                                 <StackPanel Orientation="Vertical" Grid.Row="1"
                                         HorizontalAlignment="Stretch" >
-                                    
+
                                     <!-- ERROR -->
                                     <Border Padding="0 5" Visibility="{Binding ErrorVisible, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" >
                                         <Grid>
@@ -753,7 +753,7 @@
                                             <TextBlock Grid.Column="2" x:Name="text_POSTIT_ERROR" Style="{DynamicResource text_LIST_POSTIT_ERSO_CONTENT}"
                                                        HorizontalAlignment="Stretch"
                                                        Text="{Binding Display_Error, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
-                                            
+
                                         </Grid>
                                     </Border>
 
@@ -773,11 +773,11 @@
                                             <TextBlock Grid.Column="2" x:Name="text_POSTIT_SOLUTION" Style="{DynamicResource text_LIST_POSTIT_ERSO_CONTENT}"
                                                        HorizontalAlignment="Stretch"
                                                        Text="{Binding Display_Solution, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
-                                            
+
                                         </Grid>
                                     </Border>
-                                    
-                                    
+
+
                                     <!-- SUGGESTION -->
                                     <Border Padding="0 5" Visibility="{Binding SuggestionVisible, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}">
                                         <Grid>
@@ -793,7 +793,7 @@
                                             <TextBlock Grid.Column="2" x:Name="text_POSTIT_SUGGESTION" Style="{DynamicResource text_LIST_POSTIT_ERSO_CONTENT}"
                                                        HorizontalAlignment="Stretch"
                                                        Text="{Binding Display_Suggestion, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
-                                            
+
                                         </Grid>
                                     </Border>
 
@@ -813,12 +813,12 @@
                                             <TextBlock Grid.Column="2" x:Name="text_POSTIT_COMMENT" Style="{DynamicResource text_LIST_POSTIT_ERSO_CONTENT}"
                                                        HorizontalAlignment="Stretch"
                                                        Text="{Binding Display_Comment, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
-                                            
+
                                         </Grid>
                                     </Border>
                                 </StackPanel>
                             </Grid>
-                            
+
                             <!-- COLUMN 2 -->
                             <Button Grid.Column="1" Style="{DynamicResource toolbutton_DELETE}"
                                     Command="{Binding DeletePostItCommand}"
@@ -826,7 +826,19 @@
 
                         </Grid>
                     </Border>
+
+                    <!-- Context Menu -->
+                    <ControlTemplate.Resources>
+                        <ContextMenu x:Key="ItemContextMenu">
+                            <MenuItem Header="Edit" Command="{Binding EditCommand}" 
+                                      CommandParameter="{Binding}" />
+                        </ContextMenu>
+                    </ControlTemplate.Resources>
+
                     <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter Property="ContextMenu" Value="{StaticResource ItemContextMenu}" />
+                        </Trigger>
                         <MultiTrigger>
                             <MultiTrigger.Conditions>
                                 <Condition Property="IsMouseOver" Value="True"/>
@@ -860,6 +872,7 @@
         <Setter Property="Background" Value="Transparent"/>
         <Setter Property="BorderBrush" Value="{DynamicResource STROKE}"/>
         <Setter Property="Height" Value="auto"/>
+        <Setter Property="MinHeight" Value="465"/>
         <Setter Property="Margin" Value="5"/>
         <Setter Property="BorderThickness" Value="0.6"/>
         <Setter Property="Foreground" Value="{DynamicResource BLACK}"/>
@@ -900,18 +913,18 @@
             </Setter.Value>
         </Setter>
     </Style>
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
+
+
+
+
+
+
+
+
+
+
+
+
     <!-- POST ITS LIST (VIEW VERSION) -->
 
     <Style x:Key="listViewITEM_POSTITS_View" TargetType="{x:Type ListViewItem}">
@@ -1037,7 +1050,7 @@
                             </Grid>
 
                             <!-- COLUMN 2 -->
-                            
+
 
                         </Grid>
                     </Border>
@@ -1139,14 +1152,14 @@
                             Padding="5 5 5 10"
                             SnapsToDevicePixels="true"
                             CornerRadius="3" >
-                        
+
                         <ScrollViewer Focusable="false" Padding="{TemplateBinding Padding}">
                             <!-- Grid makes the items in ListView behave. -->
                             <Grid>
                                 <ItemsPresenter SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
                             </Grid>
                         </ScrollViewer>
-                            
+
                     </Border>
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsEnabled" Value="false"/>
@@ -1200,21 +1213,21 @@
                                 <ColumnDefinition Width="10" />
                                 <ColumnDefinition Width="auto" />
                             </Grid.ColumnDefinitions>
-                            
+
                             <!-- CHECKBOX -->
                             <CheckBox Style="{DynamicResource check_SIGNUP}"
                                       IsChecked="False"/>
-                            
-                            
+
+
                             <!-- ITEM -->
                             <TextBox Grid.Column="2" x:Name="inputText_CHECKLIST_item" Style="{DynamicResource inputText_CHECKLIST_itemContent}"
                                      Text="Item" />
-                            
+
                             <!-- DELETE BUTTON -->
                             <Button Grid.Column="4" x:Name="button_DELETE_CHECKLIST_item" Style="{DynamicResource toolbutton_DELETE}"
                                     Command="{Binding}"/>
-                                
-                                
+
+
                         </Grid>
 
                     </Border>

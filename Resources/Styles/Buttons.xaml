@@ -852,7 +852,7 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type Button}">
-                    <Grid>
+                    <Grid Height="{TemplateBinding Height}" Width="{TemplateBinding Width}">
                         <Path x:Name="icon_TOOLBUTTON" Style="{DynamicResource path_TOOLBUTTON_delete}"/>
                     </Grid>
                     <ControlTemplate.Triggers>
@@ -868,11 +868,12 @@
         </Setter>
     </Style>
 
+    <!-- TOOLBUTTON RESET TEMPLATE -->
     <Style x:Key="toolbutton_RESET" TargetType="Button" BasedOn="{StaticResource toolbutton_DELETE}">
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type Button}">
-                    <Grid>
+                    <Grid Height="{TemplateBinding Height}" Width="{TemplateBinding Width}">
                         <Path x:Name="icon_TOOLBUTTON" Style="{DynamicResource path_TOOLBUTTON_reset}"/>
                     </Grid>
                     <ControlTemplate.Triggers>
@@ -899,7 +900,7 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type Button}">
-                    <Grid>
+                    <Grid Height="{TemplateBinding Height}" Width="{TemplateBinding Width}">
                         <Path x:Name="icon_adobe1" Style="{DynamicResource path_TOOLBUTTON_adobe01}"/>
                         <Path x:Name="icon_adobe2" Style="{DynamicResource path_TOOLBUTTON_adobe02}"/>
                         <Path x:Name="icon_adobe3" Style="{DynamicResource path_TOOLBUTTON_adobe03}"/>
