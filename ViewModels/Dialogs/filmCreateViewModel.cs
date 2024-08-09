@@ -1,56 +1,70 @@
-﻿using Data_Logger_1._3.Commands;
+﻿using Data_Logger_1._3.Commands.LoggerCommands;
+using Data_Logger_1._3.Models;
+using Data_Logger_1._3.Models.App_Models;
 using Data_Logger_1._3.Services;
 using Data_Logger_1._3.ViewModels.Dashboard;
-using System.Collections.ObjectModel;
-using System.Windows.Input;
 
 namespace Data_Logger_1._3.ViewModels.Dialogs
 {
     public class filmCreateViewModel : LoggerCreateViewModel
     {
+        public override LOG.CATEGORY Category { get => LOG.CATEGORY.FILM; }
+        public override CacheContext Context { get => CacheContext.Film; }
         public override string LogType { get => "FILM LOG"; }
 
 
-
-        private readonly ObservableCollection<string> _mediums;
-        private readonly ObservableCollection<string> _formats;
-
-        public IEnumerable<string> Mediums => _mediums;
-        public IEnumerable<string> Formats => _formats;
+        private readonly FilmViewModel _filmViewModel;
 
         public filmCreateViewModel(NavigationService navigationService, LogCacheViewModel logCacheViewModel, DataService dataService) : base(navigationService, logCacheViewModel, dataService)
         {
-            AnnotateCommand = new AnnotateCommand(LogType, _navigationService, this, _logCacheViewModel, _dataService);
+            AppFieldEnabled = true;
+            ApplicationName = "Blender";
+
+            _filmViewModel = (FilmViewModel)logCacheViewModel;
+
+            _dataService.InitialiseProjectsLIST(Category);
+            var items = _dataService.SQLITE_PROJECTS;
+
+            var apps = _dataService.SQLITE_APPLICATIONS;
+
+            foreach (ProjectClass project in items)
+            {
+                _projects.Add(project.Name);
+            }
+
+            _dataService.InitialiseApplicationsLIST(Category);
+            foreach (ApplicationClass app in apps)
+            {
+                _applications.Add(app.Name);
+            }
+
+
+            Output = "Motion Picture Experts Group (*.mp4)";
+            _outputs.Add("Motion Picture Experts Group Layer 4 (*.mp4)");
+            _outputs.Add("AVI (*.avi");
+            _outputs.Add("Matroska (*.mkv)");
+            _outputs.Add("Windows Media Video (*.wmv)");
+            _outputs.Add("Transfer Stream (*.ts)");
+            _outputs.Add("WebM (*.webm)");
+
+
+            Type = "Film";
+            _types.Add("Film");
+            _types.Add("NONE");
+            _types.Add("Doodle");
+            _types.Add("Assignment");
+
+            Height = string.Empty;
+            Width = string.Empty;
+            Resolution = string.Empty;
+            Length = string.Empty;
+            IsCompleted = false;
+            Source = string.Empty;
+
+            SaveCommand = new SaveCommand(this, _dataService);
+            AnnotateCommand = new AnnotateCommand(Context, _navigationService, this, _filmViewModel, _dataService);
         }
 
-        private string medium;
-        public string Medium
-        {
-            get
-            {
-                return medium;
-            }
-            set
-            {
-                medium = value;
-                OnPropertyChanged(nameof(Medium));
-            }
-        }
-
-
-        private string format;
-        public string Format
-        {
-            get
-            {
-                return format;
-            }
-            set
-            {
-                format = value;
-                OnPropertyChanged(nameof(Format));
-            }
-        }
 
         private string height;
         public string Height
@@ -136,7 +150,31 @@ namespace Data_Logger_1._3.ViewModels.Dialogs
             }
         }
 
-        public ICommand BrowseCommand { get; set; }
 
+        #region Member Functions
+
+
+
+        public void UpdateLogCount()
+        {
+            if (_filmViewModel is not null)
+            {
+                var count = _dataService.LogCount(Category);
+                LogCount = $"{_filmViewModel.CacheItems.Count} Logs Cached";
+                _filmViewModel.LogCount = $"{_filmViewModel.CacheItems.Count} film logs cached | {count} total logs";
+            }
+        }
+
+
+
+
+
+
+
+
+
+
+
+        #endregion
     }
 }

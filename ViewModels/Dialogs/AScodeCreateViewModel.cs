@@ -1,6 +1,6 @@
-﻿using Data_Logger_1._3.Commands;
-using Data_Logger_1._3.Models.App_Models;
+﻿using Data_Logger_1._3.Commands.LoggerCommands;
 using Data_Logger_1._3.Models;
+using Data_Logger_1._3.Models.App_Models;
 using Data_Logger_1._3.Services;
 using Data_Logger_1._3.ViewModels.Dashboard;
 using System.Windows;
@@ -9,75 +9,67 @@ namespace Data_Logger_1._3.ViewModels.Dialogs
 {
     public class AScodeCreateViewModel : codeCreateViewModel
     {
-		private readonly CodingAndroidViewModel _ASviewModel;
+        private readonly CodingViewModel _ASviewModel;
+        public override CacheContext Context { get => CacheContext.AndroidStudio; }
 
         public AScodeCreateViewModel(NavigationService navigationService, LogCacheViewModel logCacheViewModel, DataService dataService) : base(navigationService, logCacheViewModel, dataService)
         {
             ApplicationName = AndroidStudio;
-			ASOnly = true;
+            ApplicationToolTip = "This field cannot be changed. Only Android Studio logs are allowed in this tab.";
+            ASOnly = true;
+            AppFieldEnabled = false;
 
-			AppFieldEnabled = false;
+            FullORSimple = false;
 
-			FullORSimple = false;
-
-
-            _ASviewModel = (CodingAndroidViewModel)_viewModel;
-            AnnotateCommand = new AnnotateCommand(LogType, _navigationService, this, _ASviewModel, _dataService);
+            _ASviewModel = (CodingViewModel)_viewModel;
 
             _projects.Clear();
+            _dataService.InitialiseProjectsLIST(LOG.CATEGORY.CODING);
             var items = _dataService.SQLITE_PROJECTS;
 
 
             foreach (ProjectClass project in items)
             {
-                if (project.Category == LOG.CATEGORY.CODING && project.Application.Name == AndroidStudio)
+                if (project.Application.Name == AndroidStudio)
                     _projects.Add(project.Name);
             }
 
             _applications.Clear();
 
-			_outputs.Clear();
-			_outputs.Add("APK (*.apk)");
-			_outputs.Add("USB");
-			_outputs.Add("Emulator (*.exe)");
+            Output = "APK (*.apk)";
+            _outputs.Clear();
+            _outputs.Add("APK (*.apk)");
+            _outputs.Add("USB");
+            _outputs.Add("Emulator (*.exe)");
 
-			_types.Clear();
-			_types.Add("Sync");
-			_types.Add("Build");
-			_types.Add("Runtime");
+            Type = "Sync";
+            _types.Clear();
+            _types.Add("Sync");
+            _types.Add("Build");
+            _types.Add("Runtime");
+            _types.Add("Exception");
 
-			UpdateLogCount();
-			
+            UpdateLogCount();
+
+            SaveCommand = new SaveCommand(this, _dataService);
+            AnnotateCommand = new AnnotateCommand(Context, _navigationService, this, _ASviewModel, _dataService);
+
         }
 
-        public override void Setup()
-        {
-			base.Setup();
 
-            ApplicationName = AndroidStudio;
-			AppFieldEnabled = false;
-
-            FullORSimple = false;
-			SyncTime = DateTime.Now;
-			GradleDaemonTime = DateTime.Now;
-			RunBuildTime = DateTime.Now;
-			LoadBuildTime = DateTime.Now;
-			ConfigureBuildTime = DateTime.Now;
-			AllProjectsTime = DateTime.Now;
-        }
 
         private bool fullORsimple;
-		public bool FullORSimple
-		{
-			get
-			{
-				return fullORsimple;
-			}
-			set
-			{
-				fullORsimple = value;
+        public bool FullORSimple
+        {
+            get
+            {
+                return fullORsimple;
+            }
+            set
+            {
+                fullORsimple = value;
 
-				GradleDaemonVisibility = FullORSimple ? Visibility.Hidden : Visibility.Visible;
+                GradleDaemonVisibility = FullORSimple ? Visibility.Hidden : Visibility.Visible;
                 RunBuildVisibility = FullORSimple ? Visibility.Hidden : Visibility.Visible;
                 LoadBuildVisibility = FullORSimple ? Visibility.Hidden : Visibility.Visible;
                 ConfigureBuildVisibility = FullORSimple ? Visibility.Hidden : Visibility.Visible;
@@ -85,8 +77,8 @@ namespace Data_Logger_1._3.ViewModels.Dialogs
 
                 OnPropertyChanged(nameof(FullORSimple));
 
-			}
-		}
+            }
+        }
 
         #region SYNC 
 
@@ -94,603 +86,603 @@ namespace Data_Logger_1._3.ViewModels.Dialogs
 
         /* SYNC */
         private DateTime syncTime;
-		public DateTime SyncTime
-		{
-			get
-			{
-				return syncTime;
-			}
-			set
-			{
-				syncTime = value;
-				OnPropertyChanged(nameof(SyncTime));
-			}
-		}
-
-		private int syncHours;
-		public int SyncHours
-		{
-			get
-			{
-				return syncHours;
-			}
-			set
-			{
-				syncHours = value;
-				UpdateSyncTime();
-				OnPropertyChanged(nameof(SyncHours));
-			}
-		}
-
-		private int syncMinutes;
-		public int SyncMinutes
-		{
-			get
-			{
-				return syncMinutes;
-			}
-			set
-			{
-				syncMinutes = value;
-				UpdateSyncTime();
-				OnPropertyChanged(nameof(SyncMinutes));
-            }
-		}
-
-		private int syncSeconds;
-		public int SyncSeconds
-		{
-			get
-			{
-				return syncSeconds;
-			}
-			set
-			{
-				syncSeconds = value;
-				UpdateSyncTime();
-				OnPropertyChanged(nameof(SyncSeconds));
-            }
-		}
-
-		private int syncMilliseconds;
-		public int SyncMilliseconds
-		{
-			get
-			{
-				return syncMilliseconds;
-			}
-			set
-			{
-				syncMilliseconds = value;
-				UpdateSyncTime();
-				OnPropertyChanged(nameof(SyncMilliseconds));
-            }
-		}
-
-
-
-		#endregion
-
-
-
-
-		#region GRADLE DAEMON
-
-
-
-
-
-		private Visibility gradleDaemonVisibility;
-		public Visibility GradleDaemonVisibility
+        public DateTime SyncTime
         {
-			get
-			{
-				return gradleDaemonVisibility;
-			}
-			set
-			{
+            get
+            {
+                return syncTime;
+            }
+            set
+            {
+                syncTime = value;
+                OnPropertyChanged(nameof(SyncTime));
+            }
+        }
+
+        private int syncHours;
+        public int SyncHours
+        {
+            get
+            {
+                return syncHours;
+            }
+            set
+            {
+                syncHours = value;
+                UpdateSyncTime();
+                OnPropertyChanged(nameof(SyncHours));
+            }
+        }
+
+        private int syncMinutes;
+        public int SyncMinutes
+        {
+            get
+            {
+                return syncMinutes;
+            }
+            set
+            {
+                syncMinutes = value;
+                UpdateSyncTime();
+                OnPropertyChanged(nameof(SyncMinutes));
+            }
+        }
+
+        private int syncSeconds;
+        public int SyncSeconds
+        {
+            get
+            {
+                return syncSeconds;
+            }
+            set
+            {
+                syncSeconds = value;
+                UpdateSyncTime();
+                OnPropertyChanged(nameof(SyncSeconds));
+            }
+        }
+
+        private int syncMilliseconds;
+        public int SyncMilliseconds
+        {
+            get
+            {
+                return syncMilliseconds;
+            }
+            set
+            {
+                syncMilliseconds = value;
+                UpdateSyncTime();
+                OnPropertyChanged(nameof(SyncMilliseconds));
+            }
+        }
+
+
+
+        #endregion
+
+
+
+
+        #region GRADLE DAEMON
+
+
+
+
+
+        private Visibility gradleDaemonVisibility;
+        public Visibility GradleDaemonVisibility
+        {
+            get
+            {
+                return gradleDaemonVisibility;
+            }
+            set
+            {
                 gradleDaemonVisibility = value;
-				OnPropertyChanged(nameof(GradleDaemonVisibility));
-			}
-		}
-
-		private bool isConsidered;
-		public bool IsConsidered
-		{
-			get
-			{
-				return isConsidered;
-			}
-			set
-			{
-				isConsidered = value;
-				OnPropertyChanged(nameof(IsConsidered));
-			}
-		}
-
-
-
-		/* GRADLE DAEMON */
-		private DateTime gradleDaemonTime;
-		public DateTime GradleDaemonTime
-		{
-			get
-			{
-				return gradleDaemonTime;
-			}
-			set
-			{
-				gradleDaemonTime = value;
-				OnPropertyChanged(nameof(GradleDaemonTime));
-			}
-		}
-
-		private int gradleDaemonHours;
-		public int GradleDaemonHours
-		{
-			get
-			{
-				return gradleDaemonHours;
-			}
-			set
-			{
-				gradleDaemonHours = value;
-				UpdateGradleDaemonTime();
-				OnPropertyChanged(nameof(GradleDaemonHours));
-			}
-		}
-
-		private int gradleDaemonMinutes;
-		public int GradleDaemonMinutes
-		{
-			get
-			{
-				return gradleDaemonMinutes;
-			}
-			set
-			{
-				gradleDaemonMinutes = value;
-				UpdateGradleDaemonTime();
-				OnPropertyChanged(nameof(GradleDaemonMinutes));
+                OnPropertyChanged(nameof(GradleDaemonVisibility));
             }
-		}
+        }
 
-		private int gradleDaemonSeconds;
-		public int GradleDaemonSeconds
-		{
-			get
-			{
-				return gradleDaemonSeconds;
-			}
-			set
-			{
-				gradleDaemonSeconds = value;
-				UpdateGradleDaemonTime();
-				OnPropertyChanged(nameof(GradleDaemonSeconds));
+        private bool isConsidered;
+        public bool IsConsidered
+        {
+            get
+            {
+                return isConsidered;
             }
-		}
-
-		private int gradleDaemonMilliseconds;
-		public int GradleDaemonMilliseconds
-		{
-			get
-			{
-				return gradleDaemonMilliseconds;
-			}
-			set
-			{
-				gradleDaemonMilliseconds = value;
-				UpdateGradleDaemonTime();
-				OnPropertyChanged(nameof(GradleDaemonMilliseconds));
+            set
+            {
+                isConsidered = value;
+                OnPropertyChanged(nameof(IsConsidered));
             }
-		}
+        }
 
 
 
-
-		#endregion
-
-
-
-		#region RUN BUILD
-
-
-
-		private Visibility runBuildVisibility;
-		public Visibility RunBuildVisibility
-		{
-			get
-			{
-				return runBuildVisibility;
-			}
-			set
-			{
-				runBuildVisibility = value;
-				OnPropertyChanged(nameof(RunBuildVisibility));
-			}
-		}
-
-
-
-		/* RUN BUILD */
-		private DateTime runBuildTime;
-		public DateTime RunBuildTime
-		{
-			get
-			{
-				return runBuildTime;
-			}
-			set
-			{
-				runBuildTime = value;
-				OnPropertyChanged(nameof(RunBuildTime));
-			}
-		}
-
-		private int runBuildHours;
-		public int RunBuildHours
-		{
-			get
-			{
-				return runBuildHours;
-			}
-			set
-			{
-				runBuildHours = value;
-				UpdateRunBuildTime();
-				OnPropertyChanged(nameof(RunBuildHours));
-			}
-		}
-
-		private int runBuildMinutes;
-		public int RunBuildMinutes
-		{
-			get
-			{
-				return runBuildMinutes;
-			}
-			set
-			{
-				runBuildMinutes = value;
-				UpdateRunBuildTime();
-				OnPropertyChanged(nameof(RunBuildMinutes));
+        /* GRADLE DAEMON */
+        private DateTime gradleDaemonTime;
+        public DateTime GradleDaemonTime
+        {
+            get
+            {
+                return gradleDaemonTime;
             }
-		}
-
-		private int runBuildSeconds;
-		public int RunBuildSeconds
-		{
-			get
-			{
-				return runBuildSeconds;
-			}
-			set
-			{
-				runBuildSeconds = value;
-				UpdateRunBuildTime();
-				OnPropertyChanged(nameof(RunBuildSeconds));
+            set
+            {
+                gradleDaemonTime = value;
+                OnPropertyChanged(nameof(GradleDaemonTime));
             }
-		}
+        }
 
-		private int runBuildMilliseconds;
-		public int RunBuildMilliseconds
-		{
-			get
-			{
-				return runBuildMilliseconds;
-			}
-			set
-			{
-				runBuildMilliseconds = value;
-				UpdateRunBuildTime();
-				OnPropertyChanged(nameof(RunBuildMilliseconds));
+        private int gradleDaemonHours;
+        public int GradleDaemonHours
+        {
+            get
+            {
+                return gradleDaemonHours;
             }
-		}
-
-
-
-		#endregion
-
-
-
-
-		#region LOAD BUILD
-
-
-
-		private Visibility loadBuildVisibility;
-		public Visibility LoadBuildVisibility
-		{
-			get
-			{
-				return loadBuildVisibility;
-			}
-			set
-			{
-				loadBuildVisibility = value;
-				OnPropertyChanged(nameof(LoadBuildVisibility));
-			}
-		}
-
-
-		/* LOAD BUILD */
-		private DateTime loadBuildTime;
-		public DateTime LoadBuildTime
-		{
-			get
-			{
-				return loadBuildTime;
-			}
-			set
-			{
-				loadBuildTime = value;
-				OnPropertyChanged(nameof(LoadBuildTime));
+            set
+            {
+                gradleDaemonHours = value;
+                UpdateGradleDaemonTime();
+                OnPropertyChanged(nameof(GradleDaemonHours));
             }
-		}
+        }
 
-		private int loadBuildHours;
-		public int LoadBuildHours
-		{
-			get
-			{
-				return loadBuildHours;
-			}
-			set
-			{
-				loadBuildHours = value;
-				UpdateLoadBuildTime();
-				OnPropertyChanged(nameof(LoadBuildHours));
+        private int gradleDaemonMinutes;
+        public int GradleDaemonMinutes
+        {
+            get
+            {
+                return gradleDaemonMinutes;
             }
-		}
-
-		private int loadBuildMinutes;
-		public int LoadBuildMinutes
-		{
-			get
-			{
-				return loadBuildMinutes;
-			}
-			set
-			{
-				loadBuildMinutes = value;
-				UpdateLoadBuildTime();
-				OnPropertyChanged(nameof(LoadBuildMinutes));
+            set
+            {
+                gradleDaemonMinutes = value;
+                UpdateGradleDaemonTime();
+                OnPropertyChanged(nameof(GradleDaemonMinutes));
             }
-		}
+        }
 
-		private int loadBuildSeconds;
-		public int LoadBuildSeconds
-		{
-			get
-			{
-				return loadBuildSeconds;
-			}
-			set
-			{
-				loadBuildSeconds = value;
-				UpdateLoadBuildTime();
-				OnPropertyChanged(nameof(LoadBuildSeconds));
+        private int gradleDaemonSeconds;
+        public int GradleDaemonSeconds
+        {
+            get
+            {
+                return gradleDaemonSeconds;
             }
-		}
-
-		private int loadBuildMilliseconds;
-		public int LoadBuildMilliseconds
-		{
-			get
-			{
-				return loadBuildMilliseconds;
-			}
-			set
-			{
-				loadBuildMilliseconds = value;
-				UpdateLoadBuildTime();
-				OnPropertyChanged(nameof(LoadBuildMilliseconds));
+            set
+            {
+                gradleDaemonSeconds = value;
+                UpdateGradleDaemonTime();
+                OnPropertyChanged(nameof(GradleDaemonSeconds));
             }
-		}
+        }
 
-
-
-
-		#endregion
-
-
-
-
-		#region CONFIGURE BUILD
-
-
-
-
-		private Visibility configureBuildVisibility;
-		public Visibility ConfigureBuildVisibility
-		{
-			get
-			{
-				return configureBuildVisibility;
-			}
-			set
-			{
-				configureBuildVisibility = value;
-				OnPropertyChanged(nameof(ConfigureBuildVisibility));
-			}
-		}
-
-
-		/* CONFIGURE BUILD */
-		private DateTime configureBuildTime;
-		public DateTime ConfigureBuildTime
-		{
-			get
-			{
-				return configureBuildTime;
-			}
-			set
-			{
-				configureBuildTime = value;
-				OnPropertyChanged(nameof(ConfigureBuildTime));
-			}
-		}
-
-
-		private int configureBuildHours;
-		public int ConfigureBuildHours
-		{
-			get
-			{
-				return configureBuildHours;
-			}
-			set
-			{
-				configureBuildHours = value;
-				UpdateConfigureBuildTime();
-				OnPropertyChanged(nameof(ConfigureBuildHours));
-			}
-		}
-
-		private int configureBuildMinutes;
-		public int ConfigureBuildMinutes
-		{
-			get
-			{
-				return configureBuildMinutes;
-			}
-			set
-			{
-				configureBuildMinutes = value;
-				UpdateConfigureBuildTime();
-				OnPropertyChanged(nameof(ConfigureBuildMinutes));
+        private int gradleDaemonMilliseconds;
+        public int GradleDaemonMilliseconds
+        {
+            get
+            {
+                return gradleDaemonMilliseconds;
             }
-		}
-
-		private int configureBuildSeconds;
-		public int ConfigureBuildSeconds
-		{
-			get
-			{
-				return configureBuildSeconds;
-			}
-			set
-			{
-				configureBuildSeconds = value;
-				UpdateConfigureBuildTime();
-				OnPropertyChanged(nameof(ConfigureBuildSeconds));
+            set
+            {
+                gradleDaemonMilliseconds = value;
+                UpdateGradleDaemonTime();
+                OnPropertyChanged(nameof(GradleDaemonMilliseconds));
             }
-		}
+        }
 
-		private int configureBuildMilliseconds;
-		public int ConfigureBuildMilliseconds
-		{
-			get
-			{
-				return configureBuildMilliseconds;
-			}
-			set
-			{
-				configureBuildMilliseconds = value;
-				UpdateConfigureBuildTime();
-				OnPropertyChanged(nameof(ConfigureBuildMilliseconds));
+
+
+
+        #endregion
+
+
+
+        #region RUN BUILD
+
+
+
+        private Visibility runBuildVisibility;
+        public Visibility RunBuildVisibility
+        {
+            get
+            {
+                return runBuildVisibility;
             }
-		}
-
-
-
-		#endregion
-
-
-
-		#region ALL PROJECTS
-
-
-
-
-		private Visibility allProjectsVisibility;
-		public Visibility AllProjectsVisibility
-		{
-			get
-			{
-				return allProjectsVisibility;
-			}
-			set
-			{
-				allProjectsVisibility = value;
-				OnPropertyChanged(nameof(AllProjectsVisibility));
-			}
-		}
-
-		/* ALL PROJECTS */
-		private DateTime allProjectsTime;
-		public DateTime AllProjectsTime
-		{
-			get
-			{
-				return allProjectsTime;
-			}
-			set
-			{
-				allProjectsTime = value;
-				OnPropertyChanged(nameof(AllProjectsTime));
-			}
-		}
-
-		private int allProjectsHours;
-		public int AllProjectsHours
-		{
-			get
-			{
-				return allProjectsHours;
-			}
-			set
-			{
-				allProjectsHours = value;
-				UpdateAllProjectsTime();
-				OnPropertyChanged(nameof(AllProjectsHours));
-			}
-		}
-
-		private int allProjectsMinutes;
-		public int AllProjectsMinutes
-		{
-			get
-			{
-				return allProjectsMinutes;
-			}
-			set
-			{
-				allProjectsMinutes = value;
-				UpdateAllProjectsTime();
-				OnPropertyChanged(nameof(AllProjectsMinutes));
+            set
+            {
+                runBuildVisibility = value;
+                OnPropertyChanged(nameof(RunBuildVisibility));
             }
-		}
+        }
 
-		private int allProjectsSeconds;
-		public int AllProjectsSeconds
-		{
-			get
-			{
-				return allProjectsSeconds;
-			}
-			set
-			{
-				allProjectsSeconds = value;
-				UpdateAllProjectsTime();
-				OnPropertyChanged(nameof(AllProjectsSeconds));
-            }
-		}
 
-		private int allProjectsMilliseconds;
-		public int AllProjectsMilliseconds
-		{
-			get
-			{
-				return allProjectsMilliseconds;
-			}
-			set
-			{
-				allProjectsMilliseconds = value;
-				UpdateAllProjectsTime();
-				OnPropertyChanged(nameof(AllProjectsMilliseconds));
+
+        /* RUN BUILD */
+        private DateTime runBuildTime;
+        public DateTime RunBuildTime
+        {
+            get
+            {
+                return runBuildTime;
             }
-		}
+            set
+            {
+                runBuildTime = value;
+                OnPropertyChanged(nameof(RunBuildTime));
+            }
+        }
+
+        private int runBuildHours;
+        public int RunBuildHours
+        {
+            get
+            {
+                return runBuildHours;
+            }
+            set
+            {
+                runBuildHours = value;
+                UpdateRunBuildTime();
+                OnPropertyChanged(nameof(RunBuildHours));
+            }
+        }
+
+        private int runBuildMinutes;
+        public int RunBuildMinutes
+        {
+            get
+            {
+                return runBuildMinutes;
+            }
+            set
+            {
+                runBuildMinutes = value;
+                UpdateRunBuildTime();
+                OnPropertyChanged(nameof(RunBuildMinutes));
+            }
+        }
+
+        private int runBuildSeconds;
+        public int RunBuildSeconds
+        {
+            get
+            {
+                return runBuildSeconds;
+            }
+            set
+            {
+                runBuildSeconds = value;
+                UpdateRunBuildTime();
+                OnPropertyChanged(nameof(RunBuildSeconds));
+            }
+        }
+
+        private int runBuildMilliseconds;
+        public int RunBuildMilliseconds
+        {
+            get
+            {
+                return runBuildMilliseconds;
+            }
+            set
+            {
+                runBuildMilliseconds = value;
+                UpdateRunBuildTime();
+                OnPropertyChanged(nameof(RunBuildMilliseconds));
+            }
+        }
+
+
+
+        #endregion
+
+
+
+
+        #region LOAD BUILD
+
+
+
+        private Visibility loadBuildVisibility;
+        public Visibility LoadBuildVisibility
+        {
+            get
+            {
+                return loadBuildVisibility;
+            }
+            set
+            {
+                loadBuildVisibility = value;
+                OnPropertyChanged(nameof(LoadBuildVisibility));
+            }
+        }
+
+
+        /* LOAD BUILD */
+        private DateTime loadBuildTime;
+        public DateTime LoadBuildTime
+        {
+            get
+            {
+                return loadBuildTime;
+            }
+            set
+            {
+                loadBuildTime = value;
+                OnPropertyChanged(nameof(LoadBuildTime));
+            }
+        }
+
+        private int loadBuildHours;
+        public int LoadBuildHours
+        {
+            get
+            {
+                return loadBuildHours;
+            }
+            set
+            {
+                loadBuildHours = value;
+                UpdateLoadBuildTime();
+                OnPropertyChanged(nameof(LoadBuildHours));
+            }
+        }
+
+        private int loadBuildMinutes;
+        public int LoadBuildMinutes
+        {
+            get
+            {
+                return loadBuildMinutes;
+            }
+            set
+            {
+                loadBuildMinutes = value;
+                UpdateLoadBuildTime();
+                OnPropertyChanged(nameof(LoadBuildMinutes));
+            }
+        }
+
+        private int loadBuildSeconds;
+        public int LoadBuildSeconds
+        {
+            get
+            {
+                return loadBuildSeconds;
+            }
+            set
+            {
+                loadBuildSeconds = value;
+                UpdateLoadBuildTime();
+                OnPropertyChanged(nameof(LoadBuildSeconds));
+            }
+        }
+
+        private int loadBuildMilliseconds;
+        public int LoadBuildMilliseconds
+        {
+            get
+            {
+                return loadBuildMilliseconds;
+            }
+            set
+            {
+                loadBuildMilliseconds = value;
+                UpdateLoadBuildTime();
+                OnPropertyChanged(nameof(LoadBuildMilliseconds));
+            }
+        }
+
+
+
+
+        #endregion
+
+
+
+
+        #region CONFIGURE BUILD
+
+
+
+
+        private Visibility configureBuildVisibility;
+        public Visibility ConfigureBuildVisibility
+        {
+            get
+            {
+                return configureBuildVisibility;
+            }
+            set
+            {
+                configureBuildVisibility = value;
+                OnPropertyChanged(nameof(ConfigureBuildVisibility));
+            }
+        }
+
+
+        /* CONFIGURE BUILD */
+        private DateTime configureBuildTime;
+        public DateTime ConfigureBuildTime
+        {
+            get
+            {
+                return configureBuildTime;
+            }
+            set
+            {
+                configureBuildTime = value;
+                OnPropertyChanged(nameof(ConfigureBuildTime));
+            }
+        }
+
+
+        private int configureBuildHours;
+        public int ConfigureBuildHours
+        {
+            get
+            {
+                return configureBuildHours;
+            }
+            set
+            {
+                configureBuildHours = value;
+                UpdateConfigureBuildTime();
+                OnPropertyChanged(nameof(ConfigureBuildHours));
+            }
+        }
+
+        private int configureBuildMinutes;
+        public int ConfigureBuildMinutes
+        {
+            get
+            {
+                return configureBuildMinutes;
+            }
+            set
+            {
+                configureBuildMinutes = value;
+                UpdateConfigureBuildTime();
+                OnPropertyChanged(nameof(ConfigureBuildMinutes));
+            }
+        }
+
+        private int configureBuildSeconds;
+        public int ConfigureBuildSeconds
+        {
+            get
+            {
+                return configureBuildSeconds;
+            }
+            set
+            {
+                configureBuildSeconds = value;
+                UpdateConfigureBuildTime();
+                OnPropertyChanged(nameof(ConfigureBuildSeconds));
+            }
+        }
+
+        private int configureBuildMilliseconds;
+        public int ConfigureBuildMilliseconds
+        {
+            get
+            {
+                return configureBuildMilliseconds;
+            }
+            set
+            {
+                configureBuildMilliseconds = value;
+                UpdateConfigureBuildTime();
+                OnPropertyChanged(nameof(ConfigureBuildMilliseconds));
+            }
+        }
+
+
+
+        #endregion
+
+
+
+        #region ALL PROJECTS
+
+
+
+
+        private Visibility allProjectsVisibility;
+        public Visibility AllProjectsVisibility
+        {
+            get
+            {
+                return allProjectsVisibility;
+            }
+            set
+            {
+                allProjectsVisibility = value;
+                OnPropertyChanged(nameof(AllProjectsVisibility));
+            }
+        }
+
+        /* ALL PROJECTS */
+        private DateTime allProjectsTime;
+        public DateTime AllProjectsTime
+        {
+            get
+            {
+                return allProjectsTime;
+            }
+            set
+            {
+                allProjectsTime = value;
+                OnPropertyChanged(nameof(AllProjectsTime));
+            }
+        }
+
+        private int allProjectsHours;
+        public int AllProjectsHours
+        {
+            get
+            {
+                return allProjectsHours;
+            }
+            set
+            {
+                allProjectsHours = value;
+                UpdateAllProjectsTime();
+                OnPropertyChanged(nameof(AllProjectsHours));
+            }
+        }
+
+        private int allProjectsMinutes;
+        public int AllProjectsMinutes
+        {
+            get
+            {
+                return allProjectsMinutes;
+            }
+            set
+            {
+                allProjectsMinutes = value;
+                UpdateAllProjectsTime();
+                OnPropertyChanged(nameof(AllProjectsMinutes));
+            }
+        }
+
+        private int allProjectsSeconds;
+        public int AllProjectsSeconds
+        {
+            get
+            {
+                return allProjectsSeconds;
+            }
+            set
+            {
+                allProjectsSeconds = value;
+                UpdateAllProjectsTime();
+                OnPropertyChanged(nameof(AllProjectsSeconds));
+            }
+        }
+
+        private int allProjectsMilliseconds;
+        public int AllProjectsMilliseconds
+        {
+            get
+            {
+                return allProjectsMilliseconds;
+            }
+            set
+            {
+                allProjectsMilliseconds = value;
+                UpdateAllProjectsTime();
+                OnPropertyChanged(nameof(AllProjectsMilliseconds));
+            }
+        }
 
 
         #endregion
@@ -705,44 +697,44 @@ namespace Data_Logger_1._3.ViewModels.Dialogs
 
 
 
-		public void UpdateSyncTime()
-		{
-			SyncTime = DateTime.Parse(DateTime.Now.ToLongDateString() + " " + SyncHours + ":" + SyncMinutes + ":" + SyncSeconds + "." + SyncMilliseconds);
-		}
-
-		public void UpdateGradleDaemonTime()
-		{
-			GradleDaemonTime = DateTime.Parse(DateTime.Now.ToLongDateString() + " " + GradleDaemonHours + ":" + GradleDaemonMinutes + ":" + GradleDaemonSeconds + "." + GradleDaemonMilliseconds);
+        public void UpdateSyncTime()
+        {
+            SyncTime = DateTime.Parse(DateTime.Now.ToLongDateString() + " " + SyncHours + ":" + SyncMinutes + ":" + SyncSeconds + "." + SyncMilliseconds);
         }
 
-		public void UpdateRunBuildTime()
-		{
-			RunBuildTime = DateTime.Parse(DateTime.Now.ToLongDateString() + " " + RunBuildHours + ":" + RunBuildMinutes + ":" + RunBuildSeconds + "." + RunBuildMilliseconds);
+        public void UpdateGradleDaemonTime()
+        {
+            GradleDaemonTime = DateTime.Parse(DateTime.Now.ToLongDateString() + " " + GradleDaemonHours + ":" + GradleDaemonMinutes + ":" + GradleDaemonSeconds + "." + GradleDaemonMilliseconds);
         }
 
-		public void UpdateLoadBuildTime()
-		{
-			LoadBuildTime = DateTime.Parse(DateTime.Now.ToLongDateString() + " " + LoadBuildHours + ":" + LoadBuildMinutes + ":" + LoadBuildSeconds + "." + LoadBuildMilliseconds);
+        public void UpdateRunBuildTime()
+        {
+            RunBuildTime = DateTime.Parse(DateTime.Now.ToLongDateString() + " " + RunBuildHours + ":" + RunBuildMinutes + ":" + RunBuildSeconds + "." + RunBuildMilliseconds);
         }
 
-		public void UpdateConfigureBuildTime()
-		{
-			ConfigureBuildTime = DateTime.Parse(DateTime.Now.ToLongDateString() + " " + ConfigureBuildHours + ":" + ConfigureBuildMinutes + ":" + ConfigureBuildSeconds + "." + ConfigureBuildMilliseconds);
+        public void UpdateLoadBuildTime()
+        {
+            LoadBuildTime = DateTime.Parse(DateTime.Now.ToLongDateString() + " " + LoadBuildHours + ":" + LoadBuildMinutes + ":" + LoadBuildSeconds + "." + LoadBuildMilliseconds);
         }
 
-		public void UpdateAllProjectsTime()
-		{
-			AllProjectsTime = DateTime.Parse(DateTime.Now.ToLongDateString() + " " + AllProjectsHours + ":" + AllProjectsMinutes + ":" + AllProjectsSeconds + "." + AllProjectsMilliseconds);
+        public void UpdateConfigureBuildTime()
+        {
+            ConfigureBuildTime = DateTime.Parse(DateTime.Now.ToLongDateString() + " " + ConfigureBuildHours + ":" + ConfigureBuildMinutes + ":" + ConfigureBuildSeconds + "." + ConfigureBuildMilliseconds);
+        }
+
+        public void UpdateAllProjectsTime()
+        {
+            AllProjectsTime = DateTime.Parse(DateTime.Now.ToLongDateString() + " " + AllProjectsHours + ":" + AllProjectsMinutes + ":" + AllProjectsSeconds + "." + AllProjectsMilliseconds);
         }
 
         public override void UpdateLogCount()
         {
             if (ASOnly && _ASviewModel is not null)
-			{
+            {
                 var count = _dataService.ASLogCount();
                 LogCount = $"{_ASviewModel.CacheItems.Count} Logs Cached";
                 _ASviewModel.LogCount = $"{_ASviewModel.CacheItems.Count} android logs cached | {count} total logs";
-            }           
+            }
         }
 
 

@@ -1,6 +1,5 @@
 ﻿using Data_Logger_1._3.Commands.NotesCommands;
 using Data_Logger_1._3.Services;
-using MVVMEssentials.Services;
 using MVVMEssentials.ViewModels;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
