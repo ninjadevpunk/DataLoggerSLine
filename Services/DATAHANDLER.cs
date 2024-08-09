@@ -41,20 +41,21 @@ namespace Data_Logger_1._3.Services
 
             if (LOG_ID != 100000000)
             {
-                query.CommandText = "UPDATE LOG" +
-                "                   SET accountID = @account," +
-                "                       projectID = @project," +
-                "                       start = @start," +
-                "                       end = @end," +
-                "                       outputID = @output," +
-                "                       typeID = @type" +
-                "                       WHERE logID = @id;";
+                query.CommandText = $@"UPDATE LOG
+                                   SET {Column.AccountID} = @account,
+                                       {Column.ProjectID} = @project,
+                                       start = @start,
+                                       end = @end,
+                                       outputID = @output,
+                                       typeID = @type
+                                       WHERE logID = @id
+;";
 
                 query.Parameters.AddWithValue("@id", LOG_ID);
                 query.Parameters.AddWithValue("@account", log.Author.ID);
                 query.Parameters.AddWithValue("@project", log.Project.ProjectID);
-                query.Parameters.AddWithValue("@start", log.StartTime);
-                query.Parameters.AddWithValue("@end", log.EndTime);
+                query.Parameters.AddWithValue("@start", log.Start);
+                query.Parameters.AddWithValue("@end", log.End);
                 query.Parameters.AddWithValue("@output", log.Output.OutputID);
                 query.Parameters.AddWithValue("@type", log.Type.TypeID);
 

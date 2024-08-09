@@ -1,4 +1,5 @@
-﻿using Data_Logger_1._3.Models;
+﻿using Data_Logger_1._3.Commands.LoggerCommands;
+using Data_Logger_1._3.Models;
 using Data_Logger_1._3.Models.App_Models;
 using Data_Logger_1._3.ViewModels.Dashboard;
 using Data_Logger_1._3.ViewModels.LogViewModels;
@@ -8,7 +9,8 @@ using System.Text.RegularExpressions;
 namespace Data_Logger_1._3.Services
 {
 
-    public enum ProjectsCodingBRANCH {
+    public enum ProjectsCodingBRANCH
+    {
         Qt,
         Android,
         Generic
@@ -74,7 +76,7 @@ namespace Data_Logger_1._3.Services
 
         public void SignOutUser()
         {
-            if(_account is not null)
+            if (_account is not null)
                 _writer.UnsetCurrentUser(_account);
         }
 
@@ -92,7 +94,10 @@ namespace Data_Logger_1._3.Services
             return _reader.UpdateProfilePic(emailAddress);
         }
 
-
+        public void UpdateWatcher(int CachedItems, int CachedPostIts)
+        {
+            _writer.Watcher.UpdateOnStart(CachedItems, CachedPostIts);
+        }
         public ACCOUNT GetUser()
         {
             return _account;
@@ -186,7 +191,32 @@ namespace Data_Logger_1._3.Services
                 // TODO
             }
 
-            
+
+        }
+
+        public void InitialiseApplicationsLIST(LOG.CATEGORY category)
+        {
+            try
+            {
+                SQLITE_APPLICATIONS.Clear();
+
+                var collection = _writer.ListApplications(category);
+
+                foreach (ApplicationClass app in collection)
+                {
+                    if (app is not null)
+                        SQLITE_APPLICATIONS.Add(app);
+                }
+
+
+
+            }
+            catch (Exception)
+            {
+                // TODO
+            }
+
+
         }
 
 
@@ -263,21 +293,84 @@ namespace Data_Logger_1._3.Services
             return _writer.CreateAppID(category, account, applicationName);
         }
 
-        public int CreatePostItID(int PostItLiseSize)
+        public int CreateAppID(ActionType action, LOG.CATEGORY category, ACCOUNT account, string applicationName, int usedID)
         {
-            return _writer.CreatePostItID(PostItLiseSize);
+            return _writer.CreateAppID(action, category, account, applicationName, usedID);
         }
 
-        public int CreateSubjectID(ProjectClass project, string subjectName, int PostItListSize)
+        public int CreatePostItID(List<int>? unUsedIDs)
         {
-            return _writer.CreateSubjectID(project, subjectName, PostItListSize);
+            return _writer.CreatePostItID(unUsedIDs);
+        }
+
+        public List<int>? RetrievePostItIndex()
+        {
+            return _cachemaster.RetrievePostItIndex();
+        }
+
+        public void SavePostItIndex()
+        {
+            _cachemaster.SavePostItIndex(_writer.Watcher.AvailablePostItIDs);
+        }
+
+        public void UpdateAvailablePostItIDs(List<int>? unUsedIDs)
+        {
+            try
+            {
+                if (_writer.Watcher.AvailablePostItIDs is not null)
+                {
+                    _writer.Watcher.AvailablePostItIDs.AddRange(unUsedIDs);
+                }
+                else
+                {
+                    _writer.Watcher.AvailablePostItIDs = unUsedIDs;
+                }
+            }
+            catch (Exception)
+            {
+                // TODO
+            }
+        }
+
+        public int CreateSubjectID(ProjectClass project, string subjectName, List<int>? unUsedIDs)
+        {
+            return _writer.CreateSubjectID(project, subjectName, unUsedIDs);
+        }
+
+        public List<int>? RetrieveSubjectIndex()
+        {
+            return _cachemaster.RetrieveSubjectIndex();
+        }
+
+        public void SaveSubjectIndex()
+        {
+            _cachemaster.SaveSubjectIndex(_writer.Watcher.AvailableSubjectIDs);
+        }
+
+        public void UpdateAvailableSubjectIDs(List<int>? unUsedIDs)
+        {
+            try
+            {
+                if (_writer.Watcher.AvailableSubjectIDs is not null)
+                {
+                    _writer.Watcher.AvailableSubjectIDs.AddRange(unUsedIDs);
+                }
+                else
+                {
+                    _writer.Watcher.AvailableSubjectIDs = unUsedIDs;
+                }
+            }
+            catch (Exception)
+            {
+                // TODO
+            }
         }
 
         public int CreateOutputID(ACCOUNT account, ApplicationClass applicationName, string outputName)
         {
             return _writer.CreateOutputID(account, applicationName, outputName);
         }
-        
+
         public int CreateTypeID(ACCOUNT account, ApplicationClass applicationName, string typeName)
         {
             return _writer.CreateTypeID(account, applicationName, typeName);
@@ -302,6 +395,14 @@ namespace Data_Logger_1._3.Services
 
 
 
+
+
+
+        public void SaveLog(LOG log, string filePath)
+        {
+            _cachemaster.SaveLog(log, filePath);
+        }
+
         public bool StoreLog(LOG log)
         {
             bool IsStored = false;
@@ -309,7 +410,7 @@ namespace Data_Logger_1._3.Services
 
             _writer.CreateLOG(log);
 
-            if(_writer.LogCount() > initialCount)
+            if (_writer.LogCount() > initialCount)
             {
                 IsStored = true;
                 CurrentProject = log.Project;
@@ -344,9 +445,9 @@ namespace Data_Logger_1._3.Services
             List<LOG> logs = new();
             _reader.RetrieveLOGS();
 
-            foreach(LOG log in _reader)
+            foreach (LOG log in _reader)
             {
-                if(log.Category == category)
+                if (log.Category == category)
                     logs.Add(log);
             }
 
@@ -369,7 +470,10 @@ namespace Data_Logger_1._3.Services
             return _writer.ASLogCount();
         }
 
-
+        public List<SubjectClass> ListSubjects(ProjectClass project)
+        {
+            return _writer.ListSubjects(project);
+        }
 
 
 
@@ -381,9 +485,9 @@ namespace Data_Logger_1._3.Services
 
 
 
-        public void DeleteQtCacheFile(int id)
+        public void DeleteCacheFile(int id, CacheContext cacheContext)
         {
-            _cachemaster.DeleteQtViewModel(id);
+            _cachemaster.DeleteViewModel(id, cacheContext);
         }
 
 
@@ -402,14 +506,38 @@ namespace Data_Logger_1._3.Services
 
 
 
-
+        /// <summary>
+        /// Retrieve's Qt cache. Qt cache are Qt logs that haven't been stored.
+        /// </summary>
+        /// <param name="logCacheViewModel">The Qt dashboard/owner that is requesting the cache.</param>
+        /// <param name="dataService">The service that will interface with the UI.</param>
+        /// <returns>A list of QtLOGViewModels.</returns>
         public ObservableCollection<QtLOGViewModel> RetrieveQtCache(LogCacheViewModel logCacheViewModel, DataService dataService)
         {
-            return _cachemaster.LoadQtViewModels(logCacheViewModel, dataService);
+            return _cachemaster.LoadQtViewModels(logCacheViewModel, dataService, _account);
         }
 
+        /// <summary>
+        /// Retrieve's Android Studio cache. Android Studio cache are Android Studio logs that haven't been stored.
+        /// </summary>
+        /// <param name="logCacheViewModel">The Android Studio dashboard/owner that is requesting the cache.</param>
+        /// <param name="dataService">The service that will interface with the UI.</param>
+        /// <returns></returns>
+        public ObservableCollection<AndroidLOGViewModel> RetrieveASCache(LogCacheViewModel logCacheViewModel, DataService dataService)
+        {
+            return _cachemaster.LoadASViewModels(logCacheViewModel, dataService, _account);
+        }
 
-
+        /// <summary>
+        /// Retrieve's coding cache. Coding cache are coding logs that haven't been stored.
+        /// </summary>
+        /// <param name="logCacheViewModel">The coding dashboard/owner that is requesting the cache.</param>
+        /// <param name="dataService">The service that will interface with the UI.</param>
+        /// <returns></returns>
+        public ObservableCollection<CodeLOGViewModel> RetrieveCodeCache(LogCacheViewModel logCacheViewModel, DataService dataService)
+        {
+            return _cachemaster.LoadCodeViewModels(logCacheViewModel, dataService, _account);
+        }
 
         #endregion
 

@@ -1,4 +1,5 @@
-﻿using Data_Logger_1._3.Models;
+﻿using Data_Logger_1._3.Commands.LoggerCommands;
+using Data_Logger_1._3.Models;
 using Data_Logger_1._3.Models.App_Models;
 using System.Data.SQLite;
 using System.Text.RegularExpressions;
@@ -46,7 +47,8 @@ namespace Data_Logger_1._3.Services
              *  Look for the MEDIUM that matches "media" parameter variable.
              *  Then, return the key of the output when it is found.
              */
-            query.CommandText = "SELECT * FROM MEDIUM WHERE categoryID = @category ORDER BY mediumID ASC;";
+            query.CommandText = $@"SELECT * FROM MEDIUM WHERE {Column.CategoryID} = @category
+;";
             query.Parameters.AddWithValue("@category", FindCategoryID(category));
             read = query.ExecuteReader();
 
@@ -77,7 +79,7 @@ namespace Data_Logger_1._3.Services
              *  Look for the FORMAT that matches "format" parameter variable.
              *  Then, return the key of the output when it is found.
              */
-            query.CommandText = "SELECT * FROM FORMAT WHERE categoryID = @category ORDER BY formatID ASC;";
+            query.CommandText = "SELECT * FROM FORMAT WHERE {Column.CategoryID} = @category ORDER BY formatID ASC;";
             query.Parameters.AddWithValue("@category", FindCategoryID(category));
             read = query.ExecuteReader();
 
@@ -117,7 +119,7 @@ namespace Data_Logger_1._3.Services
             {
                 if (unit == read.GetString(unitColumn))
                 {
-                    unitKey = read.GetInt32(IDColumn);
+                    unitKey = read.GetInt32(Column.IDColumn);
                     break;
                 }
 
@@ -144,7 +146,7 @@ namespace Data_Logger_1._3.Services
 
             while (read.Read())
             {
-                FNKey = read.GetInt32(IDColumn);
+                FNKey = read.GetInt32(Column.IDColumn);
                 break;
 
             }
@@ -183,17 +185,16 @@ namespace Data_Logger_1._3.Services
             List<string> outputs = new List<string>();
             SQLiteCommand query = _con.CreateCommand();
             SQLiteDataReader read;
-            int catNumber = 1;
 
-            query.CommandText = @"SELECT * FROM OUTPUT WHERE accountID = @account
-                                    AND categoryID = @category
-                                    AND appID = @app ORDER BY outputID;";
+            query.CommandText = $@"SELECT * FROM OUTPUT WHERE {Column.AccountID} = @account
+                                    AND {Column.CategoryID} = @category
+                                    AND {Column.AppID} = @app ORDER BY outputID
+;";
             query.Parameters.AddWithValue("@accounD", User.ID);
-            query.Parameters.AddWithValue("@category", app.Category);
+            query.Parameters.AddWithValue("@category", FindCategoryID(app.Category));
             query.Parameters.AddWithValue("@app", app.AppID);
             read = query.ExecuteReader();
 
-            catNumber = FindCategoryID(app.Category);
 
             while (read.Read())
             {
@@ -214,17 +215,16 @@ namespace Data_Logger_1._3.Services
             List<string> types = new List<string>();
             SQLiteCommand query = _con.CreateCommand();
             SQLiteDataReader read;
-            int catNumber = 1;
 
-            query.CommandText = @"SELECT * FROM TYPE WHERE accountID = @account
-                                    AND categoryID = @category
-                                    AND appID = @app  ORDER BY typeID;";
+            query.CommandText = $@"SELECT * FROM TYPE WHERE {Column.AccountID} = @account
+                                    AND {Column.CategoryID} = @category
+                                    AND {Column.AppID} = @app  ORDER BY typeID
+;";
             query.Parameters.AddWithValue("@accounD", User.ID);
-            query.Parameters.AddWithValue("@category", app.Category);
+            query.Parameters.AddWithValue("@category", FindCategoryID(app.Category));
             query.Parameters.AddWithValue("@app", app.AppID);
             read = query.ExecuteReader();
 
-            catNumber = FindCategoryID(app.Category);
 
             while (read.Read())
             {
@@ -377,6 +377,15 @@ namespace Data_Logger_1._3.Services
             return units;
         }
 
+
+
+
+
+
+
+
+
+
         public int CreateAccountID()
         {
             SQLiteCommand query = _con.CreateCommand();
@@ -419,17 +428,26 @@ namespace Data_Logger_1._3.Services
 
             read.Close();
 
-            return id + count;
+            return id + count + Watcher.LogID++;
         }
 
 
         /* Create Log Note ID. */
-        public int CreatePostItID(int PostItListSize)
+        public int CreatePostItID(List<int>? unUsedIDs)
         {
+            int id, count = 0;
+            Watcher.AvailablePostItIDs = unUsedIDs;
+            if (Watcher.AvailablePostItIDs is not null && Watcher.AvailablePostItIDs.Count > 0)
+            {
+                id = Watcher.AvailablePostItIDs[0];
+                Watcher.AvailablePostItIDs.RemoveAt(0);
+
+                return id;
+            }
+
             SQLiteCommand query = _con.CreateCommand();
             SQLiteDataReader read;
             const int LNID = 12000001;
-            int id, count = 0;
 
             // Get the total amount of notaries and store it in LNID.
             query.CommandText = "SELECT * FROM PostIt;";
@@ -447,7 +465,7 @@ namespace Data_Logger_1._3.Services
 
 
 
-            id = PostItListSize > 1 ? LNID + count + PostItIDWatcher++ : LNID + count;
+            id = LNID + count + Watcher.PostItID++;
 
             return id;
         }
@@ -470,13 +488,14 @@ namespace Data_Logger_1._3.Services
 
             read.Close();
 
-            return id + count;
+            return id + count + Watcher.ProjectID++;
         }
 
         public int CreateProjectID(ACCOUNT account, ApplicationClass app, string project)
         {
             SQLiteCommand query = _con.CreateCommand();
             int count = 0, id = 1;
+            bool found = false;
 
             query.CommandText = "SELECT * FROM PROJECT;";
 
@@ -485,12 +504,13 @@ namespace Data_Logger_1._3.Services
 
             while (read.Read())
             {
-                if(read.GetInt32(3) == FindCategoryID(app.Category) &&
+                if (read.GetInt32(3) == FindCategoryID(app.Category) &&
                     read.GetInt32(2) == account.ID &&
-                    read.GetInt32(1) == app.AppID && 
+                    read.GetInt32(1) == app.AppID &&
                     read.GetString(4) == project)
                 {
                     id = read.GetInt32(0);
+                    found = true;
                     break;
                 }
                 else
@@ -500,7 +520,7 @@ namespace Data_Logger_1._3.Services
 
             read.Close();
 
-            return id + count;
+            return found ? id : id + count + Watcher.ProjectID++;
         }
 
 
@@ -521,13 +541,17 @@ namespace Data_Logger_1._3.Services
 
             read.Close();
 
-            return id + count;
+            return id + count + Watcher.AppID++;
         }
 
         public int CreateAppID(LOG.CATEGORY category, ACCOUNT account, string applicationName)
         {
+            if (string.IsNullOrEmpty(applicationName))
+                return 3;
+
             SQLiteCommand query = _con.CreateCommand();
             int count = 0, id = 1;
+            bool found = false;
 
             var categoryColumn = 3;
             var accountColumn = 1;
@@ -545,7 +569,46 @@ namespace Data_Logger_1._3.Services
                         read.GetInt32(accountColumn) == 1) &&
                     read.GetString(appColumn) == applicationName)
                 {
-                    id = read.GetInt32(IDColumn);
+                    id = read.GetInt32(Column.IDColumn);
+                    found = true;
+                    break;
+                }
+                else
+                    ++count;
+
+            }
+
+            read.Close();
+
+            return found ? id : id + count + Watcher.AppID++;
+        }
+
+        public int CreateAppID(ActionType action, LOG.CATEGORY category, ACCOUNT account, string applicationName, int usedID)
+        {
+            if (string.IsNullOrEmpty(applicationName))
+                applicationName = "Unknown";
+
+            SQLiteCommand query = _con.CreateCommand();
+            int count = 0, id = 1;
+
+            var categoryColumn = 3;
+            var accountColumn = 1;
+            var appColumn = 2;
+
+            query.CommandText = "SELECT * FROM APPLICATION;";
+
+            SQLiteDataReader read;
+            read = query.ExecuteReader();
+
+            while (read.Read())
+            {
+                if (read.GetInt32(categoryColumn) == FindCategoryID(category) &&
+                    (read.GetInt32(accountColumn) == FindAccountID(account) ||
+                        read.GetInt32(accountColumn) == 1) &&
+                    read.GetString(appColumn) == applicationName ||
+                        usedID == read.GetInt32(Column.IDColumn))
+                {
+                    id = read.GetInt32(Column.IDColumn);
                     break;
                 }
                 else
@@ -555,7 +618,7 @@ namespace Data_Logger_1._3.Services
 
             read.Close();
 
-            return id;
+            return action == ActionType.Add ? id + Watcher.AppID++ : id + (Watcher.AppID - Watcher.AppID);
         }
 
         public int CreateSubjectID()
@@ -575,59 +638,77 @@ namespace Data_Logger_1._3.Services
 
             read.Close();
 
-            return id + count + SubjectIDWatcher++;
+            return id + count + Watcher.SubjectID++;
         }
 
-        public int CreateSubjectID(ProjectClass project, string subject, int PostItListSize)
+        public int CreateSubjectID(ProjectClass project, string subject, List<int>? unUsedIDs)
         {
-            SQLiteCommand query = _con.CreateCommand();
-            int count = 0, staticID = 1, dynamicID = 1;
-            const string NS = "No Subject";
-            bool Found = false;
-
-            var categoryColumn = 4;
-            var accountColumn = 3;
-            var appColumn = 2;
-            var projectColumn = 1;
-            var subjectColumn = 5;
-
-            query.CommandText = "SELECT * FROM Subject;";
-
-            if (subject == String.Empty || subject == NS)
+            try
             {
-                subject = NS;
-                return 1;
-            }
+                int count = 0, staticID = 1, dynamicID = 1;
 
-            SQLiteDataReader read;
-            read = query.ExecuteReader();
-
-            while (read.Read())
-            {
-                if (read.GetInt32(categoryColumn) == FindCategoryID(project.Category) &&
-                    (read.GetInt32(accountColumn) == project.User.ID  ||
-                    read.GetInt32(accountColumn) == 1) &&
-                    read.GetInt32(appColumn) == project.Application.AppID &&
-                    read.GetInt32(projectColumn) == project.ProjectID &&
-                    read.GetString(subjectColumn) == subject)
+                Watcher.AvailableSubjectIDs = unUsedIDs;
+                if (Watcher.AvailableSubjectIDs is not null && Watcher.AvailableSubjectIDs.Count > 0)
                 {
-                    Found = true;
-                    staticID = read.GetInt32(IDColumn);
-                    count = 0;
-                    break;
+                    dynamicID = Watcher.AvailableSubjectIDs[0];
+                    Watcher.AvailableSubjectIDs.RemoveAt(0);
+
+                    return dynamicID;
                 }
-                else
-                    ++count;
+
+                SQLiteCommand query = _con.CreateCommand();
+                const string NS = "No Subject";
+                bool Found = false;
+
+                var categoryColumn = 4;
+                var accountColumn = 3;
+                var appColumn = 2;
+                var projectColumn = 1;
+                var subjectColumn = 5;
+
+                query.CommandText = "SELECT * FROM Subject;";
+
+                if (subject == String.Empty || subject == NS)
+                {
+                    subject = NS;
+                    return 1;
+                }
+
+                SQLiteDataReader read;
+                read = query.ExecuteReader();
+
+                while (read.Read())
+                {
+                    if (read.GetInt32(categoryColumn) == FindCategoryID(project.Category) &&
+                        (read.GetInt32(accountColumn) == project.User.ID ||
+                        read.GetInt32(accountColumn) == 1) &&
+                        read.GetInt32(appColumn) == project.Application.AppID &&
+                        read.GetInt32(projectColumn) == project.ProjectID &&
+                        read.GetString(subjectColumn) == subject)
+                    {
+                        Found = true;
+                        staticID = read.GetInt32(Column.IDColumn);
+                        count = 0;
+                        break;
+                    }
+                    else
+                        ++count;
+                }
+
+                read.Close();
+
+                if (!Found)
+                {
+                    dynamicID += count + Watcher.SubjectID++;
+                }
+
+                return Found ? staticID : dynamicID;
             }
-
-            read.Close();
-
-            if(!Found)
+            catch (Exception)
             {
-                dynamicID += PostItListSize > 1 ? count + SubjectIDWatcher++ : count;
+                // TODO
             }
-
-            return Found ? staticID : dynamicID;
+            return 1;
         }
 
         public int CreateOutputID(ACCOUNT account, ApplicationClass app, string output)
@@ -653,7 +734,7 @@ namespace Data_Logger_1._3.Services
                     read.GetInt32(appColumn) == app.AppID &&
                     read.GetString(outputColumn) == output)
                 {
-                    id = read.GetInt32(IDColumn);
+                    id = read.GetInt32(Column.IDColumn);
                     count = 0;
                     break;
                 }
@@ -663,13 +744,13 @@ namespace Data_Logger_1._3.Services
 
             read.Close();
 
-            return id + count;
+            return id;
         }
 
         public int CreateTypeID(ACCOUNT account, ApplicationClass app, string type)
         {
             SQLiteCommand query = _con.CreateCommand();
-            int count = 0, id = -1;
+            int count = 0, id = 1;
 
             var categoryColumn = 3;
             var accountColumn = 1;
@@ -689,7 +770,7 @@ namespace Data_Logger_1._3.Services
                     read.GetInt32(appColumn) == app.AppID &&
                     read.GetString(typeColumn) == type)
                 {
-                    id = read.GetInt32(IDColumn);
+                    id = read.GetInt32(Column.IDColumn);
                     break;
                 }
                 else
@@ -718,7 +799,7 @@ namespace Data_Logger_1._3.Services
 
             read.Close();
 
-            return id + count;
+            return id + count + Watcher.ChecklistItemID++;
         }
 
         /** Create database records
@@ -740,10 +821,9 @@ namespace Data_Logger_1._3.Services
             {
 
 
-                query.CommandText =
-                    @"INSERT INTO LOG(logID, categoryID, accountID, projectID, appID, start, end, outputID, typeID)
-                                VALUES(@id, @category, @author, @project, @app, @start, @end, @output, @type);
-                ";
+                query.CommandText = $@"INSERT INTO LOG(logID, {Column.CategoryID}, {Column.AccountID}, {Column.ProjectID}, {Column.AppID}, start, end, outputID, typeID)
+                                VALUES(@id, @category, @author, @project, @app, @start, @end, @output, @type)
+;";
 
                 query.Parameters.AddWithValue("@id", cachedLOG.ID);
                 query.Parameters.AddWithValue("@category", FindCategoryID(cachedLOG.Category));
@@ -754,11 +834,11 @@ namespace Data_Logger_1._3.Services
 
                 var tempAppID = FindAppID(cachedLOG.Application);
                 query.Parameters.AddWithValue("@app", tempAppID);
-                
+
 
                 // TODO Check that times can be read properly by RetrieveLOGS()
-                query.Parameters.AddWithValue("@start", cachedLOG.StartTime.ToString("dddd dd MMMM yyyy HH:mm:ss.fff"));
-                query.Parameters.AddWithValue("@end", cachedLOG.EndTime.ToString("dddd dd MMMM yyyy HH:mm:ss.fff"));
+                query.Parameters.AddWithValue("@start", cachedLOG.Start.ToString("dddd dd MMMM yyyy HH:mm:ss.fff"));
+                query.Parameters.AddWithValue("@end", cachedLOG.End.ToString("dddd dd MMMM yyyy HH:mm:ss.fff"));
                 query.Parameters.AddWithValue("@output", FindOutputID(cachedLOG.Output));
                 query.Parameters.AddWithValue("@type", FindTypeID(cachedLOG.Type));
 
@@ -990,7 +1070,7 @@ namespace Data_Logger_1._3.Services
                             query.Parameters.AddWithValue("@source", fn.Source);
 
                             query.ExecuteNonQuery();
-                            
+
                             Remove(fn);
 
                         }
@@ -1004,287 +1084,275 @@ namespace Data_Logger_1._3.Services
 
         }
 
-        // Create one database record
+
+
+
+
+
+
+
+
+
+
+
+        /// <summary>
+        /// Creates a log in the database.
+        /// </summary>
+        /// <param name="log">The log being stored.</param>
         public void CreateLOG(LOG log)
         {
-            SQLiteCommand query = _con.CreateCommand();
+            try
+            {
+                using (SQLiteCommand insert = _con.CreateCommand())
+                {
+                    InsertLogDetails(log, insert);
+                    InsertPostItDetails(log, insert);
+                    InsertLogCategorySpecificDetails(log, insert);
+                }
+            }
+            catch (SQLiteException ex)
+            {
+                // Handle SQLite exceptions
+                Console.WriteLine($"SQLite Exception: {ex.Message}");
+            }
+            catch (Exception ex)
+            {
+                // Handle other exceptions
+                Console.WriteLine($"Exception: {ex.Message}");
+            }
+        }
 
-            /** Check that the PostIt has valid input and not empty strings */
-            string pattern = "[A-Za-z]{5}[0-9]{0}";
-            Regex xp = new Regex(pattern);
-            const string UKN = "Unknown", NS = "No Subject";
+        private void InsertLogDetails(LOG log, SQLiteCommand insert)
+        {
+            insert.CommandText = $@"INSERT INTO LOG(logID, {Column.CategoryID}, {Column.AccountID}, {Column.ProjectID}, {Column.AppID}, start, end, outputID, typeID)
+                           VALUES(@id, @category, @author, @project, @app, @start, @end, @output, @type);";
+
+            insert.Parameters.AddWithValue("@id", log.ID);
+            insert.Parameters.AddWithValue("@category", FindCategoryID(log.Category));
+            insert.Parameters.AddWithValue("@author", log.Author.ID);
+            insert.Parameters.AddWithValue("@app", FindAppID(log.Application));
+            AppAlreadyAdded = false;
+            insert.Parameters.AddWithValue("@project", FindProjectID(log.Project));
+            ProjectAlreadyAdded = false;
+            insert.Parameters.AddWithValue("@start", log.Start.ToString("dddd dd MMMM yyyy HH:mm:ss.fff"));
+            insert.Parameters.AddWithValue("@end", log.End.ToString("dddd dd MMMM yyyy HH:mm:ss.fff"));
+            insert.Parameters.AddWithValue("@output", FindOutputID(log.Output));
+            insert.Parameters.AddWithValue("@type", FindTypeID(log.Type));
+
+            insert.ExecuteNonQuery();
+
+            if (Watcher.LogID > 0)
+                --Watcher.LogID;
+        }
 
 
-            
-
-
-            query.CommandText =
-                    @"INSERT INTO LOG(logID, categoryID, accountID, projectID, appID, start, end, outputID, typeID)
-                                VALUES(@id, @category, @author, @project, @app, @start, @end, @output, @type);
-                ";
-
-            query.Parameters.AddWithValue("@id", log.ID);
-            query.Parameters.AddWithValue("@category", FindCategoryID(log.Category));
-            query.Parameters.AddWithValue("@author", log.Author.ID);
-
-            var tempAppID = FindAppID(log.Application);
-
-            if (log.Application.Name == UKN || log.Application.Name == string.Empty)
-                tempAppID = 3;
-            query.Parameters.AddWithValue("@app", tempAppID);
-
-            var tempProjectID = FindProjectID(log.Project);
-
-            if (log.Project.Name == UKN || log.Project.Name == string.Empty)
-                tempProjectID = 1;
-            query.Parameters.AddWithValue("@project", tempProjectID);
-
-            // TODO Check that times can be read properly by RetrieveLOGS()
-            query.Parameters.AddWithValue("@start", log.StartTime.ToString("dddd dd MMMM yyyy HH:mm:ss.fff"));
-            query.Parameters.AddWithValue("@end", log.EndTime.ToString("dddd dd MMMM yyyy HH:mm:ss.fff"));
-            query.Parameters.AddWithValue("@output", log.Output.OutputID);
-            query.Parameters.AddWithValue("@type", log.Type.TypeID);
-
-            query.ExecuteNonQuery();
-
-            /** LOG NOTE **/
-            string er = "", so = "", su = "", co = "";
-
+        private void InsertPostItDetails(LOG log, SQLiteCommand insert)
+        {
             foreach (PostIt postIt in log.PostItList)
             {
-                er = xp.IsMatch(postIt.Error) ?
-                    postIt.Error : "";
+                string error = ValidateString(postIt.Error);
+                string solution = ValidateString(postIt.Solution);
+                string suggestion = ValidateString(postIt.Suggestion);
+                string comment = ValidateString(postIt.Comment);
 
-                so = xp.IsMatch(postIt.Solution) ?
-                    postIt.Solution : "";
-
-                su = xp.IsMatch(postIt.Suggestion) ?
-                    postIt.Suggestion : "";
-
-                co = xp.IsMatch(postIt.Comment) ?
-                    postIt.Comment : "";
-
-                query.CommandText =
-                        @"INSERT INTO PostIt(postItID, logID, subjectID, error, date_found, solution, date_solved, suggestion, comment)
-                                        VALUES(@id, @log, @subject, @error, @found, @solution, @solved, @suggest, @comment);
-                ";
-
-                query.Parameters.AddWithValue("@id", postIt.ID);
-                query.Parameters.AddWithValue("@log", log.ID);
-
-                // Subject
-
-                var tempSubjectID = FindSubjectID(postIt.Subject);
-                if (postIt.Subject.Subject == NS || postIt.Subject.Subject == string.Empty)
-                    tempSubjectID = 1;
-
-                query.Parameters.AddWithValue("@subject", tempSubjectID);
-
-                // ERROR
-
-
-                query.Parameters.AddWithValue("@error", er);
-                // Date Time
-                DateTime datum = new DateTime();
-                datum = postIt.ERCaptureTime;
-                if (xp.IsMatch(er))
-                    query.Parameters.AddWithValue("@found", datum.ToString("dddd dd MMMM yyyy HH:mm:ss.fff"));
-                else
-                    query.Parameters.AddWithValue("@found", "");
-
-                // SOLUTION
-
-
-                query.Parameters.AddWithValue("@solution", so);
-                datum = postIt.SOCaptureTime;
-                if (xp.IsMatch(so))
-                    query.Parameters.AddWithValue("@solved", datum.ToString("dddd dd MMMM yyyy HH:mm:ss.fff"));
-                else
-                    query.Parameters.AddWithValue("@solved", "");
-
-                // SUGGESTION
-
-
-                if (xp.IsMatch(su))
-                    query.Parameters.AddWithValue("@suggest", su);
-                else
-                    query.Parameters.AddWithValue("@suggest", "");
-
-                // COMMENT
-
-
-                if (xp.IsMatch(co))
-                    query.Parameters.AddWithValue("@comment", co);
-                else
-                    query.Parameters.AddWithValue("@comment", "");
-
-                query.ExecuteNonQuery();
-                PostItIDWatcher = 0;
-
+                InsertPostItIntoDatabase(insert, postIt, log.ID, error, solution, suggestion, comment);
             }
+        }
+        private string ValidateString(string input)
+        {
+            string pattern = "[A-Za-z]{5}[0-9]{0}";
+            Regex regex = new Regex(pattern);
+            return regex.IsMatch(input) ? input : string.Empty;
+        }
 
+        private void InsertPostItIntoDatabase(SQLiteCommand insert, PostIt postIt, int logID, string error, string solution, string suggestion, string comment)
+        {
+            insert.CommandText = @"INSERT INTO PostIt(postItID, logID, subjectID, error, date_found, solution, date_solved, suggestion, comment)
+                           VALUES(@id, @log, @subject, @error, @found, @solution, @solved, @suggest, @comment);";
 
+            insert.Parameters.AddWithValue("@id", postIt.ID);
+            insert.Parameters.AddWithValue("@log", logID);
+            insert.Parameters.AddWithValue("@subject", FindSubjectID(postIt.Subject));
+            insert.Parameters.AddWithValue("@error", error);
+            insert.Parameters.AddWithValue("@found", GetDateTimeString(postIt.ERCaptureTime, error));
+            insert.Parameters.AddWithValue("@solution", solution);
+            insert.Parameters.AddWithValue("@solved", GetDateTimeString(postIt.SOCaptureTime, solution));
+            insert.Parameters.AddWithValue("@suggest", suggestion);
+            insert.Parameters.AddWithValue("@comment", comment);
+
+            insert.ExecuteNonQuery();
+            SubjectAlreadyAdded = false;
+
+            if (Watcher.PostItID > 0)
+                --Watcher.PostItID;
+        }
+
+        private string GetDateTimeString(DateTime dateTime, string inputValue)
+        {
+            if (string.IsNullOrEmpty(inputValue) || dateTime == default)
+                return string.Empty;
+
+            return dateTime.ToString("dddd dd MMMM yyyy HH:mm:ss.fff");
+        }
+
+        private void InsertLogCategorySpecificDetails(LOG log, SQLiteCommand insert)
+        {
             switch (log.Category)
             {
                 case LOG.CATEGORY.CODING:
-                    CodingLOG ctemp = (CodingLOG)log;
-
-                    query.CommandText = @"INSERT INTO CodingLOG(logID, bugs, opened)
-                                                VALUES(@id, @bugs, @opened);";
-
-                    query.Parameters.AddWithValue("@id", log.ID);
-                    query.Parameters.AddWithValue("@bugs", ctemp.Bugs);
-                    query.Parameters.AddWithValue("@opened", ctemp.Success);
-
-                    query.ExecuteNonQuery();
-
-                    if (ctemp.Application.Name == Android)
-                    {
-                        var acl = (AndroidCodingLOG)ctemp;
-
-                        if (acl.Scope == SCOPE.FULL)
-                            query.CommandText = @"INSERT INTO AndroidCodingLOG(fullORsimple, sync, gradleDaemon, runBuild, loadBuild, configBuild, allProjects)
-                                                    VALUES(@fs, @s, @GD, @rb, @lb, @cb, @ap)";
-                        else
-                            query.CommandText = @"INSERT INTO AndroidCodingLOG(fullORsimple, sync)
-                                                    VALUES(@fs, @s)";
-
-                        var FullORSimple = acl.Scope == SCOPE.FULL ? 0 : 1;
-                        query.Parameters.AddWithValue("@fs", FullORSimple);
-                        query.Parameters.AddWithValue("@s", acl.Sync.ToString("HH:mm:ss.fff"));
-
-                        if (acl.Scope == SCOPE.FULL)
-                        {
-                            query.Parameters.AddWithValue("@GD", acl.StartingGradleDaemon.ToString("HH:mm:ss.fff"));
-                            query.Parameters.AddWithValue("@rb", acl.RunBuild.ToString("HH:mm:ss.fff"));
-                            query.Parameters.AddWithValue("@lb", acl.LoadBuild.ToString("HH:mm:ss.fff"));
-                            query.Parameters.AddWithValue("@cb", acl.ConfigureBuild.ToString("HH:mm:ss.fff"));
-                            query.Parameters.AddWithValue("@ap", acl.AllProjects.ToString("HH:mm:ss.fff"));
-                        }
-
-
-                        query.ExecuteNonQuery();
-                    }
-
-
+                    InsertCodingLogDetails((CodingLOG)log, insert);
                     break;
                 case LOG.CATEGORY.GRAPHICS:
-
-                    GraphicsLOG gtemp = (GraphicsLOG)log;
-
-                    query.CommandText = @"INSERT INTO GraphicsLOG(logID, mediumID, formatID, brush, height, width, unitID, 
-                                                size, DPI, depth, completed, source)
-                                                VALUES(@id, @medium, @format, @brush, @height, @width, @unit, @size, @DPI, 
-                                                    @depth, @done, @source);";
-
-                    query.Parameters.AddWithValue("@id", log.ID);
-                    query.Parameters.AddWithValue("@medium", FindMediumID(gtemp.Category, gtemp.Medium));
-                    query.Parameters.AddWithValue("@format", FindFormatID(gtemp.Category, gtemp.Format));
-                    query.Parameters.AddWithValue("@brush", gtemp.Brush);
-                    query.Parameters.AddWithValue("@height", gtemp.Height);
-                    query.Parameters.AddWithValue("@width", gtemp.Width);
-                    query.Parameters.AddWithValue("@unit", gtemp.Unit);
-                    query.Parameters.AddWithValue("@size", gtemp.Size);
-                    query.Parameters.AddWithValue("@DPI", gtemp.DPI);
-                    query.Parameters.AddWithValue("@depth", gtemp.Depth);
-                    query.Parameters.AddWithValue("@done", gtemp.IsCompleted);
-                    query.Parameters.AddWithValue("@source", gtemp.Source);
-
-
-                    query.ExecuteNonQuery();
-
+                    InsertGraphicsLogDetails((GraphicsLOG)log, insert);
                     break;
                 case LOG.CATEGORY.FILM:
-                    FilmLOG ftemp = (FilmLOG)log;
-
-                    query.CommandText = @"INSERT INTO FilmLOG(logID, height, width, length, completed, source)
-                                                VALUES(@id, @height, @width, @length, @done, @source);";
-
-                    query.Parameters.AddWithValue("@id", log.ID);
-                    query.Parameters.AddWithValue("@height", ftemp.Height);
-                    query.Parameters.AddWithValue("@width", ftemp.Width);
-                    query.Parameters.AddWithValue("@length", ftemp.Length);
-                    query.Parameters.AddWithValue("@done", ftemp.IsCompleted);
-                    query.Parameters.AddWithValue("@source", ftemp.Source);
-
-                    query.ExecuteNonQuery();
-
-
+                    InsertFilmLogDetails((FilmLOG)log, insert);
                     break;
                 case LOG.CATEGORY.NOTES:
-                    NotesLOG n = (NotesLOG)log;
-
-                    if (n.notelogtype == NotesLOG.NOTELOGType.GENERIC)
-                    {
-                        query.CommandText = @"INSERT INTO NotesLOG(logID, noteLogType)
-                                                    VALUES(@id, @category);
-";
-
-                        query.Parameters.AddWithValue("@id", log.ID);
-                        query.Parameters.AddWithValue("@category", FindNoteLogTypeID(n.notelogtype));
-
-                        query.ExecuteNonQuery();
-
-                        NoteItem gn = (NoteItem)n;
-
-                        query.CommandText = @"INSERT INTO NoteItem(logID, IsChecklist, subject, genericNote)
-                                                    VALUES(@id, @checklist, @subject, @gn);
-";
-
-                        query.Parameters.AddWithValue("@id", log.ID);
-
-                        var IsChecklist = gn.Items is not null && gn.Items.Count > 0;
-                        query.Parameters.AddWithValue("@checklist", IsChecklist);
-                        query.Parameters.AddWithValue("@subject", gn.Subject);
-                        query.Parameters.AddWithValue("@gn", gn.Content);
-
-                        query.ExecuteNonQuery();
-
-                        // Store Check List Items Here
-                        if(IsChecklist)
-                        {
-                            foreach (CheckListItem item in gn.Items)
-                            {
-                                AddCheckListItem(item.ID, log.ID, item.IsChecked, item.Item);
-                            }
-                        }
-                    }
-                    else
-                    {
-                        query.CommandText = @"INSERT INTO NotesLOG(logID, noteLogType)
-                                                    VALUES(@id, @category);
-";
-
-                        query.Parameters.AddWithValue("@id", log.ID);
-                        query.Parameters.AddWithValue("@category", FindNoteLogTypeID(n.notelogtype));
-
-                        query.ExecuteNonQuery();
-
-                        FlexiNotesLOG fn = (FlexiNotesLOG)log;
-
-                        query.CommandText = @"INSERT INTO FlexiNotesLOG(logID, flexiNoteTypeID, mediumID, formatID, bitRate, length,
-                                                        completed, source)
-                                                    VALUES(@id, @fnCategory, @medium, @format, @br, @length, @done, @source, @gc);
-";
-
-                        query.Parameters.AddWithValue("@id", log.ID);
-                        query.Parameters.AddWithValue("@fnCategory", FindFNCategory(fn.flexinotetype));
-                        query.Parameters.AddWithValue("@medium", FindMediumID(fn.Category, fn.Medium));
-                        query.Parameters.AddWithValue("@format", FindFormatID(fn.Category, fn.Format));
-                        query.Parameters.AddWithValue("@br", fn.BitRate);
-                        query.Parameters.AddWithValue("@length", fn.Length);
-                        query.Parameters.AddWithValue("@done", fn.IsCompleted);
-                        query.Parameters.AddWithValue("@source", fn.Source);
-
-                        query.ExecuteNonQuery();
-
-                    }
-
-
+                    InsertNotesLogDetails((NotesLOG)log, insert);
                     break;
             }
-
-
         }
+
+        private void InsertCodingLogDetails(CodingLOG log, SQLiteCommand insert)
+        {
+            insert.CommandText = @"INSERT INTO CodingLOG(logID, bugs, opened)
+                           VALUES(@id, @bugs, @opened);";
+
+            insert.Parameters.AddWithValue("@id", log.ID);
+            insert.Parameters.AddWithValue("@bugs", log.Bugs);
+            insert.Parameters.AddWithValue("@opened", log.Success);
+
+            insert.ExecuteNonQuery();
+
+            if (log.Application.Name == Android)
+            {
+                InsertAndroidCodingLogDetails((AndroidCodingLOG)log, insert);
+            }
+        }
+
+        private void InsertAndroidCodingLogDetails(AndroidCodingLOG log, SQLiteCommand insert)
+        {
+            if (log.Scope == SCOPE.FULL)
+            {
+                insert.CommandText = @"INSERT INTO AndroidCodingLOG(fullORsimple, sync, gradleDaemon, runBuild, loadBuild, configBuild, allProjects)
+                               VALUES(@fs, @s, @GD, @rb, @lb, @cb, @ap);";
+
+                insert.Parameters.AddWithValue("@fs", log.Scope == SCOPE.FULL ? 0 : 1);
+                insert.Parameters.AddWithValue("@s", log.Sync.ToString("HH:mm:ss.fff"));
+                insert.Parameters.AddWithValue("@GD", log.StartingGradleDaemon.ToString("HH:mm:ss.fff"));
+                insert.Parameters.AddWithValue("@rb", log.RunBuild.ToString("HH:mm:ss.fff"));
+                insert.Parameters.AddWithValue("@lb", log.LoadBuild.ToString("HH:mm:ss.fff"));
+                insert.Parameters.AddWithValue("@cb", log.ConfigureBuild.ToString("HH:mm:ss.fff"));
+                insert.Parameters.AddWithValue("@ap", log.AllProjects.ToString("HH:mm:ss.fff"));
+            }
+            else
+            {
+                insert.CommandText = @"INSERT INTO AndroidCodingLOG(fullORsimple, sync)
+                               VALUES(@fs, @s);";
+
+                insert.Parameters.AddWithValue("@fs", log.Scope == SCOPE.FULL ? 0 : 1);
+                insert.Parameters.AddWithValue("@s", log.Sync.ToString("HH:mm:ss.fff"));
+            }
+
+            insert.ExecuteNonQuery();
+        }
+
+        private void InsertGraphicsLogDetails(GraphicsLOG log, SQLiteCommand insert)
+        {
+            insert.CommandText = @"INSERT INTO GraphicsLOG(logID, mediumID, formatID, brush, height, width, unitID, size, DPI, depth, completed, source)
+                           VALUES(@id, @medium, @format, @brush, @height, @width, @unit, @size, @DPI, @depth, @done, @source);";
+
+            insert.Parameters.AddWithValue("@id", log.ID);
+            insert.Parameters.AddWithValue("@medium", FindMediumID(log.Category, log.Medium));
+            insert.Parameters.AddWithValue("@format", FindFormatID(log.Category, log.Format));
+            insert.Parameters.AddWithValue("@brush", log.Brush);
+            insert.Parameters.AddWithValue("@height", log.Height);
+            insert.Parameters.AddWithValue("@width", log.Width);
+            insert.Parameters.AddWithValue("@unit", log.Unit);
+            insert.Parameters.AddWithValue("@size", log.Size);
+            insert.Parameters.AddWithValue("@DPI", log.DPI);
+            insert.Parameters.AddWithValue("@depth", log.Depth);
+            insert.Parameters.AddWithValue("@done", log.IsCompleted);
+            insert.Parameters.AddWithValue("@source", log.Source);
+
+            insert.ExecuteNonQuery();
+        }
+
+        private void InsertFilmLogDetails(FilmLOG log, SQLiteCommand insert)
+        {
+            insert.CommandText = @"INSERT INTO FilmLOG(logID, height, width, length, completed, source)
+                           VALUES(@id, @height, @width, @length, @done, @source);";
+
+            insert.Parameters.AddWithValue("@id", log.ID);
+            insert.Parameters.AddWithValue("@height", log.Height);
+            insert.Parameters.AddWithValue("@width", log.Width);
+            insert.Parameters.AddWithValue("@length", log.Length);
+            insert.Parameters.AddWithValue("@done", log.IsCompleted);
+            insert.Parameters.AddWithValue("@source", log.Source);
+
+            insert.ExecuteNonQuery();
+        }
+
+        private void InsertNotesLogDetails(NotesLOG log, SQLiteCommand insert)
+        {
+            insert.CommandText = @"INSERT INTO NotesLOG(logID, noteLogType)
+                           VALUES(@id, @category);";
+
+            insert.Parameters.AddWithValue("@id", log.ID);
+            insert.Parameters.AddWithValue("@category", FindNoteLogTypeID(log.notelogtype));
+
+            insert.ExecuteNonQuery();
+
+            switch (log.notelogtype)
+            {
+                case NotesLOG.NOTELOGType.GENERIC:
+                    InsertGenericNoteDetails((NoteItem)log, insert);
+                    break;
+                case NotesLOG.NOTELOGType.FLEXI:
+                    InsertFlexiNoteDetails((FlexiNotesLOG)log, insert);
+                    break;
+            }
+        }
+
+        private void InsertGenericNoteDetails(NoteItem note, SQLiteCommand insert)
+        {
+            insert.CommandText = @"INSERT INTO NoteItem(logID, IsChecklist, subject, genericNote)
+                           VALUES(@id, @checklist, @subject, @gn);";
+
+            insert.Parameters.AddWithValue("@id", note.ID);
+            insert.Parameters.AddWithValue("@checklist", note.Items != null && note.Items.Count > 0);
+            insert.Parameters.AddWithValue("@subject", note.Subject);
+            insert.Parameters.AddWithValue("@gn", note.Content);
+
+            insert.ExecuteNonQuery();
+
+            if (note.Items is not null && note.Items.Count > 0)
+            {
+                foreach (CheckListItem item in note.Items)
+                {
+                    AddCheckListItem(item.ID, note.ID, item.IsChecked, item.Item);
+                }
+            }
+        }
+
+        private void InsertFlexiNoteDetails(FlexiNotesLOG note, SQLiteCommand insert)
+        {
+            insert.CommandText = @"INSERT INTO FlexiNotesLOG(logID, flexiNoteTypeID, mediumID, formatID, bitRate, length, completed, source)
+                           VALUES(@id, @fnCategory, @medium, @format, @br, @length, @done, @source, @gc);";
+
+            insert.Parameters.AddWithValue("@id", note.ID);
+            insert.Parameters.AddWithValue("@fnCategory", FindFNCategory(note.flexinotetype));
+            insert.Parameters.AddWithValue("@medium", FindMediumID(note.Category, note.Medium));
+            insert.Parameters.AddWithValue("@format", FindFormatID(note.Category, note.Format));
+            insert.Parameters.AddWithValue("@br", note.BitRate);
+            insert.Parameters.AddWithValue("@length", note.Length);
+            insert.Parameters.AddWithValue("@done", note.IsCompleted);
+            insert.Parameters.AddWithValue("@source", note.Source);
+
+            insert.ExecuteNonQuery();
+        }
+
+
     }
 }

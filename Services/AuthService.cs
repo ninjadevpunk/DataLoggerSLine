@@ -1,7 +1,7 @@
-﻿using System.Windows;
-using Data_Logger_1._3.Models;
-using System.Diagnostics;
-using System.Net;
+﻿using Data_Logger_1._3.Models;
+using System.Security.Cryptography;
+using System.Text;
+using System.Windows;
 
 namespace Data_Logger_1._3.Services
 {
@@ -14,7 +14,7 @@ namespace Data_Logger_1._3.Services
 
         public AuthService()
         {
-            
+
 
         }
 
@@ -59,7 +59,6 @@ namespace Data_Logger_1._3.Services
                 return false;
             }
 
-            // Call Firebase AuthClient or other authentication provider to create a new user
             try
             {
                 _writer.UnsetCurrentUser(Account);
@@ -76,6 +75,7 @@ namespace Data_Logger_1._3.Services
                 Account.Online = true;
 
                 bool UserIsActive = _writer.AddAccount(Account);
+                Account.Password = SaltedSHA256Hash(password, Account.ID.ToString());
 
                 if (UserIsActive)
                     return _writer.SetCurrentUser(Account);
@@ -103,10 +103,9 @@ namespace Data_Logger_1._3.Services
         {
             try
             {
-
                 var temporaryAccount = _writer.FindAccountByEmail(email, password);
 
-                if(temporaryAccount is not null)
+                if (temporaryAccount is not null)
                 {
                     _writer.UnsetCurrentUser(Account);
 
@@ -135,7 +134,7 @@ namespace Data_Logger_1._3.Services
             }
 
             return false;
-        
+
         }
 
         public bool SignOut()
@@ -149,7 +148,7 @@ namespace Data_Logger_1._3.Services
                 // Modify account status to show user is offline
                 var UserIsActive = _writer.UnsetCurrentUser(Account);
 
-                if(!UserIsActive)
+                if (!UserIsActive)
                     return true;
             }
             catch (Exception)
@@ -165,6 +164,26 @@ namespace Data_Logger_1._3.Services
             //
         }
 
+        public static string SaltedSHA256Hash(string value, string accountID)
+        {
+            using (SHA256 hash = SHA256.Create())
+            {
+                Encoding enc = Encoding.UTF8;
 
+                // The account account is the salt. 
+                // So 2 users with the same password have different hashes. 
+                // For example, if someone knows their own hash, they can't see who has the same password.
+                string input = value + accountID;
+                byte[] result = hash.ComputeHash(enc.GetBytes(input));
+
+                StringBuilder hashedStringBuilder = new StringBuilder();
+                foreach (byte b in result)
+                {
+                    hashedStringBuilder.Append(b.ToString("x2"));
+                }
+
+                return hashedStringBuilder.ToString();
+            }
+        }
     }
 }

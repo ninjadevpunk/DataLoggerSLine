@@ -1,8 +1,5 @@
 ﻿using Data_Logger_1._3.Models;
-using Data_Logger_1._3.ViewModels.LogViewModels;
 using System.Data.SQLite;
-using System.Security;
-using System.Text.RegularExpressions;
 
 namespace Data_Logger_1._3.Services
 {
@@ -802,7 +799,7 @@ namespace Data_Logger_1._3.Services
             var outputColumn = 7;
             var typeColumn = 8;
 
-            var noteLogTypeIDColumn = 1; 
+            var noteLogTypeIDColumn = 1;
 
             SQLiteCommand query = _con.CreateCommand();
 
@@ -813,7 +810,7 @@ namespace Data_Logger_1._3.Services
             read = query.ExecuteReader();
 
 
-            while(read.Read())
+            while (read.Read())
             {
 
                 if (!Initialised)
@@ -821,15 +818,15 @@ namespace Data_Logger_1._3.Services
                     logs = new();
                     Initialised = true;
                 }
-                else if(logs is not null)
+                else if (logs is not null)
                 {
-                    var type = FindNoteLogTypeByID(read.GetInt32(noteLogTypeIDColumn) );
+                    var type = FindNoteLogTypeByID(read.GetInt32(noteLogTypeIDColumn));
                     switch (type)
                     {
                         case NotesLOG.NOTELOGType.GENERIC:
                             {
                                 NoteItem note = new();
-                                note.ID = read.GetInt32(IDColumn);
+                                note.ID = read.GetInt32(Column.IDColumn);
                                 note_IDs_LIST.Add(note.ID);
                                 logs.Add(note);
 
@@ -838,7 +835,7 @@ namespace Data_Logger_1._3.Services
                         case NotesLOG.NOTELOGType.FLEXI:
                             {
                                 FlexiNotesLOG flexiLog = new();
-                                flexiLog.ID = read.GetInt32(IDColumn);
+                                flexiLog.ID = read.GetInt32(Column.IDColumn);
                                 flexiLog_IDs_LIST.Add(flexiLog.ID);
                                 logs.Add(flexiLog);
 
@@ -846,7 +843,7 @@ namespace Data_Logger_1._3.Services
                             }
                     }
                 }
-                
+
             }
 
 
@@ -858,7 +855,7 @@ namespace Data_Logger_1._3.Services
 
 
 
-            while(read.Read() && logs is not null)
+            while (read.Read() && logs is not null)
             {
 
                 switch (FindCategoryByID(read.GetInt32(categoryColumn)))
@@ -866,14 +863,14 @@ namespace Data_Logger_1._3.Services
                     case LOG.CATEGORY.CODING:
                         {
                             CodingLOG codingLog = new();
-                            codingLog.ID = read.GetInt32(IDColumn);
-                            codingLog.Author = FindAccountByID(read.GetInt32(accountColumn) );
-                            codingLog.Project = FindProjectByID(read.GetInt32(projectColumn) );
-                            codingLog.Application = FindAppByID(read.GetInt32(appColumn) );
-                            codingLog.StartTime = DateTime.Parse(read.GetString(startColumn) );
-                            codingLog.EndTime = DateTime.Parse(read.GetString(endColumn) );
-                            codingLog.Output = FindOutputByID(read.GetInt32(outputColumn) );
-                            codingLog.Type = FindTypeByID(read.GetInt32(typeColumn) );
+                            codingLog.ID = read.GetInt32(Column.IDColumn);
+                            codingLog.Author = FindAccountByID(read.GetInt32(accountColumn));
+                            codingLog.Project = FindProjectByID(read.GetInt32(projectColumn));
+                            codingLog.Application = FindAppByID(read.GetInt32(appColumn));
+                            codingLog.Start = DateTime.Parse(read.GetString(startColumn));
+                            codingLog.End = DateTime.Parse(read.GetString(endColumn));
+                            codingLog.Output = FindOutputByID(read.GetInt32(outputColumn));
+                            codingLog.Type = FindTypeByID(read.GetInt32(typeColumn));
                             codingLog.PostItList = new();
 
                             logs.Add(codingLog);
@@ -883,12 +880,12 @@ namespace Data_Logger_1._3.Services
                     case LOG.CATEGORY.GRAPHICS:
                         {
                             GraphicsLOG graphicsLog = new();
-                            graphicsLog.ID = read.GetInt32(IDColumn);
+                            graphicsLog.ID = read.GetInt32(Column.IDColumn);
                             graphicsLog.Author = FindAccountByID(read.GetInt32(accountColumn));
                             graphicsLog.Project = FindProjectByID(read.GetInt32(projectColumn));
                             graphicsLog.Application = FindAppByID(read.GetInt32(appColumn));
-                            graphicsLog.StartTime = DateTime.Parse(read.GetString(startColumn));
-                            graphicsLog.EndTime = DateTime.Parse(read.GetString(endColumn));
+                            graphicsLog.Start = DateTime.Parse(read.GetString(startColumn));
+                            graphicsLog.End = DateTime.Parse(read.GetString(endColumn));
                             graphicsLog.Output = FindOutputByID(read.GetInt32(outputColumn));
                             graphicsLog.Type = FindTypeByID(read.GetInt32(typeColumn));
                             graphicsLog.PostItList = new();
@@ -899,12 +896,12 @@ namespace Data_Logger_1._3.Services
                     case LOG.CATEGORY.FILM:
                         {
                             FilmLOG filmLog = new();
-                            filmLog.ID = read.GetInt32(IDColumn);
+                            filmLog.ID = read.GetInt32(Column.IDColumn);
                             filmLog.Author = FindAccountByID(read.GetInt32(accountColumn));
                             filmLog.Project = FindProjectByID(read.GetInt32(projectColumn));
                             filmLog.Application = FindAppByID(read.GetInt32(appColumn));
-                            filmLog.StartTime = DateTime.Parse(read.GetString(startColumn));
-                            filmLog.EndTime = DateTime.Parse(read.GetString(endColumn));
+                            filmLog.Start = DateTime.Parse(read.GetString(startColumn));
+                            filmLog.End = DateTime.Parse(read.GetString(endColumn));
                             filmLog.Output = FindOutputByID(read.GetInt32(outputColumn));
                             filmLog.Type = FindTypeByID(read.GetInt32(typeColumn));
                             filmLog.PostItList = new();
@@ -913,15 +910,15 @@ namespace Data_Logger_1._3.Services
                         }
                     case LOG.CATEGORY.NOTES:
                         {
-                            foreach(LOG log in logs)
+                            foreach (LOG log in logs)
                             {
-                                if (read.GetInt32(IDColumn) == log.ID)
+                                if (read.GetInt32(Column.IDColumn) == log.ID)
                                 {
                                     log.Author = FindAccountByID(read.GetInt32(accountColumn));
                                     log.Project = FindProjectByID(read.GetInt32(projectColumn));
                                     log.Application = FindAppByID(read.GetInt32(appColumn));
-                                    log.StartTime = DateTime.Parse(read.GetString(startColumn));
-                                    log.EndTime = DateTime.Parse(read.GetString(endColumn));
+                                    log.Start = DateTime.Parse(read.GetString(startColumn));
+                                    log.End = DateTime.Parse(read.GetString(endColumn));
                                     log.Output = FindOutputByID(read.GetInt32(outputColumn));
                                     log.Type = FindTypeByID(read.GetInt32(typeColumn));
                                     log.PostItList = new();
@@ -952,16 +949,16 @@ namespace Data_Logger_1._3.Services
             var foundColumn = 4;
             var solvedColumn = 6;
 
-            while(read.Read() && logs is not null)
+            while (read.Read() && logs is not null)
             {
 
                 foreach (LOG log in logs)
                 {
-                    if (read.GetInt32(logIDColumn) ==  log.ID)
+                    if (read.GetInt32(logIDColumn) == log.ID)
                     {
-                        log.PostItList.Add(new(read.GetInt32(IDColumn) , FindSubjectByID(read.GetInt32(subjectColumn) ), read.GetString(errorColumn),
+                        log.PostItList.Add(new(read.GetInt32(Column.IDColumn), FindSubjectByID(read.GetInt32(subjectColumn)), read.GetString(errorColumn),
                             read.GetString(solutionColumn), read.GetString(suggestionColumn), read.GetString(commentColumn), DateTime.Parse(read.GetString(foundColumn)),
-                            DateTime.Parse(read.GetString(solvedColumn)) ) );
+                            DateTime.Parse(read.GetString(solvedColumn))));
 
                         break;
                     }
@@ -972,9 +969,9 @@ namespace Data_Logger_1._3.Services
             read.Close();
 
 
-            foreach(LOG log in logs)
+            foreach (LOG log in logs)
             {
-                switch(log.Category)
+                switch (log.Category)
                 {
                     case LOG.CATEGORY.CODING:
                         {
@@ -998,7 +995,7 @@ namespace Data_Logger_1._3.Services
                         {
                             if (note_IDs_LIST.Contains(log.ID))
                                 RetrieveNoteItem((NoteItem)log);
-                            else if(flexiLog_IDs_LIST.Contains(log.ID))
+                            else if (flexiLog_IDs_LIST.Contains(log.ID))
                                 RetrieveFlexiNotesLOG((FlexiNotesLOG)log);
 
                             break;
@@ -1060,12 +1057,12 @@ namespace Data_Logger_1._3.Services
                 while (read.Read())
                 {
                     androidCodingLog.Scope = read.GetBoolean(fullORsimple) ? AndroidCodingLOG.SCOPE.SIMPLE : AndroidCodingLOG.SCOPE.FULL;
-                    androidCodingLog.Sync = DateTime.Parse(read.GetString(syncColumn) );
-                    androidCodingLog.StartingGradleDaemon = DateTime.Parse(read.GetString(gradleColumn) );
-                    androidCodingLog.RunBuild = DateTime.Parse(read.GetString(runBuildColumn) );
-                    androidCodingLog.LoadBuild = DateTime.Parse(read.GetString(loadBuildColumn) );
-                    androidCodingLog.ConfigureBuild = DateTime.Parse(read.GetString(configBuildColumn) );
-                    androidCodingLog.AllProjects = DateTime.Parse(read.GetString(allProjectsColumn) );
+                    androidCodingLog.Sync = DateTime.Parse(read.GetString(syncColumn));
+                    androidCodingLog.StartingGradleDaemon = DateTime.Parse(read.GetString(gradleColumn));
+                    androidCodingLog.RunBuild = DateTime.Parse(read.GetString(runBuildColumn));
+                    androidCodingLog.LoadBuild = DateTime.Parse(read.GetString(loadBuildColumn));
+                    androidCodingLog.ConfigureBuild = DateTime.Parse(read.GetString(configBuildColumn));
+                    androidCodingLog.AllProjects = DateTime.Parse(read.GetString(allProjectsColumn));
                 }
 
                 read.Close();
@@ -1191,16 +1188,16 @@ namespace Data_Logger_1._3.Services
                 var doneColumn = 3;
 
 
-                if(IsChecklist)
+                if (IsChecklist)
                 {
                     query.CommandText = @"SELECT * FROM Checklist WHERE logID = @id ORDER BY logID;";
                     query.Parameters.AddWithValue("@id", note.ID);
 
                     read = query.ExecuteReader();
 
-                    while(read.Read() && note.Items is not null)
+                    while (read.Read() && note.Items is not null)
                     {
-                        note.Items.Add(new CheckListItem(read.GetInt32(IDColumn), read.GetBoolean(doneColumn), read.GetString(itemColumn)));
+                        note.Items.Add(new CheckListItem(read.GetInt32(Column.IDColumn), read.GetBoolean(doneColumn), read.GetString(itemColumn)));
                     }
                 }
 
@@ -1233,8 +1230,8 @@ namespace Data_Logger_1._3.Services
                 while (read.Read())
                 {
                     flexiLog.flexinotetype = FindFlexiNoteTypeByID(flexiNoteTypeIDColumn);
-                    flexiLog.Medium = FindMediumByID(read.GetInt32(mediumColumn) );
-                    flexiLog.Format = FindFormatByID(read.GetInt32(formatColumn) );
+                    flexiLog.Medium = FindMediumByID(read.GetInt32(mediumColumn));
+                    flexiLog.Format = FindFormatByID(read.GetInt32(formatColumn));
                     flexiLog.BitRate = read.GetInt32(bitRateColumn);
                     flexiLog.Length = read.GetString(lengthColumn);
                     flexiLog.IsCompleted = read.GetBoolean(IsCompletedColumn);
@@ -2051,7 +2048,7 @@ namespace Data_Logger_1._3.Services
 
             SQLiteDataReader read = query.ExecuteReader();
 
-            while(read.Read())
+            while (read.Read())
             {
                 filePath = read.GetString(profilePicColumn);
                 break;
