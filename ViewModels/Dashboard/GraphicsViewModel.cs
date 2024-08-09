@@ -1,4 +1,4 @@
-﻿using Data_Logger_1._3.Commands.GraphicsCommands;
+﻿using Data_Logger_1._3.Commands.LogCacheCommands.GraphicsCommands;
 using Data_Logger_1._3.Services;
 using Data_Logger_1._3.ViewModels.LogViewModels;
 using System.Collections.ObjectModel;

@@ -1,4 +1,4 @@
-﻿using Data_Logger_1._3.Commands.CodingCommands;
+﻿using Data_Logger_1._3.Commands.LogCacheCommands.CodingCommands;
 using Data_Logger_1._3.Models;
 using Data_Logger_1._3.Services;
 using Data_Logger_1._3.ViewModels.LogViewModels;
@@ -7,7 +7,7 @@ using System.Windows;
 
 namespace Data_Logger_1._3.ViewModels.Dashboard
 {
-    public class CodingGenericViewModel : LogCacheViewModel
+    public class CodingViewModel : LogCacheViewModel
     {
         private ObservableCollection<CodeLOGViewModel> cacheItems;
         public ObservableCollection<CodeLOGViewModel> CacheItems
@@ -28,7 +28,7 @@ namespace Data_Logger_1._3.ViewModels.Dashboard
         }
 
 
-        public CodingGenericViewModel(NavigationService navigationService, DataService _dataService) : base(navigationService, _dataService)
+        public CodingViewModel(NavigationService navigationService, DataService _dataService) : base(navigationService, _dataService)
         {
             CacheItems = new ObservableCollection<CodeLOGViewModel>();
 
@@ -36,7 +36,7 @@ namespace Data_Logger_1._3.ViewModels.Dashboard
             ReportLogCommand = new ReportCodingLogCommand(_navigationService);
         }
 
-        public CodingGenericViewModel(string logCount, NavigationService navigationService, DataService _dataService) : base(navigationService, _dataService)
+        public CodingViewModel(string logCount, NavigationService navigationService, DataService _dataService) : base(navigationService, _dataService)
         {
             CacheItems = new ObservableCollection<CodeLOGViewModel>();
 

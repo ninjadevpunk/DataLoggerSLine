@@ -1,7 +1,7 @@
-﻿using System.Collections.ObjectModel;
-using Data_Logger_1._3.Commands.FlexiCommands;
+﻿using Data_Logger_1._3.Commands.LogCacheCommands.FlexiCommands;
 using Data_Logger_1._3.Services;
 using Data_Logger_1._3.ViewModels.LogViewModels;
+using System.Collections.ObjectModel;
 
 namespace Data_Logger_1._3.ViewModels.Dashboard
 {
