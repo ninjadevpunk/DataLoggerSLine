@@ -17,71 +17,69 @@ namespace Data_Logger_1._3.Views.Dialogs
 
             _postItViewModel = createPostItViewModel;
             DataContext = _postItViewModel;
+            _postItViewModel.ActiveEditor = this.inputText_ERROR;
 
 
+        }
+
+        private void OnTextChanged(object sender, TextChangedEventArgs e, RichTextBox inputText, Action<string> setDisplayProperty)
+        {
+            try
+            {
+                var doc = inputText.Document;
+                var range = new TextRange(doc.ContentStart, doc.ContentEnd);
+                setDisplayProperty(range.Text);
+            }
+            catch (Exception)
+            {
+                // Handle exceptions appropriately
+            }
         }
 
         private void on_Error_Text_Changed(object sender, TextChangedEventArgs e)
         {
-            try
-            {
-                TextRange range;
-                var doc = this.inputText_ERROR.Document;
-                range = new TextRange(doc.ContentStart, doc.ContentEnd);
-                _postItViewModel.Display_Error = range.Text;
-
-            }
-            catch (Exception)
-            {
-                //
-            }
-
-
+            OnTextChanged(sender, e, inputText_ERROR, text => _postItViewModel.Display_Error = text);
         }
 
         private void on_Solution_Text_Changed(object sender, TextChangedEventArgs e)
         {
-            try
-            {
-                TextRange range;
-                var doc = this.inputText_SOLUTION.Document;
-                range = new TextRange(doc.ContentStart, doc.ContentEnd);
-                _postItViewModel.Display_Solution = range.Text;
-            }
-            catch (Exception)
-            {
-                //
-            }
+            OnTextChanged(sender, e, inputText_SOLUTION, text => _postItViewModel.Display_Solution = text);
         }
 
         private void on_Suggestion_Text_Changed(object sender, TextChangedEventArgs e)
         {
-            try
-            {
-                TextRange range;
-                var doc = this.inputText_SUGGESTION.Document;
-                range = new TextRange(doc.ContentStart, doc.ContentEnd);
-                _postItViewModel.Display_Suggestion = range.Text;
-            }
-            catch (Exception)
-            {
-
-                throw;
-            }
+            OnTextChanged(sender, e, inputText_SUGGESTION, text => _postItViewModel.Display_Suggestion = text);
         }
 
         private void on_Comment_Text_Changed(object sender, TextChangedEventArgs e)
         {
-            try
+            OnTextChanged(sender, e, inputText_COMMENT, text => _postItViewModel.Display_Comment = text);
+        }
+
+        private void onSelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            switch (this.tab_POSTIT.SelectedIndex)
             {
-                TextRange range;
-                var doc = this.inputText_COMMENT.Document;
-                range = new TextRange(doc.ContentStart, doc.ContentEnd);
-                _postItViewModel.Display_Comment = range.Text;
-            }
-            catch (Exception)
-            {
-                //
+                case 0:
+                    {
+                        _postItViewModel.ActiveEditor = this.inputText_ERROR;
+                        break;
+                    }
+                case 1:
+                    {
+                        _postItViewModel.ActiveEditor = this.inputText_SOLUTION;
+                        break;
+                    }
+                case 2:
+                    {
+                        _postItViewModel.ActiveEditor = this.inputText_SUGGESTION;
+                        break;
+                    }
+                case 3:
+                    {
+                        _postItViewModel.ActiveEditor = this.inputText_COMMENT;
+                        break;
+                    }
             }
         }
     }

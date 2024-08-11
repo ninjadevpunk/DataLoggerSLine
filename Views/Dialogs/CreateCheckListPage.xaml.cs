@@ -1,5 +1,4 @@
-﻿using Data_Logger_1._3.ViewModels.LogViewModels;
-using System.Windows.Controls;
+﻿using System.Windows.Controls;
 
 namespace Data_Logger_1._3.Views.LogPages
 {
