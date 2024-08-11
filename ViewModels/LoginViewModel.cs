@@ -1,10 +1,10 @@
 ﻿
-using System.Windows.Media;
+using Data_Logger_1._3.Commands;
+using Data_Logger_1._3.Services;
+using MVVMEssentials.ViewModels;
 using System.Windows;
 using System.Windows.Input;
-using Data_Logger_1._3.Services;
-using Data_Logger_1._3.Commands;
-using MVVMEssentials.ViewModels;
+using System.Windows.Media;
 
 namespace Data_Logger_1._3.ViewModels
 {
@@ -157,7 +157,7 @@ namespace Data_Logger_1._3.ViewModels
 
         public void UpdateNavigationButtons()
         {
-            
+
         }
 
         private static Brush? TryParseBrush(string value)

@@ -3,6 +3,7 @@ using Data_Logger_1._3.Services;
 using MVVMEssentials.ViewModels;
 using System.Windows;
 using System.Windows.Input;
+using System.Windows.Media;
 
 namespace Data_Logger_1._3.ViewModels
 {
@@ -21,8 +22,11 @@ namespace Data_Logger_1._3.ViewModels
             CodingQtChecked = true;
             NotesChecked = false;
 
-            GoBackCommand = new GoBackCommand(_navigationService);
-            GoForwardCommand = new GoForwardCommand(_navigationService);
+            GoBackCommand = new GoBackCommand(_navigationService, this);
+            GoForwardCommand = new GoForwardCommand(_navigationService, this);
+
+            IconBackFill = DisabledColor;
+            IconForwardFill = DisabledColor;
         }
 
         public MainWindowViewModel(NavigationService navigationService, AuthService authService)
@@ -36,9 +40,82 @@ namespace Data_Logger_1._3.ViewModels
             CodingQtChecked = true;
             NotesChecked = false;
 
-            GoBackCommand = new GoBackCommand(_navigationService);
-            GoForwardCommand = new GoForwardCommand(_navigationService);
+            GoBackCommand = new GoBackCommand(_navigationService, this);
+            GoForwardCommand = new GoForwardCommand(_navigationService, this);
+
+            IconBackFill = DisabledColor;
+            IconForwardFill = DisabledColor;
         }
+
+
+
+
+
+        private static readonly Brush? EnabledColor = TryParseBrush("iconCOLOURAccent01");
+        private static readonly Brush? DisabledColor = TryParseBrush("AccentColour");
+
+
+        private Brush? iconBackFill;
+        public Brush? IconBackFill
+        {
+            get
+            {
+                return iconBackFill;
+            }
+            set
+            {
+                iconBackFill = value;
+                OnPropertyChanged(nameof(IconBackFill));
+            }
+        }
+
+        private Brush? iconForwardFill;
+        public Brush? IconForwardFill
+        {
+            get
+            {
+                return iconForwardFill;
+            }
+            set
+            {
+                iconForwardFill = value;
+                OnPropertyChanged(nameof(IconForwardFill));
+            }
+        }
+
+
+
+
+        private bool backEnabled;
+        public bool BackEnabled
+        {
+            get
+            {
+                return backEnabled;
+            }
+            set
+            {
+                backEnabled = value;
+                IconBackFill = BackEnabled ? EnabledColor : DisabledColor;
+                OnPropertyChanged(nameof(BackEnabled));
+            }
+        }
+
+        private bool forwardEnabled;
+        public bool ForwardEnabled
+        {
+            get
+            {
+                return forwardEnabled;
+            }
+            set
+            {
+                forwardEnabled = value;
+                IconForwardFill = ForwardEnabled ? EnabledColor : DisabledColor;
+                OnPropertyChanged(nameof(ForwardEnabled));
+            }
+        }
+
 
         private bool codingChecked;
         public bool CodingChecked
@@ -66,6 +143,7 @@ namespace Data_Logger_1._3.ViewModels
             }
         }
 
+
         private bool codingQtChecked;
         public bool CodingQtChecked
         {
@@ -75,19 +153,20 @@ namespace Data_Logger_1._3.ViewModels
             }
             set
             {
-                if(codingQtChecked != value)
+                if (codingQtChecked != value)
                 {
                     codingQtChecked = value;
                     OnPropertyChanged(nameof(CodingQtChecked));
 
-                    if(codingQtChecked)
+                    if (codingQtChecked)
                     {
                         _navigationService.NavigateToLogCachePage(CacheContext.Qt);
                     }
                 }
-                
+
             }
         }
+
 
         private bool codingAndroidChecked;
         public bool CodingAndroidChecked
@@ -98,12 +177,12 @@ namespace Data_Logger_1._3.ViewModels
             }
             set
             {
-                if(codingAndroidChecked != value)
+                if (codingAndroidChecked != value)
                 {
                     codingAndroidChecked = value;
                     OnPropertyChanged(nameof(CodingAndroidChecked));
 
-                    if(codingAndroidChecked)
+                    if (codingAndroidChecked)
                     {
                         _navigationService.NavigateToLogCachePage(CacheContext.AndroidStudio);
 
@@ -111,6 +190,7 @@ namespace Data_Logger_1._3.ViewModels
                 }
             }
         }
+
 
         private bool codingGenericChecked;
         public bool CodingGenericChecked
@@ -121,19 +201,20 @@ namespace Data_Logger_1._3.ViewModels
             }
             set
             {
-                if(codingGenericChecked != value)
+                if (codingGenericChecked != value)
                 {
                     codingGenericChecked = value;
                     OnPropertyChanged(nameof(CodingGenericChecked));
 
-                    if(codingGenericChecked)
+                    if (codingGenericChecked)
                     {
-                        _navigationService.NavigateToLogCachePage(CacheContext.Generic);
+                        _navigationService.NavigateToLogCachePage(CacheContext.Coding);
 
                     }
                 }
             }
         }
+
 
         private bool graphicsChecked;
         public bool GraphicsChecked
@@ -144,12 +225,12 @@ namespace Data_Logger_1._3.ViewModels
             }
             set
             {
-                if(graphicsChecked != value)
+                if (graphicsChecked != value)
                 {
                     graphicsChecked = value;
                     OnPropertyChanged(nameof(GraphicsChecked));
 
-                    if(graphicsChecked)
+                    if (graphicsChecked)
                     {
                         _navigationService.NavigateToLogCachePage(CacheContext.Graphics);
                         UncheckButtons();
@@ -158,6 +239,7 @@ namespace Data_Logger_1._3.ViewModels
                 }
             }
         }
+
 
         private bool filmChecked;
         public bool FilmChecked
@@ -168,12 +250,12 @@ namespace Data_Logger_1._3.ViewModels
             }
             set
             {
-                if(filmChecked != value)
+                if (filmChecked != value)
                 {
                     filmChecked = value;
                     OnPropertyChanged(nameof(FilmChecked));
 
-                    if(filmChecked)
+                    if (filmChecked)
                     {
                         _navigationService.NavigateToLogCachePage(CacheContext.Film);
                         UncheckButtons();
@@ -182,6 +264,7 @@ namespace Data_Logger_1._3.ViewModels
                 }
             }
         }
+
 
         private bool notesChecked;
         public bool NotesChecked
@@ -192,12 +275,12 @@ namespace Data_Logger_1._3.ViewModels
             }
             set
             {
-                if(notesChecked != value)
+                if (notesChecked != value)
                 {
                     notesChecked = value;
                     OnPropertyChanged(nameof(NotesChecked));
 
-                    if(notesChecked)
+                    if (notesChecked)
                     {
                         _navigationService.NavigateToNOTESDashboard();
                         UncheckButtons();
@@ -205,6 +288,7 @@ namespace Data_Logger_1._3.ViewModels
                 }
             }
         }
+
 
         private bool genericNotesChecked;
         public bool GenericNotesChecked
@@ -215,18 +299,19 @@ namespace Data_Logger_1._3.ViewModels
             }
             set
             {
-                if(genericNotesChecked != value)
+                if (genericNotesChecked != value)
                 {
                     genericNotesChecked = value;
                     OnPropertyChanged(nameof(GenericNotesChecked));
 
-                    if(genericNotesChecked)
+                    if (genericNotesChecked)
                     {
                         _navigationService.NavigateToCreateNotesPage();
                     }
                 }
             }
         }
+
 
         private bool checklistNotesChecked;
         public bool ChecklistNotesChecked
@@ -237,18 +322,19 @@ namespace Data_Logger_1._3.ViewModels
             }
             set
             {
-                if(checklistNotesChecked != value)
+                if (checklistNotesChecked != value)
                 {
                     checklistNotesChecked = value;
                     OnPropertyChanged(nameof(ChecklistNotesChecked));
 
-                    if(checklistNotesChecked)
+                    if (checklistNotesChecked)
                     {
                         _navigationService.NavigateToCreateCheckListPage();
                     }
                 }
             }
         }
+
 
         private bool flexiChecked;
         public bool FlexiChecked
@@ -259,18 +345,19 @@ namespace Data_Logger_1._3.ViewModels
             }
             set
             {
-                if(flexiChecked != value)
+                if (flexiChecked != value)
                 {
                     flexiChecked = value;
                     OnPropertyChanged(nameof(FlexiChecked));
 
-                    if(flexiChecked)
+                    if (flexiChecked)
                     {
                         _navigationService.NavigateToLogCachePage(CacheContext.Flexi);
                     }
                 }
             }
         }
+
 
         private string signupImage;
         public string SignUpImage
@@ -283,7 +370,7 @@ namespace Data_Logger_1._3.ViewModels
             {
                 signupImage = value;
 
-                if(SignUpImage != "")
+                if (SignUpImage != "")
                     ShowDefault = Visibility.Collapsed;
                 else
                     ShowDefault = Visibility.Visible;
@@ -291,6 +378,7 @@ namespace Data_Logger_1._3.ViewModels
                 OnPropertyChanged(nameof(SignUpImage));
             }
         }
+
 
         private Visibility showDefault;
         public Visibility ShowDefault
@@ -305,6 +393,8 @@ namespace Data_Logger_1._3.ViewModels
                 OnPropertyChanged(nameof(ShowDefault));
             }
         }
+
+
 
         public void UncheckButtons()
         {
@@ -323,5 +413,20 @@ namespace Data_Logger_1._3.ViewModels
         public ICommand GoForwardCommand { get; set; }
 
 
+        private static Brush? TryParseBrush(string value)
+        {
+            try
+            {
+                return (Brush)Application.Current.FindResource(value);
+            }
+            catch (ResourceReferenceKeyNotFoundException)
+            {
+                return Brushes.Transparent;
+            }
+            catch (Exception ex)
+            {
+                return Brushes.Black;
+            }
+        }
     }
 }
