@@ -3,7 +3,6 @@ using Data_Logger_1._3.ViewModels;
 using Data_Logger_1._3.Views;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using System;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media.Animation;
@@ -23,7 +22,7 @@ namespace Data_Logger_1._3
             _host = Host.CreateDefaultBuilder()
                 .ConfigureServices((context, service) =>
                 {
-                    
+
                     service.AddSingleton<Cachemaster>((services) => new());
                     service.AddSingleton<DATAWRITER>((services) => new());
                     service.AddSingleton<DATAREADER>();
@@ -64,8 +63,10 @@ namespace Data_Logger_1._3
 
             var navigationService = _host.Services.GetRequiredService<NavigationService>();
 
-            navigationService.SetHost(_host);
             await AnimateProgressBar(splash.progressBar_splashscreen, 66, splash.text_progress);
+            navigationService.SetHost(_host);
+
+
             await AnimateProgressBar(splash.progressBar_splashscreen, 100, splash.text_progress);
 
             navigationService.NavigateToLogin();
@@ -107,6 +108,8 @@ namespace Data_Logger_1._3
         protected override void OnExit(ExitEventArgs e)
         {
             var dataService = _host.Services.GetRequiredService<DataService>();
+            dataService.SaveSubjectIndex();
+            dataService.SavePostItIndex();
             dataService.SignOutUser();
 
             base.OnExit(e);
