@@ -38,7 +38,7 @@ namespace Data_Logger_1._3.ViewModels.LogViewModels
 
         public CheckList Items => _checklist.Items;
 
-        public string Date => $"Created {_checklist.StartTime.ToString("d/M/yyyy HH:mm:ss")}";
+        public string Date => $"Created {_checklist.Start.ToString("d/M/yyyy HH:mm:ss")}";
 
 
 

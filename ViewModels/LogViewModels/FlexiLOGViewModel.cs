@@ -3,31 +3,14 @@ using Data_Logger_1._3.Models;
 using Data_Logger_1._3.Services;
 using Data_Logger_1._3.ViewModels.Dashboard;
 using Data_Logger_1._3.ViewModels.Dialogs;
-using MVVMEssentials.ViewModels;
 using System.Collections.ObjectModel;
-using System.Text.RegularExpressions;
-using System.Windows;
-using System.Windows.Input;
 
 namespace Data_Logger_1._3.ViewModels.LogViewModels
 {
-    public class FlexiLOGViewModel : ViewModelBase
+    public class FlexiLOGViewModel : LOGViewModel
     {
         public FlexiNotesLOG _FlexiLOG;
-        private readonly LogCacheViewModel _vm;
-        private readonly ObservableCollection<CreatePostItViewModel> _createPostItViewModels;
-
-        public bool IsDisposed { get; set; } = false;
-
-        public Timer _timer;
-
-        public ICommand EditCommand { get; set; }
-
-        public ICommand ViewCommand { get; set; }
-
-        public ICommand DeleteCacheItemCommand { get; set; }
-        public ICommand QuickDeleteCacheItemCommand { get; set; }
-
+        public override CacheContext LOGViewModelContext => CacheContext.Flexi;
 
 
 
@@ -35,30 +18,22 @@ namespace Data_Logger_1._3.ViewModels.LogViewModels
 
 
 
-        public FlexiLOGViewModel(FlexiNotesLOG flexiLOG, LogCacheViewModel logCacheViewModel, ObservableCollection<CreatePostItViewModel> createPostItViewModels, DataService dataService)
+        public FlexiLOGViewModel(FlexiNotesLOG flexiLOG, LogCacheViewModel logCacheViewModel, ObservableCollection<CreatePostItViewModel> createPostItViewModels, DataService dataService) :
+            base(flexiLOG, logCacheViewModel, createPostItViewModels, dataService)
         {
-            _vm = logCacheViewModel;
-            _createPostItViewModels = createPostItViewModels;
-
             _FlexiLOG = flexiLOG;
-            NotaryContent = content();
-            _FlexiLOG.Content = content();
-            TimeRemaining = 1200;
-            StartCountdown();
+            EditCommand = new EditCommand(LOGViewModelContext, _vm._navigationService, _vm);
 
-            DeleteCacheItemCommand = new DeleteFlexiCacheItemCommand(_vm, dataService, true);
+            _cacheMaster.SaveFlexiViewModel(this, LOGViewModelContext);
+            dataService.SaveSubjectIndex();
+            dataService.SavePostItIndex();
         }
 
-        public FlexiLOGViewModel(FlexiNotesLOG flexiLOG, LogCacheViewModel logCacheViewModel, DataService dataService)
+        public FlexiLOGViewModel(FlexiNotesLOG flexiLOG, LogCacheViewModel logCacheViewModel, DataService dataService) :
+            base(flexiLOG, logCacheViewModel, dataService)
         {
-            _vm = logCacheViewModel;
-
             _FlexiLOG = flexiLOG;
-            NotaryContent = _FlexiLOG.Content;
-            TimeRemaining = 1200;
-            StartCountdown();
-
-            DeleteCacheItemCommand = new DeleteFlexiCacheItemCommand(_vm, dataService, true);
+            EditCommand = new EditCommand(LOGViewModelContext, _vm._navigationService, _vm);
         }
 
 
@@ -72,43 +47,6 @@ namespace Data_Logger_1._3.ViewModels.LogViewModels
 
 
 
-        public string ProjectName => $"{_FlexiLOG.Project.Name} ({_FlexiLOG.Application.Name})";
-
-        public string ErrorCount => _FlexiLOG.errorCount().ToString();
-
-        public string SolutionCount => _FlexiLOG.solutionCount().ToString();
-
-        public string SuggestionCount => _FlexiLOG.suggestionCount().ToString();
-
-        public string CommentCount => _FlexiLOG.commentCount().ToString();
-
-        /** Save the start and end time here **/
-        public string StartEndDate => $"{_FlexiLOG.StartTime.ToString("dddd, d MMMM yyyy HH:mm:ss.fff")} - " +
-            $"{_FlexiLOG.EndTime.ToString("dddd, d MMMM yyyy HH:mm:ss.fff")}";
-
-        /** Store the first occurence of a note with acceptable input only. **/
-        public string NotaryContent { get; set; }
-
-
-
-        private double timeRemaining;
-
-        public double TimeRemaining
-        {
-            get
-            {
-                return timeRemaining;
-            }
-            set
-            {
-                timeRemaining = value;
-                OnPropertyChanged(nameof(TimeRemaining));
-            }
-        }
-
-
-
-
 
 
 
@@ -118,79 +56,15 @@ namespace Data_Logger_1._3.ViewModels.LogViewModels
 
 
 
-
-
-
         #region Member Functions
 
 
 
-        public void StartCountdown()
+        protected override void DeleteCacheItem()
         {
-            _timer = new Timer(TimerCallback, null, TimeSpan.Zero, TimeSpan.FromSeconds(1));
+            DeleteCacheFile(ViewModelID, LOGViewModelContext);
+            DeleteCacheItemCommand.Execute(this);
         }
-
-        private void TimerCallback(object? state)
-        {
-            if (Application.Current != null)
-            {
-                Application.Current.Dispatcher.Invoke(() =>
-                {
-                    if (!IsDisposed)
-                    {
-                        if (TimeRemaining == 0)
-                        {
-                            // Trigger removal logic
-                            // TODO
-                            DeleteCacheItemCommand.Execute(this);
-                            _timer.Dispose();
-                            IsDisposed = true;
-                        }
-                        else
-                            TimeRemaining--;
-                    }
-                });
-            }
-        }
-
-        public string content()
-        {
-            string pattern = "[A-Za-z]{5}[0-9]{0}";
-            Regex xp = new Regex(pattern);
-
-            foreach (CreatePostItViewModel p in _createPostItViewModels)
-            {
-                if (xp.IsMatch(p.Display_Error))
-                    return p.Display_Error;
-                else if (xp.IsMatch(p.Display_Solution))
-                    return p.Display_Solution;
-                else if (xp.IsMatch(p.Display_Suggestion))
-                    return p.Display_Suggestion;
-                else if (xp.IsMatch(p.Display_Comment))
-                    return p.Display_Comment;
-
-            }
-
-            return "No Notes";
-        }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

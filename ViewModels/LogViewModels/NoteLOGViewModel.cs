@@ -35,7 +35,7 @@ namespace Data_Logger_1._3.ViewModels.LogViewModels
 
         public string Content => _noteItem.Content;
 
-        public string Date => $"Created {_noteItem.StartTime.ToString("d/M/yyyy HH:mm:ss")}";
+        public string Date => $"Created {_noteItem.Start.ToString("d/M/yyyy HH:mm:ss")}";
 
 
 
