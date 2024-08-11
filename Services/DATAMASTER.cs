@@ -59,7 +59,7 @@ namespace Data_Logger_1._3.Services
         /// <summary>
         /// The database's location.
         /// </summary>
-        private const string CONNECTION_STRING = @"Data Source=C:\Data Logger Central\Depository\LOGS.db";
+        private const string CONNECTION_STRING = @"Data Source=C:\Data Logger Central\Depository\LOGS_TEST.db";
         protected const string Qt = "Qt Creator";
         protected const string Android = "Android Studio Hedgehog 2023.1.1";
 
@@ -1056,6 +1056,8 @@ namespace Data_Logger_1._3.Services
                                     VALUES(1, 15, 4, @t39);
                                     INSERT INTO TYPE({Column.AccountID}, {Column.AppID}, {Column.CategoryID}, {type})
                                     VALUES(1, 16, 4, @t40);
+                                    INSERT INTO TYPE({Column.AccountID}, {Column.AppID}, {Column.CategoryID}, {type})
+                                    VALUES(1, 4, 1, @t41);
                                     
 ";
                 insert.Parameters.AddWithValue("@t1", "NONE");
@@ -1106,8 +1108,9 @@ namespace Data_Logger_1._3.Services
 
                 insert.Parameters.AddWithValue("@t39", "Note");
                 insert.Parameters.AddWithValue("@t40", "Check List");
+                insert.Parameters.AddWithValue("@t41", "Exception");
 
-                insert.Prepare();
+                
 
                 insert.ExecuteNonQuery();
             }
@@ -1143,7 +1146,7 @@ namespace Data_Logger_1._3.Services
                 insert.Parameters.AddWithValue("@account", 1);
                 insert.Parameters.AddWithValue("@category", 1);
                 insert.Parameters.AddWithValue("@subject", "No Subject");
-                insert.Prepare();
+                
 
                 insert.ExecuteNonQuery();
             }
