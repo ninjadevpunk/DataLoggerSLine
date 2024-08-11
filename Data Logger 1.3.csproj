@@ -107,4 +107,9 @@
     </Page>
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="ViewModels\Reporter\" />
+    <Folder Include="Views\ReportPages\" />
+  </ItemGroup>
+
 </Project>
