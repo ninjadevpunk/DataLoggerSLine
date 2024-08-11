@@ -48,10 +48,10 @@
             <Button x:Name="button_BACK" Style="{DynamicResource button_TITLE_bar}"
                     Margin="0 0 20 0"
                     Height="25"
-                    Width="25" 
+                    Width="25"
                     Command="{Binding GoBackCommand}" >
                 <Path x:Name="icon_BACK" Style="{DynamicResource path_ARROW_BACK}"
-                      Fill="{DynamicResource iconCOLOURAccent01}"
+                      Fill="{Binding IconBackFill, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
                       />
 
             </Button>
@@ -60,11 +60,12 @@
                     Margin="20 0 0 0"
                     Height="25"
                     Width="25"
+                    Command="{Binding GoForwardCommand}"
                     >
 
 
                 <Path x:Name="icon_FORWARD"  Style="{DynamicResource path_ARROW_FORWARD}"
-                      Fill="{DynamicResource iconCOLOURAccent01}"
+                      Fill="{Binding IconForwardFill, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
                       />
 
 

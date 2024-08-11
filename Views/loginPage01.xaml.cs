@@ -37,7 +37,7 @@ namespace Data_Logger_1._3.Views
             {
 
                 _navigationService.NavigateToSignUp();
-               
+
             }
             catch (Exception ex)
             {

@@ -69,7 +69,7 @@ namespace Data_Logger_1._3.Views
 
         private void UpdateNavigationButtons()
         {
-            button_BACK.IsEnabled = frame_LOGIN.NavigationService.CanGoBack;            
+            button_BACK.IsEnabled = frame_LOGIN.NavigationService.CanGoBack;
             button_FORWARD.IsEnabled = frame_LOGIN.NavigationService.CanGoForward;
 
             icon_BACK.Fill = button_BACK.IsEnabled ? enabledColor! : disabledColor!;

@@ -1,5 +1,4 @@
 ﻿using Data_Logger_1._3.Services;
-using Data_Logger_1._3.ViewModels;
 using System.Windows.Controls;
 
 namespace Data_Logger_1._3.Views
@@ -23,7 +22,7 @@ namespace Data_Logger_1._3.Views
 
             _authService = authService;
             _navigationService = navigationService;
-            
+
         }
     }
 }
