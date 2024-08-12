@@ -61,6 +61,8 @@ namespace Data_Logger_1._3.ViewModels.Dialogs
             IsCompleted = false;
             Source = string.Empty;
 
+            BrowseCommand = new BrowseCommand(Context, this);
+
             SaveCommand = new SaveCommand(this, _dataService);
             AnnotateCommand = new AnnotateCommand(Context, _navigationService, this, _filmViewModel, _dataService);
         }
