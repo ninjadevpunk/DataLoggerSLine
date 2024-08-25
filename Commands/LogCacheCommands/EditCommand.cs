@@ -2,6 +2,7 @@
 using Data_Logger_1._3.ViewModels.Dashboard;
 using Data_Logger_1._3.ViewModels.LogViewModels;
 using MVVMEssentials.Commands;
+using System.Diagnostics;
 
 namespace Data_Logger_1._3.Commands.LogCacheCommands
 {
@@ -19,12 +20,14 @@ namespace Data_Logger_1._3.Commands.LogCacheCommands
                 _navigationService = navigationService ?? throw new ArgumentNullException(nameof(navigationService));
                 _dashboard = logCacheViewModel ?? throw new ArgumentNullException(nameof(logCacheViewModel));
             }
-            catch (ArgumentNullException ex)
+            catch (ArgumentNullException nullx)
             {
-                Console.WriteLine($"Argument null exception: {ex.Message}");
+                Debug.WriteLine($"Argument null exception: {nullx.Message}");
             }
-            catch (Exception)
+            catch (Exception e)
             {
+                Debug.WriteLine($"Exception found: {e.Message}");
+
                 // TODO
             }
         }

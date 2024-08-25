@@ -1110,15 +1110,24 @@ namespace Data_Logger_1._3.Services
                     InsertLogCategorySpecificDetails(log, insert);
                 }
             }
-            catch (SQLiteException ex)
+            catch(InvalidCastException castx)
+            {
+                // Handle cast exceptions
+                Debug.WriteLine($"Invalid cast exception near CreateLOG(log): {castx.Message}");
+            }
+            catch (SQLiteException sqlex)
             {
                 // Handle SQLite exceptions
-                Console.WriteLine($"SQLite Exception: {ex.Message}");
+                Debug.WriteLine($"SQLite Exception near CreateLOG(log): {sqlex.Message}");
             }
             catch (Exception ex)
             {
                 // Handle other exceptions
-                Console.WriteLine($"Exception: {ex.Message}");
+                Debug.WriteLine($"Exception near CreateLOG(log): {ex.Message}");
+
+                // TODO
+
+
             }
         }
 

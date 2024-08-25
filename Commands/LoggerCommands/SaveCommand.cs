@@ -3,6 +3,7 @@ using Data_Logger_1._3.Models.App_Models;
 using Data_Logger_1._3.Services;
 using Data_Logger_1._3.ViewModels.Dialogs;
 using MVVMEssentials.Commands;
+using System.Diagnostics;
 
 namespace Data_Logger_1._3.Commands.LoggerCommands
 {
@@ -24,14 +25,13 @@ namespace Data_Logger_1._3.Commands.LoggerCommands
                 QtCreator = _dataService.FindApplicationByID(1);
                 AndroidStudio = _dataService.FindApplicationByID(2);
             }
-            catch (ArgumentNullException ex)
+            catch (ArgumentNullException nullx)
             {
-                Console.WriteLine($"Argument null exception found: {ex.Message}");
+                Debug.WriteLine($"Argument null exception found: {nullx.Message}");
             }
-            catch (Exception)
+            catch (Exception e)
             {
-
-                throw;
+                Debug.WriteLine($"Exception found: {e.Message}");
             }
         }
 
@@ -122,7 +122,7 @@ namespace Data_Logger_1._3.Commands.LoggerCommands
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"{ex.Message}");
+                Debug.WriteLine($"Exception found: {ex.Message}");
             }
         }
     }

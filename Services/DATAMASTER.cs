@@ -2,6 +2,7 @@
 using Data_Logger_1._3.Models.App_Models;
 using System.Data;
 using System.Data.SQLite;
+using System.Diagnostics;
 using System.Security.Cryptography;
 using System.Text;
 using static Data_Logger_1._3.Models.FlexiNotesLOG;
@@ -1574,10 +1575,14 @@ namespace Data_Logger_1._3.Services
                     accountCreated = true;
                 }
             }
+            catch(SQLiteException sqlex)
+            {
+                Debug.WriteLine($"SQLite exception found: {sqlex.Message}");
+            }
             catch (Exception ex)
             {
                 // Log or handle the exception appropriately
-                Console.WriteLine($"Error adding account: {ex.Message}");
+                Debug.WriteLine($"Error adding account: {ex.Message}");
             }
 
             return accountCreated;
@@ -1609,13 +1614,15 @@ namespace Data_Logger_1._3.Services
                         --Watcher.AppID;
                 }
             }
-            catch (SQLiteException ex)
+            catch (SQLiteException sqlex)
             {
-                Console.WriteLine($"SQLite Exception: {ex.Message}");
+                Debug.WriteLine($"SQLite Exception near AddApplication(appClass): {sqlex.Message}");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error adding application: {ex.Message}");
+                Debug.WriteLine($"Exception near AddApplication(appClass): {ex.Message}");
+
+                // TODO
             }
         }
 
@@ -1666,13 +1673,13 @@ namespace Data_Logger_1._3.Services
                     }
                 }
             }
-            catch (SQLiteException ex)
+            catch (SQLiteException sqlex)
             {
-                Console.WriteLine($"SQLite error: {ex.Message}");
+                Debug.WriteLine($"SQLite error: {sqlex.Message}");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error adding project: {ex.Message}");
+                Debug.WriteLine($"Error adding project: {ex.Message}");
             }
         }
 
@@ -1723,14 +1730,36 @@ namespace Data_Logger_1._3.Services
                     }
                 }
             }
-            catch (SQLiteException ex)
+            catch (SQLiteException sqlex)
             {
-                Console.WriteLine($"SQLite error: {ex.Message}");
+                Debug.WriteLine($"SQLiteException near AddSubject(subjectClass): {sqlex.Message}");
+
+                // Delete the log in the database with the log ID that's currently stored in currentLogID.
+                // Rollback Sqlite code
+                if (currentLogID > 0)
+                {
+                    try
+                    {
+                        using (SQLiteCommand deleteLog = _con.CreateCommand())
+                        {
+                            deleteLog.CommandText = $"DELETE FROM LOG WHERE {Column.LogID} = @logID";
+                            deleteLog.Parameters.AddWithValue("@logID", currentLogID);
+                            deleteLog.ExecuteNonQuery();
+                        }
+                    }
+                    catch (Exception deleteEx)
+                    {
+                        Debug.WriteLine($"Exception near AddSubject inner try-catch: {deleteEx.Message}");
+                    }
+                }
+
                 return;
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error adding subject: {ex.Message}");
+                Debug.WriteLine($"Exception near AddSubject(subjectClass): {ex.Message}");
+
+                // TODO
             }
         }
 
@@ -1786,7 +1815,10 @@ namespace Data_Logger_1._3.Services
             catch (Exception ex)
             {
                 // Log or handle the exception appropriately
-                Console.WriteLine($"Error finding account ID: {ex.Message}");
+                Debug.WriteLine($"Exception near FindAccountID(account): {ex.Message}");
+
+                // TODO
+
                 return -1;
             }
         }
@@ -1826,25 +1858,18 @@ namespace Data_Logger_1._3.Services
                     }
                 }
 
-                // Return null if no account found
             }
             catch (Exception ex)
             {
-                // Log the error
-                Console.WriteLine($"Error finding account by ID: {ex.Message}");
+                Debug.WriteLine($"Exception near FindAccountByID(id): {ex.Message}");
 
-                // Return null or handle the error as appropriate
+                // TODO
+
             }
 
             return null;
         }
 
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="id">The account ID for the account that is being searched for.</param>
-        /// <returns> with the specified ID.</returns>
 
         /// <summary>
         /// Finds an account in the database.
@@ -1876,8 +1901,9 @@ namespace Data_Logger_1._3.Services
             }
             catch (Exception ex)
             {
-                // Log or handle the exception appropriately
-                Console.WriteLine($"Error finding account by email: {ex.Message}");
+                Debug.WriteLine($"Exception near FindAccountByEmail(email,password): {ex.Message}");
+
+                // TODO
             }
 
             return null;
@@ -1906,7 +1932,9 @@ namespace Data_Logger_1._3.Services
             catch (Exception ex)
             {
                 // Log or handle the exception appropriately
-                Console.WriteLine($"Error parsing account: {ex.Message}");
+                Debug.WriteLine($"Exception near ParseAccount(reader): {ex.Message}");
+
+                // TODO
             }
 
             return null;
@@ -1921,8 +1949,10 @@ namespace Data_Logger_1._3.Services
             }
             catch (Exception ex)
             {
-                // Log or handle the exception appropriately
-                Console.WriteLine($"Error verifying password: {ex.Message}");
+                Debug.WriteLine($"Exception near VerifyPassword(account,password): {ex.Message}");
+
+                // TODO
+
             }
 
             return false;
@@ -2005,7 +2035,7 @@ namespace Data_Logger_1._3.Services
             catch (Exception ex)
             {
                 // Log or handle the exception appropriately
-                Console.WriteLine($"Error finding category ID: {ex.Message}");
+                Debug.WriteLine($"Exception found near FindCategoryID: {ex.Message}");
             }
 
             return -1;
@@ -2045,13 +2075,15 @@ namespace Data_Logger_1._3.Services
                     }
                 }
             }
-            catch (SQLiteException ex)
+            catch (SQLiteException sqlex)
             {
-                Console.WriteLine($"SQLite Exception: {ex.Message}");
+                Debug.WriteLine($"SQLite Exception found near FindAppID: {sqlex.Message}");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error finding application ID: {ex.Message}");
+                Debug.WriteLine($"Exception found near FindAppID: {ex.Message}");
+
+                // TODO
             }
 
             return -1;
@@ -2091,13 +2123,15 @@ namespace Data_Logger_1._3.Services
                     }
                 }
             }
-            catch (SQLiteException ex)
+            catch (SQLiteException sqlex)
             {
-                Console.WriteLine($"SQLite Exception: {ex.Message}");
+                Debug.WriteLine($"SQLite Exception found near FindAppID: {sqlex.Message}");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error finding application ID: {ex.Message}");
+                Debug.WriteLine($"Exception found near FindAppID: {ex.Message}");
+
+                // TODO
             }
 
             return -1;
@@ -2156,13 +2190,13 @@ namespace Data_Logger_1._3.Services
                 }
 
             }
-            catch (SQLiteException ex)
+            catch (SQLiteException sqlex)
             {
-                Console.WriteLine($"SQLite Exception: {ex.Message}");
+                Debug.WriteLine($"SQLite Exception near FindProjectID(projectClass): {sqlex.Message}");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error finding project ID: {ex.Message}");
+                Debug.WriteLine($"Exception near FindProjectID(projectClass): {ex.Message}");
             }
 
             return 1;
@@ -2223,13 +2257,15 @@ namespace Data_Logger_1._3.Services
                 }
 
             }
-            catch (SQLiteException ex)
+            catch (SQLiteException sqlex)
             {
-                Console.WriteLine($"SQLite Exception: {ex.Message}");
+                Debug.WriteLine($"SQLite Exception near FindProjectID(projectClass,projectMustBeAdded): {sqlex.Message}");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error finding project ID: {ex.Message}");
+                Debug.WriteLine($"Exception near FindProjectID(projectClass,projectMustBeAdded): {ex.Message}");
+
+                // TODO
             }
 
             return 1;
@@ -2264,13 +2300,15 @@ namespace Data_Logger_1._3.Services
                     }
                 }
             }
-            catch (SQLiteException ex)
+            catch (SQLiteException sqlex)
             {
-                Console.WriteLine($"SQLite Exception: {ex.Message}");
+                Debug.WriteLine($"SQLite Exception near FindProjectByID(id): {sqlex.Message}");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error finding project by ID: {ex.Message}");
+                Debug.WriteLine($"Exception near FindProjectByID(id): {ex.Message}");
+
+                // TODO
             }
 
             return project;
@@ -2296,13 +2334,15 @@ namespace Data_Logger_1._3.Services
                         return Convert.ToInt32(result);
                 }
             }
-            catch (SQLiteException ex)
+            catch (SQLiteException sqlex)
             {
-                Console.WriteLine($"SQLite Exception: {ex.Message}");
+                Debug.WriteLine($"SQLite Exception near FindOutputID(outputClass): {sqlex.Message}");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error finding output ID: {ex.Message}");
+                Debug.WriteLine($"Exception near FindOutputID(outputClass): {ex.Message}");
+
+                // TODO
             }
 
             return 37;
@@ -2331,13 +2371,13 @@ namespace Data_Logger_1._3.Services
                     }
                 }
             }
-            catch (SQLiteException ex)
+            catch (SQLiteException sqlex)
             {
-                Console.WriteLine($"SQLite Exception: {ex.Message}");
+                Debug.WriteLine($"SQLite Exception: {sqlex.Message}");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error finding output by ID: {ex.Message}");
+                Debug.WriteLine($"Error finding output by ID: {ex.Message}");
             }
 
             return output;
@@ -2505,8 +2545,14 @@ namespace Data_Logger_1._3.Services
 
                 return medium;
             }
-            catch (Exception)
+            catch (SQLiteException sqlex)
             {
+                Debug.WriteLine($"SQLiteException found near FindMediumByID(id): {sqlex.Message}");
+                return null;
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"Exception found near FindMediumByID(id): {ex.Message}");
                 // TODO
                 return null;
             }
@@ -2536,13 +2582,19 @@ namespace Data_Logger_1._3.Services
 
                 return format;
             }
-            catch (Exception)
+            catch (SQLiteException sqlex)
             {
+                Debug.WriteLine($"SQLiteException found near FindFormatByID(id): {sqlex.Message}");
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"Exception found near FindFormatByID(id): {ex.Message}");
                 // TODO
+
+            }
 
                 return null;
             }
-        }
 
         public FLEXINOTEType FindFlexiNoteTypeByID(int id)
         {
@@ -2569,11 +2621,16 @@ namespace Data_Logger_1._3.Services
 
                 return flexiNoteType;
             }
-            catch (Exception)
+            catch (SQLiteException sqlex)
             {
-                return new();
-
+                Debug.WriteLine($"SQLiteException found near FindFlexiNoteTypeByID(id): {sqlex.Message}");
             }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"Exception found found near FindFlexiNoteTypeByID(id): {ex.Message}");
+            }
+
+                return new();
         }
 
 
@@ -2619,8 +2676,13 @@ namespace Data_Logger_1._3.Services
 
                 insert.ExecuteNonQuery();
             }
-            catch (Exception)
+            catch (SQLiteException sqlex)
             {
+                Debug.WriteLine($"SQLiteException found near FindCategoryByID(id): {sqlex.Message}");
+            }
+            catch (Exception e)
+            {
+                Debug.WriteLine($"Exception found near FindCategoryByID(id): {e.Message}");
                 // TODO
             }
 
@@ -2698,9 +2760,17 @@ namespace Data_Logger_1._3.Services
 
                 insert.ExecuteNonQuery();
             }
-            catch (Exception)
+            catch (SQLiteException sqlex)
             {
+                Debug.WriteLine($"SQLiteException found near FindNoteLogTypeByID(id): {sqlex.Message}");
+            }
+            catch (Exception e)
+            {
+                Debug.WriteLine($"Exception found near FindNoteLogTypeByID(id): {e.Message}");
+                
                 // TODO
+
+
             }
 
             return type;
@@ -2781,8 +2851,17 @@ namespace Data_Logger_1._3.Services
 
                 return apps;
             }
-            catch (Exception)
+            catch (SQLiteException sqlex)
             {
+                Debug.WriteLine($"SQLiteException found: {sqlex.Message}");
+                return null;
+            }
+            catch (Exception e)
+            {
+                Debug.WriteLine($"Exception found: {e.Message}");
+
+                // TODO
+
                 return null;
             }
         }

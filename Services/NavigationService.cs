@@ -10,6 +10,7 @@ using Data_Logger_1._3.Views.LogPages;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using MVVMEssentials.ViewModels;
+using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -568,22 +569,17 @@ namespace Data_Logger_1._3.Services
                 }
 
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                Debug.WriteLine($"Exception found near ChangeData(context): {ex.Message}");
+                
                 // TODO
-                return;
-            }
-        }
 
-        public void showLOGGERPLACEHOLDERS(bool showApp)
-        {
-            Logger.inputText_PROJECT.showPlaceholderText();
 
             if (showApp)
             {
                 Logger.inputText_APP.showPlaceholderText();
             }
-
         }
 
 

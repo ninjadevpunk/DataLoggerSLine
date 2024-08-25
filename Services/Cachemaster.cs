@@ -4,6 +4,7 @@ using Data_Logger_1._3.ViewModels.Dialogs;
 using Data_Logger_1._3.ViewModels.LogViewModels;
 using Newtonsoft.Json;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.IO;
 
 
@@ -465,11 +466,14 @@ namespace Data_Logger_1._3.Services
             }
             catch (IOException ioX)
             {
-                Console.WriteLine($"IOException found: {ioX.Message}");
+                Debug.WriteLine($"IOException found near SaveViewModel(logID,json...: {ioX.Message}");
             }
-            catch (Exception)
+            catch (Exception e)
             {
+                Debug.WriteLine($"Exception found near SaveViewModel(logID,json...: {e.Message}");
+
                 // TODO: Handle exception
+
             }
         }
 
@@ -506,11 +510,12 @@ namespace Data_Logger_1._3.Services
             }
             catch (IOException ioX)
             {
-                Console.WriteLine($"IOException found: {ioX.Message}");
+                Debug.WriteLine($"IOException found near DeleteViewModel(logID, cacheContext): {ioX.Message}");
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 // Handle exception
+                Debug.WriteLine($"Exception found near DeleteViewModel(logID, cacheContext): {ex.Message}");
             }
         }
 
@@ -584,9 +589,11 @@ namespace Data_Logger_1._3.Services
 
 
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
+                    Debug.WriteLine($"Exception found near LoadQtViewModels(...): {ex.Message}");
                     // TODO
+
                 }
             }
 

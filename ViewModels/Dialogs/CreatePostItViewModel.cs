@@ -5,6 +5,7 @@ using Data_Logger_1._3.Models.App_Models;
 using Data_Logger_1._3.Services;
 using MVVMEssentials.ViewModels;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.IO;
 using System.Text;
 using System.Windows;
@@ -690,11 +691,19 @@ namespace Data_Logger_1._3.ViewModels.Dialogs
 
                 return plainText;
             }
-            catch (ArgumentException ex)
+            catch (ArgumentException argx)
             {
-                // Log or handle the exception appropriately
-                Console.WriteLine("Error converting RTF to plain text: " + ex.Message);
-                return "No notes."; // or throw the exception again if appropriate
+                Debug.WriteLine($"ArgumentException near ConvertRtfToPlaintText(): {argx.Message}");
+                
+                return string.Empty; 
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"Exception near ConvertRtfToPlainText(): {ex.Message}");
+
+                // TODO
+
+                return string.Empty;
             }
         }
 

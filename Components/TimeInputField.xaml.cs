@@ -11,7 +11,6 @@ namespace Data_Logger_1._3.Components
         public TimeInputField()
         {
             InitializeComponent();
-
         }
 
 
@@ -160,13 +159,16 @@ namespace Data_Logger_1._3.Components
                 Seconds + "." +
                 Milliseconds);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 setTime();
+                Debug.WriteLine($"Exception found near updateTime(): {ex.Message}");
+
+
+                // TODO
+
             }
 
-            var ev = new RoutedEventArgs(TimeChangedEvent);
-            RaiseEvent(ev);
         }
 
         public string NumberFormatter(int realLength, string currentNumber)

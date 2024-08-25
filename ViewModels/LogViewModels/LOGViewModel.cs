@@ -183,6 +183,19 @@ namespace Data_Logger_1._3.ViewModels.LogViewModels
                 });
             }
         }
+            catch(TaskCanceledException tex)
+            {
+                _timer.Dispose();
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"Exception found near TimerCallback(): {ex.Message}");
+
+                // TODO
+
+
+            }
+        }
 
         protected abstract void DeleteCacheItem();
 

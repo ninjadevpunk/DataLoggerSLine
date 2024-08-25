@@ -1,6 +1,7 @@
 ﻿using Data_Logger_1._3.Models;
 using Data_Logger_1._3.ViewModels.Dialogs;
 using MVVMEssentials.Commands;
+using System.Diagnostics;
 
 namespace Data_Logger_1._3.Commands
 {
@@ -120,8 +121,9 @@ namespace Data_Logger_1._3.Commands
                 }
 
             }
-            catch (Exception)
+            catch (Exception e)
             {
+                Debug.WriteLine($"Exception found near ResetLoggerCommand: {e.Message}")
                 // TODO
             }
         }

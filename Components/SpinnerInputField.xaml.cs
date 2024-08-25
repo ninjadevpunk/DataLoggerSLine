@@ -1,3 +1,4 @@
+﻿using System.Diagnostics;
 ﻿using System.Globalization;
 using System.Windows;
 using System.Windows.Controls;
@@ -313,9 +314,11 @@ namespace Data_Logger_1._3.Components
 
 
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
+                Debug.WriteLine($"Exception found near on_SPINNER_rotate(): {ex.Message}");
+            
+            // TODO
 
             }
 
@@ -416,13 +419,13 @@ namespace Data_Logger_1._3.Components
 
 
             }
-            catch (System.FormatException fe)
+            catch (FormatException fe)
             {
                 MessageBox.Show($"An error has occurred on our side. This app will send feedback for you to solve the problem. We apologise for any incovenience.",
                     "Format Error", MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK);
 
-                // TODO Send to Firebase database instead of console so that the bug can be fixed.
-                Console.WriteLine(fe.ToString());
+                // TODO Send to database instead of console so that the bug can be fixed.
+                Debug.WriteLine(fe.ToString());
 
                 return false;
             }
@@ -432,16 +435,10 @@ namespace Data_Logger_1._3.Components
                     $"If the problem persists, please use the Feedback tool on the bottom of the menu panel.",
                     "Error", MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK);
 
-                // TODO Send to Firebase database instead of console so that the bug can be fixed.
-                Console.WriteLine(e.ToString());
+                // TODO Send to database instead of console so that the bug can be fixed.
 
-                var temp = "";
+                Debug.WriteLine($"Exception found: {e.Message}");
 
-
-                for (int i = 0; i < Digits; i++)
-                {
-                    temp += Leader.Substring(0, 1);
-                }
 
                 if (IsInteger)
                     this.spinner_NUMBERS.Text = temp;
@@ -453,6 +450,9 @@ namespace Data_Logger_1._3.Components
 
             return true;
         }
+
+
+
 
         // Number Formatter
         public void Formatter()
@@ -511,9 +511,13 @@ namespace Data_Logger_1._3.Components
                 var ev = new RoutedEventArgs(IsIncrementedEvent);
                 RaiseEvent(ev);
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                // Send to Firebase
+                Debug.WriteLine($"Exception found near increment(): {e.Message}");
+
+                // Send to database
+
+
             }
 
             buttonCheck();
@@ -555,9 +559,13 @@ namespace Data_Logger_1._3.Components
                 var ev = new RoutedEventArgs(IsDecrementedEvent);
                 RaiseEvent(ev);
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                // Send to Firebase
+                Debug.WriteLine($"Exception found near decrement(): {e.Message}");
+
+                // Send to database
+
+
             }
 
             buttonCheck();

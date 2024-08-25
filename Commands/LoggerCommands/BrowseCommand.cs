@@ -1,6 +1,7 @@
 ﻿using Data_Logger_1._3.Services;
 using Data_Logger_1._3.ViewModels.Dialogs;
 using MVVMEssentials.Commands;
+using System.Diagnostics;
 
 namespace Data_Logger_1._3.Commands.LoggerCommands
 {
@@ -78,7 +79,7 @@ namespace Data_Logger_1._3.Commands.LoggerCommands
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"{ex.Message}");
+                Debug.WriteLine($"{ex.Message}");
             }
         }
     }

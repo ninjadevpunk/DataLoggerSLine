@@ -1,5 +1,6 @@
 ﻿using Data_Logger_1._3.ViewModels.Dialogs;
 using MVVMEssentials.Commands;
+using System.Diagnostics;
 using System.Windows;
 using System.Windows.Documents;
 using System.Windows.Media;
@@ -17,13 +18,13 @@ namespace Data_Logger_1._3.Commands.PostItCommands.ToolCommands
             {
                 _createPostItViewModel = createPostItViewModel ?? throw new ArgumentNullException(nameof(createPostItViewModel));
             }
-            catch (ArgumentNullException ex)
+            catch (ArgumentNullException nullx)
             {
-                Console.WriteLine($"Argument null exception: {ex.Message}");
+                Debug.WriteLine($"Argument null exception: {nullx.Message}");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"An exception occurred: {ex.Message}");
+                Debug.WriteLine($"An exception occurred: {ex.Message}");
             }
         }
 

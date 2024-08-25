@@ -1,6 +1,7 @@
 ﻿using Data_Logger_1._3.Services;
 using Data_Logger_1._3.ViewModels.Dialogs;
 using MVVMEssentials.Commands;
+using System.Diagnostics;
 using System.Windows;
 
 namespace Data_Logger_1._3.Commands.PostItCommands
@@ -25,13 +26,14 @@ namespace Data_Logger_1._3.Commands.PostItCommands
                 _createPostItViewModel = createPostItViewModel ?? throw new ArgumentNullException(nameof(createPostItViewModel));
 
             }
-            catch (ArgumentNullException ex)
+            catch (ArgumentNullException nullx)
             {
-                Console.WriteLine($"Argument null exception: {ex.Message}");
+                Debug.WriteLine($"Argument null exception: {nullx.Message}");
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                //
+                Debug.WriteLine($"Exception: {e.Message}");
+
             }
         }
 
@@ -46,13 +48,13 @@ namespace Data_Logger_1._3.Commands.PostItCommands
                 _editPostItViewModel = editPostItViewModel ?? throw new ArgumentNullException(nameof(editPostItViewModel));
                 _actionType = actionType;
             }
-            catch (ArgumentNullException ex)
+            catch (ArgumentNullException nullx)
             {
-                Console.WriteLine($"Argument null exception: {ex.Message}");
+                Debug.WriteLine($"Argument null exception: {nullx.Message}");
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                //
+                Debug.WriteLine($"Exception: {e.Message}");
             }
         }
 
@@ -117,15 +119,11 @@ namespace Data_Logger_1._3.Commands.PostItCommands
                         }
                 }
 
-                _loggerCreateViewModel.TimeNow(false);
-
-
-
 
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                // TODO
+                Debug.WriteLine($"Exception: {e.Message}");
             }
         }
     }

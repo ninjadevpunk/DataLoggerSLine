@@ -6,6 +6,7 @@ using Data_Logger_1._3.ViewModels.Dialogs;
 using Data_Logger_1._3.ViewModels.LogViewModels;
 using MVVMEssentials.Commands;
 using MVVMEssentials.ViewModels;
+using System.Diagnostics;
 using System.Windows;
 
 namespace Data_Logger_1._3.Commands.LoggerCommands
@@ -54,8 +55,9 @@ namespace Data_Logger_1._3.Commands.LoggerCommands
                     AndroidStudio = _dataService.FindApplicationByID(2);
                 }
             }
-            catch (Exception)
+            catch (Exception e)
             {
+                Debug.WriteLine($"Exception found in first AnnotateCommand constructor: {e.Message}");
                 // TODO
             }
 
@@ -75,8 +77,10 @@ namespace Data_Logger_1._3.Commands.LoggerCommands
                 _dataService = dataService ?? throw new ArgumentNullException(nameof(dataService));
                 ActionType = actionType;
             }
-            catch (Exception)
+            catch (Exception e)
             {
+                Debug.WriteLine($"Exception found in second AnnotateCommand constructor: {e.Message}");
+
                 // TODO
             }
 
@@ -104,8 +108,10 @@ namespace Data_Logger_1._3.Commands.LoggerCommands
                 }
 
             }
-            catch (Exception)
+            catch (Exception e)
             {
+                Debug.WriteLine($"Exception found in third AnnotateCommand constructor: {e.Message}");
+                
                 // TODO
             }
 
@@ -1144,17 +1150,56 @@ namespace Data_Logger_1._3.Commands.LoggerCommands
             }
             catch (InvalidCastException castx)
             {
-                Console.WriteLine($"Invalid cast canceled exception found: {castx.Message}");
+                Debug.WriteLine($"Invalid cast canceled exception found in AnnotateCommand.Execute(): {castx.Message}");
+                _navigationService.NavigateToLogCachePage(Type);
             }
             catch (TaskCanceledException taskx)
             {
-                Console.WriteLine($"Task canceled exception found: {taskx.Message}");
+                Debug.WriteLine($"Task canceled exception found in AnnotateCommand.Execute(): {taskx.Message}");
+                _navigationService.NavigateToLogCachePage(Type);
+            }
+            catch (ArgumentNullException nullx)
+            {
+                MessageBox.Show("A problem occurred on our end. We apologise for any inconvenience caused. Feedback will automatically be sent to us.",
+                    "Error", MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK);
+
+                Debug.WriteLine($"Argument null exception found in AnnotateCommand.Execute(): {nullx.Message}");
+
+                _navigationService.NavigateToLogCachePage(Type);
+            }
+            catch(IndexOutOfRangeException index)
+            {
+                MessageBox.Show("A problem occurred on our end. We apologise for any inconvenience caused. Feedback will automatically be sent to us.",
+                    "Error", MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK);
+
+                Debug.WriteLine($"Index out of range exception found in AnnotateCommand.Execute(): {index.Message}");
+
+                _navigationService.NavigateToLogCachePage(Type);
+            }
+            catch (FormatException formx)
+            {
+                if(formx.Message.Equals("The input string '' was not in a correct format."))
+                {
+                    MessageBox.Show($"An error occurred. Please ensure you entered numbers only in fields that require numeric values.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+                else
+                {
+                    MessageBox.Show("A problem occurred on our end. We apologise for any inconvenience caused. Feedback will automatically be sent to us.",
+                    "Error", MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK);
+                }
+
+                Debug.WriteLine($"Format exception found in AnnotateCommand.Execute(): {formx.Message}");
+
+                _navigationService.NavigateToLogCachePage(Type);
             }
             catch (Exception e)
             {
-                MessageBox.Show($"An error occurred: {e.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show("A problem occurred on our end. We apologise for any inconvenience caused. Feedback will automatically be sent to us.",
+                    "Error", MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK);
 
-                _navigationService.NavigateToLogCachePage(CacheContext.Coding);
+                Debug.WriteLine($"Exception found in AnnotateCommand.Execute(): {e.Message}");
+
+                _navigationService.NavigateToLogCachePage(Type);
             }
 
         }
