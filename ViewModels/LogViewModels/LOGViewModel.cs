@@ -5,6 +5,7 @@ using Data_Logger_1._3.ViewModels.Dashboard;
 using Data_Logger_1._3.ViewModels.Dialogs;
 using MVVMEssentials.ViewModels;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Input;

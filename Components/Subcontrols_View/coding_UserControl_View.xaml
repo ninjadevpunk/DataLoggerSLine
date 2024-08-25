@@ -6,17 +6,19 @@
              xmlns:local="clr-namespace:Data_Logger_1._3.Components.Subcontrols_View" xmlns:components="clr-namespace:Data_Logger_1._3.Components"
              mc:Ignorable="d"
              d:Background="White"
+             HorizontalAlignment="Stretch"
              x:Name="control_CODING_fields_View" >
 
-    <StackPanel Width="380">
+    <StackPanel>
 
         <!-- BUGS -->        
-        <Border
+        <Border 
+                HorizontalAlignment="Stretch"
             Padding="20 0"
             Height="35" >
 
             <TextBlock x:Name="text_BUGS" Style="{DynamicResource text_LABEL03}"
-                       Text="{Binding BugsFound, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
+                       Text="{Binding BugsFound}" />
 
         </Border>
 
@@ -26,7 +28,7 @@
             Height="35" >
 
             <TextBlock x:Name="text_LAUNCHSUCCESFUL" Style="{DynamicResource text_LABEL03}"
-                       Text="{Binding ApplicationOpened, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
+                       Text="{Binding ApplicationOpened}" />
 
         </Border>
 

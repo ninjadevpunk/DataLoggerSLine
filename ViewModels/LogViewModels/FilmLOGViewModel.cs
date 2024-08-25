@@ -22,6 +22,7 @@ namespace Data_Logger_1._3.ViewModels.LogViewModels
         {
             _FilmLOG = filmLOG;
             EditCommand = new EditCommand(LOGViewModelContext, _vm._navigationService, _vm);
+            ViewCommand = new ViewCommand(_vm._navigationService, _vm, LOGViewModelContext);
 
             _cacheMaster.SaveFilmViewModel(this, LOGViewModelContext);
             dataService.SaveSubjectIndex();
@@ -33,6 +34,7 @@ namespace Data_Logger_1._3.ViewModels.LogViewModels
         {
             _FilmLOG = filmLOG;
             EditCommand = new EditCommand(LOGViewModelContext, _vm._navigationService, _vm);
+            ViewCommand = new ViewCommand(_vm._navigationService, _vm, LOGViewModelContext);
         }
 
 

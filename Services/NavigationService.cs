@@ -1,9 +1,11 @@
 ﻿using Data_Logger_1._3.Components.Subcontrols;
+using Data_Logger_1._3.Components.Subcontrols_View;
 using Data_Logger_1._3.Models;
 using Data_Logger_1._3.ViewModels;
 using Data_Logger_1._3.ViewModels.Dashboard;
 using Data_Logger_1._3.ViewModels.Dialogs;
 using Data_Logger_1._3.ViewModels.LogViewModels;
+using Data_Logger_1._3.ViewModels.ViewerViewModels;
 using Data_Logger_1._3.Views;
 using Data_Logger_1._3.Views.Dialogs;
 using Data_Logger_1._3.Views.LogPages;
@@ -32,6 +34,7 @@ namespace Data_Logger_1._3.Services
         private readonly AuthService _authService;
         private readonly DataService _dataService;
         bool editControlsLoaded = false, arrowFillSet = false;
+        bool viewerControlsLoaded = false;
 
         public LOG.CATEGORY CurrentCategory { get; set; } = LOG.CATEGORY.CODING;
 
@@ -45,6 +48,8 @@ namespace Data_Logger_1._3.Services
         private Frame _ASframe; // Android Studio Logger Frame
         private Frame _EDS_frame; // Sub class Logs Editor Frame
         private Frame _EDS_ASframe; // Android Studio Logs Editor Frame
+        private Frame _VIEW_frame; // Sub class Logs Viewer Frame
+        private Frame _VIEW_ASframe; // Android Studio Logs Viewer Frame
 
         public Login LoginWindow { get; set; }
 
@@ -57,6 +62,8 @@ namespace Data_Logger_1._3.Services
         public LoggerCreatePage Logger { get; set; }
 
         public LoggerEditPage Editor { get; set; }
+
+        public LoggerViewPage Viewer { get; set; }
 
         public NOTESPage NOTESList { get; set; }
 
@@ -130,6 +137,31 @@ namespace Data_Logger_1._3.Services
         #endregion
 
 
+        #region Viewer Contexts
+
+
+
+
+        public codeViewerViewModel QtCodingViewer { get; set; }
+
+        public bool viewerProfilePictureSet = false;
+
+        public AScodeViewerViewModel ASCodingViewer { get; set; }
+
+        public codeViewerViewModel CodingViewer { get; set; }
+
+        public graphicsViewerViewModel GraphicsViewer { get; set; }
+
+        public filmViewerViewModel FilmViewer { get; set; }
+
+        public flexiViewerViewModel FlexiViewer { get; set; }
+
+
+
+
+        #endregion
+
+
         #region Frames
 
 
@@ -150,6 +182,12 @@ namespace Data_Logger_1._3.Services
         public graphics_UserControl EditGraphicsFrame { get; set; }
         public film_UserControl EditFilmFrame { get; set; }
         public flexi_UserControl EditFlexiFrame { get; set; }
+
+        public coding_UserControl_View ViewerCodingFrame { get; set; }
+        public androidStudio_UserControl_View ViewerAndroidStudioFrame { get; set; }
+        public graphics_UserControl_View ViewerGraphicsFrame { get; set; }
+        public film_UserControl_View ViewerFilmFrame { get; set; }
+        public flexi_UserControl_View ViewerFlexiFrame { get; set; }
 
 
         #endregion
@@ -221,10 +259,13 @@ namespace Data_Logger_1._3.Services
                 Dashboard = new LogCachePage();
                 Logger = new LoggerCreatePage();
                 Editor = new LoggerEditPage();
+                Viewer = new LoggerViewPage();
                 _frame = Logger.frame_VARIATIONS;
                 _ASframe = Logger.frame_ANDROIDSTUDIO;
                 _EDS_frame = Editor.frame_VARIATIONS;
                 _EDS_ASframe = Editor.frame_ANDROIDSTUDIO;
+                _VIEW_frame = Viewer.frame_VARIATIONS;
+                _VIEW_ASframe = Viewer.frame_ANDROIDSTUDIO;
 
                 NOTESList = new NOTESPage();
                 NOTESList.DataContext = notesDashboard;
@@ -247,6 +288,21 @@ namespace Data_Logger_1._3.Services
                 EditFlexiFrame = new flexi_UserControl();
 
                 editControlsLoaded = true;
+            }
+        }
+
+        public void LoadViewerControls()
+        {
+            if(!viewerControlsLoaded)
+            {
+                ViewerCodingFrame = new coding_UserControl_View();
+                ViewerAndroidStudioFrame = new androidStudio_UserControl_View();
+                ViewerAndroidStudioFrame.DataContext = ASCodingViewer;
+                ViewerGraphicsFrame = new graphics_UserControl_View();
+                ViewerFilmFrame = new film_UserControl_View();
+                ViewerFlexiFrame = new flexi_UserControl_View();
+
+                viewerControlsLoaded = true;
             }
         }
 
@@ -788,51 +844,267 @@ namespace Data_Logger_1._3.Services
 
                         break;
                     }
+        public void NavigateToViewer(ViewModelBase viewModelBase, CacheContext cacheContext)
+        {
+            try
+            {
+                switch (cacheContext)
+                {
+                    case CacheContext.Qt:
+                        {
+                            var log = (QtLOGViewModel)viewModelBase;
+                            QtCodingViewer = new(this, "Qt");
+
+                            QtCodingViewer.SignUpImage = _authService.Account.ProfilePic;
+                            QtCodingViewer.DisplayPicVisibility = QtCodingViewer.SignUpImage != "" ? Visibility.Collapsed : Visibility.Visible;
+
+                            QtCodingViewer.Author = $"{log._QtcodingLOG.Author.FirstName} {log._QtcodingLOG.Author.LastName}";
+                            QtCodingViewer.ProjectName = log._QtcodingLOG.Project.Name;
+                            QtCodingViewer.ApplicationName = log._QtcodingLOG.Application.Name;
+
+                            QtCodingViewer.Date = log._QtcodingLOG.Start.ToString("d MMMM yyyy HH:mm");
+
+                            QtCodingViewer.Output = log._QtcodingLOG.Output.Name;
+                            QtCodingViewer.Type = log._QtcodingLOG.Type.Name;
+
+                            foreach (PostIt p in log._QtcodingLOG.PostItList)
+                            {
+                                QtCodingViewer.AddPostIt(new CreatePostItViewModel(this, log._QtcodingLOG.Project, p.Subject.Subject, p.Error, p.Solution,
+                                    p.Suggestion, p.Comment));
+                            }
+
+                            QtCodingViewer.BugsFound = $"{log._QtcodingLOG.Bugs} Bugs found";
+                            QtCodingViewer.ApplicationOpened = log._QtcodingLOG.Success ? "Launch Successful" : "Unsuccessful Launch";
+
+                            Dashboard.DataContext = codingQtDashboard;
+                            Viewer.DataContext = QtCodingViewer;
+                            LoadViewerControls();
+                            _VIEW_frame.Navigate(ViewerCodingFrame);
+                            _VIEW_ASframe.Navigate(null);
+                            ViewerCodingFrame.DataContext = QtCodingViewer;
+
+                            break;
+                        }
+                    case CacheContext.AndroidStudio:
+                        {
+                            var log = (AndroidLOGViewModel)viewModelBase;
+                            ASCodingViewer = new(this, log._AndroidCodingLOG.Scope.Equals(AndroidCodingLOG.SCOPE.SIMPLE));
+
+                            ASCodingViewer.SignUpImage = _authService.Account.ProfilePic;
+                            ASCodingViewer.DisplayPicVisibility = ASCodingViewer.SignUpImage != "" ? Visibility.Collapsed : Visibility.Visible;
+
+                            ASCodingViewer.Author = $"{log._AndroidCodingLOG.Author.FirstName} {log._AndroidCodingLOG.Author.LastName}";
+                            ASCodingViewer.ProjectName = log._AndroidCodingLOG.Project.Name;
+                            ASCodingViewer.ApplicationName = log._AndroidCodingLOG.Application.Name;
+
+                            ASCodingViewer.Date = log._AndroidCodingLOG.Start.ToString("d MMMM yyyy HH:mm"); ;
+
+                            ASCodingViewer.Output = log._AndroidCodingLOG.Output.Name;
+                            ASCodingViewer.Type = log._AndroidCodingLOG.Type.Name;
+
+                            foreach (PostIt p in log._AndroidCodingLOG.PostItList)
+                            {
+                                ASCodingViewer.AddPostIt(new CreatePostItViewModel(this, log._AndroidCodingLOG.Project, p.Subject.Subject, p.Error, p.Solution,
+                                    p.Suggestion, p.Comment));
+                            }
+
+                            ASCodingViewer.BugsFound = $"{log._AndroidCodingLOG.Bugs} Bugs found";
+                            ASCodingViewer.ApplicationOpened = log._AndroidCodingLOG.Success ? "Launch Successful" : "Unsuccessful Launch";
+
+                            ASCodingViewer.SyncTime = log._AndroidCodingLOG.Sync.ToString("HH:mm:ss.fff"); ;
+
+                            ASCodingViewer.GradleDaemonTime = log._AndroidCodingLOG.StartingGradleDaemon.ToString("HH:mm:ss.fff");
+
+                            ASCodingViewer.RunBuildTime = log._AndroidCodingLOG.RunBuild.ToString("HH:mm:ss.fff");
+
+                            ASCodingViewer.LoadBuildTime = log._AndroidCodingLOG.LoadBuild.ToString("HH:mm:ss.fff");
+
+                            ASCodingViewer.ConfigureBuildTime = log._AndroidCodingLOG.ConfigureBuild.ToString("HH:mm:ss.fff");
+
+                            ASCodingViewer.AllProjectsTime = log._AndroidCodingLOG.AllProjects.ToString("HH:mm:ss.fff");
+
+                            Dashboard.DataContext = codingAndroidDashboard;
+                            Viewer.DataContext = ASCodingViewer;
+                            LoadViewerControls();
+                            _VIEW_frame.Navigate(ViewerCodingFrame);
+                            _VIEW_ASframe.Navigate(ViewerAndroidStudioFrame);
+                            ViewerCodingFrame.DataContext = ASCodingViewer;
+                            ViewerAndroidStudioFrame.DataContext = ASCodingViewer;
+
+                            break;
+                        }
                 case CacheContext.Graphics:
                     {
                         var log = (GraphicsLOGViewModel)viewModelBase;
-                        GraphicsEditor = new(this, logCacheViewModel, _dataService, log);
+                            GraphicsViewer = new(this);
 
-                        GraphicsEditor.SignUpImage = _authService.Account.ProfilePic;
+                            GraphicsViewer.SignUpImage = _authService.Account.ProfilePic;
+                            GraphicsViewer.DisplayPicVisibility = GraphicsViewer.SignUpImage != "" ? Visibility.Collapsed : Visibility.Visible;
 
-                        GraphicsEditor.ProjectName = log._GraphicsLOG.Project.Name;
-                        GraphicsEditor.ApplicationName = log._GraphicsLOG.Application.Name;
+                            GraphicsViewer.Author = $"{log._GraphicsLOG.Author.FirstName} {log._GraphicsLOG.Author.LastName}";
+                            GraphicsViewer.ProjectName = log._GraphicsLOG.Project.Name;
+                            GraphicsViewer.ApplicationName = log._GraphicsLOG.Application.Name;
 
-                        GraphicsEditor.StartDate = log._GraphicsLOG.Start;
-                        GraphicsEditor.StartHours = log._GraphicsLOG.Start.Hour;
-                        GraphicsEditor.StartMinutes = log._GraphicsLOG.Start.Minute;
-                        GraphicsEditor.StartSeconds = log._GraphicsLOG.Start.Second;
-                        GraphicsEditor.StartMilliseconds = log._GraphicsLOG.Start.Millisecond;
+                            GraphicsViewer.Date = log._GraphicsLOG.Start.ToString("d MMMM yyyy HH:mm");
 
-                        GraphicsEditor.EndDate = log._GraphicsLOG.End;
-                        GraphicsEditor.EndHours = log._GraphicsLOG.End.Hour;
-                        GraphicsEditor.EndMinutes = log._GraphicsLOG.End.Minute;
-                        GraphicsEditor.EndSeconds = log._GraphicsLOG.End.Second;
-                        GraphicsEditor.EndMilliseconds = log._GraphicsLOG.End.Millisecond;
+                            GraphicsViewer.Output = log._GraphicsLOG.Output.Name;
+                            GraphicsViewer.Type = log._GraphicsLOG.Type.Name;
 
-                        GraphicsEditor.Output = log._GraphicsLOG.Output.Name;
-                        GraphicsEditor.Type = log._GraphicsLOG.Type.Name;
+                            foreach (PostIt p in log._GraphicsLOG.PostItList)
+                            {
+                                GraphicsViewer.AddPostIt(new CreatePostItViewModel(this, log._GraphicsLOG.Project, p.Subject.Subject, p.Error,p.Solution,
+                                    p.Suggestion, p.Comment));
+                            }
 
-                        foreach (PostIt p in log._GraphicsLOG.PostItList)
-                        {
-                            GraphicsEditor.PostIts.Add(new CreatePostItViewModel(this, _dataService, GraphicsEditor, p.Subject.Subject, p.Error, p.ERCaptureTime, p.Solution,
-                                p.SOCaptureTime, p.Suggestion, p.Comment));
+                            GraphicsViewer.HxW = $"{log._GraphicsLOG.Height.ToString()} x {log._GraphicsLOG.Width.ToString()}";
+                            GraphicsViewer.Medium = log._GraphicsLOG.Medium;
+                            GraphicsViewer.Format = log._GraphicsLOG.Format;
+                            GraphicsViewer.Brush = log._GraphicsLOG.Brush;
+                            GraphicsViewer.MeasuringUnit = log._GraphicsLOG.Unit;
+                            GraphicsViewer.Size = log._GraphicsLOG.Size;
+                            GraphicsViewer.DPI = log._GraphicsLOG.DPI.ToString();
+                            GraphicsViewer.ColourDepth = log._GraphicsLOG.Depth;
+                            GraphicsViewer.IsCompleted = log._GraphicsLOG.IsCompleted ? "Project Completed" : "Project Ongoing...";
+                            GraphicsViewer.Source = $"Location: {log._GraphicsLOG.Source}";
+
+
+                            Dashboard.DataContext = graphicsDashboard;
+                            Viewer.DataContext = GraphicsViewer;
+                            LoadViewerControls();
+                            _VIEW_frame.Navigate(ViewerGraphicsFrame);
+                            _VIEW_ASframe.Navigate(null);
+                            ViewerGraphicsFrame.DataContext = GraphicsViewer;
+
+                            break;
                         }
+                    case CacheContext.Film:
+                        {
+                            var log = (FilmLOGViewModel)viewModelBase;
+                            FilmViewer = new(this);
+
+                            FilmViewer.SignUpImage = _authService.Account.ProfilePic;
+                            FilmViewer.DisplayPicVisibility = FilmViewer.SignUpImage != "" ? Visibility.Collapsed : Visibility.Visible;
+
+                            FilmViewer.Author = $"{log._FilmLOG.Author.FirstName} {log._FilmLOG.Author.LastName}";
+                            FilmViewer.ProjectName = log._FilmLOG.Project.Name;
+                            FilmViewer.ApplicationName = log._FilmLOG.Application.Name;
+
+                            FilmViewer.Date = log._FilmLOG.Start.ToString("d MMMM yyyy HH:mm");
+
+                            FilmViewer.Output = log._FilmLOG.Output.Name;
+                            FilmViewer.Type = log._FilmLOG.Type.Name;
+
+                            foreach (PostIt p in log._FilmLOG.PostItList)
+                            {
+                                FilmViewer.AddPostIt(new CreatePostItViewModel(this, log._FilmLOG.Project, p.Subject.Subject, p.Error, p.Solution,
+                                    p.Suggestion, p.Comment));
+                            }
+
+                            FilmViewer.HxW = $"{log._FilmLOG.Height.ToString()} x {log._FilmLOG.Width.ToString()}";
+                            FilmViewer.Length = log._FilmLOG.Length;
+                            FilmViewer.IsCompleted = log._FilmLOG.IsCompleted ? "Project Completed" : "Project Ongoing...";
+                            FilmViewer.Source = $"Location: {log._FilmLOG.Source}";
 
 
+                            Dashboard.DataContext = filmDashboard;
+                            Viewer.DataContext = FilmViewer;
+                            LoadViewerControls();
+                            _VIEW_frame.Navigate(ViewerFilmFrame);
+                            _VIEW_ASframe.Navigate(null);
+                            ViewerFilmFrame.DataContext = FilmViewer;
+
+                            break;
+                        }
+                    case CacheContext.Flexi:
+                        {
+                            var log = (FlexiLOGViewModel)viewModelBase;
+                            FlexiViewer = new(this);
+
+                            FlexiViewer.SignUpImage = _authService.Account.ProfilePic;
+                            FlexiViewer.DisplayPicVisibility = FlexiViewer.SignUpImage != "" ? Visibility.Collapsed : Visibility.Visible;
+
+                            FlexiViewer.Author = $"{log._FlexiLOG.Author.FirstName} {log._FlexiLOG.Author.LastName}";
+                            FlexiViewer.ProjectName = log._FlexiLOG.Project.Name;
+                            FlexiViewer.ApplicationName = log._FlexiLOG.Application.Name;
+
+                            FlexiViewer.Date = log._FlexiLOG.Start.ToString("d MMMM yyyy HH:mm");
+
+                            FlexiViewer.Output = log._FlexiLOG.Output.Name;
+                            FlexiViewer.Type = log._FlexiLOG.Type.Name;
+
+                            foreach (PostIt p in log._FlexiLOG.PostItList)
+                        {
+                                FlexiViewer.AddPostIt(new CreatePostItViewModel(this, log._FlexiLOG.Project, p.Subject.Subject, p.Error, p.Solution,
+                                    p.Suggestion, p.Comment));
+                            }
+
+                            FlexiViewer.FlexiNoteCategory = $"Flexible Log Type: {log._FlexiLOG.flexinotetype.ToString()}";
+                            FlexiViewer.Medium = log._FlexiLOG.Medium;
+                            FlexiViewer.Format = log._FlexiLOG.Format;
+                            FlexiViewer.Bitrate = log._FlexiLOG.Bitrate.ToString();
+                            FlexiViewer.Duration = log._FlexiLOG.Length;
+                            FlexiViewer.IsCompleted = log._FlexiLOG.IsCompleted ? "Project Completed" : "Project Ongoing...";
+                            FlexiViewer.Source = $"Location: {log._FlexiLOG.Source}";
+
+
+                            Dashboard.DataContext = flexiDashboard;
+                            Viewer.DataContext = FlexiViewer;
+                            LoadViewerControls();
+                            _VIEW_frame.Navigate(ViewerFlexiFrame);
+                            _VIEW_ASframe.Navigate(null);
+                            ViewerFlexiFrame.DataContext = FlexiViewer;
+
+                            break;
+                        }
+                    default:
+                        {
+                            var log = (CodeLOGViewModel)viewModelBase;
+                            CodingViewer = new(this);
+
+                            CodingViewer.SignUpImage = _authService.Account.ProfilePic;
+                            CodingViewer.DisplayPicVisibility = CodingViewer.SignUpImage != "" ? Visibility.Collapsed : Visibility.Visible;
+
+                            CodingViewer.Author = $"{log._CodeLOG.Author.FirstName} {log._CodeLOG.Author.LastName}";
+                            CodingViewer.ProjectName = log._CodeLOG.Project.Name;
+                            CodingViewer.ApplicationName = log._CodeLOG.Application.Name;
+
+                            CodingViewer.Date = log._CodeLOG.Start.ToString("d MMMM yyyy HH:mm");
+
+                            CodingViewer.Output = log._CodeLOG.Output.Name;
+                            CodingViewer.Type = log._CodeLOG.Type.Name;
+
+                            foreach (PostIt p in log._CodeLOG.PostItList)
+                            {
+                                CodingViewer.AddPostIt(new CreatePostItViewModel(this, log._CodeLOG.Project, p.Subject.Subject, p.Error, p.Solution,
+                                    p.Suggestion, p.Comment));
+                            }
+
+                            CodingViewer.BugsFound = $"{log._CodeLOG.Bugs} Bugs found";
+                            CodingViewer.ApplicationOpened = log._CodeLOG.Success ? "Launch Successful" : "Unsuccessful Launch";
 
                         Dashboard.DataContext = codingDashboard;
-                        Editor.DataContext = CodingEditor;
-                        LoadEditControls();
-                        _EDS_frame.Navigate(EditCodingFrame);
-                        _EDS_ASframe.Navigate(null);
-                        EditCodingFrame.DataContext = CodingEditor;
+                            Viewer.DataContext = CodingViewer;
+                            LoadViewerControls();
+                            _VIEW_frame.Navigate(ViewerCodingFrame);
+                            _VIEW_ASframe.Navigate(null);
+                            ViewerCodingFrame.DataContext = CodingViewer;
 
                         break;
                     }
+
             }
 
-            _MainFrame.Navigate(Editor);
+
+                _MainFrame.Navigate(Viewer);
+            }
+            catch(InvalidOperationException invex)
+            {
+                Debug.WriteLine($"An invalid operation exception has been found: {invex.Message}");
+            }
+            catch (Exception e)
+            {
+                Debug.WriteLine($"Exception found: {e.Message}");
+            }
         }
 
         public void NavigateToPostItCreator(LoggerCreateViewModel loggerCreator)

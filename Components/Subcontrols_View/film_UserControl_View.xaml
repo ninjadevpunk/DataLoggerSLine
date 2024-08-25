@@ -8,7 +8,7 @@
              d:Background="White"
              x:Name="control_FILM_fields_View" >
 
-    <StackPanel Width="380">
+    <StackPanel d:Width="380">
 
 
         <!-- HEIGHT x WIDTH MEASURING UNIT -->
@@ -18,17 +18,6 @@
 
             <TextBlock x:Name="text_text_HxW" Style="{DynamicResource text_LABEL03}"
                        Text="{Binding HxW, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
-
-        </Border>
-
-
-        <!-- RESOLUTION -->
-        <Border
-            Padding="20 0"
-            Height="35" >
-
-            <TextBlock x:Name="text_RESOLUTION" Style="{DynamicResource text_LABEL03}"
-                       Text="{Binding Resolution, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
 
         </Border>
 
@@ -60,7 +49,7 @@
             Padding="20 0"
             Height="35" >
 
-            <TextBlock x:Name="text_SOURCE" Style="{DynamicResource text_LABEL03}"
+            <TextBlock x:Name="text_SOURCE" Style="{DynamicResource text_LABEL03x2}"
                        Text="{Binding Source, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
 
         </Border>

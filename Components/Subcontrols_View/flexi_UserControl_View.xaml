@@ -6,10 +6,11 @@
              xmlns:local="clr-namespace:Data_Logger_1._3.Components.Subcontrols_View"
              mc:Ignorable="d"
              d:Background="White"
+             HorizontalAlignment="Stretch"
              x:Name="control_FLEXI_fields_View" >
 
 
-    <StackPanel Width="380">
+    <StackPanel d:Width="380">
 
 
         <!-- FLEXI-NOTE CATEGORY -->
@@ -78,7 +79,7 @@
             Padding="20 0"
             Height="35" >
 
-            <TextBlock x:Name="text_SOURCE" Style="{DynamicResource text_LABEL03}"
+            <TextBlock x:Name="text_SOURCE" Style="{DynamicResource text_LABEL03x2}"
                        Text="{Binding Source, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
 
         </Border>

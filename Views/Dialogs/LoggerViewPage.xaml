@@ -41,11 +41,11 @@
                     <StackPanel Orientation="Vertical" >
                         
                         <TextBlock x:Name="text_PROJECT" Style="{DynamicResource HEADING5}"
-                                   Text="{Binding ProjectName, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
+                                   Text="{Binding ProjectName}" />
 
 
                         <TextBlock x:Name="text_APPLICATION" Style="{DynamicResource text_SUB HEADING1}"
-                                   Text="{Binding ApplicationName, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
+                                   Text="{Binding ApplicationName}" />
                     </StackPanel>
                 </Border>
 
@@ -56,7 +56,7 @@
 
 
 
-                <!--#region INPUT FIELDS -->
+                <!--#region VIEW FIELDS -->
 
 
                 <ScrollViewer Grid.Row="2"
@@ -74,7 +74,7 @@
                             <Grid>
 
                                 <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="50"/>
+                                    <ColumnDefinition Width="60"/>
                                     <ColumnDefinition Width="*"/>
                                 </Grid.ColumnDefinitions >
 
@@ -90,7 +90,7 @@
                                       Visibility="{Binding DisplayPicVisibility}" />
 
                                 <TextBlock x:Name="text_AUTHOR" Grid.Column="1" Style="{DynamicResource text_VIEWER_Author}"
-                                           Text="{Binding Author, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                                           Text="{Binding Author}"
                                            HorizontalAlignment="Left" />
                             </Grid>
                         </Border>
@@ -102,7 +102,7 @@
 
                             <TextBlock x:Name="text_APP" Style="{DynamicResource text_VIEWER_Date}"
                                        Margin="0 5"
-                                       Text="{Binding Date, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
+                                       Text="{Binding Date}" />
                             
                         </Border>
 
@@ -116,7 +116,7 @@
                             Height="35" >
                             <TextBlock x:Name="text_OUTPUT" Style="{DynamicResource text_LABEL03}"
                                        Foreground="{DynamicResource BLACK}"
-                                       Text="{Binding Output, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
+                                       Text="{Binding Output}" />
                         </Border>
 
                         <!-- TYPE -->
@@ -126,7 +126,7 @@
                             
                             <TextBlock x:Name="text_TYPE" Style="{DynamicResource text_LABEL03}"
                                        Foreground="{DynamicResource BLACK}"
-                                       Text="{Binding Type, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
+                                       Text="{Binding Type}" />
                             
                         </Border>
 
@@ -140,10 +140,11 @@
 
                         <!-- LOG VARIED FIELDS -->
                         <Frame x:Name="frame_VARIATIONS"
-                           Source="/Components/Subcontrols/coding_UserControl_View.xaml"/>
+                               NavigationUIVisibility="Hidden" />
 
                         <!-- ANDROID STUDIO ONLY -->
-                        <Frame x:Name="frame_ANDROIDSTUDIO" />
+                        <Frame x:Name="frame_ANDROIDSTUDIO"
+                               NavigationUIVisibility="Hidden" />
 
 
 
@@ -169,7 +170,7 @@
 
                     <Button x:Name="button_OK" Style="{DynamicResource PRIMARY}"
                             HorizontalAlignment="Right"
-                            Command="{Binding}" >
+                            Command="{Binding OKCommand}" >
 
                         <TextBlock Style="{DynamicResource text_button01}"
                                    Text="OK" />
@@ -209,24 +210,15 @@
                     HorizontalAlignment="Stretch"
                     Padding="0" >
 
-                    <StackPanel Orientation="Vertical"
-                            HorizontalAlignment="Stretch"
-                            VerticalAlignment="Stretch" >
+                    <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch" >
 
                         <!-- TOOLBAR -->
-                        <ToolBar Style="{DynamicResource toolbar_POSTITS_list}" x:Name="tool_POST_IT_LIST"
-                             Height="30"
-                             BorderThickness="0" >
-
-                            <TextBlock x:Name="text_NOTES" Style="{DynamicResource HEADING6}"
-                                       Text="NOTES" />
-
-                        </ToolBar>
+                        <Rectangle Height="30" />
 
 
                         <!-- POST ITS -->
                         <ListView Style="{DynamicResource listView_POSTITS_View}"
-                              ItemsSource="{Binding}" />
+                              ItemsSource="{Binding PostIts}" />
 
 
 
@@ -236,7 +228,7 @@
 
 
 
-                    </StackPanel>
+                    </Grid>
                 </Border>
 
 

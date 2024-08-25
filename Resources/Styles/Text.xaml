@@ -188,7 +188,7 @@
         <Setter Property="FontSize" Value="16"/>
         <Setter Property="Foreground" Value="{DynamicResource BLACK}"/>
         <Setter Property="VerticalAlignment" Value="Center" />
-        <Setter Property="FontWeight" Value="Regular"/>
+        <Setter Property="FontWeight" Value="Medium"/>
         <Setter Property="FontStyle" Value="Normal"/>
         <Setter Property="Padding" Value="0"/>
     </Style>
@@ -236,6 +236,11 @@
         <Setter Property="TextTrimming" Value="CharacterEllipsis"/>
     </Style>
 
+    <Style x:Key="text_LABEL03x2" TargetType="TextBlock" BasedOn="{StaticResource text_LABEL03}">
+        <Setter Property="TextWrapping" Value="Wrap"/>
+        <Setter Property="TextTrimming" Value="None"/>
+    </Style>
+
     <Style x:Key="text_LIST_LABEL_HEADING" TargetType="TextBlock" BasedOn="{StaticResource text_LABEL01}">
         <Setter Property="FontSize" Value="14"/>
         <Setter Property="FontWeight" Value="Bold"/>
@@ -270,9 +275,23 @@
         <Setter Property="VerticalAlignment" Value="Center"/>
     </Style>
 
-    <Style x:Key="text_LIST_LABEL_CONTENT_View" TargetType="TextBlock" BasedOn="{StaticResource text_LIST_LABEL_CONTENT}">
+    <Style x:Key="text_LIST_ERROR_LABEL_CONTENT_View" TargetType="TextBlock" BasedOn="{StaticResource text_LIST_LABEL_CONTENT}">
+        <Setter Property="Height" Value="{Binding ErrorTextBlockHeight, FallbackValue=Auto}"/>
+        <Setter Property="MinHeight" Value="24"/>
         <Setter Property="TextWrapping" Value="Wrap"/>
         <Setter Property="TextTrimming" Value="None"/>
+    </Style>
+
+    <Style x:Key="text_LIST_SOLUTION_LABEL_CONTENT_View" TargetType="TextBlock" BasedOn="{StaticResource text_LIST_ERROR_LABEL_CONTENT_View}">
+        <Setter Property="Height" Value="{Binding SolutionTextBlockHeight, FallbackValue=Auto}"/>
+    </Style>
+
+    <Style x:Key="text_LIST_SUGGESTION_LABEL_CONTENT_View" TargetType="TextBlock" BasedOn="{StaticResource text_LIST_ERROR_LABEL_CONTENT_View}">
+        <Setter Property="Height" Value="{Binding SuggestionTextBlockHeight, FallbackValue=Auto}"/>
+    </Style>
+
+    <Style x:Key="text_LIST_COMMENT_LABEL_CONTENT_View" TargetType="TextBlock" BasedOn="{StaticResource text_LIST_ERROR_LABEL_CONTENT_View}">
+        <Setter Property="Height" Value="{Binding CommentTextBlockHeight, FallbackValue=Auto}"/>
     </Style>
 
 

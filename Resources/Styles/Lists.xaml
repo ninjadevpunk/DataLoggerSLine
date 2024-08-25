@@ -942,11 +942,11 @@
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type ListViewItem}">
                     <Border x:Name="border"
-                        Background="{TemplateBinding Background}"
-                        Padding="20 10"
-                        CornerRadius="3"
-                        SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}">
-                        <Grid>
+                            Background="{TemplateBinding Background}"
+                            Padding="20 10"
+                            CornerRadius="3"
+                            SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" >
+                        <Grid VerticalAlignment="Stretch">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*"/>
                                 <ColumnDefinition Width="auto"/>
@@ -963,13 +963,13 @@
                                 <TextBlock x:Name="text_POSTIT_SUBJECT" Style="{DynamicResource text_LIST_LABEL_HEADING_View}"
                                    Height="27"
                                    HorizontalAlignment="Stretch"
-                                   Text="{Binding}" />
+                                   Text="{Binding Subject, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
 
                                 <StackPanel Orientation="Vertical" Grid.Row="1"
                                     HorizontalAlignment="Stretch"
                                     >
                                     <!-- ERROR -->
-                                    <Border Padding="0 5" Visibility="{Binding}">
+                                    <Border Padding="0 5" Visibility="{Binding ErrorVisible}">
                                         <Grid>
                                             <Grid.ColumnDefinitions>
                                                 <ColumnDefinition Width="15"/>
@@ -978,18 +978,19 @@
                                             </Grid.ColumnDefinitions>
 
                                             <Ellipse x:Name="ellipse_POSTIT_ERROR" Style="{DynamicResource ellipse_ERSO}"
+                                                     VerticalAlignment="Center"
                                              Fill="{DynamicResource postIT_ERROR}" />
 
-                                            <TextBlock Grid.Column="2" x:Name="text_POSTIT_ERROR" Style="{DynamicResource text_LIST_LABEL_CONTENT_View}"
-                                               HorizontalAlignment="Stretch"
-                                               Text="{Binding}" />
+                                            <TextBlock Grid.Column="2" x:Name="text_POSTIT_ERROR" Style="{DynamicResource text_LIST_ERROR_LABEL_CONTENT_View}"
+                                                       HorizontalAlignment="Stretch"
+                                               Text="{Binding Display_Error, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
 
                                         </Grid>
                                     </Border>
 
 
                                     <!-- SOLUTION -->
-                                    <Border Padding="0 5" Visibility="{Binding}">
+                                    <Border Padding="0 5" Visibility="{Binding SolutionVisible}">
                                         <Grid>
                                             <Grid.ColumnDefinitions>
                                                 <ColumnDefinition Width="15"/>
@@ -1000,16 +1001,16 @@
                                             <Ellipse x:Name="ellipse_POSTIT_SOLUTION" Style="{DynamicResource ellipse_ERSO}"
                                                  Fill="{DynamicResource postIT_SOLUTION}" />
 
-                                            <TextBlock Grid.Column="2" x:Name="text_POSTIT_SOLUTION" Style="{DynamicResource text_LIST_LABEL_CONTENT_View}"
+                                            <TextBlock Grid.Column="2" x:Name="text_POSTIT_SOLUTION" Style="{DynamicResource text_LIST_SOLUTION_LABEL_CONTENT_View}"
                                                    HorizontalAlignment="Stretch"
-                                                   Text="{Binding}" />
+                                                   Text="{Binding Display_Solution, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
 
                                         </Grid>
                                     </Border>
 
 
                                     <!-- SUGGESTION -->
-                                    <Border Padding="0 5" Visibility="{Binding}">
+                                    <Border Padding="0 5" Visibility="{Binding SuggestionVisible}">
                                         <Grid>
                                             <Grid.ColumnDefinitions>
                                                 <ColumnDefinition Width="15"/>
@@ -1020,16 +1021,16 @@
                                             <Ellipse x:Name="ellipse_POSTIT_SUGGESTION" Style="{DynamicResource ellipse_ERSO}"
                                                  Fill="{DynamicResource postIT_SUGGESTION}" />
 
-                                            <TextBlock Grid.Column="2" x:Name="text_POSTIT_SUGGESTION" Style="{DynamicResource text_LIST_LABEL_CONTENT_View}"
+                                            <TextBlock Grid.Column="2" x:Name="text_POSTIT_SUGGESTION" Style="{DynamicResource text_LIST_SUGGESTION_LABEL_CONTENT_View}"
                                                    HorizontalAlignment="Stretch"
-                                                   Text="{Binding}" />
+                                                   Text="{Binding Display_Suggestion, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
 
                                         </Grid>
                                     </Border>
 
 
                                     <!-- COMMENT -->
-                                    <Border Padding="0 5" Visibility="{Binding}">
+                                    <Border Padding="0 5" Visibility="{Binding CommentVisible}">
                                         <Grid>
                                             <Grid.ColumnDefinitions>
                                                 <ColumnDefinition Width="15"/>
@@ -1040,9 +1041,9 @@
                                             <Ellipse x:Name="ellipse_POSTIT_COMMENT" Style="{DynamicResource ellipse_ERSO}"
                                                  Fill="{DynamicResource postIT_COMMENT}" />
 
-                                            <TextBlock Grid.Column="2" x:Name="text_POSTIT_COMMENT" Style="{DynamicResource text_LIST_LABEL_CONTENT_View}"
+                                            <TextBlock Grid.Column="2" x:Name="text_POSTIT_COMMENT" Style="{DynamicResource text_LIST_COMMENT_LABEL_CONTENT_View}"
                                                    HorizontalAlignment="Stretch"
-                                                   Text="{Binding}" />
+                                                   Text="{Binding Display_Comment, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
 
                                         </Grid>
                                     </Border>
@@ -1086,9 +1087,10 @@
 
     <Style x:Key="listView_POSTITS_View" TargetType="{x:Type ListView}">
         <Setter Property="Background" Value="Transparent"/>
-        <Setter Property="BorderBrush" Value="{DynamicResource STROKE}"/>
+        <Setter Property="BorderBrush" Value="Transparent"/>
+        <Setter Property="Height" Value="Auto"/>
         <Setter Property="MinHeight" Value="470"/>
-        <Setter Property="BorderThickness" Value="0.6"/>
+        <Setter Property="BorderThickness" Value="0"/>
         <Setter Property="Foreground" Value="{DynamicResource BLACK}"/>
         <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Disabled"/>
         <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Auto"/>
