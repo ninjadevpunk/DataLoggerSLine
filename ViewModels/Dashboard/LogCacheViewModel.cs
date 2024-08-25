@@ -1,4 +1,5 @@
-﻿using Data_Logger_1._3.Services;
+﻿using Data_Logger_1._3.Commands.LogCacheCommands;
+using Data_Logger_1._3.Services;
 using MVVMEssentials.ViewModels;
 using System.Windows;
 using System.Windows.Input;
@@ -10,6 +11,14 @@ namespace Data_Logger_1._3.ViewModels.Dashboard
         protected readonly DataService _dataService;
         public NavigationService _navigationService;
 
+        public LogCacheViewModel(NavigationService navigationService, DataService dataService)
+        {
+            _navigationService = navigationService;
+            _dataService = dataService;
+
+            CreateLogCommand = new CreateLogCommand(_navigationService);
+            ReportLogCommand = new ReportCommand();
+        }
 
         private string logCount = "0 logs cached | 0 total logs";
         public string LogCount
@@ -43,13 +52,6 @@ namespace Data_Logger_1._3.ViewModels.Dashboard
         public ICommand CreateLogCommand { get; set; }
         public ICommand ReportLogCommand { get; set; }
 
-
-        public LogCacheViewModel(NavigationService navigationService, DataService dataService)
-        {
-            _navigationService = navigationService;
-            _dataService = dataService;
-
-        }
 
 
     }

@@ -1,5 +1,4 @@
-﻿using Data_Logger_1._3.Commands.LogCacheCommands.QtCommands;
-using Data_Logger_1._3.Services;
+﻿using Data_Logger_1._3.Services;
 using Data_Logger_1._3.ViewModels.LogViewModels;
 using System.Collections.ObjectModel;
 using System.Windows;
@@ -13,18 +12,12 @@ namespace Data_Logger_1._3.ViewModels.Dashboard
         public CodingQtViewModel(NavigationService navigationService, DataService dataService) : base(navigationService, dataService)
         {
             CacheItems = new ObservableCollection<QtLOGViewModel>();
-
-            CreateLogCommand = new CreateQtLogCommand(_navigationService);
-            ReportLogCommand = new ReportQtLogCommand(_navigationService);
         }
 
         public CodingQtViewModel(string logCount, NavigationService navigationService, DataService dataService) : base(navigationService, dataService)
         {
             CacheItems = new ObservableCollection<QtLOGViewModel>();
             LogCount = logCount;
-
-            CreateLogCommand = new CreateQtLogCommand(_navigationService);
-            ReportLogCommand = new ReportQtLogCommand(_navigationService);
         }
 
 

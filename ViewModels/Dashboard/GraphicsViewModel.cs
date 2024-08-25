@@ -1,12 +1,28 @@
-﻿using Data_Logger_1._3.Commands.LogCacheCommands.GraphicsCommands;
-using Data_Logger_1._3.Services;
+﻿using Data_Logger_1._3.Services;
 using Data_Logger_1._3.ViewModels.LogViewModels;
 using System.Collections.ObjectModel;
+using System.Windows;
 
 namespace Data_Logger_1._3.ViewModels.Dashboard
 {
     public class GraphicsViewModel : LogCacheViewModel
     {
+
+
+        public GraphicsViewModel(NavigationService navigationService, DataService _dataService) : base(navigationService, _dataService)
+        {
+            CacheItems = new ObservableCollection<GraphicsLOGViewModel>();
+        }
+
+
+        public GraphicsViewModel(string logCount, NavigationService navigationService, DataService _dataService) : base(navigationService, _dataService)
+        {
+            CacheItems = new ObservableCollection<GraphicsLOGViewModel>();
+
+            LogCount = logCount;
+
+        }
+
         private ObservableCollection<GraphicsLOGViewModel> cacheItems;
         public ObservableCollection<GraphicsLOGViewModel> CacheItems
         {
@@ -17,31 +33,18 @@ namespace Data_Logger_1._3.ViewModels.Dashboard
             set
             {
                 cacheItems = value;
-                LogCount = CacheItems.Count.ToString() + " graphics logs cached | x total logs";
+
+                NoLogsMessageVisibility = CacheItems.Count == 0 ? Visibility.Visible : Visibility.Hidden;
+                UpdateLogCount();
+
                 OnPropertyChanged(nameof(CacheItems));
             }
         }
 
-
-        public GraphicsViewModel(NavigationService navigationService, DataService _dataService) : base(navigationService, _dataService)
+        private void UpdateLogCount()
         {
-            CacheItems = new ObservableCollection<GraphicsLOGViewModel>();
-
-            CreateLogCommand = new CreateGraphicsLogCommand(_navigationService);
-            ReportLogCommand = new ReportGraphicsLogCommand(_navigationService);
-        }
-
-
-        public GraphicsViewModel(string logCount, NavigationService navigationService, DataService _dataService) : base(navigationService, _dataService)
-        {
-            CacheItems = new ObservableCollection<GraphicsLOGViewModel>();
-
-            LogCount = logCount;
-
-
-            CreateLogCommand = new CreateGraphicsLogCommand(_navigationService);
-            ReportLogCommand = new ReportGraphicsLogCommand(_navigationService);
-
+            var count = _dataService.LogCount(Models.LOG.CATEGORY.GRAPHICS);
+            LogCount = $"{CacheItems.Count} graphics logs cached | {count} total logs";
         }
 
     }

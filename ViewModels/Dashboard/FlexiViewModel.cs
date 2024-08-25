@@ -1,26 +1,13 @@
-﻿using Data_Logger_1._3.Commands.LogCacheCommands.FlexiCommands;
+﻿using Data_Logger_1._3.Models;
 using Data_Logger_1._3.Services;
 using Data_Logger_1._3.ViewModels.LogViewModels;
 using System.Collections.ObjectModel;
+using System.Windows;
 
 namespace Data_Logger_1._3.ViewModels.Dashboard
 {
     public class FlexiViewModel : LogCacheViewModel
     {
-        private ObservableCollection<FlexiLOGViewModel> cacheItems;
-        public ObservableCollection<FlexiLOGViewModel> CacheItems
-        {
-            get
-            {
-                return cacheItems;
-            }
-            set
-            {
-                cacheItems = value;
-                LogCount = CacheItems.Count.ToString() + " flexible logs cached | x total logs";
-                OnPropertyChanged(nameof(CacheItems));
-            }
-        }
 
 
         public FlexiViewModel(NavigationService navigationService, DataService _dataService) : base(navigationService, _dataService)
@@ -28,9 +15,6 @@ namespace Data_Logger_1._3.ViewModels.Dashboard
             CacheItems = new ObservableCollection<FlexiLOGViewModel>();
 
             _navigationService = navigationService;
-
-            CreateLogCommand = new CreateFlexiNotesLogCommand(_navigationService);
-            ReportLogCommand = new ReportFlexiNotesLogCommand(_navigationService);
         }
 
 
@@ -41,10 +25,31 @@ namespace Data_Logger_1._3.ViewModels.Dashboard
             _navigationService = navigationService;
 
             LogCount = logCount;
+        }
 
 
-            CreateLogCommand = new CreateFlexiNotesLogCommand(_navigationService);
-            ReportLogCommand = new ReportFlexiNotesLogCommand(_navigationService);
+        private ObservableCollection<FlexiLOGViewModel> cacheItems;
+        public ObservableCollection<FlexiLOGViewModel> CacheItems
+        {
+            get
+            {
+                return cacheItems;
+            }
+            set
+            {
+                cacheItems = value;
+
+                NoLogsMessageVisibility = CacheItems.Count == 0 ? Visibility.Visible : Visibility.Hidden;
+                UpdateLogCount();
+
+                OnPropertyChanged(nameof(CacheItems));
+            }
+        }
+
+        private void UpdateLogCount()
+        {
+            var count = _dataService.LogCount(LOG.CATEGORY.NOTES);
+            LogCount = $"{CacheItems.Count} flexible logs cached | {count} total logs";
         }
 
     }

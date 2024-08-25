@@ -1,5 +1,4 @@
-﻿using Data_Logger_1._3.Commands.LogCacheCommands.CodingCommands;
-using Data_Logger_1._3.Models;
+﻿using Data_Logger_1._3.Models;
 using Data_Logger_1._3.Services;
 using Data_Logger_1._3.ViewModels.LogViewModels;
 using System.Collections.ObjectModel;
@@ -31,9 +30,6 @@ namespace Data_Logger_1._3.ViewModels.Dashboard
         public CodingViewModel(NavigationService navigationService, DataService _dataService) : base(navigationService, _dataService)
         {
             CacheItems = new ObservableCollection<CodeLOGViewModel>();
-
-            CreateLogCommand = new CreateCodingLogCommand(_navigationService);
-            ReportLogCommand = new ReportCodingLogCommand(_navigationService);
         }
 
         public CodingViewModel(string logCount, NavigationService navigationService, DataService _dataService) : base(navigationService, _dataService)
@@ -41,9 +37,6 @@ namespace Data_Logger_1._3.ViewModels.Dashboard
             CacheItems = new ObservableCollection<CodeLOGViewModel>();
 
             LogCount = logCount;
-
-            CreateLogCommand = new CreateCodingLogCommand(_navigationService);
-            ReportLogCommand = new ReportCodingLogCommand(_navigationService);
         }
 
         public virtual void UpdateLogCount()
