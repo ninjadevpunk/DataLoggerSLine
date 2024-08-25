@@ -8,6 +8,7 @@
       HorizontalAlignment="Stretch"
       VerticalAlignment="Stretch"
       d:Background="{DynamicResource WHITE}"
+      d:Width="500"
       Title="Login" >
     
     <StackPanel Margin="10"
@@ -66,6 +67,7 @@
                                         HorizontalAlignment="Stretch"
                                         VerticalAlignment="Center"
                                         PlaceholderText="Email"
+                                        DynamicPlaceholderText="Email"
                                         UserTextBoxStyle="{DynamicResource inputText_LOGIN}"
                                         UserTextBlockStyle="{DynamicResource text_login_PLACEHOLDER}"
                                         UserInput="{Binding Username, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"

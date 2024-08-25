@@ -59,6 +59,7 @@
                 <!-- Feedback Type -->
                 <components:ComboBoxInputField x:Name="inputText_FEEDBACK_TYPE"
                                            PlaceholderText="Feedback Type"
+                                           DynamicPlaceholderText="Feedback Type"
                                            UserTextBoxStyle="{DynamicResource inputText_APP}"
                                            UserTextBlockStyle="{DynamicResource text_APP_Placeholder}"
                                            UserComboInput="{Binding}"/>
@@ -73,6 +74,7 @@
                 <!-- Feedback Type -->
                 <components:ComboBoxInputField x:Name="inputText_FEEDBACK"
                            PlaceholderText="Description"
+                           DynamicPlaceholderText="Description"
                            UserTextBoxStyle="{DynamicResource inputText}"
                            UserTextBlockStyle="{DynamicResource text_Placeholder}"
                            UserComboInput="{Binding}"/>

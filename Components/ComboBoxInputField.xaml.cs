@@ -13,7 +13,7 @@ namespace Data_Logger_1._3.Components
         {
 
             InitializeComponent();
-
+            UpdatePlaceholderText();
         }
 
 
@@ -133,11 +133,6 @@ namespace Data_Logger_1._3.Components
         private void on_EditableTextBox_lostfocus(object sender, RoutedEventArgs e)
         {
             UpdatePlaceholderText();
-        }
-
-        public void showPlaceholderText()
-        {
-            DynamicPlaceholderText = PlaceholderText;
         }
 
 

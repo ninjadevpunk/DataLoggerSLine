@@ -8,12 +8,11 @@ namespace Data_Logger_1._3.Components
     /// </summary>
     public partial class PlainInputField : UserControl
     {
-        public bool Status { get; set; } = true;
-        public string Temp { get; set; } = "";
 
         public PlainInputField()
         {
             InitializeComponent();
+            UpdatePlaceholderText();
         }
 
         #region Dependency Properties
@@ -27,6 +26,19 @@ namespace Data_Logger_1._3.Components
 
         public static readonly DependencyProperty PlaceholderTextProperty =
             DependencyProperty.Register("PlaceholderText", typeof(string), typeof(PlainInputField));
+
+
+
+        public string DynamicPlaceholderText
+        {
+            get { return (string)GetValue(DynamicPlaceholderTextProperty); }
+            set { SetValue(DynamicPlaceholderTextProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for DynamicPlaceholderText.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty DynamicPlaceholderTextProperty =
+            DependencyProperty.Register("DynamicPlaceholderText", typeof(string), typeof(PlainInputField));
+
 
 
         public string UserInput
@@ -81,37 +93,19 @@ namespace Data_Logger_1._3.Components
 
         private void on_inputText_lostFocus(object sender, RoutedEventArgs e)
         {
-            showPlaceholderText();
+            UpdatePlaceholderText();
         }
 
 
         public void showPlaceholderText()
         {
-            if (this.inputText_text.Text == null)
-            {
-                return;
-            }
-            else if (this.inputText_text.Text == "" && this.text_PlaceholderText.Text == "")
-            {
-                this.text_PlaceholderText.Text = Temp;
-                Status = true;
-            }
+            DynamicPlaceholderText = PlaceholderText;
         }
 
 
-        /* This function assumes there is Placeholder Text if assert is true */
-        public void showPlaceholderText(bool show, bool assert)
+        public void UpdatePlaceholderText()
         {
-            if (show)
-            {
-                this.text_PlaceholderText.Text = Temp;
-                Status = true;
-            }
-            else if (show && assert || this.inputText_text.Text == "")
-            {
-                this.text_PlaceholderText.Text = PlaceholderText;
-                Status = true;
-            }
+            DynamicPlaceholderText = UserInput is not null && UserInput.Equals(string.Empty) ? PlaceholderText : string.Empty;
         }
 
 
@@ -130,12 +124,7 @@ namespace Data_Logger_1._3.Components
 
         private void on_inputText_text_changed(object sender, TextChangedEventArgs e)
         {
-            if (Status)
-            {
-                Temp = this.text_PlaceholderText.Text;
-                this.text_PlaceholderText.Text = "";
-                Status = false;
-            }
+            UpdatePlaceholderText();
 
             var ev = new RoutedEventArgs(TextChangedEvent);
             RaiseEvent(ev);

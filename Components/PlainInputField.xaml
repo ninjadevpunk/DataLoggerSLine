@@ -8,6 +8,7 @@
              d:DesignHeight="34" d:DesignWidth="430"
              x:Name="control_INPUT_plain"
              >
+    
     <Border CornerRadius="2"
             Background="{DynamicResource WHITE}"
             Height="40"
@@ -15,7 +16,7 @@
         <Grid>
             <!-- Placeholder Text here-->
             <TextBlock x:Name="text_PlaceholderText" Style="{Binding UserTextBlockStyle, ElementName=control_INPUT_plain}"
-                       Text="{Binding PlaceholderText, ElementName=control_INPUT_plain}"
+                       Text="{Binding DynamicPlaceholderText, ElementName=control_INPUT_plain}"
                        TextAlignment="{Binding Aligned, ElementName=control_INPUT_plain}"
                        />
 
@@ -28,4 +29,5 @@
                      />
         </Grid>
     </Border>
+    
 </UserControl>

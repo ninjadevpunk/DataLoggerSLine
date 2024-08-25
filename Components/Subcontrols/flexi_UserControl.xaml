@@ -34,14 +34,13 @@
         <components:ComboBoxField Grid.Row="0" x:Name="input_FLEXINOTE_CATEGORY"
                                        UserTextBoxStyle="{DynamicResource inputText}"
                                        UserSelection="{Binding FlexibleLogCategory, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
-                                       Enabled="False"
+                                       Enabled="True"
                                        Items="{Binding FlexiLogCategories}"/>
         
         <!-- MEDIUM -->
         <components:ComboBoxInputField Grid.Row="2" x:Name="inputText_MEDIUM"
                                        Enabled="True"
                                        PlaceholderText="Medium"
-                                       DynamicPlaceholderText="Medium"
                                        UserTextBoxStyle="{DynamicResource inputText}"
                                        UserTextBlockStyle="{DynamicResource text_Placeholder}"
                                        UserComboInput="{Binding Medium, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
@@ -51,7 +50,6 @@
         <components:ComboBoxInputField Grid.Row="4" x:Name="inputText_FORMAT"
                                        Enabled="True"
                                        PlaceholderText="Format"
-                                       DynamicPlaceholderText="Format"
                                        UserTextBoxStyle="{DynamicResource inputText}"
                                        UserTextBlockStyle="{DynamicResource text_Placeholder}"
                                        UserComboInput="{Binding Format, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
@@ -60,6 +58,7 @@
         <!-- BITRATE -->
         <components:PlainInputField Grid.Row="6" x:Name="inputText_BITRATE"
                                     PlaceholderText="Bitrate (kbps)"
+                                    DynamicPlaceholderText="Bitrate (kbps)"
                                     UserTextBoxStyle="{DynamicResource inputText_LOGIN}"
                                     UserTextBlockStyle="{DynamicResource text_login_PLACEHOLDER}"
                                     UserInput="{Binding Bitrate, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
@@ -67,6 +66,7 @@
         <!-- DURATION -->
         <components:PlainInputField Grid.Row="8" x:Name="inputText_DURATION"
                                     PlaceholderText="Duration"
+                                    DynamicPlaceholderText="Duration"
                                     UserTextBoxStyle="{DynamicResource inputText_LOGIN}"
                                     UserTextBlockStyle="{DynamicResource text_login_PLACEHOLDER}"
                                     UserInput="{Binding Duration, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
@@ -116,6 +116,7 @@
 
             <components:PlainInputField Grid.Column="0"
                                         PlaceholderText="Source"
+                                        DynamicPlaceholderText="Source"
                                         UserTextBoxStyle="{DynamicResource inputText_LOGIN}"
                                         UserTextBlockStyle="{DynamicResource text_login_PLACEHOLDER}"
                                         UserInput="{Binding Source, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />

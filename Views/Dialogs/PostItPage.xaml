@@ -539,6 +539,7 @@
                 <components:PlainInputField Grid.Column="2" Grid.Row="0" x:Name="POSTIT_REPLACE"
                                             Visibility="Hidden"
                                             PlaceholderText="Replace"
+                                            DynamicPlaceholderText="Replace"
                                             UserTextBlockStyle="{DynamicResource text_login_PLACEHOLDER}"
                                             UserTextBoxStyle="{DynamicResource inputText_LOGIN}"
                                             UserInput="{Binding Replace, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />

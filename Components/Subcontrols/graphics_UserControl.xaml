@@ -59,6 +59,7 @@
                                         HorizontalAlignment="Stretch"
                                         VerticalAlignment="Center"
                                         PlaceholderText="Height"
+                                        DynamicPlaceholderText="Height"
                                         UserTextBoxStyle="{DynamicResource inputText_LOGIN}"
                                         UserTextBlockStyle="{DynamicResource text_login_PLACEHOLDER}"
                                         UserInput="{Binding Height, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
@@ -68,6 +69,7 @@
                                         HorizontalAlignment="Stretch"
                                         VerticalAlignment="Center"
                                         PlaceholderText="Width"
+                                        DynamicPlaceholderText="Width"
                                         UserTextBoxStyle="{DynamicResource inputText_LOGIN}"
                                         UserTextBlockStyle="{DynamicResource text_login_PLACEHOLDER}"
                                         UserInput="{Binding Width, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
@@ -116,6 +118,7 @@
         <components:PlainInputField Grid.Row="10" x:Name="inputText_DPI"
                                     Margin="0 5 0 0"
                                     PlaceholderText="DPI"
+                                    DynamicPlaceholderText="DPI"
                                     UserTextBoxStyle="{DynamicResource inputText_LOGIN}"
                                     UserTextBlockStyle="{DynamicResource text_login_PLACEHOLDER}"
                                     UserInput="{Binding DPI, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
@@ -124,6 +127,7 @@
         <components:PlainInputField Grid.Row="12" x:Name="inputText_DEPTH"
                                     Margin="0 5"
                                     PlaceholderText="Colour Depth"
+                                    DynamicPlaceholderText="Colour Depth"
                                     UserTextBoxStyle="{DynamicResource inputText_LOGIN}"
                                     UserTextBlockStyle="{DynamicResource text_login_PLACEHOLDER}"
                                     UserInput="{Binding ColourDepth, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
@@ -174,6 +178,7 @@
 
             <components:PlainInputField Grid.Column="0"
                                         PlaceholderText="Source"
+                                        DynamicPlaceholderText="Source"
                                         UserTextBoxStyle="{DynamicResource inputText_LOGIN}"
                                         UserTextBlockStyle="{DynamicResource text_login_PLACEHOLDER}"
                                         UserInput="{Binding Source, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />

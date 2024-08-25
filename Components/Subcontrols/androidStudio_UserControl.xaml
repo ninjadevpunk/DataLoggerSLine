@@ -115,7 +115,7 @@
         </Grid.RowDefinitions>
 
         <ToggleButton x:Name="toggleButton_SWITCH" Style="{DynamicResource template_OPTION_SWITCH}"
-                      IsChecked="{Binding FullORSimple, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
+                      IsChecked="{Binding IsSimple, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
 
         <!-- SYNC -->
         <Border Grid.Row="3"

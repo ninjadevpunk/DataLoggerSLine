@@ -73,6 +73,7 @@
                                             HorizontalAlignment="Stretch"
                                             VerticalAlignment="Center"
                                             PlaceholderText="Email"
+                                            DynamicPlaceholderText="Email"
                                             UserInput="{Binding Email, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
                                             Aligned="Right" />
             </StackPanel>
