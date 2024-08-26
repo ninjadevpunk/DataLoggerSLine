@@ -277,17 +277,17 @@
                 <TextBlock Grid.Column="0" Grid.Row="0" Style="{DynamicResource HEADING5}"
                            Text="{Binding LogCount, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
 
-                <!-- FIREBASE STATUS -->
+                <!-- DATABASE STATUS -->
                 <StackPanel Orientation="Horizontal"
                             HorizontalAlignment="Right"
                             VerticalAlignment="Center" >
 
-                    <Ellipse x:Name="ellipse_FIREBASE_CONNECTION" Style="{DynamicResource ellipse_FIREBASE_CONNECTION}"
-                             Fill="{Binding FirebaseStatusFill, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                    <Ellipse x:Name="ellipse_DATABASE_CONNECTION" Style="{DynamicResource ellipse_DATABASE_CONNECTION}"
+                             Fill="{Binding DatabaseStatusFill, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
                              VerticalAlignment="Center" />
 
-                    <TextBlock x:Name="text_FIREBASE_CONNECTION" Style="{DynamicResource text_minorHEADING1}"
-                               Text="{Binding FirebaseStatus, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                    <TextBlock x:Name="text_DATABASE_CONNECTION" Style="{DynamicResource text_minorHEADING1}"
+                               Text="{Binding DatabaseStatus, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
                                Padding="10 0" />
 
                 </StackPanel>
