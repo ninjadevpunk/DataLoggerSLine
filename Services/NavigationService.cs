@@ -558,6 +558,7 @@ namespace Data_Logger_1._3.Services
                 switch (context)
                 {
                     case CacheContext.Qt:
+                        CurrentCategory = LOG.CATEGORY.CODING;
                         QtCodingLogger = new codeCreateViewModel(this, codingQtDashboard, "Qt", _dataService);
                         QtCodingLogger.SignUpImage = profilePic;
                         QtCodingLogger.UpdateLogCount();
@@ -569,16 +570,19 @@ namespace Data_Logger_1._3.Services
                         break;
 
                     case CacheContext.AndroidStudio:
-                        Dashboard.DataContext = codingAndroidDashboard;
+                        CurrentCategory = LOG.CATEGORY.CODING;
                         ASCodingLogger = new(this, codingAndroidDashboard, _dataService);
                         ASCodingLogger.SignUpImage = profilePic;
                         ASCodingLogger.UpdateLogCount();
+                        Dashboard.DataContext = codingAndroidDashboard;
                         Logger.DataContext = ASCodingLogger;
                         CodingFrame.DataContext = ASCodingLogger;
+                        AndroidStudioFrame.DataContext = ASCodingLogger;
                         _frame.Navigate(CodingFrame);
                         _ASframe.Navigate(AndroidStudioFrame);
                         break;
                     case CacheContext.Coding:
+                        CurrentCategory = LOG.CATEGORY.CODING;
                         Dashboard.DataContext = codingDashboard;
                         CodingLogger = new(this, codingDashboard, _dataService);
                         CodingLogger.SignUpImage = profilePic;
@@ -590,10 +594,10 @@ namespace Data_Logger_1._3.Services
                         break;
                     case CacheContext.Graphics:
                         CurrentCategory = LOG.CATEGORY.GRAPHICS;
-                        Dashboard.DataContext = graphicsDashboard;
                         GraphicsLogger = new(this, graphicsDashboard, _dataService);
                         GraphicsLogger.SignUpImage = profilePic;
                         GraphicsLogger.UpdateLogCount();
+                        Dashboard.DataContext = graphicsDashboard;
                         Logger.DataContext = GraphicsLogger;
                         GraphicsFrame.DataContext = GraphicsLogger;
                         _frame.Navigate(GraphicsFrame);
@@ -601,10 +605,10 @@ namespace Data_Logger_1._3.Services
                         break;
                     case CacheContext.Film:
                         CurrentCategory = LOG.CATEGORY.FILM;
-                        Dashboard.DataContext = filmDashboard;
                         FilmLogger = new(this, filmDashboard, _dataService);
                         FilmLogger.SignUpImage = profilePic;
                         FilmLogger.UpdateLogCount();
+                        Dashboard.DataContext = filmDashboard;
                         Logger.DataContext = FilmLogger;
                         FilmFrame.DataContext = FilmLogger;
                         _frame.Navigate(FilmFrame);
@@ -612,10 +616,10 @@ namespace Data_Logger_1._3.Services
                         break;
                     case CacheContext.Flexi:
                         CurrentCategory = LOG.CATEGORY.NOTES;
-                        Dashboard.DataContext = flexiDashboard;
                         FlexiLogger = new(this, flexiDashboard, _dataService);
                         FlexiLogger.SignUpImage = profilePic;
                         FlexiLogger.UpdateLogCount();
+                        Dashboard.DataContext = flexiDashboard;
                         Logger.DataContext = FlexiLogger;
                         FlexiFrame.DataContext = FlexiLogger;
                         _frame.Navigate(FlexiFrame);
@@ -632,9 +636,7 @@ namespace Data_Logger_1._3.Services
                 // TODO
 
 
-            if (showApp)
-            {
-                Logger.inputText_APP.showPlaceholderText();
+                return;
             }
         }
 
@@ -679,6 +681,7 @@ namespace Data_Logger_1._3.Services
 
                         QtCodingEditor.SignUpImage = _authService.Account.ProfilePic;
 
+                        QtCodingEditor.Author = $"{log._QtcodingLOG.Author.FirstName} {log._QtcodingLOG.Author.LastName}";
                         QtCodingEditor.ProjectName = log._QtcodingLOG.Project.Name;
                         QtCodingEditor.ApplicationName = log._QtcodingLOG.Application.Name;
 
@@ -699,7 +702,7 @@ namespace Data_Logger_1._3.Services
 
                         foreach (PostIt p in log._QtcodingLOG.PostItList)
                         {
-                            QtCodingEditor.PostIts.Add(new CreatePostItViewModel(this, _dataService, QtCodingEditor, p.Subject.Subject, p.Error, p.ERCaptureTime, p.Solution,
+                            QtCodingEditor.PostIts.Add(new CreatePostItViewModel(this, _dataService, QtCodingEditor, log._QtcodingLOG.Project, p.Subject.Subject, p.Error, p.ERCaptureTime, p.Solution,
                                 p.SOCaptureTime, p.Suggestion, p.Comment));
                         }
 
@@ -722,6 +725,7 @@ namespace Data_Logger_1._3.Services
 
                         ASCodingEditor.SignUpImage = _authService.Account.ProfilePic;
 
+                        ASCodingEditor.Author = $"{log._AndroidCodingLOG.Author.FirstName} {log._AndroidCodingLOG.Author.LastName}";
                         ASCodingEditor.ProjectName = log._AndroidCodingLOG.Project.Name;
                         ASCodingEditor.ApplicationName = log._AndroidCodingLOG.Application.Name;
 
@@ -742,49 +746,49 @@ namespace Data_Logger_1._3.Services
 
                         foreach (PostIt p in log._AndroidCodingLOG.PostItList)
                         {
-                            ASCodingEditor.PostIts.Add(new CreatePostItViewModel(this, _dataService, ASCodingEditor, p.Subject.Subject, p.Error, p.ERCaptureTime, p.Solution,
+                            ASCodingEditor.PostIts.Add(new CreatePostItViewModel(this, _dataService, ASCodingEditor, log._AndroidCodingLOG.Project, p.Subject.Subject, p.Error, p.ERCaptureTime, p.Solution,
                                 p.SOCaptureTime, p.Suggestion, p.Comment));
                         }
 
                         ASCodingEditor.BugsFound = log._AndroidCodingLOG.Bugs;
                         ASCodingEditor.ApplicationOpened = log._AndroidCodingLOG.Success;
 
-                        ASCodingEditor.FullORSimple = !log._AndroidCodingLOG.Scope.Equals(AndroidCodingLOG.SCOPE.FULL);
+                        ASCodingEditor.IsSimple = log._AndroidCodingLOG.Scope.Equals(AndroidCodingLOG.SCOPE.SIMPLE);
                         ASCodingEditor.SyncTime = log._AndroidCodingLOG.Sync;
                         ASCodingEditor.SyncHours = log._AndroidCodingLOG.Sync.Hour;
                         ASCodingEditor.SyncMinutes = log._AndroidCodingLOG.Sync.Minute;
                         ASCodingEditor.SyncSeconds = log._AndroidCodingLOG.Sync.Second;
                         ASCodingEditor.SyncMilliseconds = log._AndroidCodingLOG.Sync.Millisecond;
 
-                        ASCodingEditor.GradleDaemonVisibility = ASCodingEditor.FullORSimple ? Visibility.Collapsed : Visibility.Visible;
+                        ASCodingEditor.GradleDaemonVisibility = ASCodingEditor.IsSimple ? Visibility.Collapsed : Visibility.Visible;
                         ASCodingEditor.GradleDaemonTime = log._AndroidCodingLOG.StartingGradleDaemon;
                         ASCodingEditor.GradleDaemonHours = log._AndroidCodingLOG.StartingGradleDaemon.Hour;
                         ASCodingEditor.GradleDaemonMinutes = log._AndroidCodingLOG.StartingGradleDaemon.Minute;
                         ASCodingEditor.GradleDaemonSeconds = log._AndroidCodingLOG.StartingGradleDaemon.Second;
                         ASCodingEditor.GradleDaemonMilliseconds = log._AndroidCodingLOG.StartingGradleDaemon.Millisecond;
 
-                        ASCodingEditor.RunBuildVisibility = ASCodingEditor.FullORSimple ? Visibility.Collapsed : Visibility.Visible;
+                        ASCodingEditor.RunBuildVisibility = ASCodingEditor.IsSimple ? Visibility.Collapsed : Visibility.Visible;
                         ASCodingEditor.RunBuildTime = log._AndroidCodingLOG.RunBuild;
                         ASCodingEditor.RunBuildHours = log._AndroidCodingLOG.RunBuild.Hour;
                         ASCodingEditor.RunBuildMinutes = log._AndroidCodingLOG.RunBuild.Minute;
                         ASCodingEditor.RunBuildSeconds = log._AndroidCodingLOG.RunBuild.Second;
                         ASCodingEditor.RunBuildMilliseconds = log._AndroidCodingLOG.RunBuild.Millisecond;
 
-                        ASCodingEditor.LoadBuildVisibility = ASCodingEditor.FullORSimple ? Visibility.Collapsed : Visibility.Visible;
+                        ASCodingEditor.LoadBuildVisibility = ASCodingEditor.IsSimple ? Visibility.Collapsed : Visibility.Visible;
                         ASCodingEditor.LoadBuildTime = log._AndroidCodingLOG.LoadBuild;
                         ASCodingEditor.LoadBuildHours = log._AndroidCodingLOG.LoadBuild.Hour;
                         ASCodingEditor.LoadBuildMinutes = log._AndroidCodingLOG.LoadBuild.Minute;
                         ASCodingEditor.LoadBuildSeconds = log._AndroidCodingLOG.LoadBuild.Second;
                         ASCodingEditor.LoadBuildMilliseconds = log._AndroidCodingLOG.LoadBuild.Millisecond;
 
-                        ASCodingEditor.ConfigureBuildVisibility = ASCodingEditor.FullORSimple ? Visibility.Collapsed : Visibility.Visible;
+                        ASCodingEditor.ConfigureBuildVisibility = ASCodingEditor.IsSimple ? Visibility.Collapsed : Visibility.Visible;
                         ASCodingEditor.ConfigureBuildTime = log._AndroidCodingLOG.ConfigureBuild;
                         ASCodingEditor.ConfigureBuildHours = log._AndroidCodingLOG.ConfigureBuild.Hour;
                         ASCodingEditor.ConfigureBuildMinutes = log._AndroidCodingLOG.ConfigureBuild.Minute;
                         ASCodingEditor.ConfigureBuildSeconds = log._AndroidCodingLOG.ConfigureBuild.Second;
                         ASCodingEditor.ConfigureBuildMilliseconds = log._AndroidCodingLOG.ConfigureBuild.Millisecond;
                         
-                        ASCodingEditor.AllProjectsVisibility = ASCodingEditor.FullORSimple? Visibility.Collapsed: Visibility.Visible;
+                        ASCodingEditor.AllProjectsVisibility = ASCodingEditor.IsSimple? Visibility.Collapsed: Visibility.Visible;
                         ASCodingEditor.AllProjectsTime = log._AndroidCodingLOG.AllProjects;
                         ASCodingEditor.AllProjectsHours = log._AndroidCodingLOG.AllProjects.Hour;
                         ASCodingEditor.AllProjectsMinutes = log._AndroidCodingLOG.AllProjects.Minute;
@@ -797,10 +801,162 @@ namespace Data_Logger_1._3.Services
                         _EDS_frame.Navigate(EditCodingFrame);
                         _EDS_ASframe.Navigate(EditAndroidStudioFrame);
                         EditCodingFrame.DataContext = ASCodingEditor;
+                        EditAndroidStudioFrame.DataContext = ASCodingEditor;
 
                         break;
                     }
-                case CacheContext.Coding:
+                case CacheContext.Graphics:
+                    {
+                        var log = (GraphicsLOGViewModel)viewModelBase;
+                        GraphicsEditor = new(this, logCacheViewModel, _dataService, log);
+
+                        GraphicsEditor.SignUpImage = _authService.Account.ProfilePic;
+
+                        GraphicsEditor.Author = $"{log._GraphicsLOG.Author.FirstName} {log._GraphicsLOG.Author.LastName}";
+                        GraphicsEditor.ProjectName = log._GraphicsLOG.Project.Name;
+                        GraphicsEditor.ApplicationName = log._GraphicsLOG.Application.Name;
+
+                        GraphicsEditor.StartDate = log._GraphicsLOG.Start;
+                        GraphicsEditor.StartHours = log._GraphicsLOG.Start.Hour;
+                        GraphicsEditor.StartMinutes = log._GraphicsLOG.Start.Minute;
+                        GraphicsEditor.StartSeconds = log._GraphicsLOG.Start.Second;
+                        GraphicsEditor.StartMilliseconds = log._GraphicsLOG.Start.Millisecond;
+
+                        GraphicsEditor.EndDate = log._GraphicsLOG.End;
+                        GraphicsEditor.EndHours = log._GraphicsLOG.End.Hour;
+                        GraphicsEditor.EndMinutes = log._GraphicsLOG.End.Minute;
+                        GraphicsEditor.EndSeconds = log._GraphicsLOG.End.Second;
+                        GraphicsEditor.EndMilliseconds = log._GraphicsLOG.End.Millisecond;
+
+                        GraphicsEditor.Output = log._GraphicsLOG.Output.Name;
+                        GraphicsEditor.Type = log._GraphicsLOG.Type.Name;
+
+                        foreach (PostIt p in log._GraphicsLOG.PostItList)
+                        {
+                            GraphicsEditor.PostIts.Add(new CreatePostItViewModel(this, _dataService, GraphicsEditor, log._GraphicsLOG.Project, p.Subject.Subject, p.Error, p.ERCaptureTime, p.Solution,
+                                p.SOCaptureTime, p.Suggestion, p.Comment));
+                        }
+
+                        GraphicsEditor.Height = log._GraphicsLOG.Height.ToString();
+                        GraphicsEditor.Width = log._GraphicsLOG.Width.ToString();
+                        GraphicsEditor.Medium = log._GraphicsLOG.Medium;
+                        GraphicsEditor.Format = log._GraphicsLOG.Format;
+                        GraphicsEditor.Brush = log._GraphicsLOG.Brush;
+                        GraphicsEditor.MeasuringUnit = log._GraphicsLOG.Unit;
+                        GraphicsEditor.Size = log._GraphicsLOG.Size;
+                        GraphicsEditor.DPI = log._GraphicsLOG.DPI.ToString();
+                        GraphicsEditor.ColourDepth = log._GraphicsLOG.Depth;
+                        GraphicsEditor.IsCompleted = log._GraphicsLOG.IsCompleted;
+                        GraphicsEditor.Source = log._GraphicsLOG.Source;
+
+
+                        Dashboard.DataContext = graphicsDashboard;
+                        Editor.DataContext = GraphicsEditor;
+                        LoadEditControls();
+                        _EDS_frame.Navigate(EditGraphicsFrame);
+                        _EDS_ASframe.Navigate(null);
+                        EditGraphicsFrame.DataContext = GraphicsEditor;
+
+                        break;
+                    }
+                case CacheContext.Film:
+                    {
+                        var log = (FilmLOGViewModel)viewModelBase;
+                        FilmEditor = new(this, logCacheViewModel, _dataService, log);
+
+                        FilmEditor.SignUpImage = _authService.Account.ProfilePic;
+
+                        FilmEditor.Author = $"{log._FilmLOG.Author.FirstName} {log._FilmLOG.Author.LastName}";
+                        FilmEditor.ProjectName = log._FilmLOG.Project.Name;
+                        FilmEditor.ApplicationName = log._FilmLOG.Application.Name;
+
+                        FilmEditor.StartDate = log._FilmLOG.Start;
+                        FilmEditor.StartHours = log._FilmLOG.Start.Hour;
+                        FilmEditor.StartMinutes = log._FilmLOG.Start.Minute;
+                        FilmEditor.StartSeconds = log._FilmLOG.Start.Second;
+                        FilmEditor.StartMilliseconds = log._FilmLOG.Start.Millisecond;
+
+                        FilmEditor.EndDate = log._FilmLOG.End;
+                        FilmEditor.EndHours = log._FilmLOG.End.Hour;
+                        FilmEditor.EndMinutes = log._FilmLOG.End.Minute;
+                        FilmEditor.EndSeconds = log._FilmLOG.End.Second;
+                        FilmEditor.EndMilliseconds = log._FilmLOG.End.Millisecond;
+
+                        FilmEditor.Output = log._FilmLOG.Output.Name;
+                        FilmEditor.Type = log._FilmLOG.Type.Name;
+
+                        foreach (PostIt p in log._FilmLOG.PostItList)
+                        {
+                            FilmEditor.PostIts.Add(new CreatePostItViewModel(this, _dataService, FilmEditor, log._FilmLOG.Project, p.Subject.Subject, p.Error, p.ERCaptureTime, p.Solution,
+                                p.SOCaptureTime, p.Suggestion, p.Comment));
+                        }
+
+                        FilmEditor.Height = log._FilmLOG.Height.ToString();
+                        FilmEditor.Width = log._FilmLOG.Width.ToString();
+                        FilmEditor.IsCompleted = log._FilmLOG.IsCompleted;
+                        FilmEditor.Source = log._FilmLOG.Source;
+
+
+                        Dashboard.DataContext = filmDashboard;
+                        Editor.DataContext = FilmEditor;
+                        LoadEditControls();
+                        _EDS_frame.Navigate(EditFilmFrame);
+                        _EDS_ASframe.Navigate(null);
+                        EditFilmFrame.DataContext = FilmEditor;
+
+                        break;
+                    }
+                case CacheContext.Flexi:
+                    {
+                        var log = (FlexiLOGViewModel)viewModelBase;
+                        FlexiEditor = new(this, logCacheViewModel, _dataService, log);
+
+                        FlexiEditor.SignUpImage = _authService.Account.ProfilePic;
+
+                        FlexiEditor.Author = $"{log._FlexiLOG.Author.FirstName} {log._FlexiLOG.Author.LastName}";
+                        FlexiEditor.ProjectName = log._FlexiLOG.Project.Name;
+                        FlexiEditor.ApplicationName = log._FlexiLOG.Application.Name;
+
+                        FlexiEditor.StartDate = log._FlexiLOG.Start;
+                        FlexiEditor.StartHours = log._FlexiLOG.Start.Hour;
+                        FlexiEditor.StartMinutes = log._FlexiLOG.Start.Minute;
+                        FlexiEditor.StartSeconds = log._FlexiLOG.Start.Second;
+                        FlexiEditor.StartMilliseconds = log._FlexiLOG.Start.Millisecond;
+
+                        FlexiEditor.EndDate = log._FlexiLOG.End;
+                        FlexiEditor.EndHours = log._FlexiLOG.End.Hour;
+                        FlexiEditor.EndMinutes = log._FlexiLOG.End.Minute;
+                        FlexiEditor.EndSeconds = log._FlexiLOG.End.Second;
+                        FlexiEditor.EndMilliseconds = log._FlexiLOG.End.Millisecond;
+
+                        FlexiEditor.Output = log._FlexiLOG.Output.Name;
+                        FlexiEditor.Type = log._FlexiLOG.Type.Name;
+
+                        foreach (PostIt p in log._FlexiLOG.PostItList)
+                        {
+                            FlexiEditor.PostIts.Add(new CreatePostItViewModel(this, _dataService, FlexiEditor, log._FlexiLOG.Project, p.Subject.Subject, p.Error, p.ERCaptureTime, p.Solution,
+                                p.SOCaptureTime, p.Suggestion, p.Comment));
+                        }
+
+                        FlexiEditor.FlexibleLogCategory = log._FlexiLOG.flexinotetype.ToString();
+                        FlexiEditor.Medium = log._FlexiLOG.Medium;
+                        FlexiEditor.Format = log._FlexiLOG.Format;
+                        FlexiEditor.Bitrate = log._FlexiLOG.Bitrate.ToString();
+                        FlexiEditor.Duration = log._FlexiLOG.Length;
+                        FlexiEditor.IsCompleted = log._FlexiLOG.IsCompleted;
+                        FlexiEditor.Source = log._FlexiLOG.Source;
+
+
+                        Dashboard.DataContext = flexiDashboard;
+                        Editor.DataContext = FlexiEditor;
+                        LoadEditControls();
+                        _EDS_frame.Navigate(EditFlexiFrame);
+                        _EDS_ASframe.Navigate(null);
+                        EditFlexiFrame.DataContext = FlexiEditor;
+
+                        break;
+                    }
+                default:
                     {
 
                         var log = (CodeLOGViewModel)viewModelBase;
@@ -808,6 +964,7 @@ namespace Data_Logger_1._3.Services
 
                         CodingEditor.SignUpImage = _authService.Account.ProfilePic;
 
+                        CodingEditor.Author = $"{log._CodeLOG.Author.FirstName} {log._CodeLOG.Author.LastName}";
                         CodingEditor.ProjectName = log._CodeLOG.Project.Name;
                         CodingEditor.ApplicationName = log._CodeLOG.Application.Name;
 
@@ -828,7 +985,7 @@ namespace Data_Logger_1._3.Services
 
                         foreach (PostIt p in log._CodeLOG.PostItList)
                         {
-                            CodingEditor.PostIts.Add(new CreatePostItViewModel(this, _dataService, CodingEditor, p.Subject.Subject, p.Error, p.ERCaptureTime, p.Solution,
+                            CodingEditor.PostIts.Add(new CreatePostItViewModel(this, _dataService, CodingEditor, log._CodeLOG.Project, p.Subject.Subject, p.Error, p.ERCaptureTime, p.Solution,
                                 p.SOCaptureTime, p.Suggestion, p.Comment));
                         }
 
@@ -844,6 +1001,11 @@ namespace Data_Logger_1._3.Services
 
                         break;
                     }
+            }
+
+            _MainFrame.Navigate(Editor);
+        }
+
         public void NavigateToViewer(ViewModelBase viewModelBase, CacheContext cacheContext)
         {
             try
@@ -933,9 +1095,9 @@ namespace Data_Logger_1._3.Services
 
                             break;
                         }
-                case CacheContext.Graphics:
-                    {
-                        var log = (GraphicsLOGViewModel)viewModelBase;
+                    case CacheContext.Graphics:
+                        {
+                            var log = (GraphicsLOGViewModel)viewModelBase;
                             GraphicsViewer = new(this);
 
                             GraphicsViewer.SignUpImage = _authService.Account.ProfilePic;
@@ -1033,7 +1195,7 @@ namespace Data_Logger_1._3.Services
                             FlexiViewer.Type = log._FlexiLOG.Type.Name;
 
                             foreach (PostIt p in log._FlexiLOG.PostItList)
-                        {
+                            {
                                 FlexiViewer.AddPostIt(new CreatePostItViewModel(this, log._FlexiLOG.Project, p.Subject.Subject, p.Error, p.Solution,
                                     p.Suggestion, p.Comment));
                             }
@@ -1082,17 +1244,17 @@ namespace Data_Logger_1._3.Services
                             CodingViewer.BugsFound = $"{log._CodeLOG.Bugs} Bugs found";
                             CodingViewer.ApplicationOpened = log._CodeLOG.Success ? "Launch Successful" : "Unsuccessful Launch";
 
-                        Dashboard.DataContext = codingDashboard;
+                            Dashboard.DataContext = codingDashboard;
                             Viewer.DataContext = CodingViewer;
                             LoadViewerControls();
                             _VIEW_frame.Navigate(ViewerCodingFrame);
                             _VIEW_ASframe.Navigate(null);
                             ViewerCodingFrame.DataContext = CodingViewer;
 
-                        break;
-                    }
+                            break;
+                        }
 
-            }
+                }
 
 
                 _MainFrame.Navigate(Viewer);
