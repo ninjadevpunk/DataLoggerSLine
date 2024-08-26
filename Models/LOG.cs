@@ -83,7 +83,7 @@ namespace Data_Logger_1._3.Models
 
         /// <summary>
         /// The most important property of the log. All the thoughts, 
-        /// suggestions and details of the project are described on PostIts.
+        /// suggestions and details of the project are described in PostIts.
         /// </summary>
 
         public List<PostIt> PostItList { get; set; } = new();

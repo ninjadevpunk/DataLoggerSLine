@@ -66,7 +66,7 @@ namespace Data_Logger_1._3.Models
         /// The bitrate. Used for music logs primarily.
         /// </summary>
 
-        public int BitRate { get; set; } = 0;
+        public int Bitrate { get; set; } = 0;
 
         /// <summary>
         /// The length of the song.
@@ -104,7 +104,7 @@ namespace Data_Logger_1._3.Models
             this.gamingcontext = gamingcontext;
             Medium = medium;
             Format = format;
-            BitRate = bitRate;
+            Bitrate = bitRate;
             Length = length;
             IsCompleted = isCompleted;
             Source = source;
@@ -119,7 +119,7 @@ namespace Data_Logger_1._3.Models
             this.gamingcontext = gamingcontext;
             Medium = medium;
             Format = format;
-            BitRate = bitRate;
+            Bitrate = bitRate;
             Length = length;
             IsCompleted = isCompleted;
             Source = source;
@@ -149,7 +149,7 @@ namespace Data_Logger_1._3.Models
                    gamingcontext == lOG.gamingcontext &&
                    Medium == lOG.Medium &&
                    Format == lOG.Format &&
-                   BitRate == lOG.BitRate &&
+                   Bitrate == lOG.Bitrate &&
                    Length == lOG.Length &&
                    IsCompleted == lOG.IsCompleted &&
                    Source == lOG.Source;
@@ -173,7 +173,7 @@ namespace Data_Logger_1._3.Models
             hash.Add(gamingcontext);
             hash.Add(Medium);
             hash.Add(Format);
-            hash.Add(BitRate);
+            hash.Add(Bitrate);
             hash.Add(Length);
             hash.Add(IsCompleted);
             hash.Add(Source);

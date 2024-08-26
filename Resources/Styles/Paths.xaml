@@ -682,7 +682,7 @@
         <Setter Property="Width" Value="12"/>
     </Style>
 
-    <Style x:Key="ellipse_FIREBASE_CONNECTION" TargetType="Ellipse" BasedOn="{StaticResource ellipse_ERSO}">
+    <Style x:Key="ellipse_DATABASE_CONNECTION" TargetType="Ellipse" BasedOn="{StaticResource ellipse_ERSO}">
     </Style>
 
     <Style x:Key="ellipse_LIST_ERSO" TargetType="Ellipse">
