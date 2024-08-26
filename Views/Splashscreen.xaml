@@ -7,7 +7,7 @@
         AllowsTransparency="True"
         Background="Transparent"
         mc:Ignorable="d"
-        Title="Splash screen" 
+        Title="Welcome" 
         Height="700" 
         Width="398"
         WindowStyle="None"
