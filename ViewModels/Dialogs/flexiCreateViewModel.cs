@@ -1,4 +1,5 @@
-﻿using Data_Logger_1._3.Commands.LoggerCommands;
+﻿using Data_Logger_1._3.Commands;
+using Data_Logger_1._3.Commands.LoggerCommands;
 using Data_Logger_1._3.Models;
 using Data_Logger_1._3.Models.App_Models;
 using Data_Logger_1._3.Services;
@@ -25,7 +26,7 @@ namespace Data_Logger_1._3.ViewModels.Dialogs
         public flexiCreateViewModel(NavigationService navigationService, LogCacheViewModel logCacheViewModel, DataService dataService) : base(navigationService, logCacheViewModel, dataService)
         {
             AppFieldEnabled = true;
-            ApplicationName = "Blender";
+            ApplicationName = "Unity";
 
             _flexiViewModel = (FlexiViewModel)logCacheViewModel;
 
@@ -46,8 +47,9 @@ namespace Data_Logger_1._3.ViewModels.Dialogs
             }
 
 
-            Output = "Portable Document Format (*.pdf)";
-            _outputs.Add("Portable Document Format (*.pdf)");
+            Output = "EXE (*.exe)";
+            _outputs.Add("EXE (*.exe)");
+            _outputs.Add("PDF");
             _outputs.Add("Joint Pictures Experts Group (*.JPG) | (*.jpg)");
             _outputs.Add("Scalable Vector Graphics (*.svg)");
             _outputs.Add("Microsoft Word (*.docx) | (*.doc)");
@@ -63,7 +65,7 @@ namespace Data_Logger_1._3.ViewModels.Dialogs
             _outputs.Add("OGG (*.ogg)");
 
 
-            Type = "Document";
+            Type = "Boardgame";
             _types.Add("Document");
             _types.Add("NONE");
             _types.Add("Invitation");
@@ -86,14 +88,17 @@ namespace Data_Logger_1._3.ViewModels.Dialogs
             _types.Add("Mantra");
             _types.Add("Poetry");
 
-            Medium = "Song";
+            Medium = "Game Engine";
             _mediums = new();
+            _mediums.Add("Game Engine");
             _mediums.Add("Song");
             _mediums.Add("A Cappella");
             _mediums.Add("Orchestral");
 
-            Format = "CD";
+            Format = "Digital Download";
             _formats = new();
+            _formats.Add("Digital Download");
+            _formats.Add("Disc");
             _formats.Add("CD");
             _formats.Add("MIDI");
             _formats.Add("Digital");
@@ -102,13 +107,13 @@ namespace Data_Logger_1._3.ViewModels.Dialogs
             _formats.Add("EP");
             _formats.Add("Gramophone");
 
-            FlexibleLogCategory = "Document";
+            FlexibleLogCategory = "Gaming";
             _flexiLogCategories = new();
             _flexiLogCategories.Add("Document");
             _flexiLogCategories.Add("Gaming");
             _flexiLogCategories.Add("Music");
 
-            BitRate = string.Empty;
+            Bitrate = string.Empty;
             Duration = string.Empty;
             IsCompleted = false;
             Source = string.Empty;
@@ -117,6 +122,7 @@ namespace Data_Logger_1._3.ViewModels.Dialogs
 
             SaveCommand = new SaveCommand(this, _dataService);
             AnnotateCommand = new AnnotateCommand(Context, _navigationService, this, _flexiViewModel, _dataService);
+            ClearLoggerCommand = new ResetLoggerCommand(this, Category);
         }
 
 
@@ -163,17 +169,17 @@ namespace Data_Logger_1._3.ViewModels.Dialogs
             }
         }
 
-        private string bitRate;
-        public string BitRate
+        private string bitrate;
+        public string Bitrate
         {
             get
             {
-                return bitRate;
+                return bitrate;
             }
             set
             {
-                bitRate = value;
-                OnPropertyChanged(nameof(BitRate));
+                bitrate = value;
+                OnPropertyChanged(nameof(Bitrate));
             }
         }
 

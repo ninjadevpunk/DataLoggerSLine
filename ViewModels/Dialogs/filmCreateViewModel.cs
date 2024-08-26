@@ -1,4 +1,5 @@
-﻿using Data_Logger_1._3.Commands.LoggerCommands;
+﻿using Data_Logger_1._3.Commands;
+using Data_Logger_1._3.Commands.LoggerCommands;
 using Data_Logger_1._3.Models;
 using Data_Logger_1._3.Models.App_Models;
 using Data_Logger_1._3.Services;
@@ -39,13 +40,12 @@ namespace Data_Logger_1._3.ViewModels.Dialogs
             }
 
 
-            Output = "Motion Picture Experts Group (*.mp4)";
-            _outputs.Add("Motion Picture Experts Group Layer 4 (*.mp4)");
-            _outputs.Add("AVI (*.avi");
-            _outputs.Add("Matroska (*.mkv)");
-            _outputs.Add("Windows Media Video (*.wmv)");
-            _outputs.Add("Transfer Stream (*.ts)");
-            _outputs.Add("WebM (*.webm)");
+            Output = "MP4";
+            _outputs.Add("MP4");
+            _outputs.Add("AVI");
+            _outputs.Add("MKV");
+            _outputs.Add("TS");
+            _outputs.Add("WEBM");
 
 
             Type = "Film";
@@ -65,6 +65,7 @@ namespace Data_Logger_1._3.ViewModels.Dialogs
 
             SaveCommand = new SaveCommand(this, _dataService);
             AnnotateCommand = new AnnotateCommand(Context, _navigationService, this, _filmViewModel, _dataService);
+            ClearLoggerCommand = new ResetLoggerCommand(this, Category);
         }
 
 

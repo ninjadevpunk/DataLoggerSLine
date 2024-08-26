@@ -1,4 +1,5 @@
-﻿using Data_Logger_1._3.Commands.LoggerCommands;
+﻿using Data_Logger_1._3.Commands;
+using Data_Logger_1._3.Commands.LoggerCommands;
 using Data_Logger_1._3.Models;
 using Data_Logger_1._3.Models.App_Models;
 using Data_Logger_1._3.Services;
@@ -52,15 +53,15 @@ namespace Data_Logger_1._3.ViewModels.Dialogs
             }
 
 
-            Output = "Portable Network Graphics (*.PNG)";
-            _outputs.Add("Portable Network Graphics (*.PNG)");
-            _outputs.Add("Joint Pictures Experts Group (*.JPG) | (*.jpg)");
-            _outputs.Add("Scalable Vector Graphics (*.svg)");
-            _outputs.Add("Graphics Interchange Format (*.gif)");
-            _outputs.Add("Portable Document Format (*.pdf)");
-            _outputs.Add("Tag Image File Format (*.tiff)");
-            _outputs.Add("Adobe Photoshop (*.psd)");
-            _outputs.Add("WebP (*.webp)");
+            Output = "PNG";
+            _outputs.Add("PNG");
+            _outputs.Add("JPG");
+            _outputs.Add("SVG");
+            _outputs.Add("GIF");
+            _outputs.Add("PDF");
+            _outputs.Add("TIFF");
+            _outputs.Add("PSD");
+            _outputs.Add("WEBP");
 
 
             Type = "NONE";
@@ -113,6 +114,7 @@ namespace Data_Logger_1._3.ViewModels.Dialogs
 
             SaveCommand = new SaveCommand(this, _dataService);
             AnnotateCommand = new AnnotateCommand(Context, _navigationService, this, _graphicsViewModel, _dataService);
+            ClearLoggerCommand = new ResetLoggerCommand(this, Category);
         }
 
 

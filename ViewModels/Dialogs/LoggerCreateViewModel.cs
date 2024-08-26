@@ -5,7 +5,6 @@ using Data_Logger_1._3.Services;
 using Data_Logger_1._3.ViewModels.Dashboard;
 using MVVMEssentials.ViewModels;
 using System.Collections.ObjectModel;
-using System.Net.NetworkInformation;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
@@ -19,7 +18,6 @@ namespace Data_Logger_1._3.ViewModels.Dialogs
         protected readonly DataService _dataService;
         protected readonly NavigationService _navigationService;
         protected readonly LogCacheViewModel _logCacheViewModel;
-        private Timer timer;
 
 
         public abstract LOG.CATEGORY Category { get; }
@@ -67,8 +65,6 @@ namespace Data_Logger_1._3.ViewModels.Dialogs
 
 
             PostIts = new ObservableCollection<CreatePostItViewModel>();
-
-            NetworkStatusMonitor();
 
             CurrentStartDateCommand = new CurrentStartDateCommand(this);
             CurrentEndDateCommand = new CurrentEndDateCommand(this);
@@ -406,19 +402,19 @@ namespace Data_Logger_1._3.ViewModels.Dialogs
             }
         }
 
-        private bool isFirebaseOnline;
-        public bool IsFirebaseOnline
+        private bool isDatabaseOnline;
+        public bool IsDatabaseOnline
         {
             get
             {
-                return isFirebaseOnline;
+                return isDatabaseOnline;
             }
             set
             {
-                isFirebaseOnline = value;
-                FirebaseStatusFill = IsFirebaseOnline ? Brushes.Green : Brushes.Red;
-                FirebaseStatus = IsFirebaseOnline ? "Connected" : "Not Connected";
-                OnPropertyChanged(nameof(IsFirebaseOnline));
+                isDatabaseOnline = value;
+                DatabaseStatusFill = IsDatabaseOnline ? Brushes.Green : Brushes.Red;
+                DatabaseStatus = IsDatabaseOnline ? "Connected" : "Not Connected";
+                OnPropertyChanged(nameof(IsDatabaseOnline));
             }
         }
 
@@ -439,31 +435,31 @@ namespace Data_Logger_1._3.ViewModels.Dialogs
         }
 
 
-        private Brush firebaseStatusFill;
-        public Brush FirebaseStatusFill
+        private Brush databaseStatusFill;
+        public Brush DatabaseStatusFill
         {
             get
             {
-                return firebaseStatusFill;
+                return databaseStatusFill;
             }
             set
             {
-                firebaseStatusFill = value;
-                OnPropertyChanged(nameof(FirebaseStatusFill));
+                databaseStatusFill = value;
+                OnPropertyChanged(nameof(DatabaseStatusFill));
             }
         }
 
-        private string firebaseStatus;
-        public string FirebaseStatus
+        private string databaseStatus;
+        public string DatabaseStatus
         {
             get
             {
-                return firebaseStatus;
+                return databaseStatus;
             }
             set
             {
-                firebaseStatus = value;
-                OnPropertyChanged(nameof(FirebaseStatus));
+                databaseStatus = value;
+                OnPropertyChanged(nameof(DatabaseStatus));
             }
         }
 
@@ -479,6 +475,8 @@ namespace Data_Logger_1._3.ViewModels.Dialogs
         public ICommand AnnotateCommand { get; set; }
 
         public ICommand EditCommand { get; set; }
+
+        public ICommand OKCommand { get; set; }
 
 
 
@@ -505,35 +503,6 @@ namespace Data_Logger_1._3.ViewModels.Dialogs
         public void UpdateEndDateControl()
         {
             EndDate = DateTime.Parse(EndDate.Date.ToLongDateString() + " " + EndHours + ":" + EndMinutes + ":" + EndSeconds + "." + EndMilliseconds);
-        }
-
-        public static bool IsInternetAvailable()
-        {
-            return NetworkInterface.GetIsNetworkAvailable();
-        }
-
-        public void NetworkStatusMonitor()
-        {
-            // Initialize the timer to check for network status every second
-            timer = new Timer(TimerCallback, null, TimeSpan.Zero, TimeSpan.FromSeconds(1));
-        }
-
-        private void TimerCallback(object? state)
-        {
-            try
-            {
-                if (Application.Current != null)
-                {
-                    Application.Current.Dispatcher.Invoke(() =>
-                    {
-                        IsFirebaseOnline = IsInternetAvailable();
-                    });
-                }
-            }
-            catch (Exception)
-            {
-                //
-            }
         }
 
         public void TimeNow(bool updateStart)
