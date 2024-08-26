@@ -31,6 +31,37 @@ namespace Data_Logger_1._3.Services
 
         // ---END CONSTRUCTORS---
 
+
+        #region Feedback Management
+
+
+        public void CreateFeedbackID()
+        {
+            // TODO
+        }
+
+        public void Feedbacker(string description)
+        {
+            // TODO
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        #endregion
+
+
         // These private functions should be called by this class only
 
 
