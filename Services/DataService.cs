@@ -1,9 +1,9 @@
-﻿using Data_Logger_1._3.Commands.LoggerCommands;
-using Data_Logger_1._3.Models;
+﻿using Data_Logger_1._3.Models;
 using Data_Logger_1._3.Models.App_Models;
 using Data_Logger_1._3.ViewModels.Dashboard;
 using Data_Logger_1._3.ViewModels.LogViewModels;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Text.RegularExpressions;
 
 namespace Data_Logger_1._3.Services
@@ -321,9 +321,18 @@ namespace Data_Logger_1._3.Services
                     _writer.Watcher.AvailablePostItIDs = unUsedIDs;
                 }
             }
-            catch (Exception)
+            catch(ArgumentNullException nullx)
             {
+                Debug.WriteLine($"Null exception found near UpdateAvailablePostItIDs(unusedIDs): {nullx.Message}");
+            }
+            catch (Exception ex)
+            {
+
+                Debug.WriteLine($"Exception found near UpdateAvailablePostItIDs(unusedIDs): {ex.Message}");
+
                 // TODO
+
+
             }
         }
 
@@ -355,9 +364,18 @@ namespace Data_Logger_1._3.Services
                     _writer.Watcher.AvailableSubjectIDs = unUsedIDs;
                 }
             }
-            catch (Exception)
+            catch (ArgumentNullException nullx)
             {
+                Debug.WriteLine($"Null exception found near UpdateAvailableSubjectIDs(unusedIDs): {nullx.Message}");
+            }
+            catch (Exception ex)
+            {
+
+                Debug.WriteLine($"Exception found near UpdateAvailableSubjectIDs(unusedIDs): {ex.Message}");
+
                 // TODO
+
+
             }
         }
 
@@ -502,36 +520,64 @@ namespace Data_Logger_1._3.Services
 
 
         /// <summary>
-        /// Retrieve's Qt cache. Qt cache are Qt logs that haven't been stored.
+        /// Retrieves Qt cache. Qt cache are Qt logs that haven't been stored.
         /// </summary>
         /// <param name="logCacheViewModel">The Qt dashboard/owner that is requesting the cache.</param>
         /// <param name="dataService">The service that will interface with the UI.</param>
-        /// <returns>A list of QtLOGViewModels.</returns>
+        /// <returns>An observable collection of QtLOGViewModels</returns>
         public ObservableCollection<QtLOGViewModel> RetrieveQtCache(LogCacheViewModel logCacheViewModel, DataService dataService)
         {
             return _cachemaster.LoadQtViewModels(logCacheViewModel, dataService, _account);
         }
 
         /// <summary>
-        /// Retrieve's Android Studio cache. Android Studio cache are Android Studio logs that haven't been stored.
+        /// Retrieves Android Studio cache. Android Studio cache are Android Studio logs that haven't been stored.
         /// </summary>
         /// <param name="logCacheViewModel">The Android Studio dashboard/owner that is requesting the cache.</param>
-        /// <param name="dataService">The service that will interface with the UI.</param>
-        /// <returns></returns>
-        public ObservableCollection<AndroidLOGViewModel> RetrieveASCache(LogCacheViewModel logCacheViewModel, DataService dataService)
+        /// <returns>An observable collection of AndroidLOGViewModels</returns>
+        public ObservableCollection<AndroidLOGViewModel> RetrieveASCache(LogCacheViewModel logCacheViewModel)
         {
-            return _cachemaster.LoadASViewModels(logCacheViewModel, dataService, _account);
+            return _cachemaster.LoadASViewModels(logCacheViewModel, this, _account);
         }
 
         /// <summary>
-        /// Retrieve's coding cache. Coding cache are coding logs that haven't been stored.
+        /// Retrieves coding cache. Coding cache are coding logs that haven't been stored.
         /// </summary>
         /// <param name="logCacheViewModel">The coding dashboard/owner that is requesting the cache.</param>
-        /// <param name="dataService">The service that will interface with the UI.</param>
-        /// <returns></returns>
-        public ObservableCollection<CodeLOGViewModel> RetrieveCodeCache(LogCacheViewModel logCacheViewModel, DataService dataService)
+        /// <returns>An observable collection of CodeLOGViewModels</returns>
+        public ObservableCollection<CodeLOGViewModel> RetrieveCodeCache(LogCacheViewModel logCacheViewModel)
         {
-            return _cachemaster.LoadCodeViewModels(logCacheViewModel, dataService, _account);
+            return _cachemaster.LoadCodeViewModels(logCacheViewModel, this, _account);
+        }
+
+        /// <summary>
+        /// Retrieves graphics cache. Graphics cache are graphics logs that haven't been stored.
+        /// </summary>
+        /// <param name="logCacheViewModel">The graphics dashboard/owner that is requesting the cache.</param>
+        /// <returns>An observable collection of GraphicsLOGViewModels</returns>
+        public ObservableCollection<GraphicsLOGViewModel> RetrieveGraphicsCache(LogCacheViewModel logCacheViewModel)
+        {
+            return _cachemaster.LoadGraphicsViewModels(logCacheViewModel, this, _account);
+        }
+
+        /// <summary>
+        /// Retrieves film cache. Film cache are film logs that haven't been stored.
+        /// </summary>
+        /// <param name="logCacheViewModel">The film dashboard/owner that is requesting the cache.</param>
+        /// <returns>An observable collection of FilmLOGViewModels</returns>
+        public ObservableCollection<FilmLOGViewModel> RetrieveFilmCache(LogCacheViewModel logCacheViewModel)
+        {
+            return _cachemaster.LoadFilmViewModels(logCacheViewModel, this, _account);
+        }
+
+        /// <summary>
+        /// Retrieves flexible cache. Flexible cache are flexible logs that haven't been stored.
+        /// </summary>
+        /// <param name="logCacheViewModel">The flexible dashboard/owner that is requesting the cache.</param>
+        /// <returns>An observable collection of FlexiLOGViewModels</returns>
+        public ObservableCollection<FlexiLOGViewModel> RetrieveFlexibleCache(LogCacheViewModel logCacheViewModel)
+        {
+            return _cachemaster.LoadFlexiViewModels(logCacheViewModel, this, _account);
         }
 
         #endregion
