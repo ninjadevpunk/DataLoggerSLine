@@ -23,6 +23,7 @@
     <None Remove="Assets\login\ayo-ogunseinde-sibVwORYqs0-unsplash.jpg" />
     <None Remove="Assets\login\national-cancer-institute-uVnRa6mOLOM-unsplash.jpg" />
     <None Remove="Assets\login\user.png" />
+    <None Remove="Assets\viewer_wallpaper.png" />
     <None Remove="Components\SplashScreen1.png" />
     <None Remove="Fonts\Red Hat Display.ttf" />
     <None Remove="Fonts\Zekton Bold Italic.ttf" />
@@ -68,6 +69,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
     <Resource Include="Assets\login\user.png" />
+    <Resource Include="Assets\viewer_wallpaper.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
     <Resource Include="Fonts\Red Hat Display.ttf">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
