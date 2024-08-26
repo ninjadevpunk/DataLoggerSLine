@@ -9,7 +9,7 @@ namespace Data_Logger_1._3.ViewModels.Dialogs
 {
     public class AScodeCreateViewModel : codeCreateViewModel
     {
-        private readonly CodingViewModel _ASviewModel;
+        private readonly CodingAndroidViewModel _ASviewModel;
         public override CacheContext Context { get => CacheContext.AndroidStudio; }
 
         public AScodeCreateViewModel(NavigationService navigationService, LogCacheViewModel logCacheViewModel, DataService dataService) : base(navigationService, logCacheViewModel, dataService)
@@ -19,9 +19,9 @@ namespace Data_Logger_1._3.ViewModels.Dialogs
             ASOnly = true;
             AppFieldEnabled = false;
 
-            FullORSimple = false;
+            IsSimple = false;
 
-            _ASviewModel = (CodingViewModel)_viewModel;
+            _ASviewModel = (CodingAndroidViewModel)_viewModel;
 
             _projects.Clear();
             _dataService.InitialiseProjectsLIST(LOG.CATEGORY.CODING);
@@ -58,24 +58,24 @@ namespace Data_Logger_1._3.ViewModels.Dialogs
 
 
 
-        private bool fullORsimple;
-        public bool FullORSimple
+        private bool isSimple;
+        public bool IsSimple
         {
             get
             {
-                return fullORsimple;
+                return isSimple;
             }
             set
             {
-                fullORsimple = value;
+                isSimple = value;
 
-                GradleDaemonVisibility = FullORSimple ? Visibility.Hidden : Visibility.Visible;
-                RunBuildVisibility = FullORSimple ? Visibility.Hidden : Visibility.Visible;
-                LoadBuildVisibility = FullORSimple ? Visibility.Hidden : Visibility.Visible;
-                ConfigureBuildVisibility = FullORSimple ? Visibility.Hidden : Visibility.Visible;
-                AllProjectsVisibility = FullORSimple ? Visibility.Hidden : Visibility.Visible;
+                GradleDaemonVisibility = IsSimple ? Visibility.Hidden : Visibility.Visible;
+                RunBuildVisibility = IsSimple ? Visibility.Hidden : Visibility.Visible;
+                LoadBuildVisibility = IsSimple ? Visibility.Hidden : Visibility.Visible;
+                ConfigureBuildVisibility = IsSimple ? Visibility.Hidden : Visibility.Visible;
+                AllProjectsVisibility = IsSimple ? Visibility.Hidden : Visibility.Visible;
 
-                OnPropertyChanged(nameof(FullORSimple));
+                OnPropertyChanged(nameof(IsSimple));
 
             }
         }
