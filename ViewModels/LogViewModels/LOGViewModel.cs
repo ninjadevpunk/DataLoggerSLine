@@ -66,7 +66,7 @@ namespace Data_Logger_1._3.ViewModels.LogViewModels
 
             _LOG = log;
             NotaryContent = _LOG.Content;
-            TimeRemaining = 1200;
+            TimeRemaining = 600;
             StartCountdown();
 
             // TODO 
