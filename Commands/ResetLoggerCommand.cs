@@ -160,7 +160,7 @@ namespace Data_Logger_1._3.Commands
             }
             catch (Exception e)
             {
-                Debug.WriteLine($"Exception found near ResetLoggerCommand: {e.Message}")
+                Debug.WriteLine($"Exception found near ResetLoggerCommand: {e.Message}");
                 // TODO
             }
         }
