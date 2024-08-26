@@ -166,24 +166,26 @@ namespace Data_Logger_1._3.ViewModels.LogViewModels
 
         private void TimerCallback(object? state)
         {
-            if (Application.Current != null)
+            try
             {
-                Application.Current.Dispatcher.Invoke(() =>
+                if (Application.Current != null)
                 {
-                    if (!IsDisposed)
+                    Application.Current.Dispatcher.Invoke(() =>
                     {
-                        if (TimeRemaining == 0)
+                        if (!IsDisposed)
                         {
-                            DeleteCacheItem();
-                            _timer.Dispose();
-                            IsDisposed = true;
+                            if (TimeRemaining == 0)
+                            {
+                                DeleteCacheItem();
+                                _timer.Dispose();
+                                IsDisposed = true;
+                            }
+                            else
+                                TimeRemaining--;
                         }
-                        else
-                            TimeRemaining--;
-                    }
-                });
+                    });
+                }
             }
-        }
             catch(TaskCanceledException tex)
             {
                 _timer.Dispose();
@@ -212,20 +214,19 @@ namespace Data_Logger_1._3.ViewModels.LogViewModels
 
         public string PostItContent(ObservableCollection<CreatePostItViewModel> createPostItViewModel)
         {
-            string pattern = "[A-Za-z]{5}[0-9]{0}";
-            Regex xp = new Regex(pattern);
+            string pattern = @"\S";
+            Regex regex = new Regex(pattern);
 
             foreach (CreatePostItViewModel postItViewModel in createPostItViewModel)
             {
-                if (xp.IsMatch(postItViewModel.Display_Error))
+                if (!string.IsNullOrWhiteSpace(postItViewModel.Display_Error) && regex.IsMatch(postItViewModel.Display_Error))
                     return postItViewModel.Display_Error;
-                else if (xp.IsMatch(postItViewModel.Display_Solution))
+                else if (!string.IsNullOrWhiteSpace(postItViewModel.Display_Solution) && regex.IsMatch(postItViewModel.Display_Solution))
                     return postItViewModel.Display_Solution;
-                else if (xp.IsMatch(postItViewModel.Display_Suggestion))
+                else if (!string.IsNullOrWhiteSpace(postItViewModel.Display_Suggestion) && regex.IsMatch(postItViewModel.Display_Suggestion))
                     return postItViewModel.Display_Suggestion;
-                else if (xp.IsMatch(postItViewModel.Display_Comment))
+                else if (!string.IsNullOrWhiteSpace(postItViewModel.Display_Comment) && regex.IsMatch(postItViewModel.Display_Comment))
                     return postItViewModel.Display_Comment;
-
             }
 
             return "No Notes";
