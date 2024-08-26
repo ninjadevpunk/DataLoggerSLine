@@ -25,6 +25,9 @@
             <!-- Format -->
             <RowDefinition Height="auto" />
             <RowDefinition Height="*" />
+            <!-- Brush -->
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="*" />
             <!-- UNIT -->
             <RowDefinition Height="auto" />
             <RowDefinition Height="*" />
@@ -96,8 +99,17 @@
                        UserComboInput="{Binding Format, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
                        Items="{Binding Formats}" />
 
+        <!-- BRUSH -->
+        <components:PlainInputField Grid.Row="6" x:Name="inputText_brush"
+                            Margin="0 5 0 0"
+                            PlaceholderText="Brush"
+                            DynamicPlaceholderText="Brush"
+                            UserTextBoxStyle="{DynamicResource inputText_LOGIN}"
+                            UserTextBlockStyle="{DynamicResource text_login_PLACEHOLDER}"
+                            UserInput="{Binding Brush, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
+
         <!-- MEASURING UNIT -->
-        <components:ComboBoxInputField Grid.Row="6" x:Name="inputText_UNIT"
+        <components:ComboBoxInputField Grid.Row="8" x:Name="inputText_UNIT"
                                        Enabled="True"
                                        PlaceholderText="Measuring Unit"
                                        UserTextBoxStyle="{DynamicResource inputText}"
@@ -106,7 +118,7 @@
                                        Items="{Binding Units}" />
 
         <!-- SIZE -->
-        <components:ComboBoxInputField Grid.Row="8" x:Name="inputText_SIZE"
+        <components:ComboBoxInputField Grid.Row="10" x:Name="inputText_SIZE"
                                        Enabled="True"
                                        PlaceholderText="Page Size"
                                        UserTextBoxStyle="{DynamicResource inputText}"
@@ -115,7 +127,7 @@
                                        Items="{Binding Sizes}" />
 
         <!-- DPI -->
-        <components:PlainInputField Grid.Row="10" x:Name="inputText_DPI"
+        <components:PlainInputField Grid.Row="12" x:Name="inputText_DPI"
                                     Margin="0 5 0 0"
                                     PlaceholderText="DPI"
                                     DynamicPlaceholderText="DPI"
@@ -124,7 +136,7 @@
                                     UserInput="{Binding DPI, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
 
         <!-- COLOUR DEPTH -->
-        <components:PlainInputField Grid.Row="12" x:Name="inputText_DEPTH"
+        <components:PlainInputField Grid.Row="14" x:Name="inputText_DEPTH"
                                     Margin="0 5"
                                     PlaceholderText="Colour Depth"
                                     DynamicPlaceholderText="Colour Depth"
@@ -133,7 +145,7 @@
                                     UserInput="{Binding ColourDepth, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
 
         <!-- COMPLETED -->
-        <Border Grid.Row="14"
+        <Border Grid.Row="16"
                 Margin="0 0 0 5"
                 Height="40"
                 Padding="12 5 10 5"
@@ -166,7 +178,7 @@
 
 
         <!-- SOURCE -->
-        <Grid Grid.Row="16">
+        <Grid Grid.Row="18">
 
             <Grid.ColumnDefinitions>
 
