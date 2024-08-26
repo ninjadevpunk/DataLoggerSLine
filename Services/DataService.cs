@@ -293,11 +293,6 @@ namespace Data_Logger_1._3.Services
             return _writer.CreateAppID(category, account, applicationName);
         }
 
-        public int CreateAppID(ActionType action, LOG.CATEGORY category, ACCOUNT account, string applicationName, int usedID)
-        {
-            return _writer.CreateAppID(action, category, account, applicationName, usedID);
-        }
-
         public int CreatePostItID(List<int>? unUsedIDs)
         {
             return _writer.CreatePostItID(unUsedIDs);

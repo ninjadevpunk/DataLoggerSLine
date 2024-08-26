@@ -1232,7 +1232,7 @@ namespace Data_Logger_1._3.Services
                     flexiLog.flexinotetype = FindFlexiNoteTypeByID(flexiNoteTypeIDColumn);
                     flexiLog.Medium = FindMediumByID(read.GetInt32(mediumColumn));
                     flexiLog.Format = FindFormatByID(read.GetInt32(formatColumn));
-                    flexiLog.BitRate = read.GetInt32(bitRateColumn);
+                    flexiLog.Bitrate = read.GetInt32(bitRateColumn);
                     flexiLog.Length = read.GetString(lengthColumn);
                     flexiLog.IsCompleted = read.GetBoolean(IsCompletedColumn);
                     flexiLog.Source = read.GetString(sourceColumn);

@@ -1,7 +1,7 @@
-﻿using Data_Logger_1._3.Commands.LoggerCommands;
-using Data_Logger_1._3.Models;
+﻿using Data_Logger_1._3.Models;
 using Data_Logger_1._3.Models.App_Models;
 using System.Data.SQLite;
+using System.Diagnostics;
 using System.Text.RegularExpressions;
 using static Data_Logger_1._3.Models.AndroidCodingLOG;
 using static Data_Logger_1._3.Models.FlexiNotesLOG;
@@ -21,6 +21,7 @@ namespace Data_Logger_1._3.Services
             CheckProject();
             CheckOutputs();
             CheckTypes();
+            CheckNoteLogTypes();
             CheckMediums();
             CheckFormats();
             CheckFNCategories();
@@ -40,6 +41,8 @@ namespace Data_Logger_1._3.Services
             // Will store the medium ID
             int mediumKey = -1;
 
+            int mediumColumn = 2;
+
             SQLiteCommand query = _con.CreateCommand();
             SQLiteDataReader read;
 
@@ -54,9 +57,9 @@ namespace Data_Logger_1._3.Services
 
             while (read.Read())
             {
-                if (medium == read.GetString(1))
+                if (medium == read.GetString(mediumColumn))
                 {
-                    mediumKey = read.GetInt32(0);
+                    mediumKey = read.GetInt32(Column.IDColumn);
                     break;
                 }
 
@@ -69,8 +72,9 @@ namespace Data_Logger_1._3.Services
 
         public int FindFormatID(LOG.CATEGORY category, string format)
         {
-            // Will store the format ID
             int formatKey = -1;
+
+            int formatColumn = 2;
 
             SQLiteCommand query = _con.CreateCommand();
             SQLiteDataReader read;
@@ -79,13 +83,13 @@ namespace Data_Logger_1._3.Services
              *  Look for the FORMAT that matches "format" parameter variable.
              *  Then, return the key of the output when it is found.
              */
-            query.CommandText = "SELECT * FROM FORMAT WHERE {Column.CategoryID} = @category ORDER BY formatID ASC;";
+            query.CommandText = $"SELECT * FROM FORMAT WHERE {Column.CategoryID} = @category ORDER BY formatID ASC;";
             query.Parameters.AddWithValue("@category", FindCategoryID(category));
             read = query.ExecuteReader();
 
             while (read.Read())
             {
-                if (format == read.GetString(1))
+                if (format == read.GetString(formatColumn))
                 {
                     formatKey = read.GetInt32(0);
                     break;
@@ -141,7 +145,10 @@ namespace Data_Logger_1._3.Services
              *  Then, return the key of the output when it is found.
              */
             query.CommandText = "SELECT * FROM FlexiNoteType WHERE flexiNoteType = @category ORDER BY flexiNoteTypeID ASC;";
+
             query.Parameters.AddWithValue("@category", type.ToString());
+
+
             read = query.ExecuteReader();
 
             while (read.Read())
@@ -389,53 +396,42 @@ namespace Data_Logger_1._3.Services
         public int CreateAccountID()
         {
             SQLiteCommand query = _con.CreateCommand();
-            const int id = 1;
-            int count = 0;
+            const int baseID = 1;
 
-            // Get the total amount of accounts and add it to id.
-            query.CommandText = "SELECT * FROM ACCOUNT;";
-            SQLiteDataReader read;
+            query.CommandText = $"SELECT MAX({Column.AccountID}) FROM ACCOUNT;";
 
-            read = query.ExecuteReader();
+            object result = query.ExecuteScalar();
+            int maxID = result != null && result != DBNull.Value ? Convert.ToInt32(result) : baseID - 1;
 
-            while (read.Read())
-            {
-                ++count;
-            }
-
-            read.Close();
-
-            return id + count;
+            return ++maxID;
         }
 
         /* Create ID */
         public int CreateLogID()
         {
             SQLiteCommand query = _con.CreateCommand();
-            const int id = 100000001;
-            int count = 0;
 
-            // Get the total amount of logs and add it to id.
-            query.CommandText = "SELECT * FROM LOG;";
-            SQLiteDataReader read;
+            // Define the starting ID
+            const int baseID = 100000001;
 
-            read = query.ExecuteReader();
+            // Get the highest log ID currently in the database
+            query.CommandText = $"SELECT MAX({Column.LogID}) FROM LOG;";
 
-            while (read.Read())
-            {
-                ++count;
-            }
+            object result = query.ExecuteScalar();
+            int maxID = result != null && result != DBNull.Value ? Convert.ToInt32(result) : baseID - 1;
 
-            read.Close();
+            int id = ++maxID + Watcher.LogID++;
 
-            return id + count + Watcher.LogID++;
+            currentLogID = id;
+
+            return id;
         }
 
 
         /* Create Log Note ID. */
         public int CreatePostItID(List<int>? unUsedIDs)
         {
-            int id, count = 0;
+            int id;
             Watcher.AvailablePostItIDs = unUsedIDs;
             if (Watcher.AvailablePostItIDs is not null && Watcher.AvailablePostItIDs.Count > 0)
             {
@@ -446,60 +442,48 @@ namespace Data_Logger_1._3.Services
             }
 
             SQLiteCommand query = _con.CreateCommand();
-            SQLiteDataReader read;
-            const int LNID = 12000001;
+            const int baseID = 12000001;
 
-            // Get the total amount of notaries and store it in LNID.
-            query.CommandText = "SELECT * FROM PostIt;";
+            query.CommandText = $"SELECT MAX({Column.PostItID}) FROM PostIt;";
 
-            read = query.ExecuteReader();
-
-            while (read.Read())
-            {
-
-                ++count;
-
-            }
-
-            read.Close();
+            object result = query.ExecuteScalar();
+            int maxID = result != null && result != DBNull.Value ? Convert.ToInt32(result) : baseID - 1;
 
 
+            id = ++maxID;
 
-            id = LNID + count + Watcher.PostItID++;
-
-            return id;
+            return id + Watcher.PostItID++;
         }
 
 
         public int CreateProjectID()
         {
             SQLiteCommand query = _con.CreateCommand();
-            int count = 0, id = 1;
+            const int baseID = 1;
 
-            query.CommandText = "SELECT * FROM PROJECT;";
+            query.CommandText = $"SELECT MAX({Column.ProjectID}) FROM PROJECT;";
 
-            SQLiteDataReader read;
-            read = query.ExecuteReader();
+            object result = query.ExecuteScalar();
+            int maxID = result != null && result != DBNull.Value ? Convert.ToInt32(result) : baseID - 1;
 
-            while (read.Read())
-            {
-                ++count;
-            }
+            int id = ++maxID;
 
-            read.Close();
-
-            return id + count + Watcher.ProjectID++;
+            return id + Watcher.ProjectID++;
         }
 
         public int CreateProjectID(ACCOUNT account, ApplicationClass app, string project)
         {
             SQLiteCommand query = _con.CreateCommand();
-            int count = 0, id = 1;
+            int baseID = 1;
             bool found = false;
 
-            query.CommandText = "SELECT * FROM PROJECT;";
+            query.CommandText = $"SELECT MAX({Column.ProjectID}) FROM PROJECT;";
+
+            object result = query.ExecuteScalar();
+            int maxID = result != null && result != DBNull.Value ? Convert.ToInt32(result) : baseID - 1;
 
             SQLiteDataReader read;
+            query.CommandText = $"SELECT * FROM PROJECT;";
             read = query.ExecuteReader();
 
             while (read.Read())
@@ -509,39 +493,31 @@ namespace Data_Logger_1._3.Services
                     read.GetInt32(1) == app.AppID &&
                     read.GetString(4) == project)
                 {
-                    id = read.GetInt32(0);
+                    baseID = read.GetInt32(Column.IDColumn);
                     found = true;
                     break;
                 }
-                else
-                    ++count;
             }
 
 
             read.Close();
 
-            return found ? id : id + count + Watcher.ProjectID++;
+            return found ? baseID : ++maxID + Watcher.ProjectID++;
         }
-
 
         public int CreateAppID()
         {
             SQLiteCommand query = _con.CreateCommand();
-            int count = 0, id = 1;
+            int baseID = 1;
 
-            query.CommandText = "SELECT * FROM APPLICATION;";
+            query.CommandText = $"SELECT MAX({Column.AppID}) FROM APPLICATION;";
 
-            SQLiteDataReader read;
-            read = query.ExecuteReader();
+            object result = query.ExecuteScalar();
+            int maxID = result != null && result != DBNull.Value ? Convert.ToInt32(result) : baseID - 1;
 
-            while (read.Read())
-            {
-                ++count;
-            }
+            int id = ++maxID;
 
-            read.Close();
-
-            return id + count + Watcher.AppID++;
+            return id + Watcher.AppID++;
         }
 
         public int CreateAppID(LOG.CATEGORY category, ACCOUNT account, string applicationName)
@@ -550,16 +526,20 @@ namespace Data_Logger_1._3.Services
                 return 3;
 
             SQLiteCommand query = _con.CreateCommand();
-            int count = 0, id = 1;
+            int baseID = 1;
             bool found = false;
+
+            query.CommandText = $"SELECT MAX({Column.AppID}) FROM APPLICATION;";
+
+            object result = query.ExecuteScalar();
+            int maxID = result != null && result != DBNull.Value ? Convert.ToInt32(result) : baseID - 1;
 
             var categoryColumn = 3;
             var accountColumn = 1;
             var appColumn = 2;
 
-            query.CommandText = "SELECT * FROM APPLICATION;";
-
             SQLiteDataReader read;
+            query.CommandText = $"SELECT * FROM APPLICATION;";
             read = query.ExecuteReader();
 
             while (read.Read())
@@ -569,83 +549,39 @@ namespace Data_Logger_1._3.Services
                         read.GetInt32(accountColumn) == 1) &&
                     read.GetString(appColumn) == applicationName)
                 {
-                    id = read.GetInt32(Column.IDColumn);
+                    baseID = read.GetInt32(Column.IDColumn);
                     found = true;
                     break;
                 }
-                else
-                    ++count;
 
             }
 
             read.Close();
 
-            return found ? id : id + count + Watcher.AppID++;
+            return found ? baseID : ++maxID + Watcher.AppID++;
         }
 
-        public int CreateAppID(ActionType action, LOG.CATEGORY category, ACCOUNT account, string applicationName, int usedID)
-        {
-            if (string.IsNullOrEmpty(applicationName))
-                applicationName = "Unknown";
-
-            SQLiteCommand query = _con.CreateCommand();
-            int count = 0, id = 1;
-
-            var categoryColumn = 3;
-            var accountColumn = 1;
-            var appColumn = 2;
-
-            query.CommandText = "SELECT * FROM APPLICATION;";
-
-            SQLiteDataReader read;
-            read = query.ExecuteReader();
-
-            while (read.Read())
-            {
-                if (read.GetInt32(categoryColumn) == FindCategoryID(category) &&
-                    (read.GetInt32(accountColumn) == FindAccountID(account) ||
-                        read.GetInt32(accountColumn) == 1) &&
-                    read.GetString(appColumn) == applicationName ||
-                        usedID == read.GetInt32(Column.IDColumn))
-                {
-                    id = read.GetInt32(Column.IDColumn);
-                    break;
-                }
-                else
-                    id = ++count;
-
-            }
-
-            read.Close();
-
-            return action == ActionType.Add ? id + Watcher.AppID++ : id + (Watcher.AppID - Watcher.AppID);
-        }
 
         public int CreateSubjectID()
         {
             SQLiteCommand query = _con.CreateCommand();
-            int count = 0, id = 1;
+            int baseID = 1;
 
-            query.CommandText = "SELECT * FROM Subject;";
+            query.CommandText = $"SELECT MAX({Column.SubjectID}) FROM Subject;";
 
-            SQLiteDataReader read;
-            read = query.ExecuteReader();
+            object result = query.ExecuteScalar();
+            int maxID = result != null && result != DBNull.Value ? Convert.ToInt32(result) : baseID - 1;
 
-            while (read.Read())
-            {
-                ++count;
-            }
+            int id = ++maxID;
 
-            read.Close();
-
-            return id + count + Watcher.SubjectID++;
+            return id + Watcher.SubjectID++;
         }
 
         public int CreateSubjectID(ProjectClass project, string subject, List<int>? unUsedIDs)
         {
             try
             {
-                int count = 0, staticID = 1, dynamicID = 1;
+                int baseID = 1, dynamicID = 1;
 
                 Watcher.AvailableSubjectIDs = unUsedIDs;
                 if (Watcher.AvailableSubjectIDs is not null && Watcher.AvailableSubjectIDs.Count > 0)
@@ -658,7 +594,7 @@ namespace Data_Logger_1._3.Services
 
                 SQLiteCommand query = _con.CreateCommand();
                 const string NS = "No Subject";
-                bool Found = false;
+                bool found = false;
 
                 var categoryColumn = 4;
                 var accountColumn = 3;
@@ -666,15 +602,19 @@ namespace Data_Logger_1._3.Services
                 var projectColumn = 1;
                 var subjectColumn = 5;
 
-                query.CommandText = "SELECT * FROM Subject;";
-
                 if (subject == String.Empty || subject == NS)
                 {
                     subject = NS;
                     return 1;
                 }
 
+                query.CommandText = $"SELECT MAX({Column.SubjectID}) FROM Subject;";
+
+                object result = query.ExecuteScalar();
+                int maxID = result != null && result != DBNull.Value ? Convert.ToInt32(result) : baseID - 1;
+
                 SQLiteDataReader read;
+                query.CommandText = $"SELECT * FROM Subject;";
                 read = query.ExecuteReader();
 
                 while (read.Read())
@@ -686,35 +626,32 @@ namespace Data_Logger_1._3.Services
                         read.GetInt32(projectColumn) == project.ProjectID &&
                         read.GetString(subjectColumn) == subject)
                     {
-                        Found = true;
-                        staticID = read.GetInt32(Column.IDColumn);
-                        count = 0;
+                        found = true;
+                        baseID = read.GetInt32(Column.IDColumn);
                         break;
                     }
-                    else
-                        ++count;
                 }
 
                 read.Close();
 
-                if (!Found)
-                {
-                    dynamicID += count + Watcher.SubjectID++;
-                }
-
-                return Found ? staticID : dynamicID;
+                return found ? baseID : ++maxID + Watcher.SubjectID++;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                Debug.WriteLine($"Exception found near CreateSubjectID(): {ex.Message}");
+
                 // TODO
+
+
             }
+
             return 1;
         }
 
         public int CreateOutputID(ACCOUNT account, ApplicationClass app, string output)
         {
             SQLiteCommand query = _con.CreateCommand();
-            int count = 0, id = 1;
+            int id = 1;
 
             var categoryColumn = 3;
             var accountColumn = 1;
@@ -735,11 +672,8 @@ namespace Data_Logger_1._3.Services
                     read.GetString(outputColumn) == output)
                 {
                     id = read.GetInt32(Column.IDColumn);
-                    count = 0;
                     break;
                 }
-                else
-                    ++count;
             }
 
             read.Close();
@@ -750,7 +684,7 @@ namespace Data_Logger_1._3.Services
         public int CreateTypeID(ACCOUNT account, ApplicationClass app, string type)
         {
             SQLiteCommand query = _con.CreateCommand();
-            int count = 0, id = 1;
+            int id = 1;
 
             var categoryColumn = 3;
             var accountColumn = 1;
@@ -773,8 +707,6 @@ namespace Data_Logger_1._3.Services
                     id = read.GetInt32(Column.IDColumn);
                     break;
                 }
-                else
-                    id = ++count;
             }
 
             read.Close();
@@ -782,24 +714,21 @@ namespace Data_Logger_1._3.Services
             return id;
         }
 
+
+
         public int CreateChecklistItemID()
         {
             SQLiteCommand query = _con.CreateCommand();
-            int count = 0, id = 1;
+            int baseID = 1;
 
-            query.CommandText = "SELECT * FROM Checklist;";
+            query.CommandText = $"SELECT MAX({Column.ChecklistItemID}) FROM Checklist;";
 
-            SQLiteDataReader read;
-            read = query.ExecuteReader();
+            object result = query.ExecuteScalar();
+            int maxID = result != null && result != DBNull.Value ? Convert.ToInt32(result) : baseID - 1;
 
-            while (read.Read())
-            {
-                ++count;
-            }
+            int id = ++maxID;
 
-            read.Close();
-
-            return id + count + Watcher.ChecklistItemID++;
+            return id + Watcher.ChecklistItemID++;
         }
 
         /** Create database records
@@ -933,10 +862,10 @@ namespace Data_Logger_1._3.Services
                             var acl = (AndroidCodingLOG)ctemp;
 
                             if (acl.Scope == SCOPE.FULL)
-                                query.CommandText = @"INSERT INTO AndroidCodingLOG(fullORsimple, sync, gradleDaemon, runBuild, loadBuild, configBuild, allProjects)
+                                query.CommandText = @"INSERT INTO AndroidCodingLOG(isSimple, sync, gradleDaemon, runBuild, loadBuild, configBuild, allProjects)
                                                     VALUES(@fs, @s, @GD, @rb, @lb, @cb, @ap)";
                             else
-                                query.CommandText = @"INSERT INTO AndroidCodingLOG(fullORsimple, sync)
+                                query.CommandText = @"INSERT INTO AndroidCodingLOG(isSimple, sync)
                                                     VALUES(@fs, @s)";
 
                             var FullORSimple = acl.Scope == SCOPE.FULL ? 0 : 1;
@@ -1064,7 +993,7 @@ namespace Data_Logger_1._3.Services
                             query.Parameters.AddWithValue("@fnCategory", FindFNCategory(fn.flexinotetype));
                             query.Parameters.AddWithValue("@medium", FindMediumID(fn.Category, fn.Medium));
                             query.Parameters.AddWithValue("@format", FindFormatID(fn.Category, fn.Format));
-                            query.Parameters.AddWithValue("@br", fn.BitRate);
+                            query.Parameters.AddWithValue("@br", fn.Bitrate);
                             query.Parameters.AddWithValue("@length", fn.Length);
                             query.Parameters.AddWithValue("@done", fn.IsCompleted);
                             query.Parameters.AddWithValue("@source", fn.Source);
@@ -1167,9 +1096,10 @@ namespace Data_Logger_1._3.Services
                 InsertPostItIntoDatabase(insert, postIt, log.ID, error, solution, suggestion, comment);
             }
         }
+
         private string ValidateString(string input)
         {
-            string pattern = "[A-Za-z]{5}[0-9]{0}";
+            string pattern = @"[\s\S]+";
             Regex regex = new Regex(pattern);
             return regex.IsMatch(input) ? input : string.Empty;
         }
@@ -1244,7 +1174,7 @@ namespace Data_Logger_1._3.Services
         {
             if (log.Scope == SCOPE.FULL)
             {
-                insert.CommandText = @"INSERT INTO AndroidCodingLOG(fullORsimple, sync, gradleDaemon, runBuild, loadBuild, configBuild, allProjects)
+                insert.CommandText = @"INSERT INTO AndroidCodingLOG(isSimple, sync, gradleDaemon, runBuild, loadBuild, configBuild, allProjects)
                                VALUES(@fs, @s, @GD, @rb, @lb, @cb, @ap);";
 
                 insert.Parameters.AddWithValue("@fs", log.Scope == SCOPE.FULL ? 0 : 1);
@@ -1257,7 +1187,7 @@ namespace Data_Logger_1._3.Services
             }
             else
             {
-                insert.CommandText = @"INSERT INTO AndroidCodingLOG(fullORsimple, sync)
+                insert.CommandText = @"INSERT INTO AndroidCodingLOG(isSimple, sync)
                                VALUES(@fs, @s);";
 
                 insert.Parameters.AddWithValue("@fs", log.Scope == SCOPE.FULL ? 0 : 1);
@@ -1269,7 +1199,7 @@ namespace Data_Logger_1._3.Services
 
         private void InsertGraphicsLogDetails(GraphicsLOG log, SQLiteCommand insert)
         {
-            insert.CommandText = @"INSERT INTO GraphicsLOG(logID, mediumID, formatID, brush, height, width, unitID, size, DPI, depth, completed, source)
+            insert.CommandText = @"INSERT INTO GraphicsLOG(logID, mediumID, formatID, brush, height, width, unit, size, DPI, depth, completed, source)
                            VALUES(@id, @medium, @format, @brush, @height, @width, @unit, @size, @DPI, @depth, @done, @source);";
 
             insert.Parameters.AddWithValue("@id", log.ID);
@@ -1305,7 +1235,7 @@ namespace Data_Logger_1._3.Services
 
         private void InsertNotesLogDetails(NotesLOG log, SQLiteCommand insert)
         {
-            insert.CommandText = @"INSERT INTO NotesLOG(logID, noteLogType)
+            insert.CommandText = @"INSERT INTO NotesLOG(logID, noteLogTypeID)
                            VALUES(@id, @category);";
 
             insert.Parameters.AddWithValue("@id", log.ID);
@@ -1348,13 +1278,13 @@ namespace Data_Logger_1._3.Services
         private void InsertFlexiNoteDetails(FlexiNotesLOG note, SQLiteCommand insert)
         {
             insert.CommandText = @"INSERT INTO FlexiNotesLOG(logID, flexiNoteTypeID, mediumID, formatID, bitRate, length, completed, source)
-                           VALUES(@id, @fnCategory, @medium, @format, @br, @length, @done, @source, @gc);";
+                           VALUES(@id, @fnCategory, @medium, @format, @br, @length, @done, @source);";
 
             insert.Parameters.AddWithValue("@id", note.ID);
             insert.Parameters.AddWithValue("@fnCategory", FindFNCategory(note.flexinotetype));
             insert.Parameters.AddWithValue("@medium", FindMediumID(note.Category, note.Medium));
             insert.Parameters.AddWithValue("@format", FindFormatID(note.Category, note.Format));
-            insert.Parameters.AddWithValue("@br", note.BitRate);
+            insert.Parameters.AddWithValue("@br", note.Bitrate);
             insert.Parameters.AddWithValue("@length", note.Length);
             insert.Parameters.AddWithValue("@done", note.IsCompleted);
             insert.Parameters.AddWithValue("@source", note.Source);
