@@ -282,8 +282,8 @@
                 <!-- NAME OF COMPANY -->
             <Grid Margin="0 5">
                 <components:PlainInputField x:Name="inputText_COMPANY"
-                    HorizontalAlignment="Stretch"
-                    VerticalAlignment="Center"
+                                            HorizontalAlignment="Stretch"
+                                            VerticalAlignment="Center"
                                             PlaceholderText="Company Name"
                                             DynamicPlaceholderText="Company Name"
                                             UserTextBoxStyle="{DynamicResource inputText_LOGIN}"
@@ -325,7 +325,7 @@
 
 
             <Grid Height="35"
-                Margin="0 5" >
+                Margin="0 5" Visibility="Collapsed" >
                 
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"/>
@@ -353,14 +353,14 @@
             </Grid>
 
             <Grid Height="35"
-                  Margin="0 5" >
+                  Margin="0 5" Visibility="Collapsed" >
                 
                 <Button x:Name="button_GOOGLE_login" Style="{DynamicResource button_API_GOOGLE}"
                         Command="{Binding GoogleSignInCommand}" />
             </Grid>
 
             <Grid Height="35"
-                  Margin="0 5" >
+                  Margin="0 5" Visibility="Collapsed" >
                 
                 <!-- TODO Disabler Code Added -->
                 <Button x:Name="button_MS_login" Style="{DynamicResource button_API_MICROSOFT}"
