@@ -43,8 +43,8 @@
         <StackPanel Orientation="Horizontal" Grid.Column="1" Grid.Row="0"
                     HorizontalAlignment="Left"
                     Margin="60 5"
-                    d:Background="Aqua"
-                    >
+                    d:Background="Aqua" 
+                    Visibility="Collapsed" >
             <Button x:Name="button_BACK" Style="{DynamicResource button_TITLE_bar}"
                     Margin="0 0 20 0"
                     Height="25"
