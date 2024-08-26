@@ -39,7 +39,7 @@ namespace Data_Logger_1._3.Services
 
         /** Store the logID of a LOG temporarily so it can be updated in future.
          */
-        protected int LOG_ID = 100000000;
+        protected int currentLogID = 100000001;
 
         /// <summary>
         /// Stores various integers representing objects that haven't been inserted into the database.
@@ -290,8 +290,7 @@ namespace Data_Logger_1._3.Services
                                     IsDefault INTEGER NOT NULL DEFAULT 0,
                                     PRIMARY KEY({Column.AppID} AUTOINCREMENT),
                                     FOREIGN KEY({Column.AccountID}) REFERENCES ACCOUNT({Column.AccountID}),
-                                    FOREIGN KEY({Column.CategoryID}) REFERENCES CATEGORY({Column.CategoryID}),
-                                    UNIQUE(application, {Column.AccountID}, {Column.CategoryID})
+                                    FOREIGN KEY({Column.CategoryID}) REFERENCES CATEGORY({Column.CategoryID})
                                     );
 
                                     CREATE TABLE IF NOT EXISTS PROJECT(
@@ -303,8 +302,7 @@ namespace Data_Logger_1._3.Services
                                     PRIMARY KEY({Column.ProjectID} AUTOINCREMENT),
                                     FOREIGN KEY({Column.AccountID}) REFERENCES ACCOUNT({Column.AccountID}),
                                     FOREIGN KEY({Column.AppID}) REFERENCES APPLICATION({Column.AppID}),
-                                    FOREIGN KEY({Column.CategoryID}) REFERENCES CATEGORY({Column.CategoryID}),
-                                    UNIQUE ({Column.AccountID}, {Column.AppID}, {Column.CategoryID}, {Column.project})
+                                    FOREIGN KEY({Column.CategoryID}) REFERENCES CATEGORY({Column.CategoryID})
                                     );
 
                                     CREATE TABLE IF NOT EXISTS OUTPUT(
@@ -316,8 +314,7 @@ namespace Data_Logger_1._3.Services
                                     PRIMARY KEY(outputID AUTOINCREMENT),
                                     FOREIGN KEY({Column.AccountID}) REFERENCES ACCOUNT({Column.AccountID}),
                                     FOREIGN KEY({Column.AppID}) REFERENCES APPLICATION({Column.AppID}),
-                                    FOREIGN KEY({Column.CategoryID}) REFERENCES CATEGORY({Column.CategoryID}),
-                                    UNIQUE(output, {Column.AccountID}, {Column.AppID}, {Column.CategoryID})
+                                    FOREIGN KEY({Column.CategoryID}) REFERENCES CATEGORY({Column.CategoryID})
                                     );
 
                                     CREATE TABLE IF NOT EXISTS TYPE(
@@ -330,7 +327,6 @@ namespace Data_Logger_1._3.Services
                                     FOREIGN KEY({Column.AccountID}) REFERENCES ACCOUNT({Column.AccountID}),
                                     FOREIGN KEY({Column.AppID}) REFERENCES APPLICATION({Column.AppID}),
                                     FOREIGN KEY({Column.CategoryID}) REFERENCES CATEGORY({Column.CategoryID})
-                                    UNIQUE(type, {Column.AccountID}, {Column.AppID}, {Column.CategoryID})
                                     );
 
                                     CREATE TABLE IF NOT EXISTS ACCOUNT(
@@ -374,8 +370,7 @@ namespace Data_Logger_1._3.Services
                                     FOREIGN KEY({Column.ProjectID}) REFERENCES PROJECT({Column.ProjectID}),
                                     FOREIGN KEY({Column.AppID}) REFERENCES APPLICATION({Column.AppID}),
                                     FOREIGN KEY({Column.AccountID}) REFERENCES ACCOUNT({Column.AccountID}),
-                                    FOREIGN KEY({Column.CategoryID}) REFERENCES CATEGORY({Column.CategoryID}),
-                                    UNIQUE(subject, {Column.ProjectID}, {Column.AppID}, {Column.AccountID})
+                                    FOREIGN KEY({Column.CategoryID}) REFERENCES CATEGORY({Column.CategoryID})
                                     );
 
                                     CREATE TABLE IF NOT EXISTS LOG(
@@ -429,7 +424,7 @@ namespace Data_Logger_1._3.Services
                                     
                                     CREATE TABLE IF NOT EXISTS  AndroidCodingLOG(
                                     logID INTEGER NOT NULL,
-                                    fullORsimple INTEGER NOT NULL,
+                                    isSimple INTEGER NOT NULL,
                                     sync TEXT NOT NULL,
                                     gradleDaemon TEXT,
                                     runBuild TEXT,
@@ -447,7 +442,7 @@ namespace Data_Logger_1._3.Services
                                     brush VARCHAR(255),
                                     height DOUBLE(16) NOT NULL,
                                     width DOUBLE(16) NOT NULL,
-                                    unitID INTEGER NOT NULL,
+                                    unit VARCHAR(30),
                                     size VARCHAR(255),
                                     DPI DOUBLE(16),
                                     depth VARCHAR(500),
@@ -456,8 +451,7 @@ namespace Data_Logger_1._3.Services
                                     PRIMARY KEY(logID),
                                     FOREIGN KEY(logID) REFERENCES LOG(logID),
                                     FOREIGN KEY(mediumID) REFERENCES MEDIUM(mediumID),
-                                    FOREIGN KEY(formatID) REFERENCES FORMAT(formatID),
-                                    FOREIGN KEY(unitID) REFERENCES MeasuringUnit(unitID)
+                                    FOREIGN KEY(formatID) REFERENCES FORMAT(formatID)
                                     );
 
                                     CREATE TABLE IF NOT EXISTS  FilmLOG(
@@ -901,6 +895,8 @@ namespace Data_Logger_1._3.Services
                                     VALUES(1, 17, 4, @o39);
                                     INSERT INTO OUTPUT({Column.AccountID}, {Column.AppID}, {Column.CategoryID},{output})
                                     VALUES(1, 17, 4, @o40);
+                                    INSERT INTO OUTPUT({Column.AccountID}, {Column.AppID}, {Column.CategoryID},{output})
+                                    VALUES(1, 13, 4, @o41);
                                     
 ";
                 insert.Parameters.AddWithValue("@o1", "Console Application");
@@ -948,6 +944,7 @@ namespace Data_Logger_1._3.Services
                 insert.Parameters.AddWithValue("@o38", "Check List");
                 insert.Parameters.AddWithValue("@o39", "PNG");
                 insert.Parameters.AddWithValue("@o40", "JPG");
+                insert.Parameters.AddWithValue("@o41", "EXE (*.exe)");
 
                 insert.ExecuteNonQuery();
             }
@@ -1111,7 +1108,7 @@ namespace Data_Logger_1._3.Services
                 insert.Parameters.AddWithValue("@t40", "Check List");
                 insert.Parameters.AddWithValue("@t41", "Exception");
 
-                
+
 
                 insert.ExecuteNonQuery();
             }
@@ -1147,7 +1144,7 @@ namespace Data_Logger_1._3.Services
                 insert.Parameters.AddWithValue("@account", 1);
                 insert.Parameters.AddWithValue("@category", 1);
                 insert.Parameters.AddWithValue("@subject", "No Subject");
-                
+
 
                 insert.ExecuteNonQuery();
             }
@@ -1197,6 +1194,8 @@ namespace Data_Logger_1._3.Services
                                     VALUES(4, @m10);
                                     INSERT INTO MEDIUM({Column.CategoryID}, medium)
                                     VALUES(4, @m11);
+                                    INSERT INTO MEDIUM({Column.CategoryID}, medium)
+                                    VALUES(4, @m12);
                                     
 ";
                 query.Parameters.AddWithValue("@m1", "Pencil");
@@ -1210,7 +1209,7 @@ namespace Data_Logger_1._3.Services
                 query.Parameters.AddWithValue("@m9", "A Cappella");
                 query.Parameters.AddWithValue("@m10", "Song");
                 query.Parameters.AddWithValue("@m11", "Orchestral");
-                query.Prepare();
+                query.Parameters.AddWithValue("@m12", "Game Engine");
 
                 query.ExecuteNonQuery();
             }
@@ -1224,6 +1223,7 @@ namespace Data_Logger_1._3.Services
             bool ValuesExist = false;
             SQLiteCommand query = _con.CreateCommand();
             query.CommandText = @"SELECT * FROM FORMAT;";
+
             SQLiteDataReader read = query.ExecuteReader();
 
             while (read.Read())
@@ -1259,6 +1259,10 @@ namespace Data_Logger_1._3.Services
                                     VALUES(4, @f10);
                                     INSERT INTO FORMAT({Column.CategoryID}, format)
                                     VALUES(4, @f11);
+                                    INSERT INTO FORMAT({Column.CategoryID}, format)
+                                    VALUES(4, @f12);
+                                    INSERT INTO FORMAT({Column.CategoryID}, format)
+                                    VALUES(4, @f13);
                                     
 ";
                 query.Parameters.AddWithValue("@f1", "Paper");
@@ -1272,6 +1276,8 @@ namespace Data_Logger_1._3.Services
                 query.Parameters.AddWithValue("@f9", "LP");
                 query.Parameters.AddWithValue("@f10", "EP");
                 query.Parameters.AddWithValue("@f11", "Gramophone");
+                query.Parameters.AddWithValue("@f12", "Digital Download");
+                query.Parameters.AddWithValue("@f13", "Disc");
                 query.Prepare();
 
                 query.ExecuteNonQuery();
@@ -2330,7 +2336,7 @@ namespace Data_Logger_1._3.Services
 
                     object result = query.ExecuteScalar();
 
-                    if (result != null)
+                    if (result != null && result != DBNull.Value)
                         return Convert.ToInt32(result);
                 }
             }
@@ -2594,7 +2600,7 @@ namespace Data_Logger_1._3.Services
             }
 
                 return null;
-            }
+        }
 
         public FLEXINOTEType FindFlexiNoteTypeByID(int id)
         {
@@ -2630,7 +2636,7 @@ namespace Data_Logger_1._3.Services
                 Debug.WriteLine($"Exception found found near FindFlexiNoteTypeByID(id): {ex.Message}");
             }
 
-                return new();
+            return new();
         }
 
 
@@ -2671,7 +2677,7 @@ namespace Data_Logger_1._3.Services
                 insert.Parameters.AddWithValue("@feed", 1);
                 insert.Parameters.AddWithValue("@account", User.ID);
                 insert.Parameters.AddWithValue("@date_submitted", DateTime.Now.ToString("d MMMM yyyy HH:mm:ss"));
-                insert.Parameters.AddWithValue("@desc", "A bug occurred where the incorrect enum was return or the enum parser was unable to parse the enum at all for whatever reason.");
+                insert.Parameters.AddWithValue("@desc", "A bug occurred where the incorrect enum was returned or the enum parser was unable to parse the enum at all for whatever reason.");
                 insert.Parameters.AddWithValue("@contact", 0);
 
                 insert.ExecuteNonQuery();
@@ -3264,6 +3270,10 @@ namespace Data_Logger_1._3.Services
 
         public int IDColumn { get; } = 0;
 
+        public string LogID { get; } = "logID";
+
+        public string PostItID { get; } = "postItID";
+
         public string AccountID { get; } = "accountID";
 
         public string CategoryID { get; } = "categoryID";
@@ -3279,6 +3289,8 @@ namespace Data_Logger_1._3.Services
         public string SubjectID { get; } = "subjectID";
 
         public string ChecklistItemID { get; } = "itemsID";
+
+        public string MediumID { get; set; } = "mediumID";
 
         public string category { get; } = "category";
 
