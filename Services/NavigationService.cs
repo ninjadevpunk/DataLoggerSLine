@@ -402,6 +402,8 @@ namespace Data_Logger_1._3.Services
             if (LoginWindow is null)
                 return;
 
+            // Retrieve Qt Logs that weren't stored
+
             var qtList = _dataService.RetrieveQtCache(codingQtDashboard, _dataService);
             int cachedItems = 0, cachedPostIts = 0;
 
@@ -418,9 +420,9 @@ namespace Data_Logger_1._3.Services
                 }
             }
 
+            // Retrieve AS Logs that weren't stored
 
-
-            var asList = _dataService.RetrieveASCache(codingAndroidDashboard, _dataService);
+            var asList = _dataService.RetrieveASCache(codingAndroidDashboard);
 
             if (asList is not null && asList.Count > 0)
             {
@@ -434,7 +436,9 @@ namespace Data_Logger_1._3.Services
                 }
             }
 
-            var cdeList = _dataService.RetrieveCodeCache(codingDashboard, _dataService);
+            // Retrieve Coding Logs that weren't stored
+
+            var cdeList = _dataService.RetrieveCodeCache(codingDashboard);
 
             if (cdeList is not null && cdeList.Count > 0)
             {
@@ -452,10 +456,59 @@ namespace Data_Logger_1._3.Services
 
             // TODO
             // Do for the other log types.
+            // Retrieve Graphics Logs that weren't stored
+
+            var graList = _dataService.RetrieveGraphicsCache(graphicsDashboard);
+
+            if(graList is not null && graList.Count > 0)
+            {
+                graphicsDashboard.CacheItems = graList;
+
+                cachedItems += graList.Count;
+
+                foreach(GraphicsLOGViewModel item in graList)
+                {
+                    cachedPostIts += item._GraphicsLOG.PostItList.Count;
+                }    
+            }
+
+            // Retrieve Film Logs that weren't stored
+
+            var flmList = _dataService.RetrieveFilmCache(filmDashboard);
+
+            if(flmList is not null && flmList.Count > 0)
+            {
+                filmDashboard.CacheItems = flmList;
+
+                cachedItems += flmList.Count;
+
+                foreach(FilmLOGViewModel item in flmList)
+                {
+                    cachedPostIts += item._FilmLOG.PostItList.Count;
+                }
+            }
+
+            // Retrieve Flexible Logs that weren't stored
+
+            var flxList = _dataService.RetrieveFlexibleCache(flexiDashboard);
+
+            if(flxList is not null &&  flxList.Count > 0)
+            {
+                flexiDashboard.CacheItems = flxList;
+
+                cachedItems += flxList.Count;
+
+                foreach(FlexiLOGViewModel item in flxList)
+                {
+                    cachedPostIts += item._FlexiLOG.PostItList.Count;
+                }
+            }
 
             _dataService.UpdateWatcher(cachedItems, cachedPostIts);
             _dataService.UpdateAvailablePostItIDs(_dataService.RetrieveSubjectIndex());
             _dataService.UpdateAvailableSubjectIDs(_dataService.RetrieveSubjectIndex());
+
+
 
             var mainWindow = _host.Services.GetRequiredService<MainWindow>();
             var displayPic = "/Assets/login/user.png";
@@ -512,8 +565,11 @@ namespace Data_Logger_1._3.Services
 
             mainWindow.Show();
             _MainFrame = mainWindow.frame_MAINWINDOW;
+
             NavigateToLogCachePage();
+
             LoginWindow.Close();
+
             if (SignUpWindow is not null)
                 SignUpWindow.Close();
         }
