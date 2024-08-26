@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System.Diagnostics;
+using System.Windows;
 using System.Windows.Controls;
 
 namespace Data_Logger_1._3.Components
@@ -84,11 +85,7 @@ namespace Data_Logger_1._3.Components
         }
 
         public static readonly DependencyProperty TimeProperty =
-            DependencyProperty.Register("Time", typeof(DateTime), typeof(TimeInputField),
-
-
-                new PropertyMetadata(DateTime.Now)
-                );
+            DependencyProperty.Register("Time", typeof(DateTime), typeof(TimeInputField));
 
 
 
@@ -128,7 +125,7 @@ namespace Data_Logger_1._3.Components
 
 
 
-        private void updateTime(object sender, RoutedEventArgs e)
+        public void updateTime(object sender, RoutedEventArgs e)
         {
             if (this.spinner_MILLISECONDS is null)
                 return;
@@ -144,20 +141,23 @@ namespace Data_Logger_1._3.Components
 
             try
             {
+                Milliseconds = NumberFormatter(this.spinner_MILLISECONDS.Digits, Milliseconds);
 
-                Milliseconds = NumberFormatter(this.spinner_MILLISECONDS.Digits - Milliseconds.Length, Milliseconds);
+                Seconds = NumberFormatter(this.spinner_SECONDS.Digits, Seconds);
 
-                Seconds = NumberFormatter(this.spinner_SECONDS.Digits - Seconds.Length, Seconds);
+                Minutes = NumberFormatter(this.spinner_MINUTES.Digits, Minutes);
 
-                Minutes = NumberFormatter(this.spinner_MINUTES.Digits - Minutes.Length, Minutes);
+                Hours = NumberFormatter(this.spinner_HOURS.Digits, Hours);
 
-                Hours = NumberFormatter(this.spinner_HOURS.Digits - Hours.Length, Hours);
 
                 this.Time = DateTime.Parse(
                 Hours + ":" +
                 Minutes + ":" +
                 Seconds + "." +
                 Milliseconds);
+                
+                var ev = new RoutedEventArgs(TimeChangedEvent);
+                RaiseEvent(ev);
             }
             catch (Exception ex)
             {
@@ -173,16 +173,7 @@ namespace Data_Logger_1._3.Components
 
         public string NumberFormatter(int realLength, string currentNumber)
         {
-
-            if (realLength != 0 && realLength > 0)
-            {
-                const string zero = "0";
-
-                for (int i = 0; i < realLength; i++)
-                    currentNumber = zero + currentNumber;
-            }
-
-            return currentNumber;
+            return currentNumber.PadLeft(realLength, '0');
         }
 
 

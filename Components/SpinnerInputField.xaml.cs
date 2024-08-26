@@ -1,5 +1,5 @@
 ﻿using System.Diagnostics;
-﻿using System.Globalization;
+using System.Globalization;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -22,9 +22,9 @@ namespace Data_Logger_1._3.Components
             {
 
                 if (IsInteger)
-                    Number = $"{Leader}{0}";
+                    Number = Formatter("0");
                 else
-                    Number = $"{Leader}{0,00}";
+                    Number = Formatter("0,0");
             }
 
 
@@ -217,7 +217,6 @@ namespace Data_Logger_1._3.Components
 
             buttonCheck();
 
-
             var ev = new RoutedEventArgs(NumberChangedEvent);
             RaiseEvent(ev);
         }
@@ -232,15 +231,8 @@ namespace Data_Logger_1._3.Components
             {
                 if (this.spinner_NUMBERS.Text == "" || this.spinner_NUMBERS.Text == null)
                 {
-                    var temp = "";
 
-
-                    for (int i = 0; i < Digits; i++)
-                    {
-                        temp += Leader.Substring(0, 1);
-                    }
-
-                    this.spinner_NUMBERS.Text = temp;
+                    this.spinner_NUMBERS.Text = Formatter("0");
                 }
             }
             else
@@ -255,11 +247,14 @@ namespace Data_Logger_1._3.Components
                         temp += Leader.Substring(0, 1);
                     }
 
-                    this.spinner_NUMBERS.Text = $"{temp},0";
+                    this.spinner_NUMBERS.Text = Formatter("0,0");
                 }
             }
 
-            buttonCheck();
+            buttonCheck(); 
+            
+            var ev = new RoutedEventArgs(NumberChangedEvent);
+            RaiseEvent(ev);
         }
 
         // When the scroll wheel is rolled over the spinner, increment/decrement
@@ -296,13 +291,11 @@ namespace Data_Logger_1._3.Components
                 {
                     if (e.Delta > 0 && double.Parse(this.Number) != MaximumValue)
                     {
-                        SetLeader();
                         increment();
 
                     }
                     else if (e.Delta < 0 && double.Parse(this.Number) != MinimumValue)
                     {
-                        SetLeader();
                         decrement();
                     }
                 }
@@ -397,9 +390,9 @@ namespace Data_Logger_1._3.Components
                 if (this.spinner_NUMBERS.Text == "" || this.spinner_NUMBERS.Text == null)
                 {
                     if (IsInteger)
-                        this.spinner_NUMBERS.Text = $"{Leader}0";
+                        this.spinner_NUMBERS.Text = Formatter("0");
                     else
-                        this.spinner_NUMBERS.Text = $"{Leader}0,0";
+                        this.spinner_NUMBERS.Text = Formatter("0,0");
 
                     return true;
                 }
@@ -441,9 +434,12 @@ namespace Data_Logger_1._3.Components
 
 
                 if (IsInteger)
-                    this.spinner_NUMBERS.Text = temp;
+                    this.spinner_NUMBERS.Text = Formatter("0");
                 else
-                    this.spinner_NUMBERS.Text = $"{temp},0";
+                    this.spinner_NUMBERS.Text = Formatter("0,0");
+
+                var ev = new RoutedEventArgs(NumberChangedEvent);
+                RaiseEvent(ev);
 
                 return false;
             }
@@ -457,14 +453,12 @@ namespace Data_Logger_1._3.Components
         // Number Formatter
         public void Formatter()
         {
-            var count = this.Number.Length - Digits;
-            if (count != 0 && count > 0)
-            {
-                const string zero = "0";
+            this.Number.PadLeft(Digits, '0');
+        }
 
-                for (int i = 0; i < count; i++)
-                    this.Number = zero + this.Number;
-            }
+        public string Formatter(string value)
+        {
+            return value.PadLeft(Digits, '0');
         }
 
         #endregion
@@ -484,12 +478,7 @@ namespace Data_Logger_1._3.Components
                     var value = int.Parse(this.spinner_NUMBERS.Text);
                     ++value;
 
-                    if (value < 10)
-                        this.Number = $"{Leader}{value}";
-                    else
-                        this.Number = $"{Leader.Remove(0, 1)}{value}";
-
-                    Formatter();
+                    this.Number = Formatter(value.ToString());
                 }
                 else
                 {

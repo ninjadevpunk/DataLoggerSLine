@@ -26,7 +26,7 @@
         </Grid.ColumnDefinitions>
 
         <TextBox x:Name="spinner_NUMBERS" Grid.Column="0"
-             Text="{Binding Number, ElementName=control_SPINNER, UpdateSourceTrigger=PropertyChanged}"
+             Text="{Binding Number, ElementName=control_SPINNER, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
              Style="{StaticResource text_SPINNER}"
              TextChanged="on_SPINNER_textChanged"
              LostFocus="on_SPINNER_lostFocus"
