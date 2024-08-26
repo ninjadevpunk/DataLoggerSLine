@@ -95,13 +95,13 @@ namespace Data_Logger_1._3.ViewModels.Dialogs
             HighlighterCommand = new HighlighterCommand(this);
         }
 
-        public CreatePostItViewModel(NavigationService navigationService, DataService dataService, LoggerCreateViewModel loggerCreateViewModel, string subject, string error,
-            DateTime dateFound, string solution, DateTime dateSolved, string suggestion, string comment)
+        public CreatePostItViewModel(NavigationService navigationService, DataService dataService, LoggerCreateViewModel loggerCreateViewModel, ProjectClass project, 
+            string subject, string error, DateTime dateFound, string solution, DateTime dateSolved, string suggestion, string comment)
         {
             _navigationService = navigationService;
             _loggerCreateViewModel = loggerCreateViewModel;
             _dataService = dataService;
-            _dataService.InitialiseSubjectsLIST(LOG.CATEGORY.CODING);
+            _dataService.InitialiseSubjectsLIST(project);
 
             Subjects = new();
             foreach (SubjectClass item in _dataService.SQLITE_SUBJECTS)
@@ -137,6 +137,37 @@ namespace Data_Logger_1._3.ViewModels.Dialogs
             DeletePostItCommand = new DeletePostItCommand(_loggerCreateViewModel);
             EraserCommand = new EraserCommand(this);
             HighlighterCommand = new HighlighterCommand(this);
+        }
+
+        public CreatePostItViewModel(NavigationService navigationService, ProjectClass project, string subject, string error,
+            string solution, string suggestion, string comment)
+        {
+            _navigationService = navigationService;
+
+            Subject = subject;
+
+            Error = error;
+            Display_Error = ConvertRtfToPlainText(error);
+            ErrorTextBlockHeight = string.IsNullOrEmpty(Display_Error) || Display_Error.Length < 64 ? 24 : double.NaN;
+
+            Solution = solution;
+            Display_Solution = ConvertRtfToPlainText(solution);
+            SolutionTextBlockHeight = string.IsNullOrEmpty(Display_Solution) || Display_Solution.Length < 64 ? 24 : double.NaN;
+
+            Suggestion = suggestion;
+            Display_Suggestion = ConvertRtfToPlainText(suggestion);
+            SuggestionTextBlockHeight = string.IsNullOrEmpty(Display_Suggestion) || Display_Suggestion.Length < 64 ? 24 : double.NaN;
+
+            Comment = comment;
+            Display_Comment = ConvertRtfToPlainText(comment);
+            CommentTextBlockHeight = string.IsNullOrEmpty(Display_Comment) || Display_Comment.Length < 64 ? 24 : double.NaN;
+
+            ErrorVisible = Error.Equals(string.Empty) ? Visibility.Collapsed : Visibility.Visible;
+            SolutionVisible = Solution.Equals(string.Empty) ? Visibility.Collapsed : Visibility.Visible;
+            SuggestionVisible = Suggestion.Equals(string.Empty) ? Visibility.Collapsed : Visibility.Visible;
+            CommentVisible = Comment.Equals(string.Empty) ? Visibility.Collapsed : Visibility.Visible;
+
+            Option1Check = true;
         }
 
 
@@ -320,6 +351,12 @@ namespace Data_Logger_1._3.ViewModels.Dialogs
 
             }
         }
+
+        public double ErrorTextBlockHeight { get; set; }
+        public double SolutionTextBlockHeight { get; set; }
+        public double SuggestionTextBlockHeight { get; set; }
+        public double CommentTextBlockHeight { get; set; }
+
 
         private string display_error;
         public string Display_Error
@@ -679,15 +716,21 @@ namespace Data_Logger_1._3.ViewModels.Dialogs
             try
             {
                 // Create a temporary RichTextBox
-                var richTextBox = new System.Windows.Controls.RichTextBox();
+                var richTextBox = new RichTextBox();
 
-                // Set the RTF PostItContent
-                richTextBox.Document = new FlowDocument();
-                var textRange = new TextRange(richTextBox.Document.ContentStart, richTextBox.Document.ContentEnd);
-                textRange.Load(new MemoryStream(Encoding.UTF8.GetBytes(rtfContent)), DataFormats.Rtf);
+                // Convert RTF content to a byte array
+                byte[] rtfBytes = Encoding.UTF8.GetBytes(rtfContent);
+
+                // Use a MemoryStream to load the RTF content
+                using (var stream = new MemoryStream(rtfBytes))
+                {
+                    richTextBox.Document = new FlowDocument();
+                    var textRange = new TextRange(richTextBox.Document.ContentStart, richTextBox.Document.ContentEnd);
+                    textRange.Load(stream, DataFormats.Rtf);
+                }
 
                 // Extract plain text
-                string plainText = textRange.Text;
+                string plainText = new TextRange(richTextBox.Document.ContentStart, richTextBox.Document.ContentEnd).Text;
 
                 return plainText;
             }
