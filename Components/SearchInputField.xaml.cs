@@ -1,4 +1,6 @@
-﻿using System.Windows;
+﻿using Data_Logger_1._3.ViewModels.Reporter;
+using System.Collections.ObjectModel;
+using System.Windows;
 using System.Windows.Controls;
 
 namespace Data_Logger_1._3.Components
@@ -8,12 +10,11 @@ namespace Data_Logger_1._3.Components
     /// </summary>
     public partial class SearchInputField : UserControl
     {
-        public bool Status { get; set; } = true;
-        public string? Temp { get; set; }
 
         public SearchInputField()
         {
             InitializeComponent();
+            UpdatePlaceholderText();
         }
 
         #region Dependency Properties
@@ -28,6 +29,19 @@ namespace Data_Logger_1._3.Components
 
         public static readonly DependencyProperty PlaceholderTextProperty =
             DependencyProperty.Register("PlaceholderText", typeof(string), typeof(SearchInputField));
+
+
+
+        public string DynamicPlaceholderText
+        {
+            get { return (string)GetValue(DynamicPlaceholderTextProperty); }
+            set { SetValue(DynamicPlaceholderTextProperty, value); }
+        }
+
+        public static readonly DependencyProperty DynamicPlaceholderTextProperty =
+            DependencyProperty.Register("DynamicPlaceholderText", typeof(string), typeof(SearchInputField));
+
+
 
 
         // User's input
@@ -85,63 +99,17 @@ namespace Data_Logger_1._3.Components
             DependencyProperty.Register("UserTextBlockStyle", typeof(Style), typeof(SearchInputField));
 
 
-        // Icon that appears in a search result to show the application used.
-        public Style IconStyle
-        {
-            get { return (Style)GetValue(IconStyleProperty); }
-            set { SetValue(IconStyleProperty, value); }
-        }
-
-        public static readonly DependencyProperty IconStyleProperty =
-            DependencyProperty.Register("IconStyle", typeof(Style), typeof(SearchInputField));
-
-
-        // Project name in a search result to show the project in which a post it belongs
-        public string SearchBarProjectName
-        {
-            get { return (string)GetValue(SearchBarProjectNameProperty); }
-            set { SetValue(SearchBarProjectNameProperty, value); }
-        }
-
-        public static readonly DependencyProperty SearchBarProjectNameProperty =
-            DependencyProperty.Register("SearchBarProjectName", typeof(string), typeof(SearchInputField));
-
-
-        // Start date of project in search result
-        public DateTime SearchBarProjectStart
-        {
-            get { return (DateTime)GetValue(SearchBarProjectStartProperty); }
-            set { SetValue(SearchBarProjectStartProperty, value); }
-        }
-
-        public static readonly DependencyProperty SearchBarProjectStartProperty =
-            DependencyProperty.Register("SearchBarProjectStart", typeof(DateTime), typeof(SearchInputField));
-
-
-
-        // Post It subject of search result
-        public string SearchBarSubject
-        {
-            get { return (string)GetValue(SearchBarSubjectProperty); }
-            set { SetValue(SearchBarSubjectProperty, value); }
-        }
-
-        public static readonly DependencyProperty SearchBarSubjectProperty =
-            DependencyProperty.Register("SearchBarSubject", typeof(string), typeof(SearchInputField));
-
-
-        // Content of post it in search result
-        public string SearchBarResultContent
-        {
-            get { return (string)GetValue(SearchBarResultContentProperty); }
-            set { SetValue(SearchBarResultContentProperty, value); }
-        }
-
-        public static readonly DependencyProperty SearchBarResultContentProperty =
-            DependencyProperty.Register("SearchBarResultContent", typeof(string), typeof(SearchInputField));
-
 
         // List of SearchResults
+        public ObservableCollection<SearchResultViewModel> SearchResults
+        {
+            get { return (ObservableCollection<SearchResultViewModel>)GetValue(SearchResultsProperty); }
+            set { SetValue(SearchResultsProperty, value); }
+        }
+
+        public static readonly DependencyProperty SearchResultsProperty =
+            DependencyProperty.Register("SearchResults", typeof(ObservableCollection<SearchResultViewModel>), typeof(SearchInputField));
+
 
 
 
@@ -160,40 +128,13 @@ namespace Data_Logger_1._3.Components
 
         private void on_EditableTextBox_lostfocus(object sender, RoutedEventArgs e)
         {
-            showPlaceholderText();
+            UpdatePlaceholderText();
         }
 
-        public void showPlaceholderText()
+        public void UpdatePlaceholderText()
         {
-            if (this.comboBox_TEXTBOX.Text == null)
-            {
-                return;
-            }
-            else if (this.comboBox_TEXTBOX.Text == "" && this.text_Placeholdertext.Text == "")
-            {
-                this.text_Placeholdertext.Text = Temp;
-                Status = true;
-            }
+            DynamicPlaceholderText = UserComboInput is not null && UserComboInput.Equals(string.Empty) ? PlaceholderText : string.Empty;
         }
-
-        public void showPlaceholderText(bool show, bool assert)
-        {
-            if (show)
-            {
-                this.text_Placeholdertext.Text = Temp;
-                Status = true;
-            }
-            else if (show && assert || this.comboBox_TEXTBOX.Text == "")
-            {
-                this.text_Placeholdertext.Text = PlaceholderText;
-                Status = true;
-            }
-        }
-
-
-
-
-
 
 
 
@@ -208,14 +149,10 @@ namespace Data_Logger_1._3.Components
         #region Event Handlers
 
 
+
         private void on_EditableTextBox_changed(object sender, TextChangedEventArgs e)
         {
-            if (Status)
-            {
-                Temp = this.text_Placeholdertext.Text;
-                this.text_Placeholdertext.Text = "";
-                Status = false;
-            }
+            UpdatePlaceholderText();
 
             var ev = new RoutedEventArgs(TextChangedEvent);
             RaiseEvent(ev);

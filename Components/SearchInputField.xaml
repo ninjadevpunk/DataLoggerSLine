@@ -165,7 +165,7 @@
                                     <Grid>
 
                                         <TextBox x:Name="PART_EditableTextBox"
-                                                 Style="{Binding UserTextBoxStyle, ElementName=control_SEARCHBAR}"
+                                                 Style="{DynamicResource inputText}"
                                                  Text="{Binding UserComboInput, ElementName=control_SEARCHBAR}"
                                                  TextChanged="on_EditableTextBox_changed"
                                                  LostFocus="on_EditableTextBox_lostfocus" />
@@ -392,12 +392,13 @@
 
     <Grid>
         <TextBlock x:Name="text_Placeholdertext" Style="{Binding UserTextBlockStyle, ElementName=control_SEARCHBAR}"
-               Text="{Binding PlaceholderText, ElementName=control_SEARCHBAR}" />
+               Text="{Binding DynamicPlaceholderText, ElementName=control_SEARCHBAR}" />
 
         <!-- USER TEXT -->
         <ComboBox x:Name="comboBox_TEXTBOX" Style="{DynamicResource comboBox_template}"
                   ItemContainerStyle="{DynamicResource comboBox_ITEM_template}"
                   IsEditable="{Binding Enabled, ElementName=control_SEARCHBAR}"
+                  ItemsSource="{Binding SearchResults, ElementName=control_SEARCHBAR}"
                   Text="{Binding UserComboInput, ElementName=control_SEARCHBAR}" />
 
 
