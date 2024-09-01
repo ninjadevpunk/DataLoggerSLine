@@ -8,7 +8,6 @@
              HorizontalAlignment="Stretch"
              Margin="0 5"
              d:Background="White"
-             d:Width="380"
              x:Name="control_COMBOBOX_textbox" >
 
     <UserControl.Resources>
