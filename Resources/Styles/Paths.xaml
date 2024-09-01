@@ -542,27 +542,32 @@
     <Style x:Key="path_DROPDOWN_ICON" TargetType="Path">
         <Setter Property="Height" Value="15"/>
         <Setter Property="Width" Value="15"/>
-        <Setter Property="Margin" Value="0 0 20 0"/>
-        <Setter Property="HorizontalAlignment" Value="Right"/>
+        <Setter Property="HorizontalAlignment" Value="Center"/>
         <Setter Property="VerticalAlignment" Value="Center"/>
         <Setter Property="Fill" Value="{DynamicResource BLACK}"/>
         <Setter Property="Data" Value="M0.50186 7.06918L1.78563 5.78542L7.57104 11.5708L13.3565 5.78542L14.6421 7.07107L7.57104 14.1421L0.50186 7.06918Z"/>
     </Style>
-    
-    
-    
-    
-    
-    
-    
-    
+
+
+
+    <!-- ARROW BACK Return to Dashboard -->
+    <Style x:Key="path_RETURN_TO_DASHBOARD" TargetType="Path">
+        <Setter Property="Height" Value="20"/>
+        <Setter Property="Width" Value="20"/>
+        <Setter Property="Stretch" Value="Uniform"/>
+        <Setter Property="Fill" Value="{DynamicResource BLACK}"/>
+        <Setter Property="Data" Value="M16.2656 9.56L7.33688 9.55937L11.3156 5.58062L9.98687 4.25L3.73438 10.5019L9.98188 16.75L11.3125 15.4194L7.33312 11.4406H16.2644L16.2656 9.56Z"/>
+    </Style>
+
+
+
+
     <!-- #region SEARCH BAR Paths -->
 
     <Style x:Key="path_SEARCH_ICON" TargetType="Path">
         <Setter Property="Height" Value="25"/>
         <Setter Property="Width" Value="25"/>
-        <Setter Property="Margin" Value="0 0 20 0"/>
-        <Setter Property="HorizontalAlignment" Value="Right"/>
+        <Setter Property="HorizontalAlignment" Value="Center"/>
         <Setter Property="VerticalAlignment" Value="Center"/>
         <Setter Property="Fill" Value="{DynamicResource BLACK}"/>
         <Setter Property="Data" Value="M15.625 11.4375C15.625 14.0264 13.5264 16.125 10.9375 16.125C8.34867 16.125 6.25 14.0264 6.25 11.4375C6.25 8.84867 8.34867 6.75 10.9375 6.75C13.5264 6.75 15.625 8.84867 15.625 11.4375ZM14.7701 16.3749C13.7117 17.1976 12.3818 17.6875 10.9375 17.6875C7.48572 17.6875 4.6875 14.8893 4.6875 11.4375C4.6875 7.98572 7.48572 5.1875 10.9375 5.1875C14.3893 5.1875 17.1875 7.98572 17.1875 11.4375C17.1875 12.8818 16.6976 14.2117 15.8749 15.27L20.865 20.2601L19.7601 21.3649L14.7701 16.3749Z"/>
