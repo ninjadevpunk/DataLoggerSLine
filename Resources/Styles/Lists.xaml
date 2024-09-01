@@ -245,9 +245,9 @@
                                         <RowDefinition Height="*"/>
                                     </Grid.RowDefinitions>
 
-                                    <TextBlock Grid.Row="1" Text="No Reports to Show" Style="{DynamicResource text_button02}" 
+                                    <TextBlock Grid.Row="1" Text="No Logs to Show" Style="{DynamicResource text_button02}" 
                                                Foreground="{DynamicResource PlaceholderText}" />
-                                    <TextBlock Grid.Row="2" Text="Logs that can be reported will show up here after you create them in the previous page."
+                                    <TextBlock Grid.Row="2" Text="Create logs in the log cache page and they will show up here once stored."
                                                Style="{DynamicResource text_button01}"
                Foreground="{DynamicResource PlaceholderText}" />
 
