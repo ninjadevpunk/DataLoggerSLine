@@ -191,10 +191,10 @@
 
                         <!-- TYPE -->
                         <components:ComboBoxField x:Name="inputText_TYPE"
+                                                   UserSelection="{Binding Type, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
                                                    Enabled="True"
                                                    UserTextBoxStyle="{DynamicResource inputText}"
                                                    UserTextBlockStyle="{DynamicResource text_Placeholder}"
-                                                   UserSelection="{Binding Type, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
                                                    ToolTip="{Binding TypeToolTip}"
                                                    Items="{Binding Types}"/>
 
