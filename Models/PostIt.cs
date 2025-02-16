@@ -24,7 +24,7 @@ namespace Data_Logger_1._3.Models
         /// The PostIt's subject. Gives context to the PostIt's content.
         /// </summary>
 
-        public SubjectClass Subject { get; set; }
+        public SubjectClass Subject { get; set; } = new();
 
         /// <summary>
         /// The error section. For explaining bug occurences or problems that 
