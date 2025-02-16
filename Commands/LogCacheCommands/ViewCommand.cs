@@ -6,10 +6,17 @@ using System.Diagnostics;
 
 namespace Data_Logger_1._3.Commands.LogCacheCommands
 {
+    public enum ViewType
+    {
+        Cache,
+        Log
+    }
+
     public class ViewCommand : CommandBase
     {
         private readonly NavigationService _navigationService;
         private readonly CacheContext _cacheContext;
+        private ViewType viewType;
 
         public ViewCommand(NavigationService navigationService, LogCacheViewModel logCacheViewModel, CacheContext cacheContext)
         {
@@ -17,6 +24,25 @@ namespace Data_Logger_1._3.Commands.LogCacheCommands
             {
                 _navigationService = navigationService ?? throw new ArgumentNullException(nameof(navigationService));
                 _cacheContext = cacheContext;
+                viewType = ViewType.Cache;
+            }
+            catch (ArgumentNullException nullx)
+            {
+                Debug.WriteLine($"Argument null exception: {nullx.Message}");
+            }
+            catch (Exception e)
+            {
+                Debug.WriteLine($"Exception: {e.Message}");
+            }
+        }
+
+        public ViewCommand(NavigationService navigationService, CacheContext cacheContext, ViewType viewType)
+        {
+            try
+            {
+                _navigationService = navigationService ?? throw new ArgumentNullException(nameof(navigationService));
+                _cacheContext = cacheContext;
+                this.viewType = viewType;
             }
             catch (ArgumentNullException nullx)
             {
@@ -32,47 +58,59 @@ namespace Data_Logger_1._3.Commands.LogCacheCommands
         {
             try
             {
-                switch (_cacheContext)
+                switch (viewType)
                 {
-                    case CacheContext.Qt:
+                    case ViewType.Cache:
                         {
-                            var log = parameter as QtLOGViewModel;
-                            _navigationService.NavigateToViewer(log, _cacheContext);
+                            switch (_cacheContext)
+                            {
+                                case CacheContext.Qt:
+                                    {
+                                        var log = parameter as QtLOGViewModel;
+                                        _navigationService.NavigateToViewer(log, _cacheContext);
 
+                                        break;
+                                    }
+                                case CacheContext.AndroidStudio:
+                                    {
+                                        var log = parameter as AndroidLOGViewModel;
+                                        _navigationService.NavigateToViewer(log, _cacheContext);
+
+                                        break;
+                                    }
+                                case CacheContext.Coding:
+                                    {
+                                        var log = parameter as CodeLOGViewModel;
+                                        _navigationService.NavigateToViewer(log, _cacheContext);
+
+                                        break;
+                                    }
+                                case CacheContext.Graphics:
+                                    {
+                                        var log = parameter as GraphicsLOGViewModel;
+                                        _navigationService.NavigateToViewer(log, _cacheContext);
+
+                                        break;
+                                    }
+                                case CacheContext.Film:
+                                    {
+                                        var log = parameter as FilmLOGViewModel;
+                                        _navigationService.NavigateToViewer(log, _cacheContext);
+
+                                        break;
+                                    }
+                                case CacheContext.Flexi:
+                                    {
+                                        var log = parameter as FlexiLOGViewModel;
+                                        _navigationService.NavigateToViewer(log, _cacheContext);
+
+                                        break;
+                                    }
+                            }
                             break;
                         }
-                    case CacheContext.AndroidStudio:
+                    case ViewType.Log:
                         {
-                            var log = parameter as AndroidLOGViewModel;
-                            _navigationService.NavigateToViewer(log, _cacheContext);
-
-                            break;
-                        }
-                    case CacheContext.Coding:
-                        {
-                            var log = parameter as CodeLOGViewModel;
-                            _navigationService.NavigateToViewer(log, _cacheContext);
-
-                            break;
-                        }
-                    case CacheContext.Graphics:
-                        {
-                            var log = parameter as GraphicsLOGViewModel;
-                            _navigationService.NavigateToViewer(log, _cacheContext);
-
-                            break;
-                        }
-                    case CacheContext.Film:
-                        {
-                            var log = parameter as FilmLOGViewModel;
-                            _navigationService.NavigateToViewer(log, _cacheContext);
-
-                            break;
-                        }
-                    case CacheContext.Flexi:
-                        {
-                            var log = parameter as FlexiLOGViewModel;
-                            _navigationService.NavigateToViewer(log, _cacheContext);
 
                             break;
                         }

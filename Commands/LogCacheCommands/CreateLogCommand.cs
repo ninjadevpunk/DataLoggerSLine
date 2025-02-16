@@ -1,5 +1,6 @@
 ﻿using Data_Logger_1._3.Services;
 using MVVMEssentials.Commands;
+using System.Diagnostics;
 
 namespace Data_Logger_1._3.Commands.LogCacheCommands
 {
@@ -14,9 +15,9 @@ namespace Data_Logger_1._3.Commands.LogCacheCommands
                 _navigationService = navigationService ?? throw new ArgumentNullException(nameof(navigationService));
 
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                //
+                Debug.WriteLine($"Exception found near CreateLogCommand: {ex.Message}");
             }
         }
 
