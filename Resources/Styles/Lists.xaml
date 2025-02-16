@@ -27,7 +27,7 @@
                     <Border x:Name="Bd" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}"
                             Padding="1"
                             SnapsToDevicePixels="true"
-                            CornerRadius="3">
+                            CornerRadius="5">
                         <ScrollViewer Focusable="false" Padding="{TemplateBinding Padding}">
                             <!-- Grid makes the items in ListView behave. -->
                             <Grid>
@@ -229,15 +229,19 @@
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type ListView}">
                     <Border x:Name="Bd" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}"
-                    Padding="1"
-                    SnapsToDevicePixels="true">
+                            Padding="4 0"
+                            SnapsToDevicePixels="true"
+                            CornerRadius="5" >
                         <ScrollViewer Focusable="false" Padding="{TemplateBinding Padding}">
                             <!-- Grid makes the items in ListView behave. -->
                             <Grid>
                                 <ItemsPresenter SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"
                                         />
 
-                                <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Visibility="{Binding NoLogsMessageVisibility}" >
+                                <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Visibility="{Binding NoLogsMessageVisibility, UpdateSourceTrigger=PropertyChanged, 
+                                    Mode=TwoWay}" >
+                                    
+                                    
                                     <Grid.RowDefinitions>
                                         <RowDefinition Height="*"/>
                                         <RowDefinition Height="30"/>
@@ -249,7 +253,7 @@
                                                Foreground="{DynamicResource PlaceholderText}" />
                                     <TextBlock Grid.Row="2" Text="Create logs in the log cache page and they will show up here once stored."
                                                Style="{DynamicResource text_button01}"
-               Foreground="{DynamicResource PlaceholderText}" />
+                                               Foreground="{DynamicResource PlaceholderText}" />
 
                                 </Grid>
                             </Grid>
@@ -278,18 +282,16 @@
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type ListViewItem}">
                     <Border x:Name="Bd"
-                    Background="{TemplateBinding Background}"
-                    BorderBrush="{TemplateBinding BorderBrush}"
-                    BorderThickness="{TemplateBinding BorderThickness}"
-                    Padding="0"
-                    SnapsToDevicePixels="true"
-                    CornerRadius="3"
-                    HorizontalAlignment="{TemplateBinding HorizontalAlignment}"
-                    >
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            Padding="0"
+                            SnapsToDevicePixels="true"
+                            CornerRadius="3"
+                            HorizontalAlignment="{TemplateBinding HorizontalAlignment}" >
                         <Border Padding="30 5 30 0"
-                        HorizontalAlignment="Stretch"
-                        VerticalAlignment="Bottom"
-                        >
+                                HorizontalAlignment="Stretch"
+                                VerticalAlignment="Bottom" >
 
                             <StackPanel Orientation="Vertical" HorizontalAlignment="{TemplateBinding HorizontalAlignment}">
 
@@ -303,18 +305,17 @@
                                     </Grid.ColumnDefinitions>
 
                                     <TextBlock x:Name="text_PROJECTNAME" Style="{DynamicResource text_LIST_LABEL_HEADING}"
-                                       Text="{Binding}"/>
+                                       Text="{Binding ProjectName}"/>
 
                                     <StackPanel Grid.Column="2" Orientation="Horizontal"
-                                        HorizontalAlignment="Right">
+                                                HorizontalAlignment="Right">
 
                                         <!-- ERROR -->
                                         <Ellipse x:Name="ellipse_LIST_ERROR" Style="{DynamicResource ellipse_LIST_ERSO}"
                                          Fill="{DynamicResource postIT_ERROR}"/>
 
                                         <TextBlock x:Name="text_LIST_ERROR" Style="{DynamicResource text_LIST_LABEL_ERSO}"
-                                           Text="{Binding}"
-                                           Margin="10 0"/>
+                                           Text="{Binding ErrorCount}" Margin="10 0"/>
 
 
                                         <!-- SOLUTION -->
@@ -322,8 +323,7 @@
                                          Fill="{DynamicResource postIT_SOLUTION}"/>
 
                                         <TextBlock x:Name="text_LIST_SOLUTION" Style="{DynamicResource text_LIST_LABEL_ERSO}"
-                                           Text="{Binding}"
-                                           Margin="10 0"/>
+                                           Text="{Binding SolutionCount}" Margin="10 0"/>
 
 
                                         <!-- SUGGESTION -->
@@ -331,8 +331,7 @@
                                          Fill="{DynamicResource postIT_SUGGESTION}"/>
 
                                         <TextBlock x:Name="text_LIST_SUGGESTION" Style="{DynamicResource text_LIST_LABEL_ERSO}"
-                                           Text="{Binding}"
-                                           Margin="10 0"/>
+                                           Text="{Binding SuggestionCount}" Margin="10 0"/>
 
 
                                         <!-- COMMENT -->
@@ -340,8 +339,7 @@
                                          Fill="{DynamicResource postIT_COMMENT}"/>
 
                                         <TextBlock x:Name="text_LIST_COMMENT" Style="{DynamicResource text_LIST_LABEL_ERSO}"
-                                           Text="{Binding}"
-                                           Margin="10 0"/>
+                                           Text="{Binding CommentCount}" Margin="10 0"/>
 
 
 
@@ -350,22 +348,22 @@
                                 </Grid>
 
                                 <TextBlock x:Name="text_LIST_DATE" Style="{DynamicResource text_LIST_LABEL_DATE}"
-                                   Text="{Binding}"
-                                   Margin="0 5"
+                                   Text="{Binding StartEndDate}" Margin="0 5"
                                    />
 
                                 <TextBlock x:Name="text_LIST_CONTENT" Style="{DynamicResource text_LIST_LABEL_CONTENT}"
-                                   Text="{Binding}"
-                                   Margin="0 5"/>
+                                   Text="{Binding NotaryContent}" Margin="0 5"/>
 
-                                <Border>
-                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                                <Border x:Name="tools" Visibility="Hidden">
+                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" >
                                         <Button Style="{DynamicResource toolbutton_Adobe_EXPORT}"
                                                 Margin="10"
-                                                Command="{Binding}"/>
-                                        <Button Style="{DynamicResource toolbutton_PRINTER_EXPORT}"
+                                                Command="{Binding SingleExport}"
+                                                CommandParameter="{Binding}" />
+                                        <Button Style="{DynamicResource toolbutton_PRINTER_EXPORT}" Visibility="Collapsed"
                                                 Margin="10"
-                                                Command="{Binding}"/>
+                                                Command="{Binding}"
+                                                CommandParameter="{Binding}" />
                                     </StackPanel>
                                 </Border>
 
@@ -373,12 +371,29 @@
                             </StackPanel>
                         </Border>
                     </Border>
+
+                    <!-- Context Menu -->
+                    <ControlTemplate.Resources>
+                        <ContextMenu x:Key="ItemContextMenu">
+                            <MenuItem Header="Edit" Command="{Binding Edit}"
+                                      CommandParameter="{Binding}" />
+                            <MenuItem Header="View" Command="{Binding View}"
+                                      CommandParameter="{Binding}" />
+                            <MenuItem Header="Delete" Command="{Binding Delete}"
+                                      CommandParameter="{Binding}" />
+                        </ContextMenu>
+                    </ControlTemplate.Resources>
+                    
                     <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter Property="ContextMenu" Value="{StaticResource ItemContextMenu}" />
+                        </Trigger>
                         <MultiTrigger>
                             <MultiTrigger.Conditions>
                                 <Condition Property="IsMouseOver" Value="True"/>
                             </MultiTrigger.Conditions>
                             <Setter Property="Background" TargetName="Bd" Value="{DynamicResource SELECTEDListItem}"/>
+                            <Setter Property="Visibility" TargetName="tools" Value="Visible"/>
                         </MultiTrigger>
                         <MultiTrigger>
                             <MultiTrigger.Conditions>
@@ -408,8 +423,6 @@
 
 
 
-
-
     <Style x:Key="listView_NOTES_list" TargetType="{x:Type ListView}" BasedOn="{StaticResource listView_LOGCACHE}">
         <Setter Property="Template">
             <Setter.Value>
@@ -425,7 +438,10 @@
                                 <WrapPanel Orientation="Horizontal" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" IsItemsHost="True"
                                     />
 
-                                <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Visibility="{Binding NoLogsMessageVisibility}" >
+                                <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Visibility="{Binding NoLogsMessageVisibility, UpdateSourceTrigger=PropertyChanged, 
+                                    Mode=TwoWay}" >
+                                    
+                                    
                                     <Grid.RowDefinitions>
                                         <RowDefinition Height="*"/>
                                         <RowDefinition Height="30"/>
@@ -490,6 +506,9 @@
     </Style>
 
     <!-- CHECKLIST NOTE TEMPLATE -->
+    
+    
+    
     <ControlTemplate x:Key="template_NOTE_checklist_ITEM" TargetType="{x:Type ListViewItem}">
         <Border x:Name="Bd"
             Background="{TemplateBinding Background}"

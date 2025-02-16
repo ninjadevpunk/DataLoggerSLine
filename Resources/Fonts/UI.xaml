@@ -4,5 +4,6 @@
     <FontFamily x:Key="Red Hat Display">pack://application:,,,/Fonts/#Red Hat Display</FontFamily>
     <FontFamily x:Key="Zekton Light">pack://application:,,,/Fonts/#Zekton Light</FontFamily>
     
-    
+
+
 </ResourceDictionary>
