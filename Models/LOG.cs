@@ -89,7 +89,7 @@ namespace Data_Logger_1._3.Models
         public List<PostIt> PostItList { get; set; } = new();
 
 
-        public string Content { get; set; } = "";
+        public string Content { get; set; } = string.Empty;
 
 
         /** CONSTRUCTOR */
