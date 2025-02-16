@@ -2,6 +2,7 @@
 using System.Collections.ObjectModel;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 
 namespace Data_Logger_1._3.Components
 {
@@ -112,6 +113,31 @@ namespace Data_Logger_1._3.Components
 
 
 
+        // Search Bar Opens and Closes Popup
+        public bool IsDropDownOpen
+        {
+            get { return (bool)GetValue(IsDropDownOpenProperty); }
+            set { SetValue(IsDropDownOpenProperty, value); }
+        }
+
+        public static readonly DependencyProperty IsDropDownOpenProperty =
+            DependencyProperty.Register("IsDropDownOpen", typeof(bool), typeof(SearchInputField), new PropertyMetadata(false));
+
+
+
+        // Enter Button Must Execute Search
+
+        public ICommand EnterInternalCommand
+        {
+            get { return (ICommand)GetValue(EnterInternalCommandProperty); }
+            set { SetValue(EnterInternalCommandProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for MyProperty.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty EnterInternalCommandProperty =
+            DependencyProperty.Register("EnterInternalCommand", typeof(ICommand), typeof(SearchInputField));
+
+
 
 
 
@@ -129,6 +155,7 @@ namespace Data_Logger_1._3.Components
         private void on_EditableTextBox_lostfocus(object sender, RoutedEventArgs e)
         {
             UpdatePlaceholderText();
+            IsDropDownOpen = false;
         }
 
         public void UpdatePlaceholderText()
@@ -153,6 +180,7 @@ namespace Data_Logger_1._3.Components
         private void on_EditableTextBox_changed(object sender, TextChangedEventArgs e)
         {
             UpdatePlaceholderText();
+            IsDropDownOpen = false;
 
             var ev = new RoutedEventArgs(TextChangedEvent);
             RaiseEvent(ev);

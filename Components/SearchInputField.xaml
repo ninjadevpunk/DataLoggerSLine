@@ -4,7 +4,8 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:Data_Logger_1._3.Components" xmlns:theme="clr-namespace:Microsoft.Windows.Themes;assembly=PresentationFramework.AeroLite"
-             mc:Ignorable="d" 
+             mc:Ignorable="d"
+             d:Width="380"
              HorizontalAlignment="Stretch"
              d:Background="White"
              x:Name="control_SEARCHBAR" >
@@ -132,9 +133,10 @@
                                     <ColumnDefinition Width="6*"/>
                                     <ColumnDefinition Width="93"/>
                                 </Grid.ColumnDefinitions>
-                                
-                                
-                                <Popup x:Name="PART_Popup" AllowsTransparency="true" Grid.ColumnSpan="2" IsOpen="{Binding IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}" Margin="1" Placement="Bottom" PopupAnimation="{DynamicResource {x:Static SystemParameters.ComboBoxPopupAnimationKey}}">
+
+
+                                <Popup x:Name="PART_Popup" AllowsTransparency="true" Grid.ColumnSpan="2" IsOpen="{Binding IsDropDownOpen, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay, ElementName=control_SEARCHBAR}"
+                                       Margin="1" Placement="Bottom" PopupAnimation="{DynamicResource {x:Static SystemParameters.ComboBoxPopupAnimationKey}}">
                                     <theme:SystemDropShadowChrome x:Name="shadow" Color="{DynamicResource STROKE}" MinWidth="{Binding ActualWidth, ElementName=templateRoot}" MaxHeight="{TemplateBinding MaxDropDownHeight}">
                                         <Border x:Name="dropDownBorder" Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}" BorderBrush="{DynamicResource STROKE}" BorderThickness="1">
                                             <ScrollViewer x:Name="DropDownScrollViewer">
@@ -152,13 +154,14 @@
                                 
                                 
                                 <ToggleButton x:Name="toggleButton"
-                                      Grid.ColumnSpan="2"
-                                      HorizontalAlignment="Stretch"
-                                      BorderBrush="{TemplateBinding BorderBrush}"
-                                      BorderThickness="{TemplateBinding BorderThickness}"
-                                      IsChecked="{Binding IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}"
-                                      Style="{StaticResource comboBox_TOGGLEBUTTON}"
-                                      Cursor="Hand" />
+                                              Grid.ColumnSpan="2"
+                                              HorizontalAlignment="Stretch"
+                                              BorderBrush="{TemplateBinding BorderBrush}"
+                                              BorderThickness="{TemplateBinding BorderThickness}"
+                                              IsChecked="{Binding IsDropDownOpen, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay, ElementName=control_SEARCHBAR}"
+                                              Style="{StaticResource comboBox_TOGGLEBUTTON}"
+                                              Command="{Binding EnterInternalCommand, ElementName=control_SEARCHBAR}"
+                                              Cursor="Hand" />
 
 
                                 <Border x:Name="border" Grid.Column="0">
@@ -168,7 +171,13 @@
                                                  Style="{DynamicResource inputText}"
                                                  Text="{Binding UserComboInput, ElementName=control_SEARCHBAR}"
                                                  TextChanged="on_EditableTextBox_changed"
-                                                 LostFocus="on_EditableTextBox_lostfocus" />
+                                                 
+                                                 LostFocus="on_EditableTextBox_lostfocus" >
+                                            <TextBox.InputBindings>
+                                                <KeyBinding Key="Return"
+                                                            Command="{Binding EnterInternalCommand, ElementName=control_SEARCHBAR}" />
+                                            </TextBox.InputBindings>
+                                        </TextBox>
                                     </Grid>
                                     
                                 </Border>
@@ -193,9 +202,6 @@
                                 <Setter Property="Canvas.Top" TargetName="opaqueRect" Value="{Binding VerticalOffset, ElementName=DropDownScrollViewer}"/>
                                 <Setter Property="Canvas.Left" TargetName="opaqueRect" Value="{Binding HorizontalOffset, ElementName=DropDownScrollViewer}"/>
                             </Trigger>
-                            <!--<Trigger Property="IsEditable" Value="False">
-                            <Setter Property="Template" TargetName="comboBox_template" Value=""/>
-                        </Trigger>-->
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
                 </Setter.Value>
@@ -207,9 +213,11 @@
         <Style x:Key="comboBox_ITEM_template" TargetType="{x:Type ComboBoxItem}">
             <Setter Property="SnapsToDevicePixels" Value="True"/>
             <Setter Property="Height" Value="166"/>
-            <Setter Property="Width" Value="650"/>
-            <Setter Property="Padding" Value="20"/>
-            <Setter Property="HorizontalContentAlignment" Value="{Binding HorizontalContentAlignment, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}"/>
+            <Setter Property="MaxWidth" Value="835"/>
+            <Setter Property="Padding" Value="40 20"/>
+            <Setter Property="HorizontalAlignment" Value="Stretch"/>
+            <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+            <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Hidden"/>
             <Setter Property="VerticalContentAlignment" Value="{Binding VerticalContentAlignment, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}"/>
             <Setter Property="Foreground" Value="{DynamicResource BLACK}"/>
             <Setter Property="FontFamily" Value="{DynamicResource Red Hat Display}"/>
@@ -225,7 +233,8 @@
                                 BorderBrush="{TemplateBinding BorderBrush}"
                                 BorderThickness="{TemplateBinding BorderThickness}"
                                 Padding="{TemplateBinding Padding}"
-                                SnapsToDevicePixels="true" >
+                                SnapsToDevicePixels="true"
+                                Width="{TemplateBinding Width}">
 
                             <Grid>
                                 <Grid.ColumnDefinitions>
@@ -241,7 +250,7 @@
                                 <!--ICON -->
                                 <Border Padding="20" Height="70" >
 
-                                    <Path Style="{Binding IconStyle, ElementName=control_SEARCHBAR}"/>
+                                    <Path Style="{Binding IconStyle}"/>
 
                                 </Border>
                                 
@@ -260,12 +269,12 @@
                                     <TextBlock x:Name="text_PROJECT" Style="{DynamicResource text_LABEL01}"
                                                TextAlignment="Left"
                                                VerticalAlignment="Bottom"
-                                               Text="{Binding}" />
+                                               Text="{Binding Project}" />
 
                                     <TextBlock Grid.Row="2" x:Name="text_DATE" Style="{DynamicResource text_NOTE_DATE02}"
                                                Padding="0"
                                                VerticalAlignment="Top"
-                                               Text="8 December 2023"/>
+                                               Text="{Binding Date}"/>
 
 
                                 </Grid>
@@ -281,7 +290,7 @@
                                     
                                     <!-- SUBJECT -->
                                     <TextBlock x:Name="text_SUBJECT" Style="{DynamicResource text_LIST_LABEL_ERSO}"
-                                               Text="No Subject"/>
+                                               Text="{Binding Subject}"/>
 
                                     <!-- POST IT CONTENT -->
                                     <Grid Grid.Row="2">
@@ -293,7 +302,7 @@
                                         </Grid.ColumnDefinitions>
 
                                         <TextBlock x:Name="text_POSTIT_CONTENT" Style="{DynamicResource text_LABEL03}"
-                                                   Text="The quick fox jumps over the lazy dog. Lorem ipsum dolor sit amet. The quick fox jumps over the lazy dog. Lorem ipsum dolor sit amet. "/>
+                                                   Text="{Binding Content}"/>
 
                                         <Grid Grid.Column="2">
 
@@ -306,19 +315,25 @@
                                             </Grid.RowDefinitions>
 
                                             <!-- VIEW BUTTON -->
-                                            <Button x:Name="button_REPORT_VIEW" Style="{DynamicResource ACTIONSearchItem}">
+                                            <Button x:Name="button_REPORT_VIEW" Style="{DynamicResource ACTIONSearchItem}"
+                                                    Command="{Binding View}"
+                                                    CommandParameter="{Binding}">
                                                 <TextBlock Style="{DynamicResource text_button03}"
                                                            Text="View" />
                                             </Button>
 
                                             <!-- EDIT BUTTON -->
-                                            <Button Grid.Row="2" x:Name="button_REPORT_EDIT" Style="{DynamicResource ACTIONSearchItem}">
+                                            <Button Grid.Row="2" x:Name="button_REPORT_EDIT" Style="{DynamicResource ACTIONSearchItem}"
+                                                    Command="{Binding Edit}"
+                                                    CommandParameter="{Binding}">
                                                 <TextBlock Style="{DynamicResource text_button03}"
                                                            Text="Edit" />
                                             </Button>
 
                                             <!-- DELETE BUTTON -->
-                                            <Button Grid.Row="4" x:Name="button_REPORT_DELETE" Style="{DynamicResource ACTIONSearchItem}">
+                                            <Button Grid.Row="4" x:Name="button_REPORT_DELETE" Style="{DynamicResource ACTIONSearchItem}"
+                                                    Command="{Binding Delete}"
+                                                    CommandParameter="{Binding}">
                                                 <TextBlock Style="{DynamicResource text_button03}"
                                                            Text="Delete" />
                                             </Button>
@@ -398,7 +413,7 @@
         <ComboBox x:Name="comboBox_TEXTBOX" Style="{DynamicResource comboBox_template}"
                   ItemContainerStyle="{DynamicResource comboBox_ITEM_template}"
                   IsEditable="{Binding Enabled, ElementName=control_SEARCHBAR}"
-                  ItemsSource="{Binding SearchResults, ElementName=control_SEARCHBAR}"
+                  ItemsSource="{Binding SearchResults, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay, BindsDirectlyToSource=True, ElementName=control_SEARCHBAR}"
                   Text="{Binding UserComboInput, ElementName=control_SEARCHBAR}" />
 
 
