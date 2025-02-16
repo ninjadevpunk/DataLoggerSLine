@@ -48,7 +48,7 @@ namespace Data_Logger_1._3.ViewModels.LogViewModels
             _LOG = log;
             NotaryContent = PostItContent(createPostItViewModels);
             _LOG.Content = NotaryContent;
-            TimeRemaining = 1200;
+            TimeRemaining = 30;
             StartCountdown();
 
             // TODO 
@@ -81,6 +81,8 @@ namespace Data_Logger_1._3.ViewModels.LogViewModels
             DeleteCacheItemCommand = new DeleteCacheItemCommand(_vm, dataService, true);
             QuickDeleteCacheItemCommand = new DeleteCacheItemCommand(_vm, dataService, false);
         }
+
+
 
         #endregion
 
