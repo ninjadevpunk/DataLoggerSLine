@@ -72,7 +72,7 @@ namespace Data_Logger_1._3.Commands.LoggerCommands
                     case CacheContext.Qt:
                         {
                             dialog.DefaultExt = ".qtlog"; // Default file extension
-                            dialog.Filter = "Qt LOG (.qtlog)|*qtlog|JSON (.json)|*.json"; // Filter files by extension
+                            dialog.Filter = "Qt LOG (.qtlog)|*.qtlog|JSON (.json)|*.json"; // Filter files by extension
 
                             // Show save file dialog box
                             bool? result = dialog.ShowDialog();
