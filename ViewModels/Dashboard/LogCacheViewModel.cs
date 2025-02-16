@@ -17,7 +17,7 @@ namespace Data_Logger_1._3.ViewModels.Dashboard
             _dataService = dataService;
 
             CreateLogCommand = new CreateLogCommand(_navigationService);
-            ReportLogCommand = new ReportCommand();
+            ReportLogCommand = new ReportCommand(_navigationService);
         }
 
         private string logCount = "0 logs cached | 0 total logs";
