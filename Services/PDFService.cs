@@ -1,4 +1,5 @@
 ﻿using Data_Logger_1._3.Models;
+using Data_Logger_1._3.ViewModels.Dialogs;
 using Data_Logger_1._3.ViewModels.Reporter;
 using Data_Logger_1._3.ViewModels.Reporter.Logs;
 using SkiaSharp;
@@ -10,6 +11,7 @@ using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Net.Http;
+using System.Runtime.InteropServices;
 using System.Windows;
 
 namespace Data_Logger_1._3.Services
@@ -472,33 +474,6 @@ namespace Data_Logger_1._3.Services
 
                 switch (context)
                 {
-                    case CacheContext.Qt:
-                        {
-
-
-                            if (log is CodingLOG clog)
-                            {
-
-
-                                // **BUGS**
-
-                                var bugs = $"{clog.Bugs} bug(s)";
-                                graphics.DrawString(bugs, defaultFont, PdfBrushes.Black, new PointF(projectDetailsX, Ycoordinate));
-                                Ycoordinate += defaultFont.MeasureString(bugs).Height + 5;
-
-
-                                // **APP OPENED**
-
-                                var opened = clog.Success ? $"Application Launched Successfully" : $"No Sucessful Launch";
-                                graphics.DrawString(opened, defaultFont, PdfBrushes.Black, new PointF(projectDetailsX, Ycoordinate));
-
-                            }
-
-
-
-
-                            break;
-                        }
                     case CacheContext.AndroidStudio:
                         {
 
@@ -515,7 +490,7 @@ namespace Data_Logger_1._3.Services
 
                                 // **APP OPENED**
 
-                                var opened = clog.Success ? $"Application Launched Successfully" : $"No Sucessful Launch";
+                                var opened = clog.Success ? "Application Launched Successfully" : "No Sucessful Launch";
                                 graphics.DrawString(opened, defaultFont, PdfBrushes.Black, new PointF(projectDetailsX, Ycoordinate));
                                 Ycoordinate += defaultFont.MeasureString(opened).Height + 5;
 
@@ -544,12 +519,239 @@ namespace Data_Logger_1._3.Services
                                     graphics.DrawString(runBuild, defaultFont, PdfBrushes.Black, new PointF(projectDetailsX, Ycoordinate));
                                     Ycoordinate += defaultFont.MeasureString(runBuild).Height + 5;
 
+                                    // **LOAD BUILD**
+
+                                    var loadBuild = $"{asLog.LoadBuild.ToString("HH:mm:ss:fff")}";
+                                    graphics.DrawString(loadBuild, defaultFont, PdfBrushes.Black, new PointF(projectDetailsX, Ycoordinate));
+                                    Ycoordinate += defaultFont.MeasureString(loadBuild).Height + 5;
+
+                                    // **CONFIGURE BUILD**
+
+                                    var configureBuild = $"{asLog.ConfigureBuild.ToString("HH:mm:ss:fff")}";
+                                    graphics.DrawString(configureBuild, defaultFont, PdfBrushes.Black, new PointF(projectDetailsX, Ycoordinate));
+                                    Ycoordinate += defaultFont.MeasureString(configureBuild).Height + 5;
+
+                                    // **ALL PROJECTS**
+
+                                    var allProjects = $"{asLog.AllProjects.ToString("HH:mm:ss:fff")}";
+                                    graphics.DrawString(allProjects, defaultFont, PdfBrushes.Black, new PointF(projectDetailsX, Ycoordinate));
 
                                 }
 
                             }
 
                             
+
+                            break;
+                        }
+                    case CacheContext.Graphics:
+                        {
+                            if(log is GraphicsLOG glog)
+                            {
+                                // **MEDIUM**
+
+                                var medium = $"{glog.Medium}";
+                                graphics.DrawString(medium, defaultFont, PdfBrushes.Black, new PointF(projectDetailsX, Ycoordinate));
+                                Ycoordinate += defaultFont.MeasureString(medium).Height + 5;
+
+
+                                // **FORMAT**
+
+                                var format = $"{glog.Format}";
+                                graphics.DrawString(format, defaultFont, PdfBrushes.Black, new PointF(projectDetailsX, Ycoordinate));
+                                Ycoordinate += defaultFont.MeasureString(format).Height + 5;
+
+
+                                // **BRUSH**
+
+                                var brush = $"{glog.Brush}";
+                                graphics.DrawString(brush, defaultFont, PdfBrushes.Black, new PointF(projectDetailsX, Ycoordinate));
+                                Ycoordinate += defaultFont.MeasureString(brush).Height + 5;
+
+
+                                // **HEIGHT**
+
+                                var height = $"{glog.Height}";
+                                graphics.DrawString(height, defaultFont, PdfBrushes.Black, new PointF(projectDetailsX, Ycoordinate));
+                                Ycoordinate += defaultFont.MeasureString(height).Height + 5;
+
+
+                                // **WIDTH**
+
+                                var width = $"{glog.Width}";
+                                graphics.DrawString(width, defaultFont, PdfBrushes.Black, new PointF(projectDetailsX, Ycoordinate));
+                                Ycoordinate += defaultFont.MeasureString(width).Height + 5;
+
+
+                                // **UNIT**
+
+                                var unit = $"{glog.Unit}";
+                                graphics.DrawString(unit, defaultFont, PdfBrushes.Black, new PointF(projectDetailsX, Ycoordinate));
+                                Ycoordinate += defaultFont.MeasureString(unit).Height + 5;
+
+
+                                // **SIZE**
+                                var size = $"{glog.Size}";
+                                graphics.DrawString(size, defaultFont, PdfBrushes.Black, new PointF(projectDetailsX, Ycoordinate));
+                                Ycoordinate += defaultFont.MeasureString(size).Height + 5;
+
+
+                                // **DPI**
+
+                                var dpi = $"{glog.DPI}";
+                                graphics.DrawString(dpi, defaultFont, PdfBrushes.Black, new PointF(projectDetailsX, Ycoordinate));
+                                Ycoordinate += defaultFont.MeasureString(dpi).Height + 5;
+
+
+                                // **DEPTH**
+
+                                var depth = $"{glog.Depth}";
+                                graphics.DrawString(depth, defaultFont, PdfBrushes.Black, new PointF(projectDetailsX, Ycoordinate));
+                                Ycoordinate += defaultFont.MeasureString(depth).Height + 5;
+
+
+                                // **ISCOMPLETED**
+
+                                var isCompleted = glog.IsCompleted ? "Project Completed" : "Project In Progress...";
+                                graphics.DrawString(isCompleted, defaultFont, PdfBrushes.Black, new PointF(projectDetailsX, Ycoordinate));
+                                Ycoordinate += defaultFont.MeasureString(isCompleted).Height + 5;
+
+
+                                // **SOURCE**
+
+                                var source = $"{glog.Source}";
+                                graphics.DrawString(source, defaultFont, PdfBrushes.Black, new PointF(projectDetailsX, Ycoordinate));
+
+
+                            }
+
+                            break;
+                        }
+                    case CacheContext.Film:
+                        {
+                            if(log is FilmLOG flog)
+                            {
+                                // **HEIGHT**
+
+                                var height = $"{flog.Height}";
+                                graphics.DrawString(height, defaultFont, PdfBrushes.Black, new PointF(projectDetailsX, Ycoordinate));
+                                Ycoordinate += defaultFont.MeasureString(height).Height + 5;
+
+
+                                // **WIDTH**
+
+                                var width = $"{flog.Width}";
+                                graphics.DrawString(width, defaultFont, PdfBrushes.Black, new PointF(projectDetailsX, Ycoordinate));
+                                Ycoordinate += defaultFont.MeasureString(width).Height + 5;
+
+
+                                // **LENGTH**
+
+                                var length = $"{flog.Length}";
+                                graphics.DrawString(length, defaultFont, PdfBrushes.Black, new PointF(projectDetailsX, Ycoordinate));
+                                Ycoordinate += defaultFont.MeasureString(length).Height + 5;
+
+
+                                // **ISCOMPLETED**
+
+                                var isCompleted = flog.IsCompleted ? "Project Completed" : "Project In Progress...";
+                                graphics.DrawString(isCompleted, defaultFont, PdfBrushes.Black, new PointF(projectDetailsX, Ycoordinate));
+                                Ycoordinate += defaultFont.MeasureString(isCompleted).Height + 5;
+
+
+                                // **SOURCE**
+
+                                var source = $"{flog.Source}";
+                                graphics.DrawString(source, defaultFont, PdfBrushes.Black, new PointF(projectDetailsX, Ycoordinate));
+
+                            }
+
+
+                            break;
+                        }
+                    case CacheContext.Flexi:
+                        {
+
+                            if(log is FlexiNotesLOG flxlog)
+                            {
+                                // **FLEXIBLE LOG TYPE**
+
+                                var flextLogType = $"Log Type: {flxlog.flexinotetype.ToString()}";
+                                graphics.DrawString(flextLogType, defaultFont, PdfBrushes.Black, new PointF(projectDetailsX, Ycoordinate));
+                                Ycoordinate += defaultFont.MeasureString(flextLogType).Height + 5;
+
+
+                                // **MEDIUM**
+
+                                var medium = $"{flxlog.Medium}";
+                                graphics.DrawString(medium, defaultFont, PdfBrushes.Black, new PointF(projectDetailsX, Ycoordinate));
+                                Ycoordinate += defaultFont.MeasureString(medium).Height + 5;
+
+
+                                // **FORMAT**
+
+                                var format = $"{flxlog.Format}";
+                                graphics.DrawString(format, defaultFont, PdfBrushes.Black, new PointF(projectDetailsX, Ycoordinate));
+                                Ycoordinate += defaultFont.MeasureString(format).Height + 5;
+
+
+                                // **BITRATE**
+
+                                var bitRate = $"{flxlog.Bitrate}";
+                                graphics.DrawString(bitRate, defaultFont, PdfBrushes.Black, new PointF(projectDetailsX, Ycoordinate));
+                                Ycoordinate += defaultFont.MeasureString(bitRate).Height + 5;
+
+
+                                // **LENGTH**
+
+                                var length = $"{flxlog.Length}";
+                                graphics.DrawString(length, defaultFont, PdfBrushes.Black, new PointF(projectDetailsX, Ycoordinate));
+                                Ycoordinate += defaultFont.MeasureString(length).Height + 5;
+
+
+                                // **ISCOMPLETED**
+
+                                var isCompleted = flxlog.IsCompleted ? "Project Completed" : "Project In Progress...";
+                                graphics.DrawString(isCompleted, defaultFont, PdfBrushes.Black, new PointF(projectDetailsX, Ycoordinate));
+                                Ycoordinate += defaultFont.MeasureString(isCompleted).Height + 5;
+
+
+                                // **SOURCE**
+
+                                var source = $"{flxlog.Source}";
+                                graphics.DrawString(source, defaultFont, PdfBrushes.Black, new PointF(projectDetailsX, Ycoordinate));
+
+
+
+                            }
+
+
+
+
+
+
+
+                            break;
+                        }
+                    default:
+                        {
+                            if (log is CodingLOG clog)
+                            {
+
+
+                                // **BUGS**
+
+                                var bugs = $"{clog.Bugs} bug(s)";
+                                graphics.DrawString(bugs, defaultFont, PdfBrushes.Black, new PointF(projectDetailsX, Ycoordinate));
+                                Ycoordinate += defaultFont.MeasureString(bugs).Height + 5;
+
+
+                                // **APP OPENED**
+
+                                var opened = clog.Success ? $"Application Launched Successfully" : $"No Sucessful Launch";
+                                graphics.DrawString(opened, defaultFont, PdfBrushes.Black, new PointF(projectDetailsX, Ycoordinate));
+
+                            }
 
                             break;
                         }
@@ -640,10 +842,10 @@ namespace Data_Logger_1._3.Services
                             }
                         }
 
-                        DrawPostItSection(postIt.Error, PdfBrushes.Red);
-                        DrawPostItSection(postIt.Solution, new PdfSolidBrush(Color.FromArgb(0, 211, 34)));
-                        DrawPostItSection(postIt.Suggestion, new PdfSolidBrush(Color.FromArgb(255, 0, 245)));
-                        DrawPostItSection(postIt.Comment, new PdfSolidBrush(Color.FromArgb(255, 245, 0)));
+                        DrawPostItSection(CreatePostItViewModel.ConvertRtfToPlainText(postIt.Error), PdfBrushes.Red);
+                        DrawPostItSection(CreatePostItViewModel.ConvertRtfToPlainText(postIt.Solution), new PdfSolidBrush(Color.FromArgb(0, 211, 34)));
+                        DrawPostItSection(CreatePostItViewModel.ConvertRtfToPlainText(postIt.Suggestion), new PdfSolidBrush(Color.FromArgb(255, 0, 245)));
+                        DrawPostItSection(CreatePostItViewModel.ConvertRtfToPlainText(postIt.Comment), new PdfSolidBrush(Color.FromArgb(255, 245, 0)));
 
                         Ycoordinate += 10;
 
@@ -717,6 +919,8 @@ namespace Data_Logger_1._3.Services
 
                 document.Close(true);
 
+                MessageBox.Show($"Log exported successfully. Find it in this location: {filePath}", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
+
             }
             catch(HttpRequestException hex)
             {
@@ -731,6 +935,7 @@ namespace Data_Logger_1._3.Services
             catch (Exception ex)
             {
                 Debug.WriteLine($"Exception occurred in ExportLogToPDF(): {ex.Message}");
+                MessageBox.Show("An error occurred on our end. We apologise for any inconvenience casued.");
             }
 
         }
@@ -745,11 +950,11 @@ namespace Data_Logger_1._3.Services
 
 
 
-        public void ExportQtLogToPDF(REPORTViewModel viewModel)
+        public async Task ExportQtLogToPDF(REPORTViewModel viewModel)
         {
             var qtReport = (qtREPORTViewModel)viewModel;
 
-            ExportLogToPDF((CodingLOG)qtReport.GetQtCodingLog, CacheContext.Qt);
+            await ExportLogToPDF((CodingLOG)qtReport.GetQtCodingLog, CacheContext.Qt);
         }
 
 
@@ -757,36 +962,60 @@ namespace Data_Logger_1._3.Services
 
 
 
-
-
-
-        public void ExportASLogToPDF(REPORTViewModel viewModel)
+        public async Task ExportASLogToPDF(REPORTViewModel viewModel)
         {
             var asReport = (asREPORTViewModel)viewModel;
 
-            ExportLogToPDF((AndroidCodingLOG)asReport.GetAndroidCodingLog, CacheContext.AndroidStudio);
+            await ExportLogToPDF((AndroidCodingLOG)asReport.GetAndroidCodingLog, CacheContext.AndroidStudio);
+        }
 
+
+
+
+
+
+        public async Task ExportCodingLogToPDF(REPORTViewModel viewModel)
+        {
+            var report = (codeREPORTViewModel)viewModel;
+
+            await ExportLogToPDF((CodingLOG)report.GetCodingLog, CacheContext.Coding);
 
         }
 
-        public void ExportCodingLogToPDF(REPORTViewModel viewModel)
-        {
 
+
+
+
+
+        public async Task ExportGraphicsLogToPDF(REPORTViewModel viewModel)
+        {
+            var graphicsReport = (graphicsREPORTViewModel)viewModel;
+
+            await ExportLogToPDF((GraphicsLOG)graphicsReport.GetGraphicsLog, CacheContext.Graphics);
         }
 
-        public void ExportGraphicsLogToPDF(REPORTViewModel viewModel)
-        {
 
+
+
+
+
+        public async Task ExportFilmLogToPDF(REPORTViewModel viewModel)
+        {
+            var filmReport = (filmREPORTViewModel)viewModel;
+
+            await ExportLogToPDF((FilmLOG)filmReport.GetFilmLog, CacheContext.Film);
         }
 
-        public void ExportFilmLogToPDF(REPORTViewModel viewModel)
+
+
+
+
+
+        public async Task ExportFlexiLogToPDF(REPORTViewModel viewModel)
         {
+            var flexibleReport = (flexiREPORTViewModel)viewModel;
 
-        }
-
-        public void ExportFlexiLogToPDF(REPORTViewModel viewModel)
-        {
-
+            await ExportLogToPDF((FlexiNotesLOG)flexibleReport.GetFlexiLog, CacheContext.Flexi);
         }
     }
 }
