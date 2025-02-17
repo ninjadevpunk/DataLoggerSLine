@@ -5,13 +5,16 @@ using Data_Logger_1._3.ViewModels;
 using Data_Logger_1._3.ViewModels.Dashboard;
 using Data_Logger_1._3.ViewModels.Dialogs;
 using Data_Logger_1._3.ViewModels.LogViewModels;
+using Data_Logger_1._3.ViewModels.Reporter.Desk;
 using Data_Logger_1._3.ViewModels.ViewerViewModels;
 using Data_Logger_1._3.Views;
 using Data_Logger_1._3.Views.Dialogs;
 using Data_Logger_1._3.Views.LogPages;
+using Data_Logger_1._3.Views.ReportPages;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using MVVMEssentials.ViewModels;
+using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
@@ -33,10 +36,12 @@ namespace Data_Logger_1._3.Services
     {
         private readonly AuthService _authService;
         private readonly DataService _dataService;
+        private readonly PDFService _pdfService;
         bool editControlsLoaded = false, arrowFillSet = false;
         bool viewerControlsLoaded = false;
 
         public LOG.CATEGORY CurrentCategory { get; set; } = LOG.CATEGORY.CODING;
+        public CacheContext Context { get; set; } = CacheContext.Coding;
 
         private const string Qt = "Qt Creator";
         protected const string AndroidStudio = "Android Studio Hedgehog 2023.1.1";
@@ -60,6 +65,8 @@ namespace Data_Logger_1._3.Services
         public LogCachePage Dashboard { get; set; }
 
         public LoggerCreatePage Logger { get; set; }
+
+        public ReporterDashboard Reporter { get; set; }
 
         public LoggerEditPage Editor { get; set; }
 
@@ -86,6 +93,19 @@ namespace Data_Logger_1._3.Services
         public NOTESViewModel notesDashboard { get; set; }
 
         public FlexiViewModel flexiDashboard { get; set; }
+
+
+        public QtReportDeskViewModel QtReportDesk { get; set; }
+
+        public ASReportDeskViewModel ASReportDesk { get; set; }
+
+        public CodeReportDeskViewModel CodeReportDesk { get; set; }
+
+        public GraphicsReportDeskViewModel GraphicsReportDesk { get; set; }
+
+        public FilmReportDeskViewModel FilmReportDesk { get; set; }
+
+        public FlexiReportDeskViewModel FlexiReportDesk { get; set; }
 
 
         #endregion
@@ -210,6 +230,13 @@ namespace Data_Logger_1._3.Services
             _dataService = dataService;
         }
 
+        public NavigationService(AuthService service, DataService dataService, PDFService pdfService)
+        {
+            _authService = service;
+            _dataService = dataService;
+            _pdfService = pdfService;
+        }
+
 
         public NavigationService(IHost host, Frame frame, Frame aSframe)
         {
@@ -231,6 +258,13 @@ namespace Data_Logger_1._3.Services
                 graphicsDashboard = new GraphicsViewModel(this, _dataService);
                 filmDashboard = new FilmViewModel(this, _dataService);
                 flexiDashboard = new FlexiViewModel(this, _dataService);
+
+                QtReportDesk = new(this, _dataService, _pdfService);
+                ASReportDesk = new(this, _dataService, _pdfService);
+                CodeReportDesk = new(this, _dataService, _pdfService);
+                GraphicsReportDesk = new(this, _dataService, _pdfService);
+                FilmReportDesk = new(this, _dataService, _pdfService);
+                FlexiReportDesk = new(this, _dataService, _pdfService);
 
                 notesDashboard = new NOTESViewModel(this);
 
@@ -258,6 +292,7 @@ namespace Data_Logger_1._3.Services
 
                 Dashboard = new LogCachePage();
                 Logger = new LoggerCreatePage();
+                Reporter = new ReporterDashboard();
                 Editor = new LoggerEditPage();
                 Viewer = new LoggerViewPage();
                 _frame = Logger.frame_VARIATIONS;
@@ -453,9 +488,6 @@ namespace Data_Logger_1._3.Services
             }
 
 
-
-            // TODO
-            // Do for the other log types.
             // Retrieve Graphics Logs that weren't stored
 
             var graList = _dataService.RetrieveGraphicsCache(graphicsDashboard);
@@ -609,6 +641,7 @@ namespace Data_Logger_1._3.Services
 
 
                 CurrentCategory = LOG.CATEGORY.CODING;
+                Context = context;
                 var profilePic = _authService.Account.ProfilePic; ;
 
                 switch (context)
@@ -618,7 +651,10 @@ namespace Data_Logger_1._3.Services
                         QtCodingLogger = new codeCreateViewModel(this, codingQtDashboard, "Qt", _dataService);
                         QtCodingLogger.SignUpImage = profilePic;
                         QtCodingLogger.UpdateLogCount();
+
                         Dashboard.DataContext = codingQtDashboard;
+                        Reporter.DataContext = QtReportDesk;
+
                         Logger.DataContext = QtCodingLogger;
                         CodingFrame.DataContext = QtCodingLogger;
                         _frame.Navigate(CodingFrame);
@@ -630,7 +666,11 @@ namespace Data_Logger_1._3.Services
                         ASCodingLogger = new(this, codingAndroidDashboard, _dataService);
                         ASCodingLogger.SignUpImage = profilePic;
                         ASCodingLogger.UpdateLogCount();
+
                         Dashboard.DataContext = codingAndroidDashboard;
+
+
+
                         Logger.DataContext = ASCodingLogger;
                         CodingFrame.DataContext = ASCodingLogger;
                         AndroidStudioFrame.DataContext = ASCodingLogger;
@@ -639,9 +679,13 @@ namespace Data_Logger_1._3.Services
                         break;
                     case CacheContext.Coding:
                         CurrentCategory = LOG.CATEGORY.CODING;
-                        Dashboard.DataContext = codingDashboard;
                         CodingLogger = new(this, codingDashboard, _dataService);
                         CodingLogger.SignUpImage = profilePic;
+
+                        Dashboard.DataContext = codingDashboard;
+
+
+
                         CodingLogger.UpdateLogCount();
                         Logger.DataContext = CodingLogger;
                         CodingFrame.DataContext = CodingLogger;
@@ -653,7 +697,11 @@ namespace Data_Logger_1._3.Services
                         GraphicsLogger = new(this, graphicsDashboard, _dataService);
                         GraphicsLogger.SignUpImage = profilePic;
                         GraphicsLogger.UpdateLogCount();
+
                         Dashboard.DataContext = graphicsDashboard;
+
+
+
                         Logger.DataContext = GraphicsLogger;
                         GraphicsFrame.DataContext = GraphicsLogger;
                         _frame.Navigate(GraphicsFrame);
@@ -664,7 +712,11 @@ namespace Data_Logger_1._3.Services
                         FilmLogger = new(this, filmDashboard, _dataService);
                         FilmLogger.SignUpImage = profilePic;
                         FilmLogger.UpdateLogCount();
+
                         Dashboard.DataContext = filmDashboard;
+
+
+
                         Logger.DataContext = FilmLogger;
                         FilmFrame.DataContext = FilmLogger;
                         _frame.Navigate(FilmFrame);
@@ -675,7 +727,11 @@ namespace Data_Logger_1._3.Services
                         FlexiLogger = new(this, flexiDashboard, _dataService);
                         FlexiLogger.SignUpImage = profilePic;
                         FlexiLogger.UpdateLogCount();
+
                         Dashboard.DataContext = flexiDashboard;
+
+
+
                         Logger.DataContext = FlexiLogger;
                         FlexiFrame.DataContext = FlexiLogger;
                         _frame.Navigate(FlexiFrame);
@@ -720,7 +776,7 @@ namespace Data_Logger_1._3.Services
             _MainFrame.Navigate(Logger);
 
             Main.BackEnabled = true;
-            GoForward();
+            //GoForward();
         }
 
         /* Use this for EditCommand */
@@ -1344,8 +1400,141 @@ namespace Data_Logger_1._3.Services
 
         public void NavigateToReporter()
         {
-            //
+            _dataService.InitialiseProjectsLIST(CurrentCategory);
+            var list = new ObservableCollection<string>();
+
+            foreach (var item in _dataService.SQLITE_PROJECTS)
+            {
+                list.Add(item.Name);
+
+                try
+                {
+                    if (string.IsNullOrEmpty(QtReportDesk.Project))
+                    {
+                        QtReportDesk.Project = QtReportDesk.Projects.ElementAt(0);
+                    }
+                }
+                catch (ArgumentException index)
+                {
+                    Debug.WriteLine($"ArgumentException near NavigateToReporter(): {index.Message}");
+                }
+            }
+
+            switch (Context)
+            {
+                case CacheContext.Qt:
+                    {
+                        if(_dataService.QtLogCount() != 0)
+                        {
+
+                            QtReportDesk.Projects = list;
+                            _MainFrame.Navigate(Reporter);
+                        }
+                        else
+                            MessageBox.Show("Please create a log if you need to make a report.", "No logs Found", 
+                                MessageBoxButton.OK, MessageBoxImage.Information, MessageBoxResult.OK);
+                        break;
+                    }
+                case CacheContext.AndroidStudio:
+                    {
+                        if (_dataService.ASLogCount() != 0)
+                        {
+                            _MainFrame.Navigate(Reporter);
+                        }
+                        else
+                            MessageBox.Show("Please create a log if you need to make a report.", "No logs Found",
+                                MessageBoxButton.OK, MessageBoxImage.Information, MessageBoxResult.OK);
+
+                        break;
+                    }
+                case CacheContext.Graphics:
+                    {
+                        if (_dataService.LogCount(LOG.CATEGORY.GRAPHICS) != 0)
+                        {
+                            _MainFrame.Navigate(Reporter);
+                        }
+                        else
+                            MessageBox.Show("Please create a log if you need to make a report.", "No logs Found",
+                                MessageBoxButton.OK, MessageBoxImage.Information, MessageBoxResult.OK);
+
+                        break;
+                    }
+                case CacheContext.Film:
+                    {
+                        if (_dataService.LogCount(LOG.CATEGORY.FILM) != 0)
+                        {
+                            _MainFrame.Navigate(Reporter);
+                        }
+                        else
+                            MessageBox.Show("Please create a log if you need to make a report.", "No logs Found",
+                                MessageBoxButton.OK, MessageBoxImage.Information, MessageBoxResult.OK);
+
+                        break;
+                    }
+                case CacheContext.Flexi:
+                    {
+                        if (_dataService.FlexiLogCount() != 0)
+                        {
+                            _MainFrame.Navigate(Reporter);
+                        }
+                        else
+                            MessageBox.Show("Please create a log if you need to make a report.", "No logs Found",
+                                MessageBoxButton.OK, MessageBoxImage.Information, MessageBoxResult.OK);
+
+                        break;
+                    }
+                default:
+                    {
+                        if (_dataService.LogCount(LOG.CATEGORY.CODING) != 0)
+                        {
+                            _MainFrame.Navigate(Reporter);
+                        }
+                        else
+                            MessageBox.Show("Please create a log if you need to make a report.", "No logs Found",
+                                MessageBoxButton.OK, MessageBoxImage.Information, MessageBoxResult.OK);
+
+                        break;
+                    }
+            }
+
+
+            Main.BackEnabled = true;
         }
+
+
+
+        private LOG.CATEGORY ConvertToLOGEnum(CacheContext category)
+        {
+            switch (Context)
+            {
+                case CacheContext.Qt:
+                    {
+                        return LOG.CATEGORY.CODING;
+                    }
+                case CacheContext.AndroidStudio:
+                    {
+                        return LOG.CATEGORY.CODING;
+                    }
+                case CacheContext.Graphics:
+                    {
+                        return LOG.CATEGORY.GRAPHICS;
+                    }
+                case CacheContext.Film:
+                    {
+                        return LOG.CATEGORY.FILM;
+                    }
+                case CacheContext.Flexi:
+                    {
+                        return LOG.CATEGORY.NOTES;
+                    }
+                default:
+                    {
+                        return LOG.CATEGORY.CODING;
+                    }
+            }
+        }
+
+
 
 
 
