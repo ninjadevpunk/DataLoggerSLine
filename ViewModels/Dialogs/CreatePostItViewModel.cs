@@ -711,7 +711,7 @@ namespace Data_Logger_1._3.ViewModels.Dialogs
 
 
 
-        public string ConvertRtfToPlainText(string rtfContent)
+        public static string ConvertRtfToPlainText(string rtfContent)
         {
             try
             {
