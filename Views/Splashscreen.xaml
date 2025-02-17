@@ -33,7 +33,7 @@
         </Grid.ColumnDefinitions>
 
         <!-- VERSION -->
-        <TextBlock Margin="0 10 0 0" HorizontalAlignment="Left" VerticalAlignment="Top" Grid.Column="0" Text="alpha 1.1" Style="{DynamicResource text_VERSION}"/>
+        <TextBlock Margin="0 10 0 0" HorizontalAlignment="Left" VerticalAlignment="Top" Grid.Column="0" Text="alpha 1.2" Style="{DynamicResource text_VERSION}"/>
 
         <!--#region Data Logger LOGO -->
 

@@ -397,7 +397,7 @@
         <TextBlock Margin="10" Grid.Column="0" Grid.Row="2"
            HorizontalAlignment="Right"
            VerticalAlignment="Top"
-           Text="alpha 1.1" Style="{DynamicResource text_VERSION}"
+           Text="alpha 1.2" Style="{DynamicResource text_VERSION}"
            />
 
     </Grid>
