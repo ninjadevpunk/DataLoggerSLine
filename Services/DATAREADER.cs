@@ -1,5 +1,10 @@
 ﻿using Data_Logger_1._3.Models;
+using Data_Logger_1._3.Models.App_Models;
+using System.Data;
 using System.Data.SQLite;
+using System.Diagnostics;
+using static Data_Logger_1._3.Models.FlexiNotesLOG;
+using static Data_Logger_1._3.Models.NotesLOG;
 
 namespace Data_Logger_1._3.Services
 {
@@ -14,993 +19,2019 @@ namespace Data_Logger_1._3.Services
          */
 
 
-        /* CONSTRUCTORS */
+        #region Constructors
+
 
 
         public DATAREADER()
         {
-            CreateConnection();
-            CheckTables();
-            CheckCategories();
-            CheckApplications();
-            CheckProject();
-            CheckOutputs();
-            CheckTypes();
-            CheckSubjects();
-            CheckMediums();
-            CheckFormats();
-            CheckUnits();
-            CheckFNCategories();
+            
         }
 
         public DATAREADER(bool status) : base(status) { }
 
         public DATAREADER(string category, SQLiteConnection connection, bool status) : base(connection, category, status) { }
 
-        // ---END CONSTRUCTORS---
 
 
-        /* MEMBER FUNCTIONS */
 
-        ///** Return the total number of LOGs **/
-        //public int totalLOGS(string category)
-        //{
-        //    var temp = 0;
+        #endregion
 
-        //    var list = RetrieveLOGS(true);
 
-        //    for (int i = 0; i < list.Count(); i++)
-        //    {
-        //        try
-        //        {
-        //            if (
-        //                list.ElementAt(i).getCATEGORY() == category &&
-        //                list.ElementAt(i).getApplicationName() != "Qt Creator" &&
-        //                list.ElementAt(i).getApplicationName() != "Android Studio Electric Eel"
-        //                )
-        //            {
-        //                ++temp;
-        //            }
-        //        }
-        //        catch (ArgumentOutOfRangeException)
-        //        {
 
-        //            //
-        //        }
-        //    }
 
-        //    return temp;
-        //}
 
-        //public int totalLOGS(string category, string application)
-        //{
-        //    var temp = 0;
 
-        //    var list = RetrieveLOGS(true);
 
-        //    for (int i = 0; i < list.Count(); i++)
-        //    {
-        //        try
-        //        {
-        //            if (
-        //            list.ElementAt(i).getCATEGORY() == category &&
-        //            list.ElementAt(i).getApplicationName() == application
-        //            )
-        //            {
-        //                ++temp;
-        //            }
-        //        }
-        //        catch (ArgumentOutOfRangeException)
-        //        {
 
-        //            //
-        //        }
-        //    }
 
-        //    return temp;
-        //}
 
-        //public int totalLOGS(string category, string application, string project)
-        //{
-        //    var temp = 0;
+        #region Methods
 
-        //    var list = RetrieveLOGS(true);
 
-        //    for (int i = 0; i < list.Count(); i++)
-        //    {
-        //        try
-        //        {
-        //            if (
-        //            list.ElementAt(i).getCATEGORY() == category &&
-        //            list.ElementAt(i).getApplicationName() == application &&
-        //            list.ElementAt(i).getProjectName() == project
-        //            )
-        //            {
-        //                ++temp;
-        //            }
-        //        }
-        //        catch (ArgumentOutOfRangeException)
-        //        {
 
-        //            //
-        //        }
-        //    }
-
-        //    return temp;
-        //}
-
-
-        ///** Return the total duration of a project. **/
-        //public TimeSpan totalDuration(string app, string project)
-        //{
-        //    TimeSpan t1 = new TimeSpan(0, 0, 0, 0, 0);
-
-        //    for (int i = 0; i < this.Count(); i++)
-        //    {
-        //        if (this.ElementAt(i).Application == app &&
-        //            this.ElementAt(i).Project == project)
-        //        {
-        //            t1 += this.ElementAt(i).getDuration();
-        //        }
-        //    }
-
-        //    return t1;
-        //}
-
-        ///** Return the total count of unsolved errors in a project. **/
-        //public int xERtotalCount(string app, string project)
-        //{
-        //    int count = 0;
-        //    string pattern = "[A-Za-z]{5}[0-9]{0}";
-        //    Regex xp = new Regex(pattern);
-
-        //    for (int i = 0; i < this.Count(); i++)
-        //    {
-        //        if (this.ElementAt(i).getApplicationName() == app &&
-        //            this.ElementAt(i).getProjectName() == project)
-        //        {
-        //            for (int j = 0; j <= this.ElementAt(i).getNotarised().Count() - 1; j++)
-        //            {
-        //                if (xp.IsMatch(this.ElementAt(i).getNotarised().ElementAt(j).getError()) &&
-        //                    !xp.IsMatch(this.ElementAt(i).getNotarised().ElementAt(j).getSolution())
-        //                    )
-        //                {
-        //                    ++count;
-        //                }
-        //            }
-        //        }
-        //    }
-
-        //    return count;
-        //}
-
-
-        ///** Return the total count of errors in a LOG **/
-        //public int ERtotalCount(string app, string project)
-        //{
-        //    int count = 0;
-        //    string pattern = "[A-Za-z]{5}[0-9]{0}";
-        //    Regex xp = new Regex(pattern);
-
-        //    for (int i = 0; i < this.Count(); i++)
-        //    {
-        //        if (this.ElementAt(i).getApplicationName() == app &&
-        //            this.ElementAt(i).getProjectName() == project)
-        //        {
-        //            for (int j = 0; j <= this.ElementAt(i).getNotarised().Count() - 1; j++)
-        //            {
-        //                if (xp.IsMatch(this.ElementAt(i).getNotarised().ElementAt(j).getError()))
-        //                {
-        //                    ++count;
-        //                }
-        //            }
-        //        }
-        //    }
-
-        //    return count;
-        //}
-
-
-        ///** Return the total count of solutions in a LOG **/
-        //public int SOtotalCount(string app, string project)
-        //{
-        //    int count = 0;
-        //    string pattern = "[A-Za-z]{5}[0-9]{0}";
-        //    Regex xp = new Regex(pattern);
-
-        //    for (int i = 0; i < this.Count(); i++)
-        //    {
-        //        if (this.ElementAt(i).getApplicationName() == app &&
-        //            this.ElementAt(i).getProjectName() == project)
-        //        {
-        //            for (int j = 0; j <= this.ElementAt(i).getNotarised().Count() - 1; j++)
-        //            {
-        //                if (xp.IsMatch(this.ElementAt(i).getNotarised().ElementAt(j).getSolution()))
-        //                {
-        //                    ++count;
-        //                }
-        //            }
-        //        }
-        //    }
-
-        //    return count;
-        //}
-
-
-
-        ///** Return the total count of suggestions in a LOG **/
-        //public int SUtotalCount(string app, string project)
-        //{
-        //    int count = 0;
-        //    string pattern = "[A-Za-z]{5}[0-9]{0}";
-        //    Regex xp = new Regex(pattern);
-
-        //    for (int i = 0; i <= this.Count() - 1; i++)
-        //    {
-        //        if (this.ElementAt(i).getApplicationName() == app &&
-        //            this.ElementAt(i).getProjectName() == project)
-        //        {
-        //            for (int j = 0; j < this.ElementAt(i).getNotarised().Count(); j++)
-        //            {
-        //                if (xp.IsMatch(this.ElementAt(i).getNotarised().ElementAt(j).getSuggestion()))
-        //                {
-        //                    ++count;
-        //                }
-        //            }
-        //        }
-        //    }
-
-        //    return count;
-        //}
-
-
-
-
-        ///** Return the total count of comments in a LOG **/
-        //public int COtotalCount(string app, string project)
-        //{
-        //    int count = 0;
-        //    string pattern = "[A-Za-z]{5}[0-9]{0}";
-        //    Regex xp = new Regex(pattern);
-
-        //    for (int i = 0; i <= this.Count() - 1; i++)
-        //    {
-        //        if (this.ElementAt(i).getApplicationName() == app &&
-        //            this.ElementAt(i).getProjectName() == project)
-        //        {
-        //            for (int j = 0; j < this.ElementAt(i).getNotarised().Count(); j++)
-        //            {
-        //                if (xp.IsMatch(this.ElementAt(i).getNotarised().ElementAt(j).getComment()))
-        //                {
-        //                    ++count;
-        //                }
-        //            }
-        //        }
-        //    }
-
-        //    return count;
-        //}
-
-
-
-        ///** Find the highest/lowest amount of errors/solutions/suggestions/comments.
-        // * Make sure only the logs from a particular app are included
-        // *  If it's true (ASC) then return the lowest to highest.
-        // *  If it's false (DESC) then return the highest to lowest.
-        // *  Return a list with LOGS in the correct order.
-        // *  */
-        //public List<LOG> highORlow(bool asc_desc, string category, string app)
-        //{
-        //    int count = 0;
-        //    string pattern = "[A-Za-z]{5}[0-9]{0}";
-        //    Regex xp = new Regex(pattern);
-        //    Dictionary<LOG, int> array = new Dictionary<LOG, int>();
-
-
-        //    for (int i = 0; i <= this.Count() - 1; i++)
-        //    {
-        //        if (this.ElementAt(i).getApplicationName() == app)
-        //        {
-        //            for (int j = 0; j <= this.ElementAt(i).getNotarised().Count() - 1; j++)
-        //            {
-        //                if (category == "ERROR")
-        //                {
-        //                    if (xp.IsMatch(this.ElementAt(i).getNotarised().ElementAt(j).getError()))
-        //                    {
-        //                        ++count;
-        //                    }
-        //                }
-        //                if (category == "SOLUTION")
-        //                {
-        //                    if (xp.IsMatch(this.ElementAt(i).getNotarised().ElementAt(j).getSolution()))
-        //                    {
-        //                        ++count;
-        //                    }
-        //                }
-        //                if (category == "SUGGESTION")
-        //                {
-        //                    if (xp.IsMatch(this.ElementAt(i).getNotarised().ElementAt(j).getSuggestion()))
-        //                    {
-        //                        ++count;
-        //                    }
-        //                }
-        //                if (category == "COMMENT")
-        //                {
-        //                    if (xp.IsMatch(this.ElementAt(i).getNotarised().ElementAt(j).getComment()))
-        //                    {
-        //                        ++count;
-        //                    }
-        //                }
-        //            }
-        //            array.Add(this.ElementAt(i), count);
-        //            count = 0;
-        //        }
-        //    }
-
-        //    List<LOG> list = new List<LOG>();
-
-        //    if (asc_desc)
-        //    {
-        //        foreach (KeyValuePair<LOG, int> v in array.OrderBy(key => key.Value))
-        //        {
-        //            list.Add(v.Key);
-        //        }
-        //    }
-        //    else
-        //    {
-        //        foreach (KeyValuePair<LOG, int> v in array.OrderByDescending(key => key.Value))
-        //        {
-        //            list.Add(v.Key);
-        //        }
-        //    }
-
-
-
-        //    return list;
-        //}
-
-        ///** Find the highest/lowest amount of errors/solutions/suggestions/comments.
-        // * Make sure only the logs from a particular project are included
-        // *  If it's true (ASC) then return the lowest to highest.
-        // *  If it's false (DESC) then return the highest to lowest.
-        // *  Return a list with LOGS in the correct order.
-        // *  */
-        //public List<LOG> highORlow(bool asc_desc, string category, string app, string project)
-        //{
-        //    int count = 0;
-        //    string pattern = "[A-Za-z]{5}[0-9]{0}";
-        //    Regex xp = new Regex(pattern);
-        //    Dictionary<LOG, int> array = new Dictionary<LOG, int>();
-
-
-        //    for (int i = 0; i <= this.Count() - 1; i++)
-        //    {
-        //        if (this.ElementAt(i).getApplicationName() == app)
-        //        {
-        //            if (this.ElementAt(i).getProjectName() == project)
-        //            {
-        //                for (int j = 0; j <= this.ElementAt(i).getNotarised().Count() - 1; j++)
-        //                {
-        //                    if (category == "ERROR")
-        //                    {
-        //                        if (xp.IsMatch(this.ElementAt(i).getNotarised().ElementAt(j).getError()))
-        //                        {
-        //                            ++count;
-        //                        }
-        //                    }
-        //                    if (category == "SOLUTION")
-        //                    {
-        //                        if (xp.IsMatch(this.ElementAt(i).getNotarised().ElementAt(j).getSolution()))
-        //                        {
-        //                            ++count;
-        //                        }
-        //                    }
-        //                    if (category == "SUGGESTION")
-        //                    {
-        //                        if (xp.IsMatch(this.ElementAt(i).getNotarised().ElementAt(j).getSuggestion()))
-        //                        {
-        //                            ++count;
-        //                        }
-        //                    }
-        //                    if (category == "COMMENT")
-        //                    {
-        //                        if (xp.IsMatch(this.ElementAt(i).getNotarised().ElementAt(j).getComment()))
-        //                        {
-        //                            ++count;
-        //                        }
-        //                    }
-        //                }
-        //                array.Add(this.ElementAt(i), count);
-        //                count = 0;
-        //            }
-        //        }
-        //    }
-
-        //    List<LOG> list = new List<LOG>();
-
-        //    if (asc_desc)
-        //    {
-        //        foreach (KeyValuePair<LOG, int> v in array.OrderBy(key => key.Value))
-        //        {
-        //            list.Add(v.Key);
-        //        }
-        //    }
-        //    else
-        //    {
-        //        foreach (KeyValuePair<LOG, int> v in array.OrderByDescending(key => key.Value))
-        //        {
-        //            list.Add(v.Key);
-        //        }
-        //    }
-
-        //    return list;
-        //}
-
-        ///** Find the highest/lowest amount of errors/solutions/suggestions/comments.
-        // *  If it's true (ASC) then return the lowest to highest.
-        // *  If it's false (DESC) then return the highest to lowest.
-        // *  Return a list with LOGS in the correct order.
-        // *  */
-        //public List<LOG> highORlow(bool asc_desc, string category)
-        //{
-        //    int count = 0;
-        //    string pattern = "[A-Za-z]{5}[0-9]{0}";
-        //    Regex xp = new Regex(pattern);
-        //    Dictionary<LOG, int> array = new Dictionary<LOG, int>();
-
-
-        //    for (int i = 0; i <= this.Count() - 1; i++)
-        //    {
-        //        for (int j = 0; j <= this.ElementAt(i).getNotarised().Count() - 1; j++)
-        //        {
-        //            if (category == "ERROR")
-        //            {
-        //                if (xp.IsMatch(this.ElementAt(i).getNotarised().ElementAt(j).getError()))
-        //                {
-        //                    ++count;
-        //                    continue;
-        //                }
-        //            }
-        //            if (category == "SOLUTION")
-        //            {
-        //                if (xp.IsMatch(this.ElementAt(i).getNotarised().ElementAt(j).getSolution()))
-        //                {
-        //                    ++count;
-        //                    continue;
-        //                }
-        //            }
-        //            if (category == "SUGGESTION")
-        //            {
-        //                if (xp.IsMatch(this.ElementAt(i).getNotarised().ElementAt(j).getSuggestion()))
-        //                {
-        //                    ++count;
-        //                    continue;
-        //                }
-        //            }
-        //            if (category == "COMMENT")
-        //            {
-        //                if (xp.IsMatch(this.ElementAt(i).getNotarised().ElementAt(j).getComment()))
-        //                {
-        //                    ++count;
-        //                    continue;
-        //                }
-        //            }
-        //        }
-        //        array.Add(this.ElementAt(i), count);
-        //        count = 0;
-        //    }
-
-        //    List<LOG> list = new List<LOG>();
-
-        //    if (asc_desc)
-        //    {
-        //        foreach (KeyValuePair<LOG, int> v in array.OrderBy(key => key.Value))
-        //        {
-        //            list.Add(v.Key);
-        //        }
-        //    }
-        //    else
-        //    {
-        //        foreach (KeyValuePair<LOG, int> v in array.OrderByDescending(key => key.Value))
-        //        {
-        //            list.Add(v.Key);
-        //        }
-        //    }
-
-
-
-        //    return list;
-        //}
-
-        ///** Find the highest/lowest amount of errors without solutions.
-        // *  If it's true (ASC) then return the lowest to highest.
-        // *  If it's false (DESC) then return the highest to lowest.
-        // *  Return a list with LOGS in the correct order.
-        // *  */
-        //public List<LOG> ERhighORlow(bool asc_desc)
-        //{
-        //    int count = 0;
-        //    string pattern = "[A-Za-z]{5}[0-9]{0}";
-        //    Regex xp = new Regex(pattern);
-        //    Dictionary<LOG, int> array = new Dictionary<LOG, int>();
-
-
-        //    for (int i = 0; i <= this.Count() - 1; i++)
-        //    {
-        //        for (int j = 0; j <= this.ElementAt(i).getNotarised().Count() - 1; j++)
-        //        {
-        //            if (xp.IsMatch(this.ElementAt(i).getNotarised().ElementAt(j).getError()) &&
-        //                !xp.IsMatch(this.ElementAt(i).getNotarised().ElementAt(j).getSolution())
-        //                )
-        //            {
-        //                ++count;
-        //            }
-        //        }
-        //        array.Add(this.ElementAt(i), count);
-        //        count = 0;
-        //    }
-
-        //    List<LOG> list = new List<LOG>();
-
-        //    if (asc_desc)
-        //    {
-        //        foreach (KeyValuePair<LOG, int> v in array.OrderBy(key => key.Value))
-        //        {
-        //            list.Add(v.Key);
-        //        }
-        //    }
-        //    else
-        //    {
-        //        foreach (KeyValuePair<LOG, int> v in array.OrderByDescending(key => key.Value))
-        //        {
-        //            list.Add(v.Key);
-        //        }
-        //    }
-
-
-
-        //    return list;
-        //}
-
-        ///** Find the LOG in the DATAREADER list with a project name that matches proj1, and do the same for proj2.
-        // *  Return a string that explains the differences or similarities between the 2.
-        // *  
-        // *  */
-        //public string compare(string proj1, string proj2, string app, string category)
-        //{
-        //    /** 
-        //     * variable1 is for the first project being evaluated
-        //     * variable2 is for the second project being evaluated 
-        //     *  */
-        //    string temp = "";
-        //    int index1 = -1, index2 = -1,
-        //        count1 = 0, count2 = 0;
-        //    bool exists1 = false, exists2 = false;
-
-        //    if (proj1 != proj2)
-        //    {
-        //        for (int i = 0; i < this.Count(); i++)
-        //        {
-        //            if (this.ElementAt(i).getApplicationName() == app)
-        //            {
-        //                if (this.ElementAt(i).getProjectName() == proj1)
-        //                {
-        //                    exists1 = !exists1;
-        //                    index1 = i;
-        //                }
-        //                else if (this.ElementAt(i).getProjectName() == proj2)
-        //                {
-        //                    exists2 = !exists2;
-        //                    index2 = i;
-        //                }
-        //                else if (exists1 && exists2)
-        //                    break; // No need to check the rest of the list if they have been found
-        //            }
-        //        }
-        //    }
-
-
-        //    if (exists1 && exists2)
-        //    {
-        //        // DURATION Comparison
-        //        if (totalDuration(app, proj1) > totalDuration(app, proj2))
-        //        {
-        //            temp += "The project " + this.ElementAt(index1).getProjectName() + " is " +
-        //                (totalDuration(app, proj1) - totalDuration(app, proj2)).ToString() + " longer than the project " +
-        //                this.ElementAt(index2).getProjectName() + ". ";
-        //        }
-        //        else if (totalDuration(app, proj1) == totalDuration(app, proj2))
-        //        {
-        //            temp += "There is no difference between these 2 projects in terms of duration. ";
-        //        }
-        //        else
-        //        {
-        //            temp += this.ElementAt(index1).getProjectName() + " is " +
-        //                (totalDuration(app, proj2) - totalDuration(app, proj1)).ToString() +
-        //                " shorter than " + this.ElementAt(index2).getProjectName() + ". ";
-        //        }
-
-        //        // TOTAL LOGS Comparison
-        //        count1 = totalLOGS(category, app, proj1);
-
-        //        count2 = totalLOGS(category, app, proj2);
-
-        //        if (count1 > count2)
-        //        {
-        //            temp += "The project " + this.ElementAt(index1).getProjectName() +
-        //                " has " + (count1 - count2).ToString() + " more logs than the project " +
-        //                this.ElementAt(index2).getProjectName() + ". ";
-        //        }
-        //        else if (count1 == count2)
-        //        {
-        //            temp += "Both projects have " + count1.ToString() + " logs. ";
-        //        }
-        //        else
-        //        {
-        //            temp += "The project " + this.ElementAt(index1).getProjectName() +
-        //                " has " + (count2 - count1).ToString() + " less logs than the project " +
-        //                this.ElementAt(index2).getProjectName() + ". ";
-        //        }
-
-
-        //        // UNSOLVED ERRORS Comparison
-        //        count1 = xERtotalCount(app, proj1);
-
-        //        count2 = xERtotalCount(app, proj2);
-
-        //        if (count1 > count2)
-        //        {
-        //            temp += "The project " + this.ElementAt(index1).getProjectName() +
-        //                " has " + (count1 - count2).ToString() + " more unsolved errors than the project " +
-        //                this.ElementAt(index2).getProjectName() + ". ";
-        //        }
-        //        else if (count1 == count2)
-        //        {
-        //            temp += "These projects both have " + count1.ToString() + " unsolved errors. ";
-        //        }
-        //        else
-        //        {
-        //            temp += "The project " + this.ElementAt(index1).getProjectName() +
-        //                " has " + (count2 - count1).ToString() + " less unsolved errors than the project " +
-        //                this.ElementAt(index2).getProjectName() + ". ";
-        //        }
-
-        //        // ERRORS
-        //        count1 = ERtotalCount(app, proj1);
-
-        //        count2 = ERtotalCount(app, proj2);
-
-        //        if (count1 > count2)
-        //        {
-        //            temp += "The project " + this.ElementAt(index1).getProjectName() +
-        //                " has " + (count1 - count2).ToString() + " more errors than the project " +
-        //                this.ElementAt(index2).getProjectName() + ". ";
-        //        }
-        //        else if (count1 == count2)
-        //        {
-        //            temp += "These projects both have " + count1.ToString() + " errors. ";
-        //        }
-        //        else
-        //        {
-        //            temp += "The project " + this.ElementAt(index1).getProjectName() +
-        //                " has " + (count2 - count1).ToString() + " less errors than the project " +
-        //                this.ElementAt(index2).getProjectName() + ". ";
-        //        }
-
-        //        count1 = 0;
-        //        count2 = 0;
-
-        //        // SOLUTIONS
-        //        count1 = SOtotalCount(app, proj1);
-
-        //        count2 = SOtotalCount(app, proj2);
-
-        //        if (count1 > count2)
-        //        {
-        //            temp += "The project " + this.ElementAt(index1).getProjectName() +
-        //                " has " + (count1 - count2).ToString() + " more solutions than the project " +
-        //                this.ElementAt(index2).getProjectName() + ". ";
-        //        }
-        //        else if (count1 == count2)
-        //        {
-        //            temp += "These projects both have " + count1.ToString() + " solutions. ";
-        //        }
-        //        else
-        //        {
-        //            temp += "The project " + this.ElementAt(index1).getProjectName() +
-        //                " has " + (count2 - count1).ToString() + " less solutions than the project " +
-        //                this.ElementAt(index2).getProjectName() + ". ";
-        //        }
-
-        //        count1 = 0;
-        //        count2 = 0;
-
-        //        // SUGGESTIONS
-        //        count1 = SUtotalCount(app, proj1);
-
-        //        count2 = SUtotalCount(app, proj2);
-
-        //        if (count1 > count2)
-        //        {
-        //            temp += "The project " + this.ElementAt(index1).getProjectName() +
-        //                " has " + (count1 - count2).ToString() + " more suggestions than the project " +
-        //                this.ElementAt(index2).getProjectName() + ". ";
-        //        }
-        //        else if (count1 == count2)
-        //        {
-        //            temp += "These projects both have " + count1.ToString() + " suggestions. ";
-        //        }
-        //        else
-        //        {
-        //            temp += "The project " + this.ElementAt(index1).getProjectName() +
-        //                " has " + (count2 - count1).ToString() + " less suggestions than the project " +
-        //                this.ElementAt(index2).getProjectName() + ". ";
-        //        }
-
-        //        count1 = 0;
-        //        count2 = 0;
-
-
-        //        // COMMENTS
-        //        count1 = COtotalCount(app, proj1);
-
-        //        count2 = COtotalCount(app, proj2);
-
-        //        if (count1 > count2)
-        //        {
-        //            temp += "The project " + this.ElementAt(index1).getProjectName() +
-        //                " has " + (count1 - count2).ToString() + " more comments than the project " +
-        //                this.ElementAt(index2).getProjectName() + ". ";
-        //        }
-        //        else if (count1 == count2)
-        //        {
-        //            temp += "These projects both have " + count1.ToString() + " comments. ";
-        //        }
-        //        else
-        //        {
-        //            temp += "The project " + this.ElementAt(index1).getProjectName() +
-        //                " has " + (count2 - count1).ToString() + " less comments than the project " +
-        //                this.ElementAt(index2).getProjectName() + ". ";
-        //        }
-
-        //        count1 = 0;
-        //        count2 = 0;
-        //    }
-        //    else
-        //        temp = "One of the projects (or both of them) do not exist!";
-
-        //    return temp;
-        //}
-
-        //// TODO
-        //public string compare(string proj1, string proj2, string proj3, string app, string category)
-        //{
-        //    string temp = "";
-
-        //    return temp;
-        //}
-
-        /** Populates this DATAREADER with LOGS **/
-        public void RetrieveLOGS()
+        /// <summary>
+        /// Checks if an email exists.
+        /// </summary>
+        /// <param name="email">The email provided by the user signing up.</param>
+        /// <returns>Returns whether the email exists or not. Will throw an ExmailConflictException if the email exists.</returns>
+        /// <exception cref="EmailConflictException"></exception>
+        public bool EmailExists(string email)
         {
-            this.Clear();
+            using SQLiteCommand query = _con.CreateCommand();
+            query.CommandText = "SELECT email FROM ACCOUNT WHERE email = @email;";
+            query.Parameters.AddWithValue("@email", email);
 
-            List<LOG>? logs = null;
-            bool Initialised = false;
-            var note_IDs_LIST = new List<int>();
-            var flexiLog_IDs_LIST = new List<int>();
+            SQLiteDataReader reader = query.ExecuteReader();
+            if (reader.Read())
+            {
+                throw new EmailConflictException("This email already exists.");
+            }
 
-            var categoryColumn = 1;
-            var accountColumn = 2;
-            var projectColumn = 3;
-            var appColumn = 4;
-            var startColumn = 5;
-            var endColumn = 6;
-            var outputColumn = 7;
-            var typeColumn = 8;
+            return false;
+        }
 
-            var noteLogTypeIDColumn = 1;
+
+
+        /// <summary>
+        /// Counts the total number of logs.
+        /// </summary>
+        /// <returns>The count of logs.</returns>
+        public int LogCount()
+        {
+            SQLiteCommand query = _con.CreateCommand();
+            query.CommandText = $@"SELECT * FROM LOG WHERE {Column.AccountID} = @account
+;";
+            query.Parameters.AddWithValue("@account", User.ID);
+
+            SQLiteDataReader read = query.ExecuteReader();
+            int count = 0;
+
+            while (read.Read())
+            {
+                ++count;
+            }
+
+            read.Close();
+
+            return count;
+        }
+
+        /// <summary>
+        /// Counts the number of logs that are in a particular category.
+        /// </summary>
+        /// <param name="category">The category being enquired about.</param>
+        /// <returns>The count of logs in the given category.</returns>
+        public int LogCount(LOG.CATEGORY category)
+        {
+            SQLiteCommand query = _con.CreateCommand();
+            try
+            {
+                query.CommandText = $@"SELECT * FROM LOG WHERE {Column.CategoryID} = @category
+                                        AND {Column.AccountID} = @account
+                                        AND {Column.AppID} NOT IN (@id1, @id2)
+;";
+                query.Parameters.AddWithValue("@category", FindCategoryID(category));
+                query.Parameters.AddWithValue("@account", User.ID);
+                query.Parameters.AddWithValue("@id1", 1);
+                query.Parameters.AddWithValue("@id2", 2);
+
+                SQLiteDataReader read = query.ExecuteReader();
+                int count = 0;
+
+                while (read.Read())
+                {
+                    ++count;
+                }
+
+                read.Close();
+
+                return count;
+            }
+            catch (Exception)
+            {
+                return -1;
+            }
+        }
+
+        /// <summary>
+        /// Counts the number of Qt logs.
+        /// </summary>
+        /// <returns>The count of Qt logs ONLY.</returns>
+        public int QtLogCount()
+        {
+            string queryText = $@"SELECT COUNT(*) FROM LOG WHERE {Column.CategoryID} = @category 
+                                    AND {Column.AccountID} = @account
+                                    AND {Column.AppID} = @app
+;";
+
+            try
+            {
+                using (var query = _con.CreateCommand())
+                {
+                    query.CommandText = queryText;
+                    query.Parameters.AddWithValue("@category", 1);
+                    query.Parameters.AddWithValue("@account", User.ID);
+                    query.Parameters.AddWithValue("@app", 1);
+
+                    object result = query.ExecuteScalar();
+
+                    if (result != null && result != DBNull.Value)
+                        return Convert.ToInt32(result);
+                    
+
+                }
+            }
+            catch (SQLiteException sqlex)
+            {
+                Debug.WriteLine($"SQLite Exception in QtLogCount: {sqlex.Message}");
+                return -1;
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"Exception in QtLogCount: {ex.Message}");
+                return -1;
+            }
+
+            return 0;
+        }
+
+
+
+        /// <summary>
+        /// Counts the number of Android Studio logs.
+        /// </summary>
+        /// <returns>The count of Android Studio logs ONLY.</returns>
+        public int ASLogCount()
+        {
+            string queryText = $@"SELECT COUNT(*) 
+                          FROM LOG 
+                          WHERE {Column.CategoryID} = @category 
+                            AND {Column.AccountID} = @account
+                            AND {Column.AppID} = @app;";
+
+            try
+            {
+                using (var query = _con.CreateCommand())
+                {
+                    query.CommandText = queryText;
+                    query.Parameters.AddWithValue("@category", 1);
+                    query.Parameters.AddWithValue("@account", User.ID);
+                    query.Parameters.AddWithValue("@app", 2);
+
+                    object result = query.ExecuteScalar();
+
+                    if (result != null && result != DBNull.Value)
+                        return Convert.ToInt32(result);
+
+                }
+            }
+            catch (SQLiteException sqlex)
+            {
+                Debug.WriteLine($"SQLite Exception in ASLogCount: {sqlex.Message}");
+                return -1;
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"Exception occurred near ASLogCount: {ex.Message}");
+                return -1;
+            }
+
+            return 0;
+
+        }
+
+
+        /// <summary>
+        /// Counts the number of flexible logs only.
+        /// </summary>
+        /// <returns>The count of flexible logs.</returns>
+        public int FlexiLogCount()
+        {
+            SQLiteCommand query = _con.CreateCommand();
+            try
+            {
+                query.CommandText = $@"SELECT COUNT(*) FROM FlexiNotesLOG WHERE {Column.AccountID} = @account
+;";
+                query.Parameters.AddWithValue("@account", User.ID);
+
+                object result = query.ExecuteScalar();
+
+                if (result != null && result != DBNull.Value)
+                    return Convert.ToInt32(result);
+
+                
+            }
+            catch (SQLiteException sqlex)
+            {
+                Debug.WriteLine($"SQLiteException near FlexiLogCount(): {sqlex.Message}");
+                return -1;
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"Exception occurred near FlexiLogCount(): {ex.Message}");
+                return -1;
+            }
+
+            return 0;
+        }
+
+
+
+        #region Querying
+
+
+
+
+
+
+        public List<CodingLOG> SearchQtLogs(string searchBarText, int projectID)
+        {
+            if(string.IsNullOrEmpty(searchBarText))
+            {
+                return new List<CodingLOG>();
+            }
+
+            var logs = new List<CodingLOG>();
+            var codingLogs = new Dictionary<int, CodingLOG>();
+            var postIts = new Dictionary<int, List<PostIt>>();
+
+            try
+            {
+                using (var query = _con.CreateCommand())
+                {
+                    /* Fetch LOG records based on search criteria OR fetch LOGs for PostIts that have the search criteria. */
+                    query.CommandText = @"
+                        SELECT 
+                            *
+                        FROM LOG
+                        WHERE (
+                                  start LIKE @searchText
+                                  OR end LIKE @searchText
+                                  OR outputID IN (SELECT outputID FROM OUTPUT WHERE output LIKE @searchText AND appID = @appID AND categoryID = @categoryID)
+                                  OR typeID IN (SELECT typeID FROM TYPE WHERE type LIKE @searchText AND appID = @appID AND categoryID = @categoryID) 
+                               
+                                    OR
+                               
+                                    logID IN (
+                                        SELECT logID FROM PostIt WHERE
+                                        subjectID IN (SELECT subjectID FROM Subject WHERE subject LIKE @searchText 
+                                            AND appID = @appID 
+                                            AND categoryID = @categoryID 
+                                            AND accountID = @accountID
+                                            AND projectID = @projectID
+                                                     )
+                                        OR error LIKE @searchText
+                                        OR solution LIKE @searchText
+                                        OR suggestion LIKE @searchText
+                                        OR comment LIKE @searchText
+                                             )
+                              )
+                  AND accountID = @accountID
+                  AND categoryID = @categoryID
+                  AND appID = @appID
+;";
+
+                    query.Parameters.AddWithValue("@searchText", $"%{searchBarText}%");
+                    query.Parameters.AddWithValue("@accountID", User.ID);
+                    query.Parameters.AddWithValue("@categoryID", 1);
+                    query.Parameters.AddWithValue("@appID", 1);
+                    query.Parameters.AddWithValue("@projectID", projectID);
+
+                    using (var read = query.ExecuteReader())
+                    {
+                        while (read.Read())
+                        {
+                            var logID = read.GetInt32(read.GetOrdinal("logID"));
+                            codingLogs[logID] = new CodingLOG
+                            {
+                                ID = logID,
+                                Author = User,
+                                Application = FindAppByID(read.GetInt32(read.GetOrdinal("appID"))),
+                                Project = FindProjectByID(read.GetInt32(read.GetOrdinal("projectID"))),
+                                Start = DateTime.Parse(read.GetString(read.GetOrdinal("start"))),
+                                End = DateTime.Parse(read.GetString(read.GetOrdinal("end"))),
+                                Output = FindOutputByID(read.GetInt32(read.GetOrdinal("outputID"))),
+                                Type = FindTypeByID(read.GetInt32(read.GetOrdinal("typeID"))),
+                                PostItList = new()
+                            };
+                        }
+
+                        read.Close();
+                    }
+
+                    var IDs = codingLogs.Keys.ToList();
+
+                    /* Retrieve PostIts with logIDs found in codingLogs */
+                    query.CommandText = $@"SELECT
+                                                *
+                                            FROM PostIt
+                                            WHERE logID IN(
+                                                {string.Join(',', IDs)}
+                                                            )
+
+;";
+
+                    using(var read = query.ExecuteReader())
+                    {
+                        while(read.Read())
+                        {
+                            var logID = read.GetInt32(read.GetOrdinal("logID"));
+                            if (codingLogs.ContainsKey(logID))
+                            {
+                                var dateFound = read.GetString(read.GetOrdinal("date_found"));
+                                var dateSolved = read.GetString(read.GetOrdinal("date_solved"));
+
+                                codingLogs[logID].PostItList.Add(
+                                    new PostIt
+                                    {
+                                        ID = read.GetInt32(read.GetOrdinal("postItID")),
+                                        Subject = FindSubjectByID(read.GetInt32(read.GetOrdinal("subjectID"))),
+                                        Error = read.GetString(read.GetOrdinal("error")),
+                                        ERCaptureTime = string.IsNullOrEmpty(dateFound) ? new() : 
+                                            DateTime.Parse(dateFound),
+                                        Solution = read.GetString(read.GetOrdinal("solution")),
+                                        SOCaptureTime = string.IsNullOrEmpty(dateSolved) ? new() :
+                                            DateTime.Parse(dateSolved),
+                                        Suggestion = read.GetString(read.GetOrdinal("suggestion")),
+                                        Comment = read.GetString(read.GetOrdinal("comment"))
+                                    }
+                                    );
+                            }
+                        }
+                        
+                        read.Close();
+                    }
+
+                    /* Retrieve CodingLOGs with logIDs found in codingLogs.  */
+                    query.CommandText = $@"SELECT
+                                                *
+                                            FROM CodingLOG
+                                            WHERE logID IN(
+                                                {string.Join(',', IDs)} )
+
+;";
+
+                    using (var read = query.ExecuteReader())
+                    {
+                        while(read.Read())
+                        {
+                            var logID = read.GetInt32(read.GetOrdinal("logID"));
+                            if (codingLogs.ContainsKey(logID))
+                            {
+                                codingLogs[logID].Bugs = read.GetInt32(read.GetOrdinal("bugs"));
+                                codingLogs[logID].Success = read.GetBoolean(read.GetOrdinal("opened"));
+                            }
+                        }
+
+                        read.Close();
+                    }
+
+                }
+            }
+            catch (ArgumentNullException nullex)
+            {
+                Debug.WriteLine($"ArgumentNullException occurred near SearchQtLogs(query,projectID): {nullex.Message}");
+            }
+            catch (SQLiteException sqlex)
+            {
+                Debug.WriteLine($"SQLiteException occurred near SearchQtLogs(query,projectID): {sqlex.Message}");
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"Exception occurred near SearchQtLogs(query,projectID): {ex.Message}");
+            }
+
+            return [.. codingLogs.Values];
+        }
+
+
+
+
+
+
+
+
+
+
+        #endregion
+
+
+
+
+
+
+
+
+        /// <summary>
+        /// Finds a category ID in the database for the LOG category enum provided.
+        /// </summary>
+        /// <param name="category">The category enum that the ID required is associated with.</param>
+        /// <returns>An integer value representing an ID.</returns>
+        public int FindCategoryID(LOG.CATEGORY category)
+        {
+            try
+            {
+                using (SQLiteCommand query = _con.CreateCommand())
+                {
+                    query.CommandText = $@"SELECT {Column.CategoryID} FROM CATEGORY WHERE {Column.category} = @categoryName;";
+                    query.Parameters.AddWithValue("@categoryName", category.ToString());
+
+                    object result = query.ExecuteScalar();
+                    return result != null ? Convert.ToInt32(result) : -1;
+                }
+            }
+            catch (Exception ex)
+            {
+                // Log or handle the exception appropriately
+                Debug.WriteLine($"Exception found near FindCategoryID: {ex.Message}");
+            }
+
+            return -1;
+        }
+
+        /** Will find an APPLICATION's ID and return both the ID.
+        *   It will automatically add an APPLICATION if it doesn't exist.
+        *   */
+        public int FindAppID(ApplicationClass app)
+        {
+            try
+            {
+                using (SQLiteCommand query = _con.CreateCommand())
+                {
+                    query.CommandText = $@"SELECT {Column.AppID} FROM APPLICATION WHERE {Column.app} = @appName
+                                                        AND {Column.CategoryID} = @category
+                                                        AND {Column.AccountID} IN (@id1, @id2)
+;";
+                    query.Parameters.AddWithValue("@appName", app.Name);
+                    query.Parameters.AddWithValue("@category", FindCategoryID(app.Category));
+                    query.Parameters.AddWithValue("@id1", 1);
+                    query.Parameters.AddWithValue("@id2", app.User.ID);
+
+                    object result = query.ExecuteScalar();
+
+                    if (result != null)
+                        return Convert.ToInt32(result);
+                    
+                }
+            }
+            catch (SQLiteException sqlex)
+            {
+                Debug.WriteLine($"SQLite Exception found near FindAppID: {sqlex.Message}");
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"Exception found near FindAppID: {ex.Message}");
+
+                // TODO
+            }
+
+            return -1;
+        }
+
+
+        /** Will find a PROJECT's ID and return the ID of the PROJECT.
+         *  This function will automatically add a PROJECT if it doesn't exist and return the new project's ID.
+         *  */
+        public int FindProjectID(ProjectClass project)
+        {
+            if (string.IsNullOrEmpty(project.Name) || project.Name == "Unknown")
+                return 1;
+
+
+            try
+            {
+
+                // Retrieve APPLICATION ID
+                int appID = FindAppID(project.Application);
+
+                // If application ID is not 3, perform search and add project if not found
+                if (appID != 3)
+                {
+                    using (SQLiteCommand query = _con.CreateCommand())
+                    {
+                        query.CommandText = $@"SELECT {Column.ProjectID} FROM PROJECT 
+                                      WHERE {Column.AppID} = @app
+                                        AND {Column.AccountID} = @account
+                                        AND {Column.CategoryID} = @category
+                                        AND {Column.project} = @project
+;";
+
+                        query.Parameters.AddWithValue("@app", project.Application.AppID);
+                        query.Parameters.AddWithValue("@account", project.User.ID);
+                        query.Parameters.AddWithValue("@category", FindCategoryID(project.Category));
+                        query.Parameters.AddWithValue("@project", project.Name);
+
+                        object result = query.ExecuteScalar();
+
+                        if (result != null)
+                            return Convert.ToInt32(result);
+                        
+                    }
+                }
+
+            }
+            catch (SQLiteException sqlex)
+            {
+                Debug.WriteLine($"SQLite Exception near FindProjectID(projectClass): {sqlex.Message}");
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"Exception near FindProjectID(projectClass): {ex.Message}");
+            }
+
+            return -1;
+        }
+
+
+
+        public ProjectClass FindProjectByID(int id)
+        {
+            ProjectClass project = new ProjectClass();
+            const string unknown = "Unknown";
+
+            try
+            {
+                using (SQLiteCommand query = _con.CreateCommand())
+                {
+                    query.CommandText = $@"SELECT * FROM PROJECT WHERE {Column.ProjectID} = @id
+;";
+                    query.Parameters.AddWithValue("@id", id);
+
+                    SQLiteDataReader read = query.ExecuteReader();
+                    if (read.Read())
+                    {
+                        project.ProjectID = read.GetInt32(Column.IDColumn);
+                        project.Name = read.GetString(Column.project);
+
+                        project.IsDefault = project.Name.Equals(unknown, StringComparison.OrdinalIgnoreCase);
+
+                        int accountID = read.GetInt32(Column.AccountID);
+                        project.User = FindAccountByID(accountID);
+
+                        int appID = read.GetInt32(Column.AppID);
+                        project.Application = FindAppByID(appID);
+                    }
+
+                    read.Close();
+                }
+            }
+            catch (SQLiteException sqlex)
+            {
+                Debug.WriteLine($"SQLite Exception near FindProjectByID(id): {sqlex.Message}");
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"Exception near FindProjectByID(id): {ex.Message}");
+
+                // TODO
+            }
+
+            return project;
+        }
+
+
+        public int FindOutputID(OutputClass output)
+        {
+
+            try
+            {
+                using (SQLiteCommand query = _con.CreateCommand())
+                {
+                    query.CommandText = $@"SELECT outputID FROM OUTPUT WHERE {Column.CategoryID} = @category 
+                                                            AND output = @output ORDER BY outputID ASC
+;";
+                    query.Parameters.AddWithValue("@category", FindCategoryID(output.Category));
+                    query.Parameters.AddWithValue("@output", output.Name);
+
+                    object result = query.ExecuteScalar();
+
+                    if (result != null && result != DBNull.Value)
+                        return Convert.ToInt32(result);
+                }
+            }
+            catch (SQLiteException sqlex)
+            {
+                Debug.WriteLine($"SQLite Exception near FindOutputID(outputClass): {sqlex.Message}");
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"Exception near FindOutputID(outputClass): {ex.Message}");
+
+                // TODO
+            }
+
+            return 37;
+        }
+
+
+        public OutputClass FindOutputByID(int id)
+        {
+            OutputClass output = new();
+
+            try
+            {
+                using (SQLiteCommand query = _con.CreateCommand())
+                {
+                    query.CommandText = "SELECT * FROM OUTPUT WHERE outputID = @id ORDER BY outputID ASC;";
+                    query.Parameters.AddWithValue("@id", id);
+
+                    SQLiteDataReader reader = query.ExecuteReader();
+                    if (reader.Read())
+                    {
+                        output.OutputID = reader.GetInt32(Column.IDColumn);
+                        output.Name = reader.GetString(Column.output);
+                        output.User = FindAccountByID(reader.GetInt32(Column.AccountID));
+                        output.Application = FindAppByID(reader.GetInt32(Column.AppID));
+                        output.Category = FindCategoryByID(reader.GetInt32(Column.CategoryID));
+                    }
+
+                    reader.Close();
+                }
+            }
+            catch (SQLiteException sqlex)
+            {
+                Debug.WriteLine($"SQLite Exception: {sqlex.Message}");
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"Error finding output by ID: {ex.Message}");
+            }
+
+            return output;
+        }
+
+
+        public int FindTypeID(TypeClass type)
+        {
+            // Will store the type IDs
+            int typeKey = 1, catNumber = 1;
 
             SQLiteCommand query = _con.CreateCommand();
+            SQLiteDataReader read;
 
+            /** Retrieve TYPEs from the database temporarily.
+             *  Look for the type that matches "type" parameter variable.
+             *  Then, return the key of the type when it is found.
+             */
 
-            query.CommandText = @"SELECT * FROM NotesLOG ORDER BY logID;";
-            SQLiteDataReader read = query.ExecuteReader();
-
+            query.CommandText = $@"SELECT * FROM TYPE WHERE {Column.CategoryID} = @category 
+                                                AND type = @type
+;";
+            query.Parameters.AddWithValue("@category", FindCategoryID(type.Category));
+            query.Parameters.AddWithValue("@type", type.Name);
             read = query.ExecuteReader();
 
 
             while (read.Read())
             {
+                typeKey = read.GetInt32(Column.IDColumn);
+                break;
+            }
 
-                if (!Initialised)
+            read.Close();
+
+            return typeKey;
+        }
+
+        public TypeClass FindTypeByID(int id)
+        {
+            SQLiteCommand query = _con.CreateCommand();
+            SQLiteDataReader read;
+            TypeClass type = new();
+
+            query.CommandText = "SELECT * FROM TYPE WHERE typeID = @id ORDER BY typeID ASC;";
+            query.Parameters.AddWithValue("@id", id);
+
+            read = query.ExecuteReader();
+
+            while (read.Read())
+            {
+                type.TypeID = read.GetInt32(0);
+                type.Name = read.GetString(4);
+                type.User = FindAccountByID(read.GetInt32(1));
+                type.Application = FindAppByID(read.GetInt32(2));
+                type.Category = FindCategoryByID(read.GetInt32(3));
+            }
+
+            read.Close();
+
+            return type;
+        }
+
+        public int FindSubjectID(SubjectClass subject)
+        {
+            // Will store the type IDs
+            int subjectKey = -1;
+
+            var subjectColumn = 5;
+
+            SQLiteCommand query = _con.CreateCommand();
+            SQLiteDataReader read;
+
+            /** Retrieve Subjects from the database temporarily.
+             *  Look for the subject that matches the "subject" parameter variable.
+             *  Then, return the key of the type when it is found.
+             */
+            query.CommandText = $@"SELECT * FROM Subject WHERE {Column.CategoryID} = @category
+                                    AND {Column.ProjectID} = @project
+                                    AND {Column.AppID} = @app
+                                    AND {Column.AccountID} = @account
+;";
+            query.Parameters.AddWithValue("@category", FindCategoryID(subject.Category));
+
+            var projectID = subject.Project.ProjectID;
+            query.Parameters.AddWithValue("@project", projectID);
+
+            var appID = subject.Application.AppID;
+            query.Parameters.AddWithValue("@app", appID);
+
+            var userID = subject.User.ID;
+            query.Parameters.AddWithValue("@account", userID);
+
+            read = query.ExecuteReader();
+
+            while (read.Read())
+            {
+                if (read.GetString(subjectColumn) == subject.Subject)
                 {
-                    logs = new();
-                    Initialised = true;
+                    subjectKey = read.GetInt32(Column.IDColumn);
+                    SubjectAlreadyAdded = true;
+                    break;
                 }
-                else if (logs is not null)
+            }
+
+            read.Close();
+
+            return subjectKey;
+        }
+
+        public SubjectClass FindSubjectByID(int id)
+        {
+            SQLiteCommand query = _con.CreateCommand();
+            SQLiteDataReader read;
+            SubjectClass subject = new();
+            subject.SubjectID = -1;
+
+            query.CommandText = "SELECT * FROM Subject WHERE subjectID = @id ORDER BY subjectID ASC;";
+            query.Parameters.AddWithValue("@id", id);
+
+            read = query.ExecuteReader();
+
+            while (read.Read())
+            {
+                subject.SubjectID = read.GetInt32(0);
+                subject.Project = FindProjectByID(read.GetInt32(1));
+                subject.Application = FindAppByID(read.GetInt32(2));
+                subject.User = FindAccountByID(read.GetInt32(3));
+                subject.Category = FindCategoryByID(read.GetInt32(4));
+                subject.Subject = read.GetString(5);
+            }
+
+            read.Close();
+
+            return subject;
+        }
+
+        public string? FindMediumByID(int id)
+        {
+            try
+            {
+                SQLiteCommand query = _con.CreateCommand();
+                SQLiteDataReader read;
+                string? medium = null;
+
+                var mediumColumn = 2;
+
+                query.CommandText = "SELECT * FROM MEDIUM WHERE mediumID = @id ORDER BY mediumID ASC;";
+                query.Parameters.AddWithValue("@id", id);
+
+                read = query.ExecuteReader();
+
+                while (read.Read())
                 {
-                    var type = FindNoteLogTypeByID(read.GetInt32(noteLogTypeIDColumn));
-                    switch (type)
-                    {
-                        case NotesLOG.NOTELOGType.GENERIC:
-                            {
-                                NoteItem note = new();
-                                note.ID = read.GetInt32(Column.IDColumn);
-                                note_IDs_LIST.Add(note.ID);
-                                logs.Add(note);
-
-                                break;
-                            }
-                        case NotesLOG.NOTELOGType.FLEXI:
-                            {
-                                FlexiNotesLOG flexiLog = new();
-                                flexiLog.ID = read.GetInt32(Column.IDColumn);
-                                flexiLog_IDs_LIST.Add(flexiLog.ID);
-                                logs.Add(flexiLog);
-
-                                break;
-                            }
-                    }
+                    medium = read.GetString(mediumColumn);
                 }
+
+                read.Close();
+
+                return medium;
+            }
+            catch (SQLiteException sqlex)
+            {
+                Debug.WriteLine($"SQLiteException found near FindMediumByID(id): {sqlex.Message}");
+                return null;
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"Exception found near FindMediumByID(id): {ex.Message}");
+                // TODO
+                return null;
+            }
+        }
+
+        public string FindFormatByID(int id)
+        {
+            try
+            {
+                SQLiteCommand query = _con.CreateCommand();
+                SQLiteDataReader read;
+                string? format = null;
+
+                var formatColumn = 2;
+
+                query.CommandText = "SELECT * FROM FORMAT WHERE formatID = @id ORDER BY formatID ASC;";
+                query.Parameters.AddWithValue("@id", id);
+
+                read = query.ExecuteReader();
+
+                while (read.Read())
+                {
+                    format = read.GetString(formatColumn);
+                }
+
+                read.Close();
+
+                return format;
+            }
+            catch (SQLiteException sqlex)
+            {
+                Debug.WriteLine($"SQLiteException found near FindFormatByID(id): {sqlex.Message}");
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"Exception found near FindFormatByID(id): {ex.Message}");
+                // TODO
 
             }
 
+            return null;
+        }
 
+        public FLEXINOTEType FindFlexiNoteTypeByID(int id)
+        {
+            try
+            {
+                SQLiteCommand query = _con.CreateCommand();
+                SQLiteDataReader read;
+                FLEXINOTEType flexiNoteType = new();
+
+                var flexiNoteTypeColumn = 2;
+
+                query.CommandText = "SELECT * FROM FlexiNoteType WHERE flexiNoteTypeID = @id ORDER BY flexiNoteTypeID ASC;";
+                query.Parameters.AddWithValue("@id", id);
+
+                read = query.ExecuteReader();
+
+                while (read.Read())
+                {
+                    var type = read.GetString(flexiNoteTypeColumn);
+                    Enum.TryParse(type, out flexiNoteType);
+                }
+
+                read.Close();
+
+                return flexiNoteType;
+            }
+            catch (SQLiteException sqlex)
+            {
+                Debug.WriteLine($"SQLiteException found near FindFlexiNoteTypeByID(id): {sqlex.Message}");
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"Exception found found near FindFlexiNoteTypeByID(id): {ex.Message}");
+            }
+
+            return new();
+        }
+
+
+        public LOG.CATEGORY FindCategoryByID(int id)
+        {
+            SQLiteCommand query = _con.CreateCommand();
+            SQLiteDataReader read;
+            LOG.CATEGORY category = new();
+
+            query.CommandText = $@"SELECT * FROM CATEGORY WHERE {Column.CategoryID} = @category;";
+            query.Parameters.AddWithValue("@category", id);
+
+            try
+            {
+                read = query.ExecuteReader();
+
+                while (read.Read())
+                {
+                    if (read.GetInt32(Column.IDColumn) == id)
+                    {
+                        string categoryName = read.GetString(1);
+                        var IsOkay = Enum.TryParse(categoryName, out category);
+
+                        if (!IsOkay)
+                            throw new InvalidCastException();
+                        break;
+                    }
+
+                }
+
+                read.Close();
+            }
+            catch (InvalidCastException)
+            {
+                SQLiteCommand insert = _con.CreateCommand();
+                insert.CommandText = @"INSERT INTO FEEDBACK(feedTypeID, {Column.AccountID}, date, description, CanContact)
+                                        VALUES(@feed, @account, @date_submitted, @desc, @contact)";
+                insert.Parameters.AddWithValue("@feed", 1);
+                insert.Parameters.AddWithValue("@account", User.ID);
+                insert.Parameters.AddWithValue("@date_submitted", DateTime.Now.ToString("d MMMM yyyy HH:mm:ss"));
+                insert.Parameters.AddWithValue("@desc", "A bug occurred where the incorrect enum was returned or the enum parser was unable to parse the enum at all for whatever reason.");
+                insert.Parameters.AddWithValue("@contact", 0);
+
+                insert.ExecuteNonQuery();
+            }
+            catch (SQLiteException sqlex)
+            {
+                Debug.WriteLine($"SQLiteException found near FindCategoryByID(id): {sqlex.Message}");
+            }
+            catch (Exception e)
+            {
+                Debug.WriteLine($"Exception found near FindCategoryByID(id): {e.Message}");
+                // TODO
+            }
+
+            return category;
+        }
+
+        /// <summary>
+        /// Finds a NOTELOGType ID in the database for the enum provided.
+        /// </summary>
+        /// <param name="type">The type enum that the ID required is associated with.</param>
+        /// <returns>An integer value representing a NOTELOGType ID.</returns>
+        public int FindNoteLogTypeID(NOTELOGType type)
+        {
+            SQLiteCommand query = _con.CreateCommand();
+            query.CommandText = "SELECT * FROM NoteLogTypes;";
+            SQLiteDataReader read = query.ExecuteReader();
+            int id = -1;
+            var noteLogTypeColumn = 1;
+
+            while (read.Read())
+            {
+                if (read.GetString(noteLogTypeColumn) == type.ToString())
+                {
+                    id = read.GetInt32(Column.IDColumn);
+                    break;
+                }
+            }
+
+            read.Close();
+
+            return id;
+        }
+
+
+        public NOTELOGType FindNoteLogTypeByID(int id)
+        {
+            SQLiteCommand query = _con.CreateCommand();
+            SQLiteDataReader read;
+            NOTELOGType type = new();
+
+            var noteLogTypeColumn = 1;
+
+            query.CommandText = "SELECT * FROM NoteLogTypes WHERE noteLogTypeID = @id;";
+            query.Parameters.AddWithValue("@id", id);
+
+            try
+            {
+                read = query.ExecuteReader();
+
+                while (read.Read())
+                {
+                    string typeName = read.GetString(noteLogTypeColumn);
+                    var IsOkay = Enum.TryParse(typeName, out type);
+
+                    break;
+
+                }
+
+                read.Close();
+            }
+            catch (InvalidCastException)
+            {
+                SQLiteCommand insert = _con.CreateCommand();
+                insert.CommandText = $@"INSERT INTO FEEDBACK(feedTypeID, {Column.AccountID}, date, description, CanContact)
+                                        VALUES(@feed, @account, @date_submitted, @desc, @contact)";
+                insert.Parameters.AddWithValue("@feed", 1);
+                insert.Parameters.AddWithValue("@account", User.ID);
+                insert.Parameters.AddWithValue("@date_submitted", DateTime.Now.ToString("d MMMM yyyy HH:mm:ss"));
+                insert.Parameters.AddWithValue("@desc", "A bug occurred where the incorrect enum was return or the enum parser was unable to parse the enum at all for whatever reason.");
+                insert.Parameters.AddWithValue("@contact", 0);
+
+                insert.ExecuteNonQuery();
+            }
+            catch (SQLiteException sqlex)
+            {
+                Debug.WriteLine($"SQLiteException found near FindNoteLogTypeByID(id): {sqlex.Message}");
+            }
+            catch (Exception e)
+            {
+                Debug.WriteLine($"Exception found near FindNoteLogTypeByID(id): {e.Message}");
+
+                // TODO
+
+
+            }
+
+            return type;
+        }
+
+
+        public ApplicationClass? FindAppByID(int id)
+        {
+            SQLiteCommand query = _con.CreateCommand();
+            SQLiteDataReader read;
+            ApplicationClass? app = null;
+
+            var categoryColumn = 3;
+            var accountColumn = 1;
+            var appColumn = 2;
+            var isDefaultColumn = 4;
+
+            query.CommandText = $@"SELECT * FROM APPLICATION WHERE {Column.AppID} = @app
+;";
+            query.Parameters.AddWithValue("@app", id);
+            read = query.ExecuteReader();
+
+            while (read.Read())
+            {
+                var account = read.GetBoolean(isDefaultColumn) ? FindAccountByID(1) : FindAccountByID(read.GetInt32(accountColumn));
+                app = new ApplicationClass(read.GetInt32(Column.IDColumn), account, read.GetString(appColumn), FindCategoryByID(read.GetInt32(categoryColumn)),
+                                read.GetBoolean(isDefaultColumn));
+                break;
+            }
+
+            read.Close();
+
+            return app;
+        }
+
+
+        /// <summary>
+        /// Retrieve the ID of a medium with a given category and medium.
+        /// </summary>
+        /// <param name="category">The class the medium belongs to.</param>
+        /// <param name="medium">The name of the medium.</param>
+        /// <returns>A medium ID as an integer. Returns -1 if not found.</returns>
+        public int FindMediumID(LOG.CATEGORY category, string medium)
+        {
+            int mediumKey = -1;
+
+            try
+            {
+                int mediumColumn = 2;
+
+                SQLiteCommand query = _con.CreateCommand();
+                SQLiteDataReader read;
+
+                query.CommandText = $@"SELECT * FROM MEDIUM WHERE {Column.CategoryID} = @category
+;";
+                query.Parameters.AddWithValue("@category", FindCategoryID(category));
+                read = query.ExecuteReader();
+
+                while (read.Read())
+                {
+                    if (medium == read.GetString(mediumColumn))
+                    {
+                        mediumKey = read.GetInt32(Column.IDColumn);
+                        break;
+                    }
+
+                }
+
+                read.Close();
+            }
+            catch (SQLiteException sqlex)
+            {
+                Debug.WriteLine($"SQLiteException found near FindMediumID(category,medium): {sqlex.Message}");
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"Exception found near FindMediumID(category,medium): {ex.Message}");
+            }
+
+            return mediumKey;
+        }
+
+
+
+        /// <summary>
+        /// Retrieves the ID of a format with a given category and format.
+        /// </summary>
+        /// <param name="category">The class the format belongs to</param>
+        /// <param name="format">The name of the format.</param>
+        /// <returns>A format ID as an integer. Returns -1 if not found.</returns>
+        public int FindFormatID(LOG.CATEGORY category, string format)
+        {
+            int formatKey = -1;
+
+            try
+            {
+                int formatColumn = 2;
+
+                SQLiteCommand query = _con.CreateCommand();
+                SQLiteDataReader read;
+
+                query.CommandText = $"SELECT * FROM FORMAT WHERE {Column.CategoryID} = @category ORDER BY formatID ASC;";
+                query.Parameters.AddWithValue("@category", FindCategoryID(category));
+                read = query.ExecuteReader();
+
+                while (read.Read())
+                {
+                    if (format == read.GetString(formatColumn))
+                    {
+                        formatKey = read.GetInt32(0);
+                        break;
+                    }
+
+                }
+
+                read.Close();
+            }
+            catch (SQLiteException sqlex)
+            {
+                Debug.WriteLine($"SQLiteException found near FindFormatID(category,format): {sqlex.Message}");
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"Exception found near FindFormatID(category,format): {ex.Message}");
+            }
+
+            return formatKey;
+        }
+
+
+        /// <summary>
+        /// Retrieves the ID of a unit with a given unit.
+        /// </summary>
+        /// <param name="unit">The name of the unit.</param>
+        /// <returns>A unit ID as an integer. Returns -1 if not found.</returns>
+        public int FindUnitID(string unit)
+        {
+            int unitKey = -1;
+
+            try
+            {
+                SQLiteCommand query = _con.CreateCommand();
+                SQLiteDataReader read;
+
+                var unitColumn = 1;
+
+                query.CommandText = "SELECT * FROM MeasuringUnit ORDER BY unitID ASC;";
+                read = query.ExecuteReader();
+
+                while (read.Read())
+                {
+                    if (unit == read.GetString(unitColumn))
+                    {
+                        unitKey = read.GetInt32(Column.IDColumn);
+                        break;
+                    }
+
+                }
+
+                read.Close();
+            }
+            catch (SQLiteException sqlex)
+            {
+                Debug.WriteLine($"SQLiteException found near FindUnitID(unit): {sqlex.Message}");
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"Exception found near FindUnitID(unit): {ex.Message}");
+            }
+
+            return unitKey;
+        }
+
+
+        public int FindFNCategory(FLEXINOTEType type)
+        {
+            // Will store the flexi note ID
+            int FNKey = -1;
+
+            SQLiteCommand query = _con.CreateCommand();
+            SQLiteDataReader read;
+
+            /** Retrieve FLEXI_NOTE CATEGORY from the database temporarily.
+             *  Look for the FLEXI NOTE CATEGORY that matches "FNCategory" parameter variable.
+             *  Then, return the key of the output when it is found.
+             */
+            query.CommandText = "SELECT * FROM FlexiNoteType WHERE flexiNoteType = @category ORDER BY flexiNoteTypeID ASC;";
+
+            query.Parameters.AddWithValue("@category", type.ToString());
+
+
+            read = query.ExecuteReader();
+
+            while (read.Read())
+            {
+                FNKey = read.GetInt32(Column.IDColumn);
+                break;
+
+            }
+
+            read.Close();
+
+            return FNKey;
+        }
+
+
+
+
+        /// <summary>
+        /// List ALL applications by the logged in user.
+        /// </summary>
+        /// <returns>A list of ApplicationClass objects.</returns>
+        public List<ApplicationClass>? ListApplications()
+        {
+            /** Retrieve the APPLICATIONs from the database, 
+             *  add them to a list 
+             *  and return the list. */
+            try
+            {
+                List<ApplicationClass>? apps = new();
+                SQLiteCommand query = _con.CreateCommand();
+                SQLiteDataReader read;
+
+                var categoryColumn = 3;
+                var accountColumn = 1;
+                var appColumn = 2;
+                var isDefaultColumn = 4;
+
+                query.CommandText = $@"SELECT * FROM APPLICATION WHERE {Column.AccountID} IN (@id1, @id2) ORDER BY {Column.CategoryID} ASC, {Column.AppID} ASC
+;";
+                query.Parameters.AddWithValue("@id1", User.ID);
+                query.Parameters.AddWithValue("@id2", 1);
+
+                read = query.ExecuteReader();
+
+                while (read.Read())
+                {
+                    apps.Add(new(read.GetInt32(Column.IDColumn), FindAccountByID(read.GetInt32(accountColumn)), read.GetString(appColumn), FindCategoryByID(read.GetInt32(categoryColumn)),
+                                read.GetBoolean(isDefaultColumn)));
+                }
+
+                read.Close();
+
+                return apps;
+            }
+            catch (SQLiteException sqlex)
+            {
+                Debug.WriteLine($"SQLiteException found: {sqlex.Message}");
+                return null;
+            }
+            catch (Exception e)
+            {
+                Debug.WriteLine($"Exception found: {e.Message}");
+
+                // TODO
+
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// List all applications in a particular LOG category.
+        /// </summary>
+        /// <param name="category">The log category.</param>
+        /// <returns>A list of ApplicationClass objects.</returns>
+        public List<ApplicationClass> ListApplications(LOG.CATEGORY category)
+        {
+            /** Retrieve the APPLICATIONs from the database, 
+             *  add them to a list 
+             *  and return the list. */
+            List<ApplicationClass> apps = new();
+            SQLiteCommand query = _con.CreateCommand();
+            SQLiteDataReader read;
+
+            var accountColumn = 1;
+            var appColumn = 2;
+            var isDefaultColumn = 4;
+
+            query.CommandText = $@"SELECT * FROM APPLICATION WHERE {Column.AccountID} IN (@id1, @id2) 
+                                            AND {Column.CategoryID} = @category ORDER BY {Column.CategoryID} ASC, {Column.AppID} ASC
+;";
+            query.Parameters.AddWithValue("@id1", User.ID);
+            query.Parameters.AddWithValue("@id2", 1);
+            query.Parameters.AddWithValue("@category", FindCategoryID(category));
+
+            read = query.ExecuteReader();
+
+            while (read.Read())
+            {
+                apps.Add(new(read.GetInt32(Column.IDColumn), FindAccountByID(read.GetInt32(accountColumn)), read.GetString(appColumn), category, read.GetBoolean(isDefaultColumn)));
+            }
+
+            read.Close();
+
+            return apps;
+        }
+
+        /// <summary>
+        /// Lists ALL the projects from the database.
+        /// </summary>
+        /// <returns>A list of ProjectClass objects.</returns>
+        public List<ProjectClass>? ListProjects()
+        {
+            /** Retrieve the PROJECTs from the database, 
+             *  add them to a list 
+             *  and return the list. */
+
+            List<ProjectClass>? projects = new List<ProjectClass>();
+            SQLiteCommand query = _con.CreateCommand();
+            SQLiteDataReader read;
+
+            try
+            {
+
+                query.CommandText = $@"SELECT * FROM PROJECT WHERE {Column.AccountID} IN (@id1, @id2) ORDER BY {Column.CategoryID} ASC, {Column.AppID} ASC, {Column.ProjectID} ASC
+;";
+                query.Parameters.AddWithValue("@id1", User.ID);
+                query.Parameters.AddWithValue("@id2", 1);
+
+                read = query.ExecuteReader();
+
+                while (read.Read())
+                {
+                    projects.Add(FindProjectByID(read.GetInt32(Column.IDColumn)));
+                }
+                read.Close();
+
+                return projects;
+            }
+            catch (Exception)
+            {
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// Lists the projects from the database and filters it by the category enum argument provided. Projects may or may not be unique.
+        /// </summary>
+        /// <param name="category">The category the projects fall under.</param>
+        /// <returns>A list of ProjectClass objects from the specified category.</returns>
+        public List<ProjectClass> ListProjects(LOG.CATEGORY category)
+        {
+            /** Retrieve the PROJECTs from the database, 
+             *  add them to a list 
+             *  and return the list. */
+
+            List<ProjectClass> projects = new List<ProjectClass>();
+            SQLiteCommand query = _con.CreateCommand();
+            SQLiteDataReader read;
+
+
+            query.CommandText = $@"SELECT * FROM PROJECT WHERE {Column.AccountID} IN (@id1, @id2)
+                                            AND {Column.CategoryID} = @category ORDER BY {Column.CategoryID} ASC, {Column.AppID} ASC, {Column.ProjectID} ASC
+;";
+            query.Parameters.AddWithValue("@id1", User.ID);
+            query.Parameters.AddWithValue("@id2", 1);
+            query.Parameters.AddWithValue("@category", FindCategoryID(category));
+
+            read = query.ExecuteReader();
+
+            while (read.Read())
+            {
+                projects.Add(FindProjectByID(read.GetInt32(Column.IDColumn)));
+            }
+
+            read.Close();
+
+            return projects;
+        }
+
+        /// <summary>
+        /// Lists the projects from the database and filters it by the app argument provided. Projects are all unique.
+        /// </summary>
+        /// <param name="app">The app from which the projects are created in.</param>
+        /// <returns>A list of ProjectClass objects created in the app.</returns>
+        public List<ProjectClass> ListProjects(ApplicationClass app)
+        {
+
+
+            List<ProjectClass> projects = new List<ProjectClass>();
+            SQLiteCommand query = _con.CreateCommand();
+            SQLiteDataReader read;
+            bool Exists;
+
+            query.CommandText = $@"SELECT * FROM PROJECT WHERE {Column.AccountID} IN (@id1, @id2) 
+                                            AND {Column.AppID} = @app
+                                            AND {Column.CategoryID} = @category 
+                                            ORDER BY {Column.CategoryID} ASC, {Column.AppID} ASC, {Column.ProjectID} ASC
+;";
+            query.Parameters.AddWithValue("@id1", User.ID);
+            query.Parameters.AddWithValue("@id2", 1);
+            query.Parameters.AddWithValue("@app", app.AppID);
+            query.Parameters.AddWithValue("@category", FindCategoryID(app.Category));
+
+            read = query.ExecuteReader();
+
+            while (read.Read())
+            {
+                var project = FindProjectByID(read.GetInt32(Column.IDColumn));
+                Exists = false;
+
+                foreach (ProjectClass pro in projects)
+                {
+                    if (pro.Name == project.Name && pro.Application == project.Application)
+                        Exists = true;
+                }
+
+                if (!Exists)
+                    projects.Add(project);
+            }
+            read.Close();
+
+            return projects;
+        }
+
+
+
+
+        public List<SubjectClass> ListSubjects(LOG.CATEGORY category)
+        {
+            /** Retrieve the SUBJEECTs from the database, 
+             *  add them to a list 
+             *  and return the list. */
+            List<SubjectClass> subjects = new();
+
+            // Get the logIDs from the PostIt table
+            SQLiteCommand query = _con.CreateCommand();
+            SQLiteDataReader read;
+
+            var categoryColumn = 4;
+            var accountColumn = 3;
+            var appColumn = 2;
+            var projectColumn = 1;
+            var subjectColumn = 5;
+
+            // In ACCOUNT
+            query.CommandText = $@"SELECT * FROM Subject WHERE {Column.AccountID} IN (@id1, @id2) 
+                                            AND {Column.CategoryID} = @category ORDER BY {Column.AccountID} ASC
+;";
+            query.Parameters.AddWithValue("@id1", User.ID);
+            query.Parameters.AddWithValue("@id2", 1);
+            query.Parameters.AddWithValue("@category", FindCategoryID(category));
+
+            read = query.ExecuteReader();
+
+            while (read.Read())
+            {
+                subjects.Add(new SubjectClass(read.GetInt32(Column.IDColumn), FindCategoryByID(read.GetInt32(categoryColumn)), FindAccountByID(read.GetInt32(accountColumn)),
+                    read.GetString(subjectColumn), FindProjectByID(read.GetInt32(projectColumn)), FindAppByID(read.GetInt32(appColumn))));
+            }
 
             read.Close();
 
 
-            query.CommandText = @"SELECT * FROM LOG ORDER BY logID;";
+            return subjects;
+        }
+
+        public List<SubjectClass> ListSubjects(ProjectClass project)
+        {
+            /** Retrieve the SUBJEECTs from the database, 
+             *  add them to a list 
+             *  and return the list. */
+            List<SubjectClass> subjects = new();
+
+            // Get the logIDs from the PostIt table
+            SQLiteCommand query = _con.CreateCommand();
+            SQLiteDataReader read;
+
+            var categoryColumn = 4;
+            var accountColumn = 3;
+            var appColumn = 2;
+            var projectColumn = 1;
+            var subjectColumn = 5;
 
 
+            query.CommandText = $@"SELECT * FROM Subject WHERE {Column.CategoryID} = @category
+                                            AND {Column.AccountID} = @id
+                                            AND {Column.AppID} = @app
+                                            AND {Column.ProjectID} = @project ORDER BY {Column.AccountID} ASC;";
+            query.Parameters.AddWithValue("@category", FindCategoryID(project.Category));
+            query.Parameters.AddWithValue("@id", project.User.ID);
+            query.Parameters.AddWithValue("@app", project.Application.AppID);
+            query.Parameters.AddWithValue("@project", project.ProjectID);
+            read = query.ExecuteReader();
 
-            while (read.Read() && logs is not null)
+            while (read.Read())
             {
+                subjects.Add(new SubjectClass(read.GetInt32(Column.IDColumn), FindCategoryByID(read.GetInt32(categoryColumn)),
+                    FindAccountByID(read.GetInt32(accountColumn)), read.GetString(subjectColumn), FindProjectByID(read.GetInt32(projectColumn)),
+                    FindAppByID(read.GetInt32(appColumn))));
+            }
 
-                switch (FindCategoryByID(read.GetInt32(categoryColumn)))
+            read.Close();
+
+
+            return subjects;
+        }
+
+        public List<string> ListOutputs()
+        {
+            /** Retrieve the OUTPUTs from the database, 
+             *  add them to a list 
+             *  and return the list. */
+            List<string> outputs = new List<string>();
+            SQLiteCommand query = _con.CreateCommand();
+            SQLiteDataReader read;
+
+            query.CommandText = @"SELECT * FROM OUTPUT ORDER BY outputID;";
+            read = query.ExecuteReader();
+
+            while (read.Read())
+            {
+                outputs.Add(read.GetString(1));
+            }
+            read.Close();
+
+            return outputs;
+        }
+
+        public List<string> ListOutputs(ApplicationClass app)
+        {
+            /** Retrieve the OUTPUTs from the database, 
+             *  add them to a list 
+             *  and return the list. */
+            List<string> outputs = new List<string>();
+            SQLiteCommand query = _con.CreateCommand();
+            SQLiteDataReader read;
+
+            query.CommandText = $@"SELECT * FROM OUTPUT WHERE {Column.AccountID} = @account
+                                    AND {Column.CategoryID} = @category
+                                    AND {Column.AppID} = @app ORDER BY outputID
+;";
+            query.Parameters.AddWithValue("@accounD", User.ID);
+            query.Parameters.AddWithValue("@category", FindCategoryID(app.Category));
+            query.Parameters.AddWithValue("@app", app.AppID);
+            read = query.ExecuteReader();
+
+
+            while (read.Read())
+            {
+                outputs.Add(read.GetString(4));
+            }
+
+            read.Close();
+
+            return outputs;
+        }
+
+
+        public List<string> ListTypes(ApplicationClass app)
+        {
+            /** Retrieve the TYPEs from the database, 
+             *  add them to a list 
+             *  and return the list. */
+            List<string> types = new List<string>();
+            SQLiteCommand query = _con.CreateCommand();
+            SQLiteDataReader read;
+
+            query.CommandText = $@"SELECT * FROM TYPE WHERE {Column.AccountID} = @account
+                                    AND {Column.CategoryID} = @category
+                                    AND {Column.AppID} = @app  ORDER BY typeID
+;";
+            query.Parameters.AddWithValue("@accounD", User.ID);
+            query.Parameters.AddWithValue("@category", FindCategoryID(app.Category));
+            query.Parameters.AddWithValue("@app", app.AppID);
+            read = query.ExecuteReader();
+
+
+            while (read.Read())
+            {
+                types.Add(read.GetString(4));
+            }
+
+            read.Close();
+
+            return types;
+        }
+
+        public List<string> ListMediums()
+        {
+            /** Retrieve the MEDIUMs from the database, 
+             *  add them to a list 
+             *  and return the list. */
+            List<string> mediums = new List<string>();
+            SQLiteCommand query = _con.CreateCommand();
+            SQLiteDataReader read;
+
+            query.CommandText = @"SELECT * FROM MEDIUM ORDER BY mediumID;";
+            read = query.ExecuteReader();
+
+            while (read.Read())
+            {
+                mediums.Add(read.GetString(1));
+            }
+            read.Close();
+
+            return mediums;
+        }
+
+        public List<string> ListMediums(string category)
+        {
+            /** Retrieve the MEDIUMs from the database, 
+             *  add them to a list 
+             *  and return the list. */
+            List<string> mediums = new List<string>();
+            SQLiteCommand query = _con.CreateCommand();
+            SQLiteDataReader read;
+
+            query.CommandText = @"SELECT * FROM MEDIUM ORDER BY mediumID;";
+            read = query.ExecuteReader();
+
+            while (read.Read())
+            {
+                switch (category)
                 {
-                    case LOG.CATEGORY.CODING:
+                    case "GRAPHICS":
+                        if (read.GetInt32(0) <= 8)
                         {
-                            CodingLOG codingLog = new();
-                            codingLog.ID = read.GetInt32(Column.IDColumn);
-                            codingLog.Author = FindAccountByID(read.GetInt32(accountColumn));
-                            codingLog.Project = FindProjectByID(read.GetInt32(projectColumn));
-                            codingLog.Application = FindAppByID(read.GetInt32(appColumn));
-                            codingLog.Start = DateTime.Parse(read.GetString(startColumn));
-                            codingLog.End = DateTime.Parse(read.GetString(endColumn));
-                            codingLog.Output = FindOutputByID(read.GetInt32(outputColumn));
-                            codingLog.Type = FindTypeByID(read.GetInt32(typeColumn));
-                            codingLog.PostItList = new();
-
-                            logs.Add(codingLog);
-
-                            break;
+                            mediums.Add(read.GetString(1));
                         }
-                    case LOG.CATEGORY.GRAPHICS:
+                        break;
+                    case "NOTES":
+                        if (read.GetInt32(0) > 8)
                         {
-                            GraphicsLOG graphicsLog = new();
-                            graphicsLog.ID = read.GetInt32(Column.IDColumn);
-                            graphicsLog.Author = FindAccountByID(read.GetInt32(accountColumn));
-                            graphicsLog.Project = FindProjectByID(read.GetInt32(projectColumn));
-                            graphicsLog.Application = FindAppByID(read.GetInt32(appColumn));
-                            graphicsLog.Start = DateTime.Parse(read.GetString(startColumn));
-                            graphicsLog.End = DateTime.Parse(read.GetString(endColumn));
-                            graphicsLog.Output = FindOutputByID(read.GetInt32(outputColumn));
-                            graphicsLog.Type = FindTypeByID(read.GetInt32(typeColumn));
-                            graphicsLog.PostItList = new();
-
-
-                            break;
+                            mediums.Add(read.GetString(1));
                         }
-                    case LOG.CATEGORY.FILM:
-                        {
-                            FilmLOG filmLog = new();
-                            filmLog.ID = read.GetInt32(Column.IDColumn);
-                            filmLog.Author = FindAccountByID(read.GetInt32(accountColumn));
-                            filmLog.Project = FindProjectByID(read.GetInt32(projectColumn));
-                            filmLog.Application = FindAppByID(read.GetInt32(appColumn));
-                            filmLog.Start = DateTime.Parse(read.GetString(startColumn));
-                            filmLog.End = DateTime.Parse(read.GetString(endColumn));
-                            filmLog.Output = FindOutputByID(read.GetInt32(outputColumn));
-                            filmLog.Type = FindTypeByID(read.GetInt32(typeColumn));
-                            filmLog.PostItList = new();
+                        break;
+                }
 
-                            break;
-                        }
-                    case LOG.CATEGORY.NOTES:
+            }
+            read.Close();
+
+            return mediums;
+        }
+
+        public List<string> ListFormats()
+        {
+            /** Retrieve the FORMATs from the database, 
+             *  add them to a list 
+             *  and return the list. */
+            List<string> formats = new List<string>();
+            SQLiteCommand query = _con.CreateCommand();
+            SQLiteDataReader read;
+
+            query.CommandText = @"SELECT * FROM FORMAT ORDER BY formatID;";
+            read = query.ExecuteReader();
+
+            while (read.Read())
+            {
+                formats.Add(read.GetString(1));
+            }
+            read.Close();
+
+            return formats;
+        }
+
+        public List<string> ListFormats(string category)
+        {
+            /** Retrieve the FORMATs from the database, 
+             *  add them to a list 
+             *  and return the list. */
+            List<string> formats = new List<string>();
+            SQLiteCommand query = _con.CreateCommand();
+            SQLiteDataReader read;
+
+            query.CommandText = @"SELECT * FROM FORMAT ORDER BY formatID;";
+            read = query.ExecuteReader();
+
+            while (read.Read())
+            {
+                switch (category)
+                {
+                    case "GRAPHICS":
+                        if (read.GetInt32(0) <= 4)
                         {
-                            foreach (LOG log in logs)
+                            formats.Add(read.GetString(1));
+                        }
+                        break;
+                    case "NOTES":
+                        if (read.GetInt32(0) > 4)
+                        {
+                            formats.Add(read.GetString(1));
+                        }
+                        break;
+                }
+
+            }
+            read.Close();
+
+            return formats;
+        }
+
+        public List<string>? ListUnits()
+        {
+            /** Retrieve the UNITs from the database, 
+             *  add them to a list 
+             *  and return the list. */
+            List<string> units = null;
+            SQLiteCommand query = _con.CreateCommand();
+            SQLiteDataReader read;
+
+            var unitColumn = 1;
+
+            query.CommandText = @"SELECT * FROM MeasuringUnit ORDER BY unitID;";
+            read = query.ExecuteReader();
+
+            while (read.Read())
+            {
+                if (units is null)
+                    units = new();
+                units.Add(read.GetString(unitColumn));
+
+            }
+
+            read.Close();
+
+            return units;
+        }
+
+
+
+
+
+
+
+        /** Populates this DATAREADER with LOGS **/
+        public void RetrieveLOGS()
+        {
+            try
+            {
+                this.Clear();
+
+                List<LOG>? logs = new();
+                bool Initialised = false;
+                var note_IDs_LIST = new List<int>();
+                var flexiLog_IDs_LIST = new List<int>();
+
+                var categoryColumn = 1;
+                var accountColumn = 2;
+                var projectColumn = 3;
+                var appColumn = 4;
+                var startColumn = 5;
+                var endColumn = 6;
+                var outputColumn = 7;
+                var typeColumn = 8;
+
+                var noteLogTypeIDColumn = 1;
+
+                SQLiteCommand query = _con.CreateCommand();
+
+
+                query.CommandText = @"SELECT * FROM NotesLOG ORDER BY logID;";
+                
+
+                using(var read = query.ExecuteReader())
+                {
+
+                    while (read.Read())
+                    {
+
+                        if (!Initialised)
+                        {
+                            logs = new();
+                            Initialised = true;
+                        }
+                        else if (logs is not null)
+                        {
+                            var type = FindNoteLogTypeByID(read.GetInt32(noteLogTypeIDColumn));
+                            switch (type)
                             {
-                                if (read.GetInt32(Column.IDColumn) == log.ID)
+                                case NotesLOG.NOTELOGType.GENERIC:
+                                    {
+                                        NoteItem note = new();
+                                        note.ID = read.GetInt32(Column.IDColumn);
+                                        note_IDs_LIST.Add(note.ID);
+                                        logs.Add(note);
+
+                                        break;
+                                    }
+                                case NotesLOG.NOTELOGType.FLEXI:
+                                    {
+                                        FlexiNotesLOG flexiLog = new();
+                                        flexiLog.ID = read.GetInt32(Column.IDColumn);
+                                        flexiLog_IDs_LIST.Add(flexiLog.ID);
+                                        logs.Add(flexiLog);
+
+                                        break;
+                                    }
+                            }
+                        }
+
+                    }
+
+
+
+                    read.Close();
+                }
+
+
+                query.CommandText = @"SELECT * FROM LOG ORDER BY logID;";
+
+
+                using (var read = query.ExecuteReader())
+                {
+                    while (read.Read() && logs is not null)
+                    {
+
+                        switch (FindCategoryByID(read.GetInt32(categoryColumn)))
+                        {
+                            case LOG.CATEGORY.CODING:
                                 {
-                                    log.Author = FindAccountByID(read.GetInt32(accountColumn));
-                                    log.Project = FindProjectByID(read.GetInt32(projectColumn));
-                                    log.Application = FindAppByID(read.GetInt32(appColumn));
-                                    log.Start = DateTime.Parse(read.GetString(startColumn));
-                                    log.End = DateTime.Parse(read.GetString(endColumn));
-                                    log.Output = FindOutputByID(read.GetInt32(outputColumn));
-                                    log.Type = FindTypeByID(read.GetInt32(typeColumn));
-                                    log.PostItList = new();
+                                    CodingLOG codingLog = new();
+                                    codingLog.ID = read.GetInt32(Column.IDColumn);
+                                    codingLog.Author = FindAccountByID(read.GetInt32(accountColumn));
+                                    codingLog.Project = FindProjectByID(read.GetInt32(projectColumn));
+                                    codingLog.Application = FindAppByID(read.GetInt32(appColumn));
+                                    codingLog.Start = DateTime.Parse(read.GetString(startColumn));
+                                    codingLog.End = DateTime.Parse(read.GetString(endColumn));
+                                    codingLog.Output = FindOutputByID(read.GetInt32(outputColumn));
+                                    codingLog.Type = FindTypeByID(read.GetInt32(typeColumn));
+                                    codingLog.PostItList = new();
+
+                                    logs.Add(codingLog);
 
                                     break;
                                 }
-                            }
-                            break;
+                            case LOG.CATEGORY.GRAPHICS:
+                                {
+                                    GraphicsLOG graphicsLog = new();
+                                    graphicsLog.ID = read.GetInt32(Column.IDColumn);
+                                    graphicsLog.Author = FindAccountByID(read.GetInt32(accountColumn));
+                                    graphicsLog.Project = FindProjectByID(read.GetInt32(projectColumn));
+                                    graphicsLog.Application = FindAppByID(read.GetInt32(appColumn));
+                                    graphicsLog.Start = DateTime.Parse(read.GetString(startColumn));
+                                    graphicsLog.End = DateTime.Parse(read.GetString(endColumn));
+                                    graphicsLog.Output = FindOutputByID(read.GetInt32(outputColumn));
+                                    graphicsLog.Type = FindTypeByID(read.GetInt32(typeColumn));
+                                    graphicsLog.PostItList = new();
 
+
+                                    break;
+                                }
+                            case LOG.CATEGORY.FILM:
+                                {
+                                    FilmLOG filmLog = new();
+                                    filmLog.ID = read.GetInt32(Column.IDColumn);
+                                    filmLog.Author = FindAccountByID(read.GetInt32(accountColumn));
+                                    filmLog.Project = FindProjectByID(read.GetInt32(projectColumn));
+                                    filmLog.Application = FindAppByID(read.GetInt32(appColumn));
+                                    filmLog.Start = DateTime.Parse(read.GetString(startColumn));
+                                    filmLog.End = DateTime.Parse(read.GetString(endColumn));
+                                    filmLog.Output = FindOutputByID(read.GetInt32(outputColumn));
+                                    filmLog.Type = FindTypeByID(read.GetInt32(typeColumn));
+                                    filmLog.PostItList = new();
+
+                                    break;
+                                }
+                            case LOG.CATEGORY.NOTES:
+                                {
+                                    foreach (LOG log in logs)
+                                    {
+                                        if (read.GetInt32(Column.IDColumn) == log.ID)
+                                        {
+                                            log.Author = FindAccountByID(read.GetInt32(accountColumn));
+                                            log.Project = FindProjectByID(read.GetInt32(projectColumn));
+                                            log.Application = FindAppByID(read.GetInt32(appColumn));
+                                            log.Start = DateTime.Parse(read.GetString(startColumn));
+                                            log.End = DateTime.Parse(read.GetString(endColumn));
+                                            log.Output = FindOutputByID(read.GetInt32(outputColumn));
+                                            log.Type = FindTypeByID(read.GetInt32(typeColumn));
+                                            log.PostItList = new();
+
+                                            break;
+                                        }
+                                    }
+                                    break;
+
+                                }
                         }
+                    }
+
+                    read.Close();
                 }
-            }
-
-            read.Close();
+                    
 
 
 
 
-            query.CommandText = @"SELECT * FROM POSTIT ORDER BY logID ASC, postItID ASC;";
-            read = query.ExecuteReader();
+                query.CommandText = @"SELECT * FROM POSTIT ORDER BY logID ASC, postItID ASC;";
 
-            var logIDColumn = 1;
-            var subjectColumn = 2;
-            var errorColumn = 3;
-            var solutionColumn = 5;
-            var suggestionColumn = 7;
-            var commentColumn = 8;
-            var foundColumn = 4;
-            var solvedColumn = 6;
+                using(var read = query.ExecuteReader())
+                {
+                    var logIDColumn = 1;
+                    var subjectColumn = 2;
+                    var errorColumn = 3;
+                    var solutionColumn = 5;
+                    var suggestionColumn = 7;
+                    var commentColumn = 8;
+                    var foundColumn = 4;
+                    var solvedColumn = 6;
 
-            while (read.Read() && logs is not null)
-            {
+                    while (read.Read() && logs is not null)
+                    {
+
+                        foreach (LOG log in logs)
+                        {
+                            if (read.GetInt32(logIDColumn) == log.ID)
+                            {
+                                DateTime dateFound;
+                                DateTime dateSolved;
+
+                                string foundDateString = read.GetString(foundColumn);
+                                string solvedDateString = read.GetString(solvedColumn);
+
+                                bool isFoundDateValid = DateTime.TryParse(foundDateString, out dateFound);
+                                bool isSolvedDateValid = DateTime.TryParse(solvedDateString, out dateSolved);
+
+
+                                log.PostItList.Add(new(read.GetInt32(Column.IDColumn), FindSubjectByID(read.GetInt32(subjectColumn)), read.GetString(errorColumn),
+                                    read.GetString(solutionColumn), read.GetString(suggestionColumn), read.GetString(commentColumn), isFoundDateValid ? dateFound : new(),
+                                    isSolvedDateValid ? dateSolved : new()));
+
+                                break;
+                            }
+                        }
+
+                    }
+
+                    read.Close();
+                }
+
 
                 foreach (LOG log in logs)
                 {
-                    if (read.GetInt32(logIDColumn) == log.ID)
+                    switch (log.Category)
                     {
-                        log.PostItList.Add(new(read.GetInt32(Column.IDColumn), FindSubjectByID(read.GetInt32(subjectColumn)), read.GetString(errorColumn),
-                            read.GetString(solutionColumn), read.GetString(suggestionColumn), read.GetString(commentColumn), DateTime.Parse(read.GetString(foundColumn)),
-                            DateTime.Parse(read.GetString(solvedColumn))));
+                        case LOG.CATEGORY.CODING:
+                            {
+                                RetrieveCodingLOG((CodingLOG)log);
 
-                        break;
+                                break;
+                            }
+                        case LOG.CATEGORY.GRAPHICS:
+                            {
+                                RetrieveGraphicsLOG((GraphicsLOG)log);
+
+                                break;
+                            }
+                        case LOG.CATEGORY.FILM:
+                            {
+                                RetrieveFilmLOG((FilmLOG)log);
+
+                                break;
+                            }
+                        case LOG.CATEGORY.NOTES:
+                            {
+                                if (note_IDs_LIST.Contains(log.ID))
+                                    RetrieveNoteItem((NoteItem)log);
+                                else if (flexiLog_IDs_LIST.Contains(log.ID))
+                                    RetrieveFlexiNotesLOG((FlexiNotesLOG)log);
+
+                                break;
+                            }
                     }
                 }
-
             }
-
-            read.Close();
-
-
-            foreach (LOG log in logs)
+            catch (SQLiteException sqlex)
             {
-                switch (log.Category)
-                {
-                    case LOG.CATEGORY.CODING:
-                        {
-                            RetrieveCodingLOG((CodingLOG)log);
-
-                            break;
-                        }
-                    case LOG.CATEGORY.GRAPHICS:
-                        {
-                            RetrieveGraphicsLOG((GraphicsLOG)log);
-
-                            break;
-                        }
-                    case LOG.CATEGORY.FILM:
-                        {
-                            RetrieveFilmLOG((FilmLOG)log);
-
-                            break;
-                        }
-                    case LOG.CATEGORY.NOTES:
-                        {
-                            if (note_IDs_LIST.Contains(log.ID))
-                                RetrieveNoteItem((NoteItem)log);
-                            else if (flexiLog_IDs_LIST.Contains(log.ID))
-                                RetrieveFlexiNotesLOG((FlexiNotesLOG)log);
-
-                            break;
-                        }
-                }
+                Debug.WriteLine($"SQLiteException found in RetrieveLOGS(): {sqlex.Message}");
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"Exception found in RetrieveLOGS(): {ex.Message}");
             }
 
         }
@@ -1023,6 +2054,8 @@ namespace Data_Logger_1._3.Services
                     codingLog.Bugs = read.GetInt32(bugsColumn);
                     codingLog.Success = read.GetBoolean(openedColumn);
                 }
+
+                read.Close();
 
                 if (codingLog.Application.Name == Android)
                     RetrieveAndroidCodingLOG((AndroidCodingLOG)codingLog);
@@ -1070,8 +2103,9 @@ namespace Data_Logger_1._3.Services
 
                 this.Add(androidCodingLog);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                Debug.WriteLine($"Exception near RetrieveAndroidCodingLOG(androidCodingLOG): {ex.Message}");
                 // TODO
             }
         }
@@ -1249,792 +2283,7 @@ namespace Data_Logger_1._3.Services
         }
 
 
-        //public List<LOG> RetrieveLOGS(bool theListONLY)
-        //{
-        //    /** Retrieve the LOGs from the database and then use the PROJECT's ID to find the app and category.
-        //     * Use the CATEGORY ID to find the correct info
-        //     */
-        //    int f = 0, accountID = 0;
-        //    var list = new List<LOG>();
 
-        //    // IDs
-        //    List<int> ids = new List<int>(),
-        //        acIDs = new List<int>(),
-        //        proIDs = new List<int>(),
-        //        appIDs = new List<int>(),
-        //        catIDs = new List<int>(),
-        //        outputIDs = new List<int>(),
-        //        typeIDs = new List<int>();
-
-        //    Dictionary<int, int> mediumIDs = new Dictionary<int, int>(), // logID and mediumID
-        //        formatIDs = new Dictionary<int, int>(), // logID and formatID
-        //        unitIDs = new Dictionary<int, int>(), // logID and unitID
-        //        FNCategoryIDs = new Dictionary<int, int>(); // logID and FNCategoryID
-
-
-        //    ACCOUNT account = new ACCOUNT();
-        //    List<string> proList = new List<string>();
-        //    List<string> appList = new List<string>();
-        //    List<DateTime> startList = new List<DateTime>();
-        //    List<DateTime> endList = new List<DateTime>();
-        //    List<string> outputList = new List<string>();
-        //    List<string> typeList = new List<string>();
-        //    List<List<Notary>> notaries = new List<List<Notary>>();
-        //    Dictionary<int, string> subPairs = new Dictionary<int, string>();
-
-        //    (int, string) mediumList = (0, "");
-        //    (int, string) formatList = (0, "");
-        //    (int, string) unitList = (0, "");
-        //    (int, string) FNCategoryList = (0, "");
-
-        //    SQLiteCommand query = _con.CreateCommand();
-        //    query.CommandText = "SELECT * FROM ACCOUNT WHERE status = @status LIMIT 1;";
-
-        //    query.Parameters.AddWithValue("@status", 1);
-        //    SQLiteDataReader read;
-
-        //    /** Add the account to a List<ACCOUNT> so they can be added to the DATAREADER List LOGs
-        //    *   To find it just look at who's online and add that ONE ACCOUNT to the "account" variable.
-        //    *   */
-
-        //    read = query.ExecuteReader();
-
-        //    while (read.Read())
-        //    {
-        //        accountID = read.GetInt32(0);
-
-        //        account.setDisplayPicture(read.GetString(1));
-        //        account.setFirstName(read.GetString(2));
-        //        account.setLastName(read.GetString(3));
-        //        var email = new SecureString();
-
-        //        foreach (char c in read.GetString(4).ToCharArray())
-        //        {
-        //            email.AppendChar(c);
-        //        }
-        //        account.setEmail(email);
-        //        account.setPassword(new SecureString());
-        //        account.setStatus(true);
-        //    }
-
-        //    read.Close();
-
-        //    query.CommandText = "SELECT * FROM LOG WHERE accountID = @id ORDER BY logID";
-
-        //    query.Parameters.AddWithValue("@id", accountID);
-
-        //    read = query.ExecuteReader();
-
-        //    while (read.Read())
-        //    {
-        //        ids.Add(read.GetInt32(0)); // LOG ID
-        //        proIDs.Add(read.GetInt32(2)); // PROJECT ID
-        //        startList.Add(DateTime.Parse(read.GetString(3))); // Start Times
-        //        endList.Add(DateTime.Parse(read.GetString(4))); // End Times
-        //        outputIDs.Add(read.GetInt32(5)); // OUTPUT ID
-        //        typeIDs.Add(read.GetInt32(6)); // TYPE ID
-        //    }
-
-        //    read.Close();
-
-        //    /** Get the Notaries from the LOG_NOTE table **/
-        //    /** Check that the LOG_NOTE has valid input and not empty strings */
-        //    string pattern = "[A-Za-z]{5}[0-9]{0}";
-        //    Regex xp = new Regex(pattern);
-
-        //    int logIDb4 = 0; // The previous record's note's logID
-        //    var noteList = new List<Notary>(); // Temporary list for adding to LOG Notary member variable
-        //    query.CommandText = "SELECT * FROM LOG_NOTE ORDER BY logID ASC, subjectID ASC;";
-
-        //    read = query.ExecuteReader();
-        //    subPairs = retrieveSubjects();
-        //    var temp = true;
-
-        //    /** Start a new Notary for each record. */
-        //    Notary thought;
-
-
-        //    while (read.Read())
-        //    {
-        //        thought = new Notary();
-
-        //        if (temp)
-        //        {
-        //            logIDb4 = read.GetInt32(1);
-        //            temp = false;
-        //        }
-
-        //        if (ids.Contains(read.GetInt32(1)))
-        //        {
-
-        //            /** Check to see if we're dealing with a new List of Notoaries.
-        //             *  You also need to create a new List<Notary> because the logID has changed. Each log deals with one List of type Notary!
-        //             *  */
-        //            if (logIDb4 != read.GetInt32(1))
-        //            {
-        //                notaries.Add(noteList);
-        //                noteList = new List<Notary>();
-        //            }
-
-        //            if (subPairs.Count > 0)
-        //            {
-        //                for (int j = 0; j < subPairs.Count; j++)
-        //                {
-        //                    if (read.GetInt32(2) == subPairs.ElementAt(j).Key)
-        //                    {
-        //                        thought.setSubject(subPairs.Values.ElementAt(j));
-        //                        break;
-        //                    }
-        //                }
-        //            }
-        //            else
-        //            {
-        //                thought.setSubject("No Subject");
-        //            }
-
-        //            // ERROR
-        //            if (xp.IsMatch(read.GetString(3)))
-        //            {
-        //                thought.setError(read.GetString(3));
-        //                thought.setERCaptureTime(DateTime.Parse(read.GetString(4)));
-        //            }
-
-        //            // SOLUTION
-        //            if (xp.IsMatch(read.GetString(5)))
-        //            {
-        //                thought.setSolution(read.GetString(5));
-        //                thought.setSOCaptureTime(DateTime.Parse(read.GetString(6)));
-        //            }
-
-        //            // SUGGESTION
-        //            if (xp.IsMatch(read.GetString(7)))
-        //                thought.setSuggestion(read.GetString(7));
-
-        //            // COMMENT
-        //            if (xp.IsMatch(read.GetString(8)))
-        //                thought.setComment(read.GetString(8));
-
-        //        }
-        //        else
-        //        {
-        //            notaries.Add(new List<Notary>());
-        //            noteList = new List<Notary>();
-        //        }
-
-        //        noteList.Add(thought);
-        //        logIDb4 = read.GetInt32(1);
-        //    }
-
-        //    while (notaries.Count != ids.Count)
-        //    {
-        //        if (notaries.Count < ids.Count)
-        //        {
-        //            notaries.Add(new List<Notary>());
-        //        }
-
-
-        //    }
-
-        //    read.Close();
-
-
-        //    /** Do what you did for account but for PROJECTs.
-        //     *  Make sure to add the projects to proList
-        //     *  You can add the app IDs to appIDs simultaneously
-        //     *  */
-        //    query.CommandText = "SELECT * FROM PROJECT ORDER BY projectID";
-        //    read = query.ExecuteReader();
-        //    f = 0;
-        //    string[] parray = new string[ids.Count];
-        //    int[] arrayID = new int[ids.Count];
-
-        //    while (read.Read())
-        //    {
-        //        if (proIDs.Count > 0)
-        //        {
-        //            for (f = 0; f < ids.Count; f++)
-        //            {
-        //                if (read.GetInt32(0) == proIDs.ElementAt(f))
-        //                {
-        //                    parray[f] = read.GetString(1); // Project Names
-        //                    arrayID[f] = read.GetInt32(2); // appIDs
-        //                }
-        //            }
-        //        }
-        //    }
-
-        //    for (int i = 0; i < parray.Length; i++)
-        //    {
-        //        proList.Add(parray[i]);
-        //        appIDs.Add(arrayID[i]);
-        //    }
-
-        //    read.Close();
-
-        //    /** Retrieve apps **/
-        //    query.CommandText = "SELECT * FROM APPLICATION ORDER BY categoryID ASC, appID ASC";
-        //    read = query.ExecuteReader();
-        //    f = 0;
-        //    string[] array = new string[ids.Count];
-        //    int[] carrayID = new int[ids.Count];
-
-        //    while (read.Read())
-        //    {
-        //        if (appIDs.Count > 0)
-        //        {
-        //            for (f = 0; f < ids.Count; f++)
-        //            {
-        //                if (read.GetInt32(0) == appIDs.ElementAt(f))
-        //                {
-        //                    array[f] = read.GetString(1); // App Names
-        //                    carrayID[f] = read.GetInt32(2); // Category IDs
-        //                }
-        //            }
-        //        }
-        //    }
-
-        //    for (int i = 0; i < array.Length; i++)
-        //    {
-        //        appList.Add(array[i]);
-        //        catIDs.Add(carrayID[i]);
-        //    }
-
-        //    read.Close();
-
-        //    /** Retrieve Outputs */
-        //    query.CommandText = "SELECT * FROM OUTPUT ORDER BY outputID;";
-        //    read = query.ExecuteReader();
-        //    f = 0;
-        //    string[] orray = new string[ids.Count];
-
-        //    while (read.Read())
-        //    {
-        //        if (outputIDs.Count > 0)
-        //        {
-        //            for (f = 0; f < ids.Count; f++)
-        //            {
-        //                if (read.GetInt32(0) == outputIDs.ElementAt(f))
-        //                {
-        //                    orray[f] = read.GetString(1); // Outputs
-        //                }
-        //            }
-        //        }
-        //    }
-
-        //    read.Close();
-
-        //    /** Retrieve Outputs */
-        //    query.CommandText = "SELECT * FROM TYPE ORDER BY typeID;";
-        //    read = query.ExecuteReader();
-        //    f = 0;
-        //    string[] trray = new string[ids.Count];
-
-        //    while (read.Read())
-        //    {
-        //        if (typeIDs.Count > 0)
-        //        {
-        //            for (f = 0; f < ids.Count; f++)
-        //            {
-        //                if (read.GetInt32(0) == typeIDs.ElementAt(f))
-        //                {
-        //                    trray[f] = read.GetString(1); // Types
-        //                }
-        //            }
-        //        }
-        //    }
-
-        //    for (int i = 0; i < ids.Count; i++)
-        //    {
-        //        outputList.Add(orray[i]);
-        //        typeList.Add(trray[i]);
-        //    }
-
-        //    read.Close();
-
-        //    /** Make sure to add the mediumIDs, formatIDs and unitIDs in a way that will make them easy to extract through a for loop. **/
-        //    query.CommandText = "SELECT * FROM GRAPHICS_LOG ORDER BY logID ASC, mediumID ASC;";
-        //    read = query.ExecuteReader();
-
-        //    while (read.Read())
-        //    {
-        //        mediumIDs.Add(read.GetInt32(0), read.GetInt32(1));
-        //        formatIDs.Add(read.GetInt32(0), read.GetInt32(2));
-        //        unitIDs.Add(read.GetInt32(0), read.GetInt32(6));
-        //    }
-
-        //    read.Close();
-
-        //    /** Make sure to add the unitIDs in a way that will make them easy to extract through a for loop **/
-        //    query.CommandText = "SELECT * FROM FILM_LOG ORDER BY logID;";
-        //    read = query.ExecuteReader();
-
-        //    while (read.Read())
-        //    {
-        //        unitIDs.Add(read.GetInt32(0), read.GetInt32(3));
-        //    }
-
-        //    read.Close();
-
-        //    /** Make sure to add the FNCategories, mediumIDs and formatIDs in a way that will make them easy to extract 
-        //     * through a for loop. **/
-        //    query.CommandText = "SELECT * FROM FLEXI_NOTE_LOG ORDER BY logID;";
-        //    read = query.ExecuteReader();
-
-        //    while (read.Read())
-        //    {
-        //        FNCategoryIDs.Add(read.GetInt32(0), read.GetInt32(1));
-        //        mediumIDs.Add(read.GetInt32(0), read.GetInt32(2));
-        //        formatIDs.Add(read.GetInt32(0), read.GetInt32(3));
-        //    }
-
-        //    read.Close();
-
-        //    query.CommandText = "SELECT * FROM MEDIUM ORDER BY mediumID ASC;";
-        //    read = query.ExecuteReader();
-        //    string[] marray = new string[ids.Count];
-
-
-        //    while (read.Read())
-        //    {
-        //        for (f = 0; f < mediumIDs.Count; f++)
-        //        {
-        //            if (read.GetInt32(0) == mediumIDs.ElementAt(f).Value)
-        //            {
-        //                for (int i = 0; i < ids.Count; i++)
-        //                {
-        //                    marray[i] = "";
-        //                    if (ids.ElementAt(i) == mediumIDs.ElementAt(f).Key)
-        //                        marray[i] = read.GetString(1);
-
-        //                }
-
-        //            }
-        //        }
-        //    }
-
-        //    read.Close();
-
-        //    query.CommandText = "SELECT * FROM FORMAT ORDER BY formatID ASC;";
-        //    read = query.ExecuteReader();
-        //    f = 0;
-        //    string[] farray = new string[ids.Count];
-
-        //    while (read.Read())
-        //    {
-        //        for (f = 0; f < formatIDs.Count; f++)
-        //        {
-        //            if (read.GetInt32(0) == formatIDs.ElementAt(f).Value)
-        //            {
-        //                for (int i = 0; i < ids.Count; i++)
-        //                {
-        //                    farray[i] = "";
-        //                    if (ids.ElementAt(i) == formatIDs.ElementAt(f).Key)
-        //                        farray[i] = read.GetString(1);
-
-        //                }
-
-        //            }
-        //        }
-        //    }
-
-        //    read.Close();
-
-        //    query.CommandText = "SELECT * FROM MEASURING_UNIT ORDER BY unitID ASC;";
-        //    read = query.ExecuteReader();
-        //    f = 0;
-        //    string[] urray = new string[ids.Count];
-
-        //    while (read.Read())
-        //    {
-        //        for (f = 0; f < unitIDs.Count; f++)
-        //        {
-        //            if (read.GetInt32(0) == unitIDs.ElementAt(f).Value)
-        //            {
-        //                for (int i = 0; i < ids.Count; i++)
-        //                {
-        //                    urray[i] = "";
-        //                    if (ids.ElementAt(i) == unitIDs.ElementAt(f).Key)
-        //                        urray[i] = read.GetString(1);
-
-        //                }
-
-        //            }
-        //        }
-        //    }
-
-        //    read.Close();
-
-        //    for (f = 0; f < mediumIDs.Count; f++)
-        //    {
-        //        for (int i = 0; i < marray.Length; i++)
-        //        {
-        //            mediumList = (mediumIDs.ElementAt(f).Key, marray[i]);
-        //            formatList = (formatIDs.ElementAt(f).Key, farray[i]);
-        //            unitList = (unitIDs.ElementAt(f).Key, urray[i]);
-        //        }
-        //    }
-
-        //    query.CommandText = "SELECT * FROM FLEXI_NOTE_CAT ORDER BY flexiNoteID ASC;";
-        //    read = query.ExecuteReader();
-        //    f = 0;
-        //    string[] fnarray = new string[ids.Count];
-
-        //    while (read.Read())
-        //    {
-        //        for (f = 0; f < FNCategoryIDs.Count; f++)
-        //        {
-        //            if (read.GetInt32(0) == FNCategoryIDs.ElementAt(f).Value)
-        //            {
-        //                for (int i = 0; i < ids.Count; i++)
-        //                {
-        //                    fnarray[i] = "";
-        //                    if (ids.ElementAt(i) == FNCategoryIDs.ElementAt(f).Key)
-        //                        fnarray[i] = read.GetString(1);
-
-        //                }
-
-        //            }
-        //        }
-        //    }
-
-        //    read.Close();
-
-        //    for (f = 0; f < FNCategoryIDs.Count; f++)
-        //    {
-        //        for (int i = 0; i < fnarray.Length; i++)
-        //        {
-        //            FNCategoryList = (FNCategoryIDs.ElementAt(f).Key, fnarray[i]);
-        //        }
-        //    }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        //    // Read the data for specific LOG.
-        //    for (int i = 0; i < ids.Count; i++)
-        //    {
-        //        switch (catIDs.ElementAt(i))
-        //        {
-        //            case 1:
-        //                {
-        //                    query.CommandText = "SELECT * FROM CODE_LOG ORDER BY logID;";
-        //                    read = query.ExecuteReader();
-
-        //                    var clog = new CODE_LOG(account,
-        //                        proList.ElementAt(i), appList.ElementAt(i), startList.ElementAt(i), endList.ElementAt(i),
-        //                        outputList.ElementAt(i), typeList.ElementAt(i), notaries.ElementAt(i), 0, false);
-
-        //                    while (read.Read())
-        //                    {
-        //                        // If the logID is the same as the current logID set log contents
-        //                        if (ids.ElementAt(i) == read.GetInt32(0) && i < ids.Count)
-        //                        {
-        //                            clog.setBugs(read.GetInt32(1));
-        //                            clog.setSuccess(read.GetBoolean(2));
-        //                            break;
-        //                        }
-        //                    }
-
-        //                    read.Close();
-
-        //                    if (clog.getApplicationName() == "Android Studio Electric Eel")
-        //                    {
-        //                        query.CommandText = "SELECT * FROM ANDROID_CODE_LOG ORDER BY logID";
-        //                        read = query.ExecuteReader();
-        //                        var acl = new ANDROID_CODE_LOG(clog);
-
-        //                        while (read.Read())
-        //                        {
-        //                            if (ids.ElementAt(i) == read.GetInt32(0))
-        //                            {
-        //                                acl.setSync(DateTime.Parse(read.GetString(1)));
-
-        //                                if (read.GetString(2) != null)
-        //                                    acl.setGradleDaemon(DateTime.Parse(read.GetString(2)));
-
-        //                                if (read.GetString(3) != null)
-        //                                    acl.setBuildRun(DateTime.Parse(read.GetString(3)));
-
-        //                                if (read.GetString(4) != null)
-        //                                    acl.setBuildLoad(DateTime.Parse(read.GetString(4)));
-
-        //                                if (read.GetString(5) != null)
-        //                                    acl.setBuildConfig(DateTime.Parse(read.GetString(5)));
-
-        //                                if (read.GetString(6) != null)
-        //                                    acl.setAllProjects(DateTime.Parse(read.GetString(6)));
-        //                                break;
-        //                            }
-        //                        }
-
-        //                        read.Close();
-
-        //                        if (theListONLY)
-        //                            list.Add(acl);
-        //                        else
-        //                            this.Add(acl);
-        //                    }
-        //                    else
-        //                    {
-        //                        if (theListONLY)
-        //                            list.Add(clog);
-        //                        else
-        //                            this.Add(clog);
-        //                    }
-
-        //                }
-        //                break;
-        //            case 2:
-        //                {
-        //                    var glog = new GRAPHICS_LOG();
-
-        //                    glog.setAuthor(account); // ACCOUNT
-        //                    glog.setProjectName(proList.ElementAt(i)); // PROJECT
-        //                    glog.setApplicationName(appList.ElementAt(i)); // APPLICATION
-        //                    glog.setStartTime(startList.ElementAt(i)); // START TIME
-        //                    glog.setEndTime(endList.ElementAt(i)); // END TIME
-        //                    glog.setOutput(outputList.ElementAt(i)); // OUTPUT
-        //                    glog.setType(typeList.ElementAt(i)); // TYPE
-        //                    glog.setNotarised(notaries.ElementAt(i)); // Notaries
-
-        //                    query.CommandText = "SELECT * FROM GRAPHICS_LOG ORDER BY logID;";
-        //                    read = query.ExecuteReader();
-
-        //                    while (read.Read())
-        //                    {
-        //                        // If the logID is the same as the current logID set log contents
-        //                        if (ids.ElementAt(i) == read.GetInt32(0))
-        //                        {
-        //                            if (mediumList.Item1 == read.GetInt32(1))
-        //                                glog.setMedium(mediumList.Item2);
-
-        //                            if (formatList.Item1 == read.GetInt32(2))
-        //                                glog.setFormat(mediumList.Item2);
-
-        //                            glog.setBrush(read.GetString(3));
-        //                            glog.setHeight(read.GetDecimal(4));
-        //                            glog.setWidth(read.GetDecimal(5));
-
-        //                            if (unitList.Item1 == read.GetInt32(6))
-        //                                glog.setUnit(unitList.Item2);
-
-        //                            glog.setSize(read.GetString(7));
-        //                            glog.setDPI(read.GetDecimal(8));
-        //                            glog.setDepth(read.GetString(9));
-        //                            glog.setCompleted(read.GetBoolean(10));
-        //                            glog.setSource(read.GetString(11));
-        //                            break;
-        //                        }
-        //                    }
-        //                    read.Close();
-
-        //                    if (theListONLY)
-        //                        list.Add(glog);
-        //                    else
-        //                        this.Add(glog);
-        //                }
-        //                break;
-        //            case 3:
-        //                {
-        //                    var flog = new FILM_LOG();
-
-        //                    flog.setAuthor(account); // ACCOUNT
-        //                    flog.setProjectName(proList.ElementAt(i)); // PROJECT
-        //                    flog.setApplicationName(appList.ElementAt(i)); // APPLICATION
-        //                    flog.setStartTime(startList.ElementAt(i)); // START TIME
-        //                    flog.setEndTime(endList.ElementAt(i)); // END TIME
-        //                    flog.setOutput(outputList.ElementAt(i)); // OUTPUT
-        //                    flog.setType(typeList.ElementAt(i)); // TYPE
-        //                    flog.setNotarised(notaries.ElementAt(i)); // Notaries
-
-        //                    query.CommandText = "SELECT * FROM FILM_LOG ORDER BY logID;";
-        //                    read = query.ExecuteReader();
-
-        //                    while (read.Read())
-        //                    {
-        //                        // If the logID is the same as the current logID set log contents
-        //                        if (ids.ElementAt(i) == read.GetInt32(0))
-        //                        {
-        //                            flog.setHeight(read.GetDecimal(1));
-        //                            flog.setWidth(read.GetDecimal(2));
-
-        //                            if (unitList.Item1 == read.GetInt32(3))
-        //                                flog.setUnit(unitList.Item2);
-
-        //                            flog.setLength(read.GetString(4));
-        //                            flog.setCompleted(read.GetBoolean(5));
-        //                            flog.setSource(read.GetString(6));
-
-        //                            break;
-        //                        }
-        //                    }
-        //                    read.Close();
-
-        //                    if (theListONLY)
-        //                        list.Add(flog);
-        //                    else
-        //                        this.Add(flog);
-        //                }
-        //                break;
-        //            case 4:
-        //                {
-        //                    query.CommandText = "SELECT * FROM NOTE_LOG ORDER BY logID;";
-        //                    read = query.ExecuteReader();
-        //                    bool genORflex = true;
-
-        //                    while (read.Read())
-        //                    {
-        //                        if (ids.ElementAt(i) == read.GetInt32(0))
-        //                        {
-        //                            genORflex = read.GetBoolean(1);
-        //                            break;
-        //                        }
-        //                    }
-
-        //                    read.Close();
-
-
-        //                    if (genORflex)
-        //                    {
-        //                        bool isList = true;
-        //                        var gen = new GENERIC_NOTE();
-
-        //                        gen.setAuthor(account); // ACCOUNT
-        //                        gen.setProjectName(proList.ElementAt(i)); // PROJECT
-        //                        gen.setApplicationName(appList.ElementAt(i)); // APPLICATION
-        //                        gen.setStartTime(startList.ElementAt(i)); // START TIME
-        //                        gen.setEndTime(endList.ElementAt(i)); // END TIME
-        //                        gen.setOutput(outputList.ElementAt(i)); // OUTPUT
-        //                        gen.setType(typeList.ElementAt(i)); // TYPE
-
-        //                        query.CommandText = "SELECT * FROM GENERIC_NOTE_LOG ORDER BY logID;";
-        //                        read = query.ExecuteReader();
-
-        //                        while (read.Read())
-        //                        {
-        //                            // If the logID is the same as the current logID set log contents
-        //                            if (ids.ElementAt(i) == read.GetInt32(0))
-        //                            {
-        //                                gen.setCategory(read.GetBoolean(1));
-        //                                isList = read.GetBoolean(1);
-        //                                gen.setSubject(read.GetString(2));
-        //                                gen.setNote(read.GetString(3));
-
-        //                                break;
-        //                            }
-        //                        }
-
-        //                        read.Close();
-
-
-        //                        f = 0;
-        //                        if (!isList)
-        //                        {
-        //                            query.CommandText = "SELECT * FROM GNL_CHECKLIST ORDER BY gnlCheckID ASC, logID ASC;";
-        //                            read = query.ExecuteReader();
-        //                            Checklist dict = new Checklist();
-
-        //                            while (read.Read())
-        //                            {
-        //                                if (ids.ElementAt(i) == read.GetInt32(1))
-        //                                {
-        //                                    dict.Add(read.GetBoolean(3), read.GetString(2));
-        //                                }
-
-        //                            }
-
-        //                            gen.setItems(dict);
-
-        //                            read.Close();
-        //                        }
-
-        //                        if (theListONLY)
-        //                            list.Add(gen);
-        //                        else
-        //                            this.Add(gen);
-        //                    }
-        //                    else
-        //                    {
-        //                        var flex = new FLEXI_NOTE();
-
-        //                        flex.setAuthor(account); // ACCOUNT
-        //                        flex.setProjectName(proList.ElementAt(i)); // PROJECT
-        //                        flex.setApplicationName(appList.ElementAt(i)); // APPLICATION
-        //                        flex.setStartTime(startList.ElementAt(i)); // START TIME
-        //                        flex.setEndTime(endList.ElementAt(i)); // END TIME
-        //                        flex.setOutput(outputList.ElementAt(i)); // OUTPUT
-        //                        flex.setType(typeList.ElementAt(i)); // TYPE
-        //                        flex.setNotarised(notaries.ElementAt(i)); // Notaries
-
-        //                        query.CommandText = "SELECT * FROM FLEXI_NOTE_LOG ORDER BY logID ASC, flexiNoteID ASC;";
-        //                        read = query.ExecuteReader();
-
-        //                        while (read.Read())
-        //                        {
-        //                            if (ids.ElementAt(i) == read.GetInt32(0))
-        //                            {
-        //                                if (FNCategoryList.Item1 == read.GetInt32(1))
-        //                                    flex.setCategory(FNCategoryList.Item2);
-
-        //                                if (mediumList.Item1 == read.GetInt32(2))
-        //                                    flex.setMedium(mediumList.Item2);
-
-        //                                if (formatList.Item1 == read.GetInt32(3))
-        //                                    flex.setFormat(formatList.Item2);
-
-        //                                flex.setBitRate(read.GetInt32(4));
-        //                                flex.setLength(read.GetString(5));
-        //                                flex.setCompleted(read.GetBoolean(6));
-        //                                flex.setSource(read.GetString(7));
-        //                                flex.setGameCategory(read.GetBoolean(8));
-
-        //                                break;
-        //                            }
-
-        //                        }
-
-        //                        read.Close();
-
-        //                        if (theListONLY)
-        //                            list.Add(flex);
-        //                        else
-        //                            this.Add(flex);
-        //                    }
-
-        //                }
-        //                break; // case 4 SWITCH
-        //        }
-        //    }
-
-        //    return list;
-        //}
-
-
-
-
-        // ---END MEMBER FUNCTIONS
 
         public string UpdateProfilePic(string emailAddress)
         {
@@ -2057,5 +2306,14 @@ namespace Data_Logger_1._3.Services
 
             return filePath;
         }
+
+
+
+        #endregion
+    }
+
+    public class EmailConflictException : Exception
+    {
+        public EmailConflictException(string message) : base(message) { }
     }
 }
