@@ -13,7 +13,7 @@ namespace Data_Logger_1._3.Commands.ReporterCommands
     /// <summary>
     /// Exports a single log to a PDF.
     /// </summary>
-    public class SingleExportCommand : CommandBase
+    public class SingleExportCommand : AsyncCommandBase
     {
         private readonly NavigationService _navigationService;
         private readonly DataService _dataService;
@@ -41,7 +41,8 @@ namespace Data_Logger_1._3.Commands.ReporterCommands
             }
         }
 
-        public override void Execute(object parameter)
+
+        protected override async Task ExecuteAsync(object parameter)
         {
             try
             {
@@ -50,22 +51,28 @@ namespace Data_Logger_1._3.Commands.ReporterCommands
                     switch (report.Context)
                     {
                         case CacheContext.Qt:
-                            _pdfService.ExportQtLogToPDF(report);
+                            await _pdfService.ExportQtLogToPDF(report);
+
                             break;
                         case CacheContext.AndroidStudio:
-                            _pdfService.ExportASLogToPDF(report);
+                            await _pdfService.ExportASLogToPDF(report);
+
                             break;
                         case CacheContext.Coding:
-                            _pdfService.ExportCodingLogToPDF(report);
+                            await _pdfService.ExportCodingLogToPDF(report);
+
                             break;
                         case CacheContext.Graphics:
-                            _pdfService.ExportGraphicsLogToPDF(report);
+                            await _pdfService.ExportGraphicsLogToPDF(report);
+
                             break;
                         case CacheContext.Film:
-                            _pdfService.ExportFilmLogToPDF(report);
+                            await _pdfService.ExportFilmLogToPDF(report);
+
                             break;
                         case CacheContext.Flexi:
-                            _pdfService.ExportFlexiLogToPDF(report);
+                            await _pdfService.ExportFlexiLogToPDF(report);
+
                             break;
                         default:
                             break;
@@ -77,8 +84,6 @@ namespace Data_Logger_1._3.Commands.ReporterCommands
                 Debug.WriteLine($"Exception occurred near SingleExportCommand.Execute(): {ex.Message}");
             }
         }
-
-
     }
 
 }
