@@ -76,10 +76,14 @@ namespace Data_Logger_1._3.Services
 
         #region CONSTRUCTORS
 
-        public DATAMASTER() { }
+        public DATAMASTER()
+        {
+            StartUpTasks();
+        }
 
         public DATAMASTER(LOG log)
         {
+            StartUpTasks();
 
             Add(log);
 
@@ -88,6 +92,8 @@ namespace Data_Logger_1._3.Services
 
         public DATAMASTER(bool option)
         {
+            StartUpTasks();
+
             if (option)
             {
                 _con = new SQLiteConnection(CONNECTION_STRING);
@@ -106,6 +112,8 @@ namespace Data_Logger_1._3.Services
 
         public DATAMASTER(SQLiteConnection connection, string category, bool databaseStatus)
         {
+            StartUpTasks();
+
             _con = connection;
             this.databaseStatus = databaseStatus;
 
@@ -114,8 +122,26 @@ namespace Data_Logger_1._3.Services
 
         public DATAMASTER(SQLiteConnection connection, string category, bool databaseStatus, LOG current)
         {
+            StartUpTasks();
+
             _con = connection;
             this.databaseStatus = databaseStatus;
+        }
+
+        private void StartUpTasks()
+        {
+            CreateConnection();
+            CheckTables();
+            CheckCategories();
+            CheckApplications();
+            CheckProject();
+            CheckOutputs();
+            CheckTypes();
+            CheckSubjects();
+            CheckMediums();
+            CheckFormats();
+            CheckUnits();
+            CheckFNCategories();
         }
 
 
@@ -1574,7 +1600,7 @@ namespace Data_Logger_1._3.Services
         }
 
 
-        
+
         // SecureString Support
         #region Helper Functions
 
