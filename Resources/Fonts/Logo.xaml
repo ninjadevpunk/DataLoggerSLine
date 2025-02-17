@@ -4,5 +4,6 @@
     
     <FontFamily x:Key="Zekton">pack://application:,,,/Fonts/#Zekton</FontFamily>
     <FontFamily x:Key="ZektonItalics">pack://application:,,,/Fonts/#Zekton Italic</FontFamily>
-    <FontFamily x:Key="ZektonRg">pack://application:,,,/Fonts/#zekton rg</FontFamily>
+    <FontFamily x:Key="ZektonRg">pack://application:,,,/Fonts/#Zekton</FontFamily>
+    <FontFamily x:Key="ZektonBold">pack://application:,,,/Fonts/#Zekton Bold</FontFamily>
 </ResourceDictionary>
