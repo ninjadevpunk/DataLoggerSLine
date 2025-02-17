@@ -10,12 +10,12 @@
       d:Background="{DynamicResource WHITE}"
       d:Width="500"
       Title="Login" >
-    
+
     <StackPanel Margin="10"
-            Orientation="Vertical"
-            VerticalAlignment="Stretch"
-            HorizontalAlignment="Stretch"
-            Height="758" >
+                Orientation="Vertical"
+                VerticalAlignment="Center"
+                HorizontalAlignment="Stretch"
+                Height="auto" >
 
         <!-- DISPLAY PICTURE (Not Editable) -->
         <Grid Margin="0 10" >
