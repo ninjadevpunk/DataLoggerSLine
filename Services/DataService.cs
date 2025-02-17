@@ -28,12 +28,12 @@ namespace Data_Logger_1._3.Services
     {
         private readonly DATAWRITER _writer;
         private readonly DATAREADER _reader;
+        private readonly DATAHANDLER _handler;
         private readonly Cachemaster _cachemaster;
 
         private ACCOUNT _account;
         private const string Qt = "Qt Creator";
         private const string Android = "Android Studio Hedgehog 2023.1.1";
-        private bool IsStartup = true;
 
         public ProjectClass CurrentProject { get; set; }
 
@@ -58,6 +58,18 @@ namespace Data_Logger_1._3.Services
         {
             _writer = writer;
             _reader = reader;
+            _cachemaster = cachemaster;
+
+            _account = authService.Account;
+            SignInUser();
+
+        }
+
+        public DataService(DATAWRITER writer, DATAREADER reader, DATAHANDLER handler, Cachemaster cachemaster, AuthService authService)
+        {
+            _writer = writer;
+            _reader = reader;
+            _handler = handler;
             _cachemaster = cachemaster;
 
             _account = authService.Account;
@@ -98,6 +110,7 @@ namespace Data_Logger_1._3.Services
         {
             _writer.Watcher.UpdateOnStart(CachedItems, CachedPostIts);
         }
+
         public ACCOUNT GetUser()
         {
             return _account;
@@ -123,17 +136,19 @@ namespace Data_Logger_1._3.Services
             _account = account;
         }
 
-        /* Use this to retrieve projects from database.
-         * Use the Category to filter out projects for a specific category in the project object.
-         * */
 
+
+
+        /// <summary>
+        /// Retrieves projects from the database.
+        /// </summary>
         public void InitialiseProjectsLIST()
         {
             try
             {
                 SQLITE_PROJECTS.Clear();
 
-                var collection = _writer.ListProjects();
+                var collection = _reader.ListProjects();
 
                 foreach (ProjectClass pro in collection)
                 {
@@ -148,13 +163,19 @@ namespace Data_Logger_1._3.Services
 
         }
 
+
+
+        /// <summary>
+        /// Retrieves projects from the database of a specified category.
+        /// </summary>
+        /// <param name="category">The type of project.</param>
         public void InitialiseProjectsLIST(LOG.CATEGORY category)
         {
             try
             {
                 SQLITE_PROJECTS.Clear();
 
-                var collection = _writer.ListProjects(category);
+                var collection = _reader.ListProjects(category);
 
                 foreach (ProjectClass pro in collection)
                 {
@@ -175,7 +196,7 @@ namespace Data_Logger_1._3.Services
             {
                 SQLITE_APPLICATIONS.Clear();
 
-                var collection = _writer.ListApplications();
+                var collection = _reader.ListApplications();
 
                 foreach (ApplicationClass app in collection)
                 {
@@ -200,7 +221,7 @@ namespace Data_Logger_1._3.Services
             {
                 SQLITE_APPLICATIONS.Clear();
 
-                var collection = _writer.ListApplications(category);
+                var collection = _reader.ListApplications(category);
 
                 foreach (ApplicationClass app in collection)
                 {
@@ -226,7 +247,7 @@ namespace Data_Logger_1._3.Services
             {
                 SQLITE_SUBJECTS.Clear();
 
-                var collection = _writer.ListSubjects(category);
+                var collection = _reader.ListSubjects(category);
 
                 foreach (SubjectClass subject in collection)
                 {
@@ -247,7 +268,7 @@ namespace Data_Logger_1._3.Services
             {
                 SQLITE_SUBJECTS.Clear();
 
-                var collection = _writer.ListSubjects(project);
+                var collection = _reader.ListSubjects(project);
 
                 foreach (SubjectClass subject in collection)
                 {
@@ -285,7 +306,7 @@ namespace Data_Logger_1._3.Services
 
         public ProjectClass RetrieveProject(int projectID)
         {
-            return _writer.FindProjectByID(projectID);
+            return _reader.FindProjectByID(projectID);
         }
 
         public int CreateAppID(LOG.CATEGORY category, ACCOUNT account, string applicationName)
@@ -396,7 +417,7 @@ namespace Data_Logger_1._3.Services
 
         public ApplicationClass? FindApplicationByID(int id)
         {
-            return _writer.FindAppByID(id);
+            return _reader.FindAppByID(id);
         }
 
         #endregion
@@ -419,11 +440,9 @@ namespace Data_Logger_1._3.Services
         public bool StoreLog(LOG log)
         {
             bool IsStored = false;
-            var initialCount = _writer.LogCount();
+            var initialCount = _reader.LogCount();
 
-            _writer.CreateLOG(log);
-
-            if (_writer.LogCount() > initialCount)
+            if (_writer.CreateLOG(log))
             {
                 IsStored = true;
                 CurrentProject = log.Project;
@@ -443,6 +462,7 @@ namespace Data_Logger_1._3.Services
 
 
         #region Log Retrieval
+
 
 
 
@@ -467,26 +487,124 @@ namespace Data_Logger_1._3.Services
             return logs;
         }
 
+        public List<LOG> RetrieveQtLogs()
+        {
+            List<LOG> logs = new();
+            
+            foreach(LOG log in RetrieveLogs(LOG.CATEGORY.CODING))
+            {
+                if(log.Application.AppID == 1)
+                    logs.Add(log);
+            }
+
+            return logs;
+        }
+
+
+        /// <summary>
+        /// Counts the total number of logs.
+        /// </summary>
+        /// <returns>The count of logs.</returns>
+        public int LogCount()
+        {
+            return _reader.LogCount();
+        }
 
         public int LogCount(LOG.CATEGORY category)
         {
-            return _writer.LogCount(category);
+            return _reader.LogCount(category);
         }
 
         public int QtLogCount()
         {
-            return _writer.QtLogCount();
+            return _reader.QtLogCount();
         }
 
         public int ASLogCount()
         {
-            return _writer.ASLogCount();
+            return _reader.ASLogCount();
+        }
+
+        public int FlexiLogCount()
+        {
+            return _reader.FlexiLogCount();
         }
 
         public List<SubjectClass> ListSubjects(ProjectClass project)
         {
-            return _writer.ListSubjects(project);
+            return _reader.ListSubjects(project);
         }
+
+
+
+
+
+        public List<CodingLOG> SearchForQtRecords(string searchBarText, int projectID)
+        {
+            return _reader.SearchQtLogs(searchBarText, projectID);
+        }
+
+
+
+
+        #endregion
+
+
+
+
+        #region Log Management
+
+
+
+
+        #region Updates
+
+
+
+
+
+
+
+
+
+
+
+
+
+        #endregion
+
+
+
+
+
+
+        #region Deleteions
+
+
+
+
+
+        public bool DeleteLog(int logID)
+        {
+            return _handler.DeleteLog(logID);
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+        #endregion
+
+
+
 
 
 
