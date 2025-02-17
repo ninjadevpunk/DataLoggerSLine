@@ -6,22 +6,23 @@ using Newtonsoft.Json;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
+using System.Security.AccessControl;
+using System.Security.Principal;
 
 
 namespace Data_Logger_1._3.Services
 {
+    /// <summary>
+    /// Class for temporary and permanent file storage. Related to the DATAMASTER class. This class creates files to permanently keep contents of LOGS for backup purposes. Files
+    /// with a link in DATAMASTER will be deleted automatically. This class can also save incomplete logs in the Logger.
+    /// </summary>
     public class Cachemaster
     {
-        /** DOCUMENTATION
-         * 
-         * Please use this class for temporary and permanent file storage.
-         * For database support, use DATAMASTER classes.
-         * 
-         * File Handler Class
-         * Use this class to create files to permanently keep contents of unstored LOGS.
-         * When a LOG is removed from DATAMASTER, this class will remove the file associated
-         * with it in 20 minutes.
-         */
+
+        const string MAIN_FOLDER = @"C:\Data Logger Central";
+        const string DEPOSITORY_PATH = @"C:\Data Logger Central\Depository";
+
+
         const string IDENTIFIERS_PATH = @"C:\Data Logger Central\Depository\res\_identifiers.index";
         const string SUBJECT_IDS_PATH = @"C:\Data Logger Central\Depository\res\subject.index";
         const string POSTIT_IDS_PATH = @"C:\Data Logger Central\Depository\res\postit.index";
@@ -54,35 +55,92 @@ namespace Data_Logger_1._3.Services
              */
             try
             {
-                if (!Directory.Exists(RESOURCE_DIRECTORY))
+
+                // Ensure the base folder exists
+                if (!Directory.Exists(MAIN_FOLDER))
                 {
-
-                    DirectoryInfo directory = Directory.CreateDirectory(RESOURCE_DIRECTORY);
-                    directory.Create();
-
-
-                    var fileStream = new FileStream(IDENTIFIERS_PATH, FileMode.CreateNew);
-                    fileStream.Close();
-
-                    fileStream = new(SUBJECT_IDS_PATH, FileMode.CreateNew);
-                    fileStream.Close();
-
-                    fileStream = new(POSTIT_IDS_PATH, FileMode.CreateNew);
-                    fileStream.Close();
-
+                    Directory.CreateDirectory(MAIN_FOLDER);
+                    GrantFolderPermissions(MAIN_FOLDER);
                 }
 
+                // Ensure the Depository folder exists
+                if (!Directory.Exists(DEPOSITORY_PATH))
+                {
+                    Directory.CreateDirectory(DEPOSITORY_PATH);
+                    DirectoryInfo depositoryInfo = new DirectoryInfo(DEPOSITORY_PATH);
+                    depositoryInfo.Attributes |= FileAttributes.Hidden;
+                }
 
+                // Ensure RESOURCE_DIRECTORY exists
+                if (!Directory.Exists(RESOURCE_DIRECTORY))
+                {
+                    Directory.CreateDirectory(RESOURCE_DIRECTORY);
+
+                    using (var fileStream = new FileStream(IDENTIFIERS_PATH, FileMode.CreateNew)) { }
+                    using (var fileStream = new FileStream(SUBJECT_IDS_PATH, FileMode.CreateNew)) { }
+                    using (var fileStream = new FileStream(POSTIT_IDS_PATH, FileMode.CreateNew)) { }
+                }
             }
-            catch (Exception)
+            catch (UnauthorizedAccessException unex)
             {
+                Debug.WriteLine($"An UnauthorizedAccessException error occurred in ResourcesCreated(): {unex.Message}");
+
+                // Handle permissions issue gracefully
+                //RequestAdminPrivileges();
+
+                return false;
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"An exception occurred in ResourcesCreated(): {ex.Message}");
                 Identifiers = null;
+
                 return false;
             }
 
             return true;
 
         }
+
+        private void GrantFolderPermissions(string folderPath)
+        {
+            DirectoryInfo dirInfo = new DirectoryInfo(folderPath);
+            DirectorySecurity dirSecurity = dirInfo.GetAccessControl();
+
+            SecurityIdentifier sid = WindowsIdentity.GetCurrent().User;
+
+            FileSystemAccessRule accessRule = new FileSystemAccessRule(
+                sid,
+                FileSystemRights.FullControl,
+                InheritanceFlags.ContainerInherit | InheritanceFlags.ObjectInherit,
+                PropagationFlags.None,
+                AccessControlType.Allow
+            );
+
+            dirSecurity.AddAccessRule(accessRule);
+            dirInfo.SetAccessControl(dirSecurity);
+        }
+
+        // Requests admin privileges if access is denied
+        private void RequestAdminPrivileges()
+        {
+            System.Diagnostics.ProcessStartInfo procInfo = new System.Diagnostics.ProcessStartInfo
+            {
+                FileName = System.Reflection.Assembly.GetExecutingAssembly().Location,
+                Verb = "runas",
+                UseShellExecute = true
+            };
+
+            try
+            {
+                System.Diagnostics.Process.Start(procInfo);
+            }
+            catch
+            {
+                // Handle failure to restart with admin rights
+            }
+        }
+
 
         /// <summary>
         /// Only checks if the Identifiers file exists and creates it if it doesn't. Will then insert found identifiers into the Identifiers list.
