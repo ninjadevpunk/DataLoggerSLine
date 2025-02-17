@@ -46,7 +46,7 @@ namespace Data_Logger_1._3.Services
 
         public static string GetProcessedImageUrl(string uploadedImageUrl)
         {
-            return $"{uploadedImageUrl}?tr=ar-1-1,w-50,r-3,fo-auto,q-100,cp-true,e-sharpen,lo-true,f-png";
+            return $"{uploadedImageUrl}?tr=ar-1-1,w-350,r-30,fo-auto,q-100,cp-true,e-sharpen,lo-true,f-png";
         }
 
         public static async Task<string> DownloadImageAsync(string imageUrl, string savePath)
