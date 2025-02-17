@@ -425,6 +425,14 @@ namespace Data_Logger_1._3.Services
 
         public void NavigateToMainWindow()
         {
+            if (_dataService is null)
+            {
+                MessageBox.Show("An error occurred on our end. We aplogise for any inconvenience.", "Error");
+
+                Debug.WriteLine("DataService is null!");
+
+                return;
+            }
 
             _dataService.SetAccount(_authService.Account);
 
@@ -435,7 +443,13 @@ namespace Data_Logger_1._3.Services
 
 
             if (LoginWindow is null)
+            {
+                MessageBox.Show("An error occurred on our end. We aplogise for any inconvenience.", "Error");
+
+                Debug.WriteLine("LoginWindow is null!");
+
                 return;
+            }
 
             // Retrieve Qt Logs that weren't stored
 
