@@ -23,10 +23,10 @@ namespace Data_Logger_1._3
                 .ConfigureServices((context, service) =>
                 {
 
-                    service.AddSingleton<Cachemaster>((services) => new());
-                    service.AddSingleton<DATAREADER>((services) => new());
-                    service.AddSingleton<DATAHANDLER>((services) => new());
-                    service.AddSingleton<PDFService>((services) => new());
+                    service.AddSingleton<Cachemaster>();
+                    service.AddSingleton<DATAREADER>();
+                    service.AddSingleton<DATAHANDLER>();
+                    service.AddSingleton<PDFService>();
                     service.AddSingleton((services) => new DATAWRITER(services.GetRequiredService<DATAREADER>()));
                     service.AddSingleton((services) => new AuthService(services.GetRequiredService<DATAWRITER>(), services.GetRequiredService<DATAREADER>()));
                     service.AddSingleton((services) => new DataService(services.GetRequiredService<DATAWRITER>(), services.GetRequiredService<DATAREADER>(),
@@ -35,14 +35,14 @@ namespace Data_Logger_1._3
                         services.GetRequiredService<AuthService>()));
                     service.AddSingleton((services) => new NavigationService(services.GetRequiredService<AuthService>(), services.GetRequiredService<DataService>(),
                         services.GetRequiredService<PDFService>()));
-                    service.AddTransient<Splashscreen>();
+                    service.AddSingleton<Splashscreen>();
                     service.AddSingleton<Login>();
-                    service.AddTransient((services) => new loginPage01(services.GetRequiredService<NavigationService>())
+                    service.AddSingleton((services) => new loginPage01(services.GetRequiredService<NavigationService>())
                     {
                         DataContext = new LoginViewModel(services.GetRequiredService<AuthService>(), services.GetRequiredService<NavigationService>())
                     }
                     );
-                    service.AddTransient((services) => new loginPage02(services.GetRequiredService<AuthService>(), services.GetRequiredService<NavigationService>())
+                    service.AddSingleton((services) => new loginPage02(services.GetRequiredService<AuthService>(), services.GetRequiredService<NavigationService>())
                     {
                         DataContext = new ForgotPasswordViewModel(services.GetRequiredService<AuthService>(), services.GetRequiredService<NavigationService>())
                     }
@@ -59,6 +59,8 @@ namespace Data_Logger_1._3
 
         protected override async void OnStartup(StartupEventArgs e)
         {
+            var cachemaster = _host.Services.GetRequiredService<Cachemaster>();
+
             var splash = _host.Services.GetRequiredService<Splashscreen>();
             splash.Show();
 
