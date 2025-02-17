@@ -3,28 +3,22 @@ using Data_Logger_1._3.Models.App_Models;
 using System.Data.SQLite;
 using System.Diagnostics;
 using System.Text.RegularExpressions;
+using System.Windows;
 using static Data_Logger_1._3.Models.AndroidCodingLOG;
-using static Data_Logger_1._3.Models.FlexiNotesLOG;
 
 namespace Data_Logger_1._3.Services
 {
+
     public class DATAWRITER : DATAMASTER
     {
+        protected readonly DATAREADER _reader;
 
         /* CONSTRUCTORS */
-        public DATAWRITER()
+        public DATAWRITER() { }
+
+        public DATAWRITER(DATAREADER reader)
         {
-            CreateConnection();
-            CheckTables();
-            CheckCategories();
-            CheckApplications();
-            CheckProject();
-            CheckOutputs();
-            CheckTypes();
-            CheckNoteLogTypes();
-            CheckMediums();
-            CheckFormats();
-            CheckFNCategories();
+            _reader = reader;
         }
 
         public DATAWRITER(string category, SQLiteConnection connection, bool status) : base(connection, category, status) { }
@@ -33,6 +27,7 @@ namespace Data_Logger_1._3.Services
 
 
         #region Feedback Management
+
 
 
         public void CreateFeedbackID()
@@ -62,362 +57,253 @@ namespace Data_Logger_1._3.Services
         #endregion
 
 
-        // These private functions should be called by this class only
 
-
-        // Find IDs
-
-        public int FindMediumID(LOG.CATEGORY category, string medium)
+        /// <summary>
+        /// Adds an account that is provided as an argument to the database.
+        /// </summary>
+        /// <param name="account">The account that will be added to the database.</param>
+        /// <returns">A boolean value that indicated if the process was successful or not.</returns>
+        public bool AddAccount(ACCOUNT account)
         {
-            // Will store the medium ID
-            int mediumKey = -1;
+            bool accountCreated = false;
 
-            int mediumColumn = 2;
+            try
+            {
+                if (account is null)
+                    throw new ArgumentNullException("Account not initialised. Operation aborted.");
 
-            SQLiteCommand query = _con.CreateCommand();
-            SQLiteDataReader read;
 
-            /** Retrieve MEDIUMs from the database temporarily.
-             *  Look for the MEDIUM that matches "media" parameter variable.
-             *  Then, return the key of the output when it is found.
-             */
-            query.CommandText = $@"SELECT * FROM MEDIUM WHERE {Column.CategoryID} = @category
+                _reader.EmailExists(account.Email);
+
+                string hashedPassword = SaltedSHA256Hash(account.Password, account.ID.ToString());
+
+                using (SQLiteCommand insert = _con.CreateCommand())
+                {
+                    insert.CommandText = $@"INSERT INTO ACCOUNT({Column.AccountID}, profilepic, first, last, email, password, IsEmployee, companyName, companyAddress, companyLogo, online)
+                                                        VALUES(@account, @profilePic, @firstName, @lastName, @email, @password, 
+                                                            @isEmployee, @companyName, @companyAddress, @companyLogo, @online)
 ;";
-            query.Parameters.AddWithValue("@category", FindCategoryID(category));
-            read = query.ExecuteReader();
+                    insert.Parameters.AddWithValue("@account", account.ID);
+                    insert.Parameters.AddWithValue("@profilePic", account.ProfilePic);
+                    insert.Parameters.AddWithValue("@firstName", account.FirstName);
+                    insert.Parameters.AddWithValue("@lastName", account.LastName);
+                    insert.Parameters.AddWithValue("@email", account.Email);
+                    insert.Parameters.AddWithValue("@password", hashedPassword);
+                    insert.Parameters.AddWithValue("@isEmployee", account.IsEmployee);
+                    insert.Parameters.AddWithValue("@companyName", account.CompanyName);
+                    insert.Parameters.AddWithValue("@companyAddress", account.CompanyAddress);
+                    insert.Parameters.AddWithValue("@companyLogo", account.CompanyLogo);
+                    insert.Parameters.AddWithValue("@online", false);
 
-            while (read.Read())
-            {
-                if (medium == read.GetString(mediumColumn))
-                {
-                    mediumKey = read.GetInt32(Column.IDColumn);
-                    break;
+                    insert.ExecuteNonQuery();
                 }
 
+                accountCreated = true;
             }
-
-            read.Close();
-
-            return mediumKey;
-        }
-
-        public int FindFormatID(LOG.CATEGORY category, string format)
-        {
-            int formatKey = -1;
-
-            int formatColumn = 2;
-
-            SQLiteCommand query = _con.CreateCommand();
-            SQLiteDataReader read;
-
-            /** Retrieve FORMATs from the database temporarily.
-             *  Look for the FORMAT that matches "format" parameter variable.
-             *  Then, return the key of the output when it is found.
-             */
-            query.CommandText = $"SELECT * FROM FORMAT WHERE {Column.CategoryID} = @category ORDER BY formatID ASC;";
-            query.Parameters.AddWithValue("@category", FindCategoryID(category));
-            read = query.ExecuteReader();
-
-            while (read.Read())
+            catch (EmailConflictException mailex)
             {
-                if (format == read.GetString(formatColumn))
-                {
-                    formatKey = read.GetInt32(0);
-                    break;
-                }
+                Debug.WriteLine($"EmailConflictException found near AddAccount(account): {mailex.Message}");
 
+                MessageBox.Show($"The email you entered has been taken. Please use a different one.", "Email Exists", MessageBoxButton.OK, MessageBoxImage.Error);
             }
-
-            read.Close();
-
-            return formatKey;
-        }
-
-        public int FindUnitID(string unit)
-        {
-            // Will store the unit ID
-            int unitKey = -1;
-
-            SQLiteCommand query = _con.CreateCommand();
-            SQLiteDataReader read;
-
-            var unitColumn = 1;
-
-            /** Retrieve UNITs from the database temporarily.
-             *  Look for the UNIT that matches "unit" parameter variable.
-             *  Then, return the key of the output when it is found.
-             */
-            query.CommandText = "SELECT * FROM MeasuringUnit ORDER BY unitID ASC;";
-            read = query.ExecuteReader();
-
-            while (read.Read())
+            catch (ArgumentNullException nullex)
             {
-                if (unit == read.GetString(unitColumn))
-                {
-                    unitKey = read.GetInt32(Column.IDColumn);
-                    break;
-                }
+                Debug.WriteLine($"ArgumentNullException found near AddAccount(account): {nullex.Message}");
 
+                MessageBox.Show("A problem occurred on our end. We apologise for any inconvenience caused. Feedback will automatically be sent to us.",
+                   "Error", MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK);
             }
-
-            return unitKey;
-        }
-
-        public int FindFNCategory(FLEXINOTEType type)
-        {
-            // Will store the flexi note ID
-            int FNKey = -1;
-
-            SQLiteCommand query = _con.CreateCommand();
-            SQLiteDataReader read;
-
-            /** Retrieve FLEXI_NOTE CATEGORY from the database temporarily.
-             *  Look for the FLEXI NOTE CATEGORY that matches "FNCategory" parameter variable.
-             *  Then, return the key of the output when it is found.
-             */
-            query.CommandText = "SELECT * FROM FlexiNoteType WHERE flexiNoteType = @category ORDER BY flexiNoteTypeID ASC;";
-
-            query.Parameters.AddWithValue("@category", type.ToString());
-
-
-            read = query.ExecuteReader();
-
-            while (read.Read())
+            catch (Exception ex)
             {
-                FNKey = read.GetInt32(Column.IDColumn);
-                break;
+                Debug.WriteLine($"Exception found near AddAccount(account): {ex.Message}");
 
+                MessageBox.Show("A problem occurred on our end. We apologise for any inconvenience caused. Feedback will automatically be sent to us.",
+                   "Error", MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK);
             }
 
-            return FNKey;
+            return accountCreated;
+
         }
 
-
-        // List items
-        public List<string> ListOutputs()
+        /// <summary>
+        /// Adds an ApplicationClass provided as an argument to the database.
+        /// </summary>
+        /// <param name="app">The app that will be added to the database.</param>
+        protected void AddApplication(ApplicationClass app)
         {
-            /** Retrieve the OUTPUTs from the database, 
-             *  add them to a list 
-             *  and return the list. */
-            List<string> outputs = new List<string>();
-            SQLiteCommand query = _con.CreateCommand();
-            SQLiteDataReader read;
-
-            query.CommandText = @"SELECT * FROM OUTPUT ORDER BY outputID;";
-            read = query.ExecuteReader();
-
-            while (read.Read())
+            try
             {
-                outputs.Add(read.GetString(1));
-            }
-            read.Close();
-
-            return outputs;
-        }
-
-        public List<string> ListOutputs(ApplicationClass app)
-        {
-            /** Retrieve the OUTPUTs from the database, 
-             *  add them to a list 
-             *  and return the list. */
-            List<string> outputs = new List<string>();
-            SQLiteCommand query = _con.CreateCommand();
-            SQLiteDataReader read;
-
-            query.CommandText = $@"SELECT * FROM OUTPUT WHERE {Column.AccountID} = @account
-                                    AND {Column.CategoryID} = @category
-                                    AND {Column.AppID} = @app ORDER BY outputID
+                using SQLiteCommand insert = _con.CreateCommand();
+                insert.CommandText = $@"INSERT INTO APPLICATION({Column.AppID}, {Column.AccountID}, application, {Column.CategoryID}, IsDefault)
+                            VALUES(@app, @account, @appName, @category, @isDefault)
 ;";
-            query.Parameters.AddWithValue("@accounD", User.ID);
-            query.Parameters.AddWithValue("@category", FindCategoryID(app.Category));
-            query.Parameters.AddWithValue("@app", app.AppID);
-            read = query.ExecuteReader();
+                insert.Parameters.AddWithValue("@app", app.AppID);
+                insert.Parameters.AddWithValue("@account", User.ID);
+                insert.Parameters.AddWithValue("@appName", app.Name);
+                insert.Parameters.AddWithValue("@category", _reader.FindCategoryID(app.Category));
+                insert.Parameters.AddWithValue("@isDefault", 0);
 
+                insert.ExecuteNonQuery();
 
-            while (read.Read())
-            {
-                outputs.Add(read.GetString(4));
+                if (Watcher.AppID > 0)
+                    --Watcher.AppID;
             }
+            catch (SQLiteException sqlex)
+            {
+                Debug.WriteLine($"SQLite Exception near AddApplication(appClass): {sqlex.Message}");
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"Exception near AddApplication(appClass): {ex.Message}");
 
-            read.Close();
-
-            return outputs;
+                // TODO
+            }
         }
 
-
-        public List<string> ListTypes(ApplicationClass app)
+        /// <summary>
+        /// Adds a ProjectClass provided as an argument to the database.
+        /// </summary>
+        /// <param name="project">The project that will be added to the database.</param>
+        private void AddProject(ProjectClass project)
         {
-            /** Retrieve the TYPEs from the database, 
-             *  add them to a list 
-             *  and return the list. */
-            List<string> types = new List<string>();
-            SQLiteCommand query = _con.CreateCommand();
-            SQLiteDataReader read;
+            try
+            {
+                var existingProjects = _reader.ListProjects(project.Application);
 
-            query.CommandText = $@"SELECT * FROM TYPE WHERE {Column.AccountID} = @account
-                                    AND {Column.CategoryID} = @category
-                                    AND {Column.AppID} = @app  ORDER BY typeID
+                foreach (ProjectClass item in existingProjects)
+                {
+                    if (item.Name.Equals(project.Name) &&
+                        item.Application.Equals(project.Application) &&
+                        item.Category.Equals(project.Category) &&
+                        item.User.Equals(project.User)
+                        )
+                    {
+                        return;
+                    }
+                }
+
+                if (project.Application.AppID != 3)
+                {
+                    using SQLiteCommand insert = _con.CreateCommand();
+                    insert.CommandText = $@"INSERT INTO PROJECT({Column.ProjectID}, {Column.AppID}, {Column.AccountID}, {Column.CategoryID}, {Column.project})
+                                    VALUES(@id, @app, @account, @category, @project)
 ;";
-            query.Parameters.AddWithValue("@accounD", User.ID);
-            query.Parameters.AddWithValue("@category", FindCategoryID(app.Category));
-            query.Parameters.AddWithValue("@app", app.AppID);
-            read = query.ExecuteReader();
+                    insert.Parameters.AddWithValue("@id", project.ProjectID);
+                    insert.Parameters.AddWithValue("@app", project.Application.AppID);
+                    insert.Parameters.AddWithValue("@account", project.User.ID);
+                    insert.Parameters.AddWithValue("@category", _reader.FindCategoryID(project.Category));
+                    insert.Parameters.AddWithValue("@project", project.Name);
 
+                    insert.ExecuteNonQuery();
 
-            while (read.Read())
-            {
-                types.Add(read.GetString(4));
+                    // Reset the ProjectID watcher
+                    if (Watcher.ProjectID > 0)
+                        --Watcher.ProjectID;
+                }
             }
-
-            read.Close();
-
-            return types;
+            catch (SQLiteException sqlex)
+            {
+                Debug.WriteLine($"SQLite error: {sqlex.Message}");
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"Error adding project: {ex.Message}");
+            }
         }
 
-        public List<string> ListMediums()
+        /// <summary>
+        /// Adds a subject to the database if it doesn't exist already.
+        /// </summary>
+        /// <param name="subject">The subject object that will be added.</param>
+        private void AddSubject(SubjectClass subject)
         {
-            /** Retrieve the MEDIUMs from the database, 
-             *  add them to a list 
-             *  and return the list. */
-            List<string> mediums = new List<string>();
-            SQLiteCommand query = _con.CreateCommand();
-            SQLiteDataReader read;
-
-            query.CommandText = @"SELECT * FROM MEDIUM ORDER BY mediumID;";
-            read = query.ExecuteReader();
-
-            while (read.Read())
+            try
             {
-                mediums.Add(read.GetString(1));
-            }
-            read.Close();
+                // Ensure subject is not already added for the specified project
+                var existingProjects = _reader.ListSubjects(subject.Project);
+                bool exists = false;
 
-            return mediums;
-        }
-
-        public List<string> ListMediums(string category)
-        {
-            /** Retrieve the MEDIUMs from the database, 
-             *  add them to a list 
-             *  and return the list. */
-            List<string> mediums = new List<string>();
-            SQLiteCommand query = _con.CreateCommand();
-            SQLiteDataReader read;
-
-            query.CommandText = @"SELECT * FROM MEDIUM ORDER BY mediumID;";
-            read = query.ExecuteReader();
-
-            while (read.Read())
-            {
-                switch (category)
+                foreach (SubjectClass item in existingProjects)
                 {
-                    case "GRAPHICS":
-                        if (read.GetInt32(0) <= 8)
-                        {
-                            mediums.Add(read.GetString(1));
-                        }
-                        break;
-                    case "NOTES":
-                        if (read.GetInt32(0) > 8)
-                        {
-                            mediums.Add(read.GetString(1));
-                        }
-                        break;
+                    if (item.Subject.Equals(subject.Subject) &&
+                        item.Application.Equals(subject.Application) &&
+                        item.Category.Equals(subject.Category) &&
+                        item.User.Equals(subject.User)
+                        )
+                    {
+                        return;
+                    }
                 }
 
+                using SQLiteCommand insert = _con.CreateCommand();
+                insert.CommandText = $@"INSERT INTO Subject(subjectID, {Column.ProjectID}, {Column.AppID}, {Column.AccountID}, {Column.CategoryID}, subject)
+                                    VALUES(@id, @project, @app, @account, @category, @subject)
+;";
+                insert.Parameters.AddWithValue("@id", subject.SubjectID);
+                insert.Parameters.AddWithValue("@project", subject.Project.ProjectID);
+                insert.Parameters.AddWithValue("@app", subject.Application.AppID);
+                insert.Parameters.AddWithValue("@account", subject.User.ID);
+                insert.Parameters.AddWithValue("@category", _reader.FindCategoryID(subject.Category));
+                insert.Parameters.AddWithValue("@subject", subject.Subject);
+
+                insert.ExecuteNonQuery();
+
+                // Reset the SubjectID watcher
+                if (Watcher.SubjectID > 0)
+                    --Watcher.SubjectID;
             }
-            read.Close();
-
-            return mediums;
-        }
-
-        public List<string> ListFormats()
-        {
-            /** Retrieve the FORMATs from the database, 
-             *  add them to a list 
-             *  and return the list. */
-            List<string> formats = new List<string>();
-            SQLiteCommand query = _con.CreateCommand();
-            SQLiteDataReader read;
-
-            query.CommandText = @"SELECT * FROM FORMAT ORDER BY formatID;";
-            read = query.ExecuteReader();
-
-            while (read.Read())
+            catch (SQLiteException sqlex)
             {
-                formats.Add(read.GetString(1));
-            }
-            read.Close();
+                Debug.WriteLine($"SQLiteException near AddSubject(subjectClass): {sqlex.Message}");
 
-            return formats;
-        }
-
-        public List<string> ListFormats(string category)
-        {
-            /** Retrieve the FORMATs from the database, 
-             *  add them to a list 
-             *  and return the list. */
-            List<string> formats = new List<string>();
-            SQLiteCommand query = _con.CreateCommand();
-            SQLiteDataReader read;
-
-            query.CommandText = @"SELECT * FROM FORMAT ORDER BY formatID;";
-            read = query.ExecuteReader();
-
-            while (read.Read())
-            {
-                switch (category)
+                // Delete the log in the database with the log ID that's currently stored in currentLogID.
+                // Rollback Sqlite code
+                if (currentLogID > 0)
                 {
-                    case "GRAPHICS":
-                        if (read.GetInt32(0) <= 4)
+                    try
+                    {
+                        using (SQLiteCommand deleteLog = _con.CreateCommand())
                         {
-                            formats.Add(read.GetString(1));
+                            deleteLog.CommandText = $"DELETE FROM LOG WHERE {Column.LogID} = @logID";
+                            deleteLog.Parameters.AddWithValue("@logID", currentLogID);
+                            deleteLog.ExecuteNonQuery();
                         }
-                        break;
-                    case "NOTES":
-                        if (read.GetInt32(0) > 4)
-                        {
-                            formats.Add(read.GetString(1));
-                        }
-                        break;
+                    }
+                    catch (Exception deleteEx)
+                    {
+                        Debug.WriteLine($"Exception near AddSubject inner try-catch: {deleteEx.Message}");
+                    }
                 }
 
+                return;
             }
-            read.Close();
-
-            return formats;
-        }
-
-        public List<string>? ListUnits()
-        {
-            /** Retrieve the UNITs from the database, 
-             *  add them to a list 
-             *  and return the list. */
-            List<string> units = null;
-            SQLiteCommand query = _con.CreateCommand();
-            SQLiteDataReader read;
-
-            var unitColumn = 1;
-
-            query.CommandText = @"SELECT * FROM MeasuringUnit ORDER BY unitID;";
-            read = query.ExecuteReader();
-
-            while (read.Read())
+            catch (Exception ex)
             {
-                if (units is null)
-                    units = new();
-                units.Add(read.GetString(unitColumn));
+                Debug.WriteLine($"Exception near AddSubject(subjectClass): {ex.Message}");
 
+                // TODO
             }
-
-            read.Close();
-
-            return units;
         }
 
+        /// <summary>
+        /// Adds a CheckListItem to the Checklist table.
+        /// </summary>
+        /// <param name="id">The item's ID.</param>
+        /// <param name="logID">The NotesLOG ID.</param>
+        /// <param name="isChecked">Whether the item was checked or not.</param>
+        /// <param name="item">The item that needed to be done.</param>
+        protected void AddCheckListItem(int id, int logID, bool isChecked, string item)
+        {
+            using SQLiteCommand insert = _con.CreateCommand();
+            insert.CommandText = @"INSERT INTO Checklist(itemsID, logID, item, done)
+                               VALUES(@id, @logID, @item, @done)";
+            insert.Parameters.AddWithValue("@id", id);
+            insert.Parameters.AddWithValue("@logID", logID);
+            insert.Parameters.AddWithValue("@item", item);
+            insert.Parameters.AddWithValue("@done", isChecked);
 
-
-
+            insert.ExecuteNonQuery();
+        }
 
 
 
@@ -519,7 +405,7 @@ namespace Data_Logger_1._3.Services
 
             while (read.Read())
             {
-                if (read.GetInt32(3) == FindCategoryID(app.Category) &&
+                if (read.GetInt32(3) == _reader.FindCategoryID(app.Category) &&
                     read.GetInt32(2) == account.ID &&
                     read.GetInt32(1) == app.AppID &&
                     read.GetString(4) == project)
@@ -575,8 +461,8 @@ namespace Data_Logger_1._3.Services
 
             while (read.Read())
             {
-                if (read.GetInt32(categoryColumn) == FindCategoryID(category) &&
-                    (read.GetInt32(accountColumn) == FindAccountID(account) ||
+                if (read.GetInt32(categoryColumn) == _reader.FindCategoryID(category) &&
+                    (read.GetInt32(accountColumn) == _reader.FindAccountID(account) ||
                         read.GetInt32(accountColumn) == 1) &&
                     read.GetString(appColumn) == applicationName)
                 {
@@ -650,7 +536,7 @@ namespace Data_Logger_1._3.Services
 
                 while (read.Read())
                 {
-                    if (read.GetInt32(categoryColumn) == FindCategoryID(project.Category) &&
+                    if (read.GetInt32(categoryColumn) == _reader.FindCategoryID(project.Category) &&
                         (read.GetInt32(accountColumn) == project.User.ID ||
                         read.GetInt32(accountColumn) == 1) &&
                         read.GetInt32(appColumn) == project.Application.AppID &&
@@ -696,7 +582,7 @@ namespace Data_Logger_1._3.Services
 
             while (read.Read())
             {
-                if (read.GetInt32(categoryColumn) == FindCategoryID(app.Category) &&
+                if (read.GetInt32(categoryColumn) == _reader.FindCategoryID(app.Category) &&
                     (read.GetInt32(accountColumn) == account.ID ||
                     read.GetInt32(accountColumn) == 1) &&
                     read.GetInt32(appColumn) == app.AppID &&
@@ -729,7 +615,7 @@ namespace Data_Logger_1._3.Services
 
             while (read.Read())
             {
-                if (read.GetInt32(categoryColumn) == FindCategoryID(app.Category) &&
+                if (read.GetInt32(categoryColumn) == _reader.FindCategoryID(app.Category) &&
                     (read.GetInt32(accountColumn) == account.ID ||
                     read.GetInt32(accountColumn) == 1) &&
                     read.GetInt32(appColumn) == app.AppID &&
@@ -762,9 +648,7 @@ namespace Data_Logger_1._3.Services
             return id + Watcher.ChecklistItemID++;
         }
 
-        /** Create database records
-         * Call Synchronise when this is called.
-         */
+        /** Create database records */
         public void CreateLOGS()
         {
 
@@ -786,21 +670,30 @@ namespace Data_Logger_1._3.Services
 ;";
 
                 query.Parameters.AddWithValue("@id", cachedLOG.ID);
-                query.Parameters.AddWithValue("@category", FindCategoryID(cachedLOG.Category));
+                query.Parameters.AddWithValue("@category", _reader.FindCategoryID(cachedLOG.Category));
                 query.Parameters.AddWithValue("@author", cachedLOG.Author.ID);
 
-                var tempProjectID = FindProjectID(cachedLOG.Project);
+                var tempProjectID = _reader.FindProjectID(cachedLOG.Project);
                 query.Parameters.AddWithValue("@project", tempProjectID);
 
-                var tempAppID = FindAppID(cachedLOG.Application);
+                var app = cachedLOG.Application;
+                var tempAppID = _reader.FindAppID(app);
+                if (!AppAlreadyAdded && tempAppID == -1)
+                {
+                    AddApplication(app);
+                    AppAlreadyAdded = true;
+
+                    tempAppID = _reader.FindAppID(app);
+                }
+
                 query.Parameters.AddWithValue("@app", tempAppID);
 
 
                 // TODO Check that times can be read properly by RetrieveLOGS()
                 query.Parameters.AddWithValue("@start", cachedLOG.Start.ToString("dddd dd MMMM yyyy HH:mm:ss.fff"));
                 query.Parameters.AddWithValue("@end", cachedLOG.End.ToString("dddd dd MMMM yyyy HH:mm:ss.fff"));
-                query.Parameters.AddWithValue("@output", FindOutputID(cachedLOG.Output));
-                query.Parameters.AddWithValue("@type", FindTypeID(cachedLOG.Type));
+                query.Parameters.AddWithValue("@output", _reader.FindOutputID(cachedLOG.Output));
+                query.Parameters.AddWithValue("@type", _reader.FindTypeID(cachedLOG.Type));
 
                 query.ExecuteNonQuery();
 
@@ -829,7 +722,16 @@ namespace Data_Logger_1._3.Services
                     query.Parameters.AddWithValue("@id", postIt.ID);
                     query.Parameters.AddWithValue("@log", cachedLOG.ID);
 
-                    var tempSubjectID = FindSubjectID(postIt.Subject);
+                    var subject = postIt.Subject;
+                    var tempSubjectID = _reader.FindSubjectID(subject);
+
+                    if (!SubjectAlreadyAdded && tempSubjectID == -1)
+                    {
+                        AddSubject(subject);
+                        SubjectAlreadyAdded = true;
+
+                        tempSubjectID = _reader.FindSubjectID(subject);
+                    }
 
                     // Subject
                     if (tempSubjectID == -1)
@@ -929,8 +831,8 @@ namespace Data_Logger_1._3.Services
                                                     @depth, @done, @source);";
 
                         query.Parameters.AddWithValue("@id", cachedLOG.ID);
-                        query.Parameters.AddWithValue("@medium", FindMediumID(gtemp.Category, gtemp.Medium));
-                        query.Parameters.AddWithValue("@format", FindFormatID(gtemp.Category, gtemp.Format));
+                        query.Parameters.AddWithValue("@medium", _reader.FindMediumID(gtemp.Category, gtemp.Medium));
+                        query.Parameters.AddWithValue("@format", _reader.FindFormatID(gtemp.Category, gtemp.Format));
                         query.Parameters.AddWithValue("@brush", gtemp.Brush);
                         query.Parameters.AddWithValue("@height", gtemp.Height);
                         query.Parameters.AddWithValue("@width", gtemp.Width);
@@ -1021,9 +923,9 @@ namespace Data_Logger_1._3.Services
 ";
 
                             query.Parameters.AddWithValue("@id", cachedLOG.ID);
-                            query.Parameters.AddWithValue("@fnCategory", FindFNCategory(fn.flexinotetype));
-                            query.Parameters.AddWithValue("@medium", FindMediumID(fn.Category, fn.Medium));
-                            query.Parameters.AddWithValue("@format", FindFormatID(fn.Category, fn.Format));
+                            query.Parameters.AddWithValue("@fnCategory", _reader.FindFNCategory(fn.flexinotetype));
+                            query.Parameters.AddWithValue("@medium", _reader.FindMediumID(fn.Category, fn.Medium));
+                            query.Parameters.AddWithValue("@format", _reader.FindFormatID(fn.Category, fn.Format));
                             query.Parameters.AddWithValue("@br", fn.Bitrate);
                             query.Parameters.AddWithValue("@length", fn.Length);
                             query.Parameters.AddWithValue("@done", fn.IsCompleted);
@@ -1059,7 +961,7 @@ namespace Data_Logger_1._3.Services
         /// Creates a log in the database.
         /// </summary>
         /// <param name="log">The log being stored.</param>
-        public void CreateLOG(LOG log)
+        public bool CreateLOG(LOG log)
         {
             try
             {
@@ -1069,16 +971,39 @@ namespace Data_Logger_1._3.Services
                     InsertPostItDetails(log, insert);
                     InsertLogCategorySpecificDetails(log, insert);
                 }
+
+                return true;
             }
-            catch(InvalidCastException castx)
+            catch (InvalidCastException castx)
             {
                 // Handle cast exceptions
                 Debug.WriteLine($"Invalid cast exception near CreateLOG(log): {castx.Message}");
+
+                //TODO
+                /*
+                 
+                try{
+
+                // Send to Feedback table within this class.
+
+
+                }
+                catch(Exception ex)
+                {
+                    Debug.WriteLine($"Exception found near CreateLog(log): {ex.Message}");
+                }
+
+
+                 */
+
+                return false;
             }
             catch (SQLiteException sqlex)
             {
                 // Handle SQLite exceptions
-                Debug.WriteLine($"SQLite Exception near CreateLOG(log): {sqlex.Message}");
+                Debug.WriteLine($"SQLiteException near CreateLOG(log): {sqlex.Message}");
+
+                return false;
             }
             catch (Exception ex)
             {
@@ -1088,6 +1013,7 @@ namespace Data_Logger_1._3.Services
                 // TODO
 
 
+                return false;
             }
         }
 
@@ -1097,16 +1023,39 @@ namespace Data_Logger_1._3.Services
                            VALUES(@id, @category, @author, @project, @app, @start, @end, @output, @type);";
 
             insert.Parameters.AddWithValue("@id", log.ID);
-            insert.Parameters.AddWithValue("@category", FindCategoryID(log.Category));
+            insert.Parameters.AddWithValue("@category", _reader.FindCategoryID(log.Category));
             insert.Parameters.AddWithValue("@author", log.Author.ID);
-            insert.Parameters.AddWithValue("@app", FindAppID(log.Application));
+
+            var app = log.Application;
+            var temporaryID = _reader.FindAppID(app);
+            if (!AppAlreadyAdded && temporaryID == -1)
+            {
+                AddApplication(app);
+                AppAlreadyAdded = true;
+
+                temporaryID = _reader.FindAppID(app);
+            }
+
+            insert.Parameters.AddWithValue("@app", temporaryID);
             AppAlreadyAdded = false;
-            insert.Parameters.AddWithValue("@project", FindProjectID(log.Project));
+
+            var project = log.Project;
+            temporaryID = _reader.FindProjectID(project);
+            if (!ProjectAlreadyAdded && temporaryID == -1)
+            {
+                AddProject(project);
+                ProjectAlreadyAdded = true;
+
+                temporaryID = _reader.FindProjectID(project);
+            }
+
+            insert.Parameters.AddWithValue("@project", temporaryID);
             ProjectAlreadyAdded = false;
+
             insert.Parameters.AddWithValue("@start", log.Start.ToString("dddd dd MMMM yyyy HH:mm:ss.fff"));
             insert.Parameters.AddWithValue("@end", log.End.ToString("dddd dd MMMM yyyy HH:mm:ss.fff"));
-            insert.Parameters.AddWithValue("@output", FindOutputID(log.Output));
-            insert.Parameters.AddWithValue("@type", FindTypeID(log.Type));
+            insert.Parameters.AddWithValue("@output", _reader.FindOutputID(log.Output));
+            insert.Parameters.AddWithValue("@type", _reader.FindTypeID(log.Type));
 
             insert.ExecuteNonQuery();
 
@@ -1142,7 +1091,20 @@ namespace Data_Logger_1._3.Services
 
             insert.Parameters.AddWithValue("@id", postIt.ID);
             insert.Parameters.AddWithValue("@log", logID);
-            insert.Parameters.AddWithValue("@subject", FindSubjectID(postIt.Subject));
+
+            var subject = postIt.Subject;
+            var tempSubjectID = _reader.FindSubjectID(subject);
+
+            if (!SubjectAlreadyAdded && tempSubjectID == -1)
+            {
+                AddSubject(subject);
+                SubjectAlreadyAdded = true;
+
+                tempSubjectID = _reader.FindSubjectID(subject);
+            }
+            insert.Parameters.AddWithValue("@subject", tempSubjectID);
+            SubjectAlreadyAdded = false;
+
             insert.Parameters.AddWithValue("@error", error);
             insert.Parameters.AddWithValue("@found", GetDateTimeString(postIt.ERCaptureTime, error));
             insert.Parameters.AddWithValue("@solution", solution);
@@ -1151,7 +1113,6 @@ namespace Data_Logger_1._3.Services
             insert.Parameters.AddWithValue("@comment", comment);
 
             insert.ExecuteNonQuery();
-            SubjectAlreadyAdded = false;
 
             if (Watcher.PostItID > 0)
                 --Watcher.PostItID;
@@ -1184,7 +1145,7 @@ namespace Data_Logger_1._3.Services
             }
         }
 
-        private void InsertCodingLogDetails(CodingLOG log, SQLiteCommand insert)
+        private static void InsertCodingLogDetails(CodingLOG log, SQLiteCommand insert)
         {
             insert.CommandText = @"INSERT INTO CodingLOG(logID, bugs, opened)
                            VALUES(@id, @bugs, @opened);";
@@ -1201,7 +1162,7 @@ namespace Data_Logger_1._3.Services
             }
         }
 
-        private void InsertAndroidCodingLogDetails(AndroidCodingLOG log, SQLiteCommand insert)
+        private static void InsertAndroidCodingLogDetails(AndroidCodingLOG log, SQLiteCommand insert)
         {
             if (log.Scope == SCOPE.FULL)
             {
@@ -1234,8 +1195,8 @@ namespace Data_Logger_1._3.Services
                            VALUES(@id, @medium, @format, @brush, @height, @width, @unit, @size, @DPI, @depth, @done, @source);";
 
             insert.Parameters.AddWithValue("@id", log.ID);
-            insert.Parameters.AddWithValue("@medium", FindMediumID(log.Category, log.Medium));
-            insert.Parameters.AddWithValue("@format", FindFormatID(log.Category, log.Format));
+            insert.Parameters.AddWithValue("@medium", _reader.FindMediumID(log.Category, log.Medium));
+            insert.Parameters.AddWithValue("@format", _reader.FindFormatID(log.Category, log.Format));
             insert.Parameters.AddWithValue("@brush", log.Brush);
             insert.Parameters.AddWithValue("@height", log.Height);
             insert.Parameters.AddWithValue("@width", log.Width);
@@ -1249,7 +1210,7 @@ namespace Data_Logger_1._3.Services
             insert.ExecuteNonQuery();
         }
 
-        private void InsertFilmLogDetails(FilmLOG log, SQLiteCommand insert)
+        private static void InsertFilmLogDetails(FilmLOG log, SQLiteCommand insert)
         {
             insert.CommandText = @"INSERT INTO FilmLOG(logID, height, width, length, completed, source)
                            VALUES(@id, @height, @width, @length, @done, @source);";
@@ -1270,7 +1231,7 @@ namespace Data_Logger_1._3.Services
                            VALUES(@id, @category);";
 
             insert.Parameters.AddWithValue("@id", log.ID);
-            insert.Parameters.AddWithValue("@category", FindNoteLogTypeID(log.notelogtype));
+            insert.Parameters.AddWithValue("@category", _reader.FindNoteLogTypeID(log.notelogtype));
 
             insert.ExecuteNonQuery();
 
@@ -1312,9 +1273,9 @@ namespace Data_Logger_1._3.Services
                            VALUES(@id, @fnCategory, @medium, @format, @br, @length, @done, @source);";
 
             insert.Parameters.AddWithValue("@id", note.ID);
-            insert.Parameters.AddWithValue("@fnCategory", FindFNCategory(note.flexinotetype));
-            insert.Parameters.AddWithValue("@medium", FindMediumID(note.Category, note.Medium));
-            insert.Parameters.AddWithValue("@format", FindFormatID(note.Category, note.Format));
+            insert.Parameters.AddWithValue("@fnCategory", _reader.FindFNCategory(note.flexinotetype));
+            insert.Parameters.AddWithValue("@medium", _reader.FindMediumID(note.Category, note.Medium));
+            insert.Parameters.AddWithValue("@format", _reader.FindFormatID(note.Category, note.Format));
             insert.Parameters.AddWithValue("@br", note.Bitrate);
             insert.Parameters.AddWithValue("@length", note.Length);
             insert.Parameters.AddWithValue("@done", note.IsCompleted);
