@@ -16,7 +16,7 @@ namespace Data_Logger_1._3
     {
 
         private readonly IHost _host;
-        private static readonly Random random = new();
+
         public App()
         {
             _host = Host.CreateDefaultBuilder()
@@ -24,12 +24,17 @@ namespace Data_Logger_1._3
                 {
 
                     service.AddSingleton<Cachemaster>((services) => new());
-                    service.AddSingleton<DATAWRITER>((services) => new());
-                    service.AddSingleton<DATAREADER>();
+                    service.AddSingleton<DATAREADER>((services) => new());
+                    service.AddSingleton<DATAHANDLER>((services) => new());
+                    service.AddSingleton<PDFService>((services) => new());
+                    service.AddSingleton((services) => new DATAWRITER(services.GetRequiredService<DATAREADER>()));
                     service.AddSingleton((services) => new AuthService(services.GetRequiredService<DATAWRITER>(), services.GetRequiredService<DATAREADER>()));
-                    service.AddSingleton((services) => new DataService(services.GetRequiredService<DATAWRITER>(), services.GetRequiredService<DATAREADER>(), services.GetRequiredService<Cachemaster>(),
+                    service.AddSingleton((services) => new DataService(services.GetRequiredService<DATAWRITER>(), services.GetRequiredService<DATAREADER>(),
+                        services.GetRequiredService<DATAHANDLER>(),
+                        services.GetRequiredService<Cachemaster>(),
                         services.GetRequiredService<AuthService>()));
-                    service.AddSingleton((services) => new NavigationService(services.GetRequiredService<AuthService>(), services.GetRequiredService<DataService>()));
+                    service.AddSingleton((services) => new NavigationService(services.GetRequiredService<AuthService>(), services.GetRequiredService<DataService>(),
+                        services.GetRequiredService<PDFService>()));
                     service.AddTransient<Splashscreen>();
                     service.AddSingleton<Login>();
                     service.AddTransient((services) => new loginPage01(services.GetRequiredService<NavigationService>())
