@@ -1,0 +1,227 @@
+﻿using Data_Logger_1._3.Services;
+using MVVMEssentials.ViewModels;
+using System.Collections.ObjectModel;
+using System.Windows;
+using System.Windows.Input;
+
+namespace Data_Logger_1._3.ViewModels.Reporter.Desk
+{
+    /// <summary>
+    /// The base class for all reporter dashboards.
+    /// </summary>
+    public abstract class ReportDeskViewModel : ViewModelBase
+    {
+        public NavigationService _navigationService;
+        protected readonly DataService _dataService;
+        protected readonly PDFService _pdfService;
+
+        public abstract CacheContext Context { get; }
+
+        protected bool AwaitCall = true;
+
+
+        public ReportDeskViewModel(NavigationService navigationService, DataService dataService)
+        {
+            _navigationService = navigationService;
+            _dataService = dataService;
+
+        }
+
+        public ReportDeskViewModel(NavigationService navigationService, DataService dataService, PDFService pdfService)
+        {
+            _navigationService = navigationService;
+            _dataService = dataService;
+            _pdfService = pdfService;
+        }
+
+
+        #region Properties
+
+
+
+
+        #region Collections
+
+
+
+
+        private ObservableCollection<SearchResultViewModel> searchBarItems = new();
+        public ObservableCollection<SearchResultViewModel> SearchBarItems
+        {
+            get
+            {
+                return searchBarItems;
+            }
+            set
+            {
+                searchBarItems = value;
+                OnPropertyChanged(nameof(SearchBarItems));
+            }
+        }
+
+
+
+        private ObservableCollection<REPORTViewModel> logs = new();
+        public ObservableCollection<REPORTViewModel> Logs
+        {
+            get
+            {
+                return logs;
+            }
+            set
+            {
+                logs = value;
+
+                NoLogsMessageVisibility = Logs.Count == 0 ? Visibility.Visible : Visibility.Hidden;
+                OnPropertyChanged(nameof(Logs));
+            }
+        }
+
+        private Visibility noLogsMessageVisibility;
+        public Visibility NoLogsMessageVisibility
+        {
+            get
+            {
+                return noLogsMessageVisibility;
+            }
+            set
+            {
+                noLogsMessageVisibility = value;
+                OnPropertyChanged(nameof(NoLogsMessageVisibility));
+            }
+        }
+
+
+
+        #endregion
+
+
+
+        private string query = string.Empty;
+        public string Query
+        {
+            get
+            {
+                return query;
+            }
+            set
+            {
+                if (query != value)
+                {
+                    query = value;
+                    OnPropertyChanged(nameof(Query));
+                }
+            }
+        }
+
+
+        private string project = string.Empty;
+        public string Project
+        {
+            get
+            {
+                return project;
+            }
+            set
+            {
+                project = value;
+
+                if(!AwaitCall)
+                    UpdateLogs(Project);
+
+                OnPropertyChanged(nameof(Project));
+            }
+        }
+
+        private ObservableCollection<string> projects = new();
+        public ObservableCollection<string> Projects
+        {
+            get
+            {
+                return projects;
+            }
+            set
+            {
+                projects = value;
+                OnPropertyChanged(nameof(Projects));
+            }
+        }
+
+        private string application = string.Empty;
+        public string Application
+        {
+            get
+            {
+                return application;
+            }
+            set
+            {
+                application = value;
+                OnPropertyChanged(nameof(Application));
+            }
+        }
+
+        private ObservableCollection<string> applications = new();
+        public ObservableCollection<string> Applications
+        {
+            get
+            {
+                return applications;
+            }
+            set
+            {
+                applications = value;
+                OnPropertyChanged(nameof(Applications));
+            }
+        }
+
+        public bool ApplicationEnabled { get; set; } = true;
+
+        public string ApplicationToolTip { get; set; } = "Enter the application used for the project.";
+
+
+
+        #endregion
+
+
+
+        #region Commands
+
+
+
+        public ICommand Search { get; set; }
+
+        public ICommand Export { get; set; }
+
+        public ICommand ReturnToDashboard { get; set; }
+
+
+
+
+        #endregion
+
+
+
+        #region Methods
+
+
+
+
+        public abstract void UpdateLogs(string project);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        #endregion
+    }
+}
