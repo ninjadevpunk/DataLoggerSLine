@@ -27,11 +27,8 @@
     <None Remove="Components\SplashScreen1.png" />
     <None Remove="Fonts\Red Hat Display.ttf" />
     <None Remove="Fonts\Zekton Bold Italic.ttf" />
-    <None Remove="Fonts\Zekton Bold.ttf" />
     <None Remove="Fonts\Zekton Italic.ttf" />
     <None Remove="Fonts\Zekton Light.ttf" />
-    <None Remove="Fonts\zekton rg.ttf" />
-    <None Remove="Fonts\Zekton.ttf" />
   </ItemGroup>
 
   <ItemGroup>
@@ -89,9 +86,6 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
     <Resource Include="Fonts\Zekton Light.ttf">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Fonts\zekton rg.ttf">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
     <Resource Include="Fonts\Zekton.ttf">
