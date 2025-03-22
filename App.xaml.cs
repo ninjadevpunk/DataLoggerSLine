@@ -25,7 +25,7 @@ namespace Data_Logger_1._3
 
                     service.AddSingleton<Cachemaster>();
                     service.AddSingleton<DATAREADER>();
-                    service.AddSingleton<DATAHANDLER>();
+                    service.AddSingleton((services) => new DATAHANDLER(services.GetRequiredService<DATAREADER>()));
                     service.AddSingleton<PDFService>();
                     service.AddSingleton((services) => new DATAWRITER(services.GetRequiredService<DATAREADER>()));
                     service.AddSingleton((services) => new AuthService(services.GetRequiredService<DATAWRITER>(), services.GetRequiredService<DATAREADER>()));
