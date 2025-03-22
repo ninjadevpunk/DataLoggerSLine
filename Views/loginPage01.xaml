@@ -13,9 +13,9 @@
 
     <StackPanel Margin="10"
                 Orientation="Vertical"
-                VerticalAlignment="Center"
+                VerticalAlignment="Stretch"
                 HorizontalAlignment="Stretch"
-                Height="auto" >
+                Height="758" >
 
         <!-- DISPLAY PICTURE (Not Editable) -->
         <Grid Margin="0 10" >
