@@ -1,10 +1,11 @@
 ﻿using Data_Logger_1._3.Commands.LoggerCommands;
 using Data_Logger_1._3.Services;
 using Data_Logger_1._3.ViewModels.Dashboard;
+using Data_Logger_1._3.ViewModels.Dialogs.Create;
 using Data_Logger_1._3.ViewModels.LogViewModels;
 using MVVMEssentials.ViewModels;
 
-namespace Data_Logger_1._3.ViewModels.Dialogs
+namespace Data_Logger_1._3.ViewModels.Dialogs.Edit
 {
     public class codeEditViewModel : codeCreateViewModel
     {

@@ -214,7 +214,7 @@ namespace Data_Logger_1._3.ViewModels.LogViewModels
 
 
 
-        public string PostItContent(ObservableCollection<CreatePostItViewModel> createPostItViewModel)
+        public static string PostItContent(ObservableCollection<CreatePostItViewModel> createPostItViewModel)
         {
             string pattern = @"\S";
             Regex regex = new Regex(pattern);

@@ -1,20 +1,22 @@
-﻿using Data_Logger_1._3.Commands;
-using Data_Logger_1._3.Commands.LoggerCommands;
+﻿using Data_Logger_1._3.Commands.LoggerCommands;
 using Data_Logger_1._3.Models;
 using Data_Logger_1._3.Models.App_Models;
 using Data_Logger_1._3.Services;
 using Data_Logger_1._3.ViewModels.Dashboard;
 using System.Collections.ObjectModel;
 
-namespace Data_Logger_1._3.ViewModels.Dialogs
+namespace Data_Logger_1._3.ViewModels.Dialogs.Create
 {
     public class flexiCreateViewModel : LoggerCreateViewModel
     {
-        public override LOG.CATEGORY Category { get => LOG.CATEGORY.NOTES; }
-        public override CacheContext Context { get => CacheContext.Flexi; }
-        public override string LogType { get => "FLEXIBLE LOG"; }
+        public override LOG.CATEGORY Category => LOG.CATEGORY.NOTES;
+        public override CacheContext Context => CacheContext.Flexi;
+        public override string LogType => "FLEXIBLE LOG";
+
+
 
         private readonly FlexiViewModel _flexiViewModel;
+
         private readonly ObservableCollection<string> _mediums;
         private readonly ObservableCollection<string> _formats;
         private readonly ObservableCollection<string> _flexiLogCategories;
@@ -30,23 +32,75 @@ namespace Data_Logger_1._3.ViewModels.Dialogs
 
             _flexiViewModel = (FlexiViewModel)logCacheViewModel;
 
-            _dataService.InitialiseProjectsLIST(Category);
-            var items = _dataService.SQLITE_PROJECTS;
+            InitializeProjectsAndApplications(dataService);
+            InitializeDefaults();
 
-            var apps = _dataService.SQLITE_APPLICATIONS;
+            _mediums = new ObservableCollection<string>
+            {
+                "Game Engine",
+                "Song",
+                "A Cappella",
+                "Orchestral"
+            };
+
+            _formats = new ObservableCollection<string>
+            {
+                "Digital Download",
+                "Disc",
+                "CD",
+                "MIDI",
+                "Digital",
+                "Tape",
+                "LP",
+                "EP",
+                "Gramophone"
+            };
+
+            _flexiLogCategories = new ObservableCollection<string>
+            {
+                "Document",
+                "Gaming",
+                "Music"
+            };
+
+
+            BrowseCommand = new BrowseCommand(Context, this);
+            SaveCommand = new SaveCommand(this, _dataService);
+            AnnotateCommand = new AnnotateCommand(Context, _navigationService, this, _flexiViewModel, _dataService);
+            ClearLoggerCommand = new ResetLoggerCommand(this, Category);
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+        private void InitializeProjectsAndApplications(DataService dataService)
+        {
+            dataService.InitialiseProjectsLIST(Category);
+            var items = dataService.SQLITE_PROJECTS;
+            var apps = dataService.SQLITE_APPLICATIONS;
 
             foreach (ProjectClass project in items)
             {
                 _projects.Add(project.Name);
             }
 
-            _dataService.InitialiseApplicationsLIST(Category);
+            dataService.InitialiseApplicationsLIST(Category);
             foreach (ApplicationClass app in apps)
             {
                 _applications.Add(app.Name);
             }
+        }
 
-
+        private void InitializeDefaults()
+        {
             Output = "EXE (*.exe)";
             _outputs.Add("EXE (*.exe)");
             _outputs.Add("PDF");
@@ -63,7 +117,6 @@ namespace Data_Logger_1._3.ViewModels.Dialogs
             _outputs.Add("AAC File (*.aac)");
             _outputs.Add("M4A (*.m4a)");
             _outputs.Add("OGG (*.ogg)");
-
 
             Type = "Boardgame";
             _types.Add("Document");
@@ -87,52 +140,20 @@ namespace Data_Logger_1._3.ViewModels.Dialogs
             _types.Add("Music");
             _types.Add("Mantra");
             _types.Add("Poetry");
-
-            Medium = "Game Engine";
-            _mediums = new();
-            _mediums.Add("Game Engine");
-            _mediums.Add("Song");
-            _mediums.Add("A Cappella");
-            _mediums.Add("Orchestral");
-
-            Format = "Digital Download";
-            _formats = new();
-            _formats.Add("Digital Download");
-            _formats.Add("Disc");
-            _formats.Add("CD");
-            _formats.Add("MIDI");
-            _formats.Add("Digital");
-            _formats.Add("Tape");
-            _formats.Add("LP");
-            _formats.Add("EP");
-            _formats.Add("Gramophone");
-
-            FlexibleLogCategory = "Gaming";
-            _flexiLogCategories = new();
-            _flexiLogCategories.Add("Document");
-            _flexiLogCategories.Add("Gaming");
-            _flexiLogCategories.Add("Music");
-
-            Bitrate = string.Empty;
-            Duration = string.Empty;
-            IsCompleted = false;
-            Source = string.Empty;
-
-            BrowseCommand = new BrowseCommand(Context, this);
-
-            SaveCommand = new SaveCommand(this, _dataService);
-            AnnotateCommand = new AnnotateCommand(Context, _navigationService, this, _flexiViewModel, _dataService);
-            ClearLoggerCommand = new ResetLoggerCommand(this, Category);
         }
+
+
+
+
+        #region Properties
+
+
 
 
         private string flexibleLogCategory;
         public string FlexibleLogCategory
         {
-            get
-            {
-                return flexibleLogCategory;
-            }
+            get => flexibleLogCategory;
             set
             {
                 flexibleLogCategory = value;
@@ -143,10 +164,7 @@ namespace Data_Logger_1._3.ViewModels.Dialogs
         private string medium;
         public string Medium
         {
-            get
-            {
-                return medium;
-            }
+            get => medium;
             set
             {
                 medium = value;
@@ -154,14 +172,10 @@ namespace Data_Logger_1._3.ViewModels.Dialogs
             }
         }
 
-
         private string format;
         public string Format
         {
-            get
-            {
-                return format;
-            }
+            get => format;
             set
             {
                 format = value;
@@ -172,10 +186,7 @@ namespace Data_Logger_1._3.ViewModels.Dialogs
         private string bitrate;
         public string Bitrate
         {
-            get
-            {
-                return bitrate;
-            }
+            get => bitrate;
             set
             {
                 bitrate = value;
@@ -186,10 +197,7 @@ namespace Data_Logger_1._3.ViewModels.Dialogs
         private string duration;
         public string Duration
         {
-            get
-            {
-                return duration;
-            }
+            get => duration;
             set
             {
                 duration = value;
@@ -200,10 +208,7 @@ namespace Data_Logger_1._3.ViewModels.Dialogs
         private bool isCompleted;
         public bool IsCompleted
         {
-            get
-            {
-                return isCompleted;
-            }
+            get => isCompleted;
             set
             {
                 isCompleted = value;
@@ -214,10 +219,7 @@ namespace Data_Logger_1._3.ViewModels.Dialogs
         private string source;
         public string Source
         {
-            get
-            {
-                return source;
-            }
+            get => source;
             set
             {
                 source = value;
@@ -227,12 +229,12 @@ namespace Data_Logger_1._3.ViewModels.Dialogs
 
 
 
+#endregion
+
 
 
 
         #region Member Functions
-
-
 
         public void UpdateLogCount()
         {
@@ -243,16 +245,6 @@ namespace Data_Logger_1._3.ViewModels.Dialogs
                 _flexiViewModel.LogCount = $"{_flexiViewModel.CacheItems.Count} flexible logs cached | {count} total logs";
             }
         }
-
-
-
-
-
-
-
-
-
-
 
         #endregion
     }

@@ -9,12 +9,11 @@ using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
 
-namespace Data_Logger_1._3.ViewModels.Dialogs
+namespace Data_Logger_1._3.ViewModels.Dialogs.Create
 {
     public abstract class LoggerCreateViewModel : ViewModelBase
     {
 
-        protected readonly AuthService _authService;
         protected readonly DataService _dataService;
         protected readonly NavigationService _navigationService;
         protected readonly LogCacheViewModel _logCacheViewModel;
@@ -92,8 +91,6 @@ namespace Data_Logger_1._3.ViewModels.Dialogs
 
 
         public Visibility DisplayPicVisibility { get; set; }
-
-        public int LogID { get; set; }
 
         public string Author { get; set; }
 
@@ -472,7 +469,7 @@ namespace Data_Logger_1._3.ViewModels.Dialogs
 
         public ICommand SaveCommand { get; set; }
 
-        public ICommand AnnotateCommand { get; set; }
+        public ICommand? AnnotateCommand { get; set; }
 
         public ICommand EditCommand { get; set; }
 

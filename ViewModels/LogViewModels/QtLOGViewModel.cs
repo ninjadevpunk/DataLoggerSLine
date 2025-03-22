@@ -7,6 +7,9 @@ using System.Collections.ObjectModel;
 
 namespace Data_Logger_1._3.ViewModels.LogViewModels
 {
+    /// <summary>
+    /// LOG ViewModel class for a log cached in the log cache. Specialised for Qt logs.
+    /// </summary>
     public class QtLOGViewModel : LOGViewModel
     {
         public readonly CodingLOG _QtcodingLOG;

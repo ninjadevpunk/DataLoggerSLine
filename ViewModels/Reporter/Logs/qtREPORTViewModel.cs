@@ -1,6 +1,7 @@
 ﻿using Data_Logger_1._3.Commands.ReporterCommands;
 using Data_Logger_1._3.Models;
 using Data_Logger_1._3.Services;
+using Data_Logger_1._3.ViewModels.Reporter.Desk;
 
 namespace Data_Logger_1._3.ViewModels.Reporter.Logs
 {
@@ -9,10 +10,11 @@ namespace Data_Logger_1._3.ViewModels.Reporter.Logs
         private readonly CodingLOG _QtcodingLOG;
         public override CacheContext Context => CacheContext.Qt;
 
-        public qtREPORTViewModel(CodingLOG codingLOG, NavigationService navigationService, DataService dataService, PDFService pdfService) : base(codingLOG, navigationService, dataService)
+        public qtREPORTViewModel(CodingLOG codingLOG, ReportDeskViewModel reportDeskViewModel, NavigationService navigationService, DataService dataService, PDFService pdfService) : base(codingLOG, navigationService, dataService)
         {
             _QtcodingLOG = codingLOG;
-            SingleExport = new SingleExportCommand(Context, navigationService, dataService, pdfService);
+            SingleExport = new SingleExportCommand(Context, pdfService);
+            Edit = new EditLogCommand(this, reportDeskViewModel, navigationService);
         }
 
 

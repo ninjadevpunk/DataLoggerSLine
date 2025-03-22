@@ -1,28 +1,38 @@
-﻿using Data_Logger_1._3.Commands;
-using Data_Logger_1._3.Commands.LoggerCommands;
+﻿using Data_Logger_1._3.Commands.LoggerCommands;
 using Data_Logger_1._3.Models;
 using Data_Logger_1._3.Models.App_Models;
 using Data_Logger_1._3.Services;
 using Data_Logger_1._3.ViewModels.Dashboard;
 
-namespace Data_Logger_1._3.ViewModels.Dialogs
+namespace Data_Logger_1._3.ViewModels.Dialogs.Create
 {
     public class filmCreateViewModel : LoggerCreateViewModel
     {
-        public override LOG.CATEGORY Category { get => LOG.CATEGORY.FILM; }
-        public override CacheContext Context { get => CacheContext.Film; }
-        public override string LogType { get => "FILM LOG"; }
-
+        public override LOG.CATEGORY Category => LOG.CATEGORY.FILM;
+        public override CacheContext Context => CacheContext.Film;
+        public override string LogType => "FILM LOG";
 
         private readonly FilmViewModel _filmViewModel;
 
-        public filmCreateViewModel(NavigationService navigationService, LogCacheViewModel logCacheViewModel, DataService dataService) : base(navigationService, logCacheViewModel, dataService)
+        public filmCreateViewModel(NavigationService navigationService, LogCacheViewModel logCacheViewModel, DataService dataService)
+            : base(navigationService, logCacheViewModel, dataService)
         {
             AppFieldEnabled = true;
             ApplicationName = "Blender";
 
             _filmViewModel = (FilmViewModel)logCacheViewModel;
 
+            InitializeProjectsAndApplications();
+            InitializeDefaults();
+
+            BrowseCommand = new BrowseCommand(Context, this);
+            SaveCommand = new SaveCommand(this, _dataService);
+            AnnotateCommand = new AnnotateCommand(Context, _navigationService, this, _filmViewModel, _dataService);
+            ClearLoggerCommand = new ResetLoggerCommand(this, Category);
+        }
+
+        private void InitializeProjectsAndApplications()
+        {
             _dataService.InitialiseProjectsLIST(Category);
             var items = _dataService.SQLITE_PROJECTS;
 
@@ -38,15 +48,16 @@ namespace Data_Logger_1._3.ViewModels.Dialogs
             {
                 _applications.Add(app.Name);
             }
+        }
 
-
+        private void InitializeDefaults()
+        {
             Output = "MP4";
             _outputs.Add("MP4");
             _outputs.Add("AVI");
             _outputs.Add("MKV");
             _outputs.Add("TS");
             _outputs.Add("WEBM");
-
 
             Type = "Film";
             _types.Add("Film");
@@ -60,22 +71,29 @@ namespace Data_Logger_1._3.ViewModels.Dialogs
             Length = string.Empty;
             IsCompleted = false;
             Source = string.Empty;
-
-            BrowseCommand = new BrowseCommand(Context, this);
-
-            SaveCommand = new SaveCommand(this, _dataService);
-            AnnotateCommand = new AnnotateCommand(Context, _navigationService, this, _filmViewModel, _dataService);
-            ClearLoggerCommand = new ResetLoggerCommand(this, Category);
         }
+
+
+
+
+
+
+
+
+
+
+
+
+
+        #region Properties
+
+
 
 
         private string height;
         public string Height
         {
-            get
-            {
-                return height;
-            }
+            get => height;
             set
             {
                 height = value;
@@ -86,10 +104,7 @@ namespace Data_Logger_1._3.ViewModels.Dialogs
         private string width;
         public string Width
         {
-            get
-            {
-                return width;
-            }
+            get => width;
             set
             {
                 width = value;
@@ -100,10 +115,7 @@ namespace Data_Logger_1._3.ViewModels.Dialogs
         private string resolution;
         public string Resolution
         {
-            get
-            {
-                return resolution;
-            }
+            get => resolution;
             set
             {
                 resolution = value;
@@ -114,10 +126,7 @@ namespace Data_Logger_1._3.ViewModels.Dialogs
         private string length;
         public string Length
         {
-            get
-            {
-                return length;
-            }
+            get => length;
             set
             {
                 length = value;
@@ -128,10 +137,7 @@ namespace Data_Logger_1._3.ViewModels.Dialogs
         private bool isCompleted;
         public bool IsCompleted
         {
-            get
-            {
-                return isCompleted;
-            }
+            get => isCompleted;
             set
             {
                 isCompleted = value;
@@ -142,10 +148,7 @@ namespace Data_Logger_1._3.ViewModels.Dialogs
         private string source;
         public string Source
         {
-            get
-            {
-                return source;
-            }
+            get => source;
             set
             {
                 source = value;
@@ -154,7 +157,17 @@ namespace Data_Logger_1._3.ViewModels.Dialogs
         }
 
 
+
+        #endregion
+
+
+
+
+
+
+
         #region Member Functions
+
 
 
 
@@ -168,16 +181,10 @@ namespace Data_Logger_1._3.ViewModels.Dialogs
             }
         }
 
-
-
-
-
-
-
-
-
-
-
         #endregion
+
+
+
+
     }
 }

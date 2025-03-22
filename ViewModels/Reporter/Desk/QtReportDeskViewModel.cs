@@ -141,7 +141,7 @@ namespace Data_Logger_1._3.ViewModels.Reporter.Desk
             foreach (LOG log in _dataService.RetrieveLogs(LOG.CATEGORY.CODING))
             {
                 if(log.Project.ProjectID == projectID)
-                    list.Add(new qtREPORTViewModel((CodingLOG)log, _navigationService, _dataService, _pdfService));
+                    list.Add(new qtREPORTViewModel((CodingLOG)log, this, _navigationService, _dataService, _pdfService));
             }
 
             Logs = list;
@@ -154,7 +154,7 @@ namespace Data_Logger_1._3.ViewModels.Reporter.Desk
             foreach (LOG log in _dataService.RetrieveLogs(LOG.CATEGORY.CODING))
             {
                 if(Project == log.Project.Name)
-                    list.Add(new qtREPORTViewModel((CodingLOG)log, _navigationService, _dataService, _pdfService));
+                    list.Add(new qtREPORTViewModel((CodingLOG)log, this, _navigationService, _dataService, _pdfService));
             }
 
             Logs = list;
