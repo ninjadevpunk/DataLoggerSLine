@@ -1,4 +1,5 @@
 ﻿using Data_Logger_1._3.ViewModels.Dialogs;
+using Data_Logger_1._3.ViewModels.Reporter.Updater;
 using System.Windows.Controls;
 using System.Windows.Documents;
 
@@ -10,6 +11,7 @@ namespace Data_Logger_1._3.Views.Dialogs
     public partial class PostItPage : Page
     {
         private readonly CreatePostItViewModel _postItViewModel;
+        private readonly CreateReporterPostItViewModel _createReporterPostItViewModel1;
 
         public PostItPage(CreatePostItViewModel createPostItViewModel)
         {
@@ -18,6 +20,17 @@ namespace Data_Logger_1._3.Views.Dialogs
             _postItViewModel = createPostItViewModel;
             DataContext = _postItViewModel;
             _postItViewModel.ActiveEditor = this.inputText_ERROR;
+
+
+        }
+
+        public PostItPage(CreateReporterPostItViewModel createReporterPostItViewModel)
+        {
+            InitializeComponent();
+
+            _createReporterPostItViewModel1 = createReporterPostItViewModel;
+            DataContext = _postItViewModel;
+            _createReporterPostItViewModel1.ActiveEditor = this.inputText_ERROR;
 
 
         }
