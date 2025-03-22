@@ -15,8 +15,6 @@ namespace Data_Logger_1._3.Commands.ReporterCommands
     /// </summary>
     public class SingleExportCommand : AsyncCommandBase
     {
-        private readonly NavigationService _navigationService;
-        private readonly DataService _dataService;
         private readonly PDFService _pdfService;
 
         public CacheContext Context { get; set; }
@@ -26,12 +24,10 @@ namespace Data_Logger_1._3.Commands.ReporterCommands
         {
         }
 
-        public SingleExportCommand(CacheContext context, NavigationService navigationService, DataService dataService, PDFService pdfService)
+        public SingleExportCommand(CacheContext context, PDFService pdfService)
         {
             try
             {
-                _navigationService = navigationService ?? throw new ArgumentNullException(nameof(navigationService));
-                _dataService = dataService ?? throw new ArgumentNullException(nameof(dataService));
                 _pdfService = pdfService ?? throw new ArgumentNullException(nameof(pdfService));
                 Context = context;
             }

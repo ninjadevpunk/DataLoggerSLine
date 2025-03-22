@@ -1,7 +1,7 @@
 ﻿using Data_Logger_1._3.Models;
 using Data_Logger_1._3.Models.App_Models;
 using Data_Logger_1._3.Services;
-using Data_Logger_1._3.ViewModels.Dialogs;
+using Data_Logger_1._3.ViewModels.Dialogs.Create;
 using MVVMEssentials.Commands;
 using System.Diagnostics;
 

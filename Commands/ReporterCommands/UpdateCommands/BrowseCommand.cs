@@ -1,21 +1,21 @@
 ﻿using Data_Logger_1._3.Services;
-using Data_Logger_1._3.ViewModels.Dialogs.Create;
+using Data_Logger_1._3.ViewModels.Reporter.Updater;
 using MVVMEssentials.Commands;
 using System.Diagnostics;
 
-namespace Data_Logger_1._3.Commands.LoggerCommands
+namespace Data_Logger_1._3.Commands.ReporterCommands.UpdateCommands
 {
     public class BrowseCommand : CommandBase
     {
         private readonly CacheContext _cacheContext;
-        private readonly LoggerCreateViewModel _loggerCreateViewModel;
+        private readonly ReporterUpdaterViewModel _reporterUpdaterViewModel;
 
-        public BrowseCommand(CacheContext cacheContext, LoggerCreateViewModel loggerCreateViewModel)
+        public BrowseCommand(CacheContext cacheContext, ReporterUpdaterViewModel reporterUpdaterViewModel)
         {
             try
             {
                 _cacheContext = cacheContext;
-                _loggerCreateViewModel = loggerCreateViewModel ?? throw new ArgumentNullException(nameof(loggerCreateViewModel));
+                _reporterUpdaterViewModel = reporterUpdaterViewModel ?? throw new ArgumentNullException(nameof(reporterUpdaterViewModel));
             }
             catch (Exception ex)
             {
@@ -33,7 +33,7 @@ namespace Data_Logger_1._3.Commands.LoggerCommands
                 {
                     case CacheContext.Graphics:
                         {
-                            graphicCreateViewModel graphicsCVM = (graphicCreateViewModel)_loggerCreateViewModel;
+                            graphicsUpdateViewModel graphicsCVM = (graphicsUpdateViewModel)_reporterUpdaterViewModel;
 
                             dialog.DefaultExt = ".png"; // Default file extension
                             dialog.Filter = @"Portable Network Graphics (.png)|*.png|JPEG Images (.jpg)|*.jpg|
@@ -51,7 +51,7 @@ namespace Data_Logger_1._3.Commands.LoggerCommands
                         }
                     case CacheContext.Film:
                         {
-                            filmCreateViewModel filmCVM = (filmCreateViewModel)_loggerCreateViewModel;
+                            filmUpdateViewModel filmCVM = (filmUpdateViewModel)_reporterUpdaterViewModel;
 
                             dialog.DefaultExt = ".mp4";
                             dialog.Filter = @"Motion Picture Experts Group Layer 4 (.mp4)|*.mp4|Matroska (.mkv)|*.mkv|
@@ -59,21 +59,21 @@ namespace Data_Logger_1._3.Commands.LoggerCommands
 
                             bool? result = dialog.ShowDialog();
 
-                            if(result == true)
+                            if (result == true)
                                 filmCVM.Source = dialog.FileName;
 
                             break;
                         }
-                        case CacheContext.Flexi:
+                    case CacheContext.Flexi:
                         {
-                            flexiCreateViewModel flexiCVM = (flexiCreateViewModel)_loggerCreateViewModel;
+                            flexiUpdateViewModel flexiCVM = (flexiUpdateViewModel)_reporterUpdaterViewModel;
 
                             bool? result = dialog.ShowDialog();
 
                             if (result == true)
                                 flexiCVM.Source = dialog.FileName;
 
-                                break;
+                            break;
                         }
                 }
             }

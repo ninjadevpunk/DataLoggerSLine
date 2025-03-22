@@ -1,30 +1,29 @@
 ﻿using Data_Logger_1._3.Services;
-using Data_Logger_1._3.ViewModels.Dialogs;
-using Data_Logger_1._3.ViewModels.Dialogs.Create;
+using Data_Logger_1._3.ViewModels.Reporter.Updater;
 using MVVMEssentials.Commands;
 using System.Diagnostics;
 using System.Windows;
 
-namespace Data_Logger_1._3.Commands.PostItCommands
+namespace Data_Logger_1._3.Commands.ReporterCommands.UpdateCommands
 {
     public class PostCommand : CommandBase
     {
         public enum ActionType { Create, Edit }
 
         private readonly NavigationService _navigationService;
-        private readonly LoggerCreateViewModel _loggerCreateViewModel;
-        private readonly CreatePostItViewModel _createPostItViewModel;
-        private readonly EditPostItViewModel _editPostItViewModel;
-        private readonly ActionType _actionType = ActionType.Create;
+        private readonly ReporterUpdaterViewModel _reporterUpdaterViewModel;
+        private readonly CreateReporterPostItViewModel _postItViewModel;
+        private readonly UpdatePostItViewModel _updatePostItViewModel;
+        private ActionType _actionType = ActionType.Create;
 
-        public PostCommand(NavigationService navigationService, LoggerCreateViewModel loggerCreateViewModel, CreatePostItViewModel createPostItViewModel)
+        public PostCommand(NavigationService navigationService, ReporterUpdaterViewModel reporterUpdaterViewModel, CreateReporterPostItViewModel createReporterPostItViewModel)
         {
             try
             {
 
                 _navigationService = navigationService ?? throw new ArgumentNullException(nameof(navigationService));
-                _loggerCreateViewModel = loggerCreateViewModel ?? throw new ArgumentNullException(nameof(loggerCreateViewModel));
-                _createPostItViewModel = createPostItViewModel ?? throw new ArgumentNullException(nameof(createPostItViewModel));
+                _reporterUpdaterViewModel = reporterUpdaterViewModel ?? throw new ArgumentNullException(nameof(reporterUpdaterViewModel));
+                _postItViewModel = createReporterPostItViewModel ?? throw new ArgumentNullException(nameof(createReporterPostItViewModel));
 
             }
             catch (ArgumentNullException nullx)
@@ -38,15 +37,15 @@ namespace Data_Logger_1._3.Commands.PostItCommands
             }
         }
 
-        public PostCommand(ActionType actionType, NavigationService navigationService, LoggerCreateViewModel loggerCreateViewModel, EditPostItViewModel editPostItViewModel, CreatePostItViewModel createPostItViewModel)
+        public PostCommand(ActionType actionType, NavigationService navigationService, ReporterUpdaterViewModel reporterUpdaterViewModel, UpdatePostItViewModel updatePostItViewModel, CreateReporterPostItViewModel createReporterPostItViewModel)
         {
             try
             {
 
                 _navigationService = navigationService ?? throw new ArgumentNullException(nameof(navigationService));
-                _loggerCreateViewModel = loggerCreateViewModel ?? throw new ArgumentNullException(nameof(loggerCreateViewModel));
-                _createPostItViewModel = createPostItViewModel ?? throw new ArgumentNullException(nameof(createPostItViewModel));
-                _editPostItViewModel = editPostItViewModel ?? throw new ArgumentNullException(nameof(editPostItViewModel));
+                _reporterUpdaterViewModel = reporterUpdaterViewModel ?? throw new ArgumentNullException(nameof(reporterUpdaterViewModel));
+                _updatePostItViewModel = updatePostItViewModel ?? throw new ArgumentNullException(nameof(updatePostItViewModel));
+                _postItViewModel = createReporterPostItViewModel ?? throw new ArgumentNullException(nameof(createReporterPostItViewModel));
                 _actionType = actionType;
             }
             catch (ArgumentNullException nullx)
@@ -67,23 +66,23 @@ namespace Data_Logger_1._3.Commands.PostItCommands
                 {
                     case ActionType.Create:
                         {
-                            if (_createPostItViewModel.Subject == string.Empty)
+                            if (_postItViewModel.Subject == string.Empty)
                             {
                                 MessageBox.Show("Please add a subject.", "No Subject", MessageBoxButton.OK, MessageBoxImage.Warning);
                             }
                             else
                             {
-                                if ((_createPostItViewModel.Error.Length == 0 || _createPostItViewModel.Error.Length == 353) &&
-                                (_createPostItViewModel.Solution.Length == 0 || _createPostItViewModel.Solution.Length == 353) &&
-                                (_createPostItViewModel.Suggestion.Length == 0 || _createPostItViewModel.Suggestion.Length == 353) &&
-                                (_createPostItViewModel.Comment.Length == 0 || _createPostItViewModel.Comment.Length == 353)
+                                if ((_postItViewModel.Error.Length == 0 || _postItViewModel.Error.Length == 353) &&
+                                (_postItViewModel.Solution.Length == 0 || _postItViewModel.Solution.Length == 353) &&
+                                (_postItViewModel.Suggestion.Length == 0 || _postItViewModel.Suggestion.Length == 353) &&
+                                (_postItViewModel.Comment.Length == 0 || _postItViewModel.Comment.Length == 353)
                                 )
                                 {
                                     MessageBox.Show("You have not entered any relevant data. All logs require that you submit a valid PostIt.", "No Data", MessageBoxButton.OK, MessageBoxImage.Warning);
                                 }
                                 else
                                 {
-                                    _loggerCreateViewModel.PostIts.Add(_createPostItViewModel);
+                                    _reporterUpdaterViewModel.PostIts.Add(_postItViewModel);
                                     _navigationService.GoBack();
                                 }
                             }
@@ -91,24 +90,24 @@ namespace Data_Logger_1._3.Commands.PostItCommands
                         }
                     case ActionType.Edit:
                         {
-                            if (_editPostItViewModel.Subject == string.Empty)
+                            if (_updatePostItViewModel.Subject == string.Empty)
                             {
                                 MessageBox.Show("Please add a subject.", "No Subject", MessageBoxButton.OK, MessageBoxImage.Warning);
                             }
                             else
                             {
-                                if ((_editPostItViewModel.Error.Length == 0 || _editPostItViewModel.Error.Length == 353) &&
-                                (_editPostItViewModel.Solution.Length == 0 || _editPostItViewModel.Solution.Length == 353) &&
-                                (_editPostItViewModel.Suggestion.Length == 0 || _editPostItViewModel.Suggestion.Length == 353) &&
-                                (_editPostItViewModel.Comment.Length == 0 || _editPostItViewModel.Comment.Length == 353)
+                                if ((_updatePostItViewModel.Error.Length == 0 || _updatePostItViewModel.Error.Length == 353) &&
+                                (_updatePostItViewModel.Solution.Length == 0 || _updatePostItViewModel.Solution.Length == 353) &&
+                                (_updatePostItViewModel.Suggestion.Length == 0 || _updatePostItViewModel.Suggestion.Length == 353) &&
+                                (_updatePostItViewModel.Comment.Length == 0 || _updatePostItViewModel.Comment.Length == 353)
                                 )
                                 {
                                     MessageBox.Show("You have not entered any relevant data. All logs require that you submit a valid PostIt.", "No Data", MessageBoxButton.OK, MessageBoxImage.Warning);
                                 }
                                 else
                                 {
-                                    var index = _loggerCreateViewModel.PostIts.IndexOf(_createPostItViewModel);
-                                    _loggerCreateViewModel.PostIts[index] = _editPostItViewModel;
+                                    var index = _reporterUpdaterViewModel.PostIts.IndexOf(_postItViewModel);
+                                    _reporterUpdaterViewModel.PostIts[index] = _updatePostItViewModel;
                                     _navigationService.GoBack();
                                 }
                             }

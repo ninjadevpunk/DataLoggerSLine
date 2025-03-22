@@ -1,9 +1,9 @@
 ﻿using Data_Logger_1._3.Models;
-using Data_Logger_1._3.ViewModels.Dialogs;
+using Data_Logger_1._3.ViewModels.Dialogs.Create;
 using MVVMEssentials.Commands;
 using System.Diagnostics;
 
-namespace Data_Logger_1._3.Commands
+namespace Data_Logger_1._3.Commands.LoggerCommands
 {
     public class ResetLoggerCommand : CommandBase
     {
@@ -21,9 +21,9 @@ namespace Data_Logger_1._3.Commands
                 _viewModel = viewModel ?? throw new ArgumentNullException(nameof(viewModel));
                 Category = category;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                // TODO
+                Debug.WriteLine($"An exception occurred near ResetLoggerCommand(viewModel, category) constructor: {ex.Message}");
             }
         }
 
@@ -62,7 +62,7 @@ namespace Data_Logger_1._3.Commands
                             var codingViewModel = (codeCreateViewModel)_viewModel;
 
                             if (isQt)
-                                codingViewModel.ApplicationName = Qt;                                
+                                codingViewModel.ApplicationName = Qt;
                             else if (isVisualStudio)
                                 codingViewModel.ApplicationName = VisualStudio;
 
@@ -71,7 +71,7 @@ namespace Data_Logger_1._3.Commands
                             codingViewModel.BugsFound = 0;
                             codingViewModel.ApplicationOpened = false;
 
-                            if(isAndroidStudio)
+                            if (isAndroidStudio)
                             {
                                 codingViewModel.ApplicationName = Android;
                                 var AScodingViewModel = (AScodeCreateViewModel)codingViewModel;

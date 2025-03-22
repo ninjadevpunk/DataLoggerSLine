@@ -1,13 +1,13 @@
-﻿using Data_Logger_1._3.ViewModels.Dialogs.Create;
+﻿using Data_Logger_1._3.ViewModels.Reporter.Updater;
 using MVVMEssentials.Commands;
 
-namespace Data_Logger_1._3.Commands.LoggerCommands
+namespace Data_Logger_1._3.Commands.ReporterCommands.UpdateCommands
 {
     public class CurrentStartDateCommand : CommandBase
     {
-        private readonly LoggerCreateViewModel _viewModel;
+        private readonly ReporterUpdaterViewModel _viewModel;
 
-        public CurrentStartDateCommand(LoggerCreateViewModel viewModel)
+        public CurrentStartDateCommand(ReporterUpdaterViewModel viewModel)
         {
 
 
@@ -23,6 +23,7 @@ namespace Data_Logger_1._3.Commands.LoggerCommands
 
         }
 
+
         public override void Execute(object parameter)
         {
             _viewModel.StartDate = DateTime.Now;
@@ -36,7 +37,6 @@ namespace Data_Logger_1._3.Commands.LoggerCommands
             _viewModel.EndMinutes = DateTime.Now.Minute;
             _viewModel.EndSeconds = DateTime.Now.Second;
             _viewModel.EndMilliseconds = DateTime.Now.Millisecond;
-
         }
     }
 }

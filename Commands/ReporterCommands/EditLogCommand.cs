@@ -1,4 +1,7 @@
-﻿using MVVMEssentials.Commands;
+﻿using Data_Logger_1._3.Services;
+using Data_Logger_1._3.ViewModels.Reporter;
+using Data_Logger_1._3.ViewModels.Reporter.Desk;
+using MVVMEssentials.Commands;
 using System.Diagnostics;
 
 namespace Data_Logger_1._3.Commands.ReporterCommands
@@ -9,15 +12,27 @@ namespace Data_Logger_1._3.Commands.ReporterCommands
     /// </summary>
     public class EditLogCommand : CommandBase
     {
+        private readonly REPORTViewModel _viewModel;
+        private readonly ReportDeskViewModel _reportDeskViewModel;
+        private readonly NavigationService _navigationService;
+
         public EditLogCommand()
         {
+
+        }
+
+        public EditLogCommand(REPORTViewModel reportViewModel, ReportDeskViewModel reportDeskViewModel, NavigationService navigationService)
+        {
+
         }
 
         public override void Execute(object parameter)
         {
             try
             {
-                // Your implementation here
+                _navigationService.NavigateToReporterUpdater(_viewModel, _reportDeskViewModel);
+
+
             }
             catch (Exception e)
             {

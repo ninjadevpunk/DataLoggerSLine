@@ -2,7 +2,8 @@
 using Data_Logger_1._3.Models.App_Models;
 using Data_Logger_1._3.Services;
 using Data_Logger_1._3.ViewModels.Dashboard;
-using Data_Logger_1._3.ViewModels.Dialogs;
+using Data_Logger_1._3.ViewModels.Dialogs.Create;
+using Data_Logger_1._3.ViewModels.Dialogs.Edit;
 using Data_Logger_1._3.ViewModels.LogViewModels;
 using MVVMEssentials.Commands;
 using MVVMEssentials.ViewModels;
@@ -127,7 +128,7 @@ namespace Data_Logger_1._3.Commands.LoggerCommands
 
 
                 List<PostIt> posts = new();
-                ApplicationClass application = ActionType == ActionType.Add ? new(_dataService.CreateAppID(_viewModel.Category, account, _viewModel.ApplicationName), account,
+                ApplicationClass? application = ActionType == ActionType.Add ? new(_dataService.CreateAppID(_viewModel.Category, account, _viewModel.ApplicationName), account,
                     _viewModel.ApplicationName, _viewModel.Category, false) : null;
 
                 if (ActionType == ActionType.Add)
@@ -151,7 +152,9 @@ namespace Data_Logger_1._3.Commands.LoggerCommands
                 TypeClass? type = ActionType == ActionType.Add ? new(_dataService.CreateTypeID(account, application, _viewModel.Type), account, _viewModel.Type, application, _viewModel.Category) :
                     new(0, account, _viewModel.Type, application, _viewModel.Category);
                 SubjectClass subject;
+
                 PostIt postIt;
+
                 bool DateIsWrong = _viewModel.StartDate.Equals(_viewModel.EndDate) || _viewModel.StartDate > _viewModel.EndDate;
 
 

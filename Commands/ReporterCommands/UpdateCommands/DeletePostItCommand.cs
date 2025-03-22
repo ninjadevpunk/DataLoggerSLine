@@ -1,15 +1,16 @@
 ﻿using Data_Logger_1._3.ViewModels.Dialogs;
 using Data_Logger_1._3.ViewModels.Dialogs.Create;
+using Data_Logger_1._3.ViewModels.Reporter.Updater;
 using MVVMEssentials.Commands;
 using System.Windows;
 
-namespace Data_Logger_1._3.Commands.PostItCommands
+namespace Data_Logger_1._3.Commands.ReporterCommands.UpdateCommands
 {
     public class DeletePostItCommand : CommandBase
     {
-        private readonly LoggerCreateViewModel _viewModel;
+        private readonly ReporterUpdaterViewModel _viewModel;
 
-        public DeletePostItCommand(LoggerCreateViewModel viewModel)
+        public DeletePostItCommand(ReporterUpdaterViewModel viewModel)
         {
             try
             {
