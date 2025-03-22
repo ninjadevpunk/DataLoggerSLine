@@ -190,6 +190,10 @@ namespace Data_Logger_1._3.Services
 
         }
 
+
+        /// <summary>
+        /// Retrieves applications from the database.
+        /// </summary>
         public void InitialiseApplicationsLIST()
         {
             try
@@ -215,6 +219,10 @@ namespace Data_Logger_1._3.Services
 
         }
 
+        /// <summary>
+        /// Retrieves applications from the database of a specified category.
+        /// </summary>
+        /// <param name="category">The type of application.</param>
         public void InitialiseApplicationsLIST(LOG.CATEGORY category)
         {
             try
@@ -241,6 +249,10 @@ namespace Data_Logger_1._3.Services
         }
 
 
+        /// <summary>
+        /// Retrieves subjects from the database.
+        /// </summary>
+        /// <param name="category">The type of subjects being retrieved.</param>
         public void InitialiseSubjectsLIST(LOG.CATEGORY category)
         {
             try
@@ -262,6 +274,10 @@ namespace Data_Logger_1._3.Services
 
         }
 
+        /// <summary>
+        /// Retrieves subjects from the database.
+        /// </summary>
+        /// <param name="project">Subjects from the specified ProjectClass will be retrieved ONLY.</param>
         public void InitialiseSubjectsLIST(ProjectClass project)
         {
             try
@@ -561,7 +577,10 @@ namespace Data_Logger_1._3.Services
 
 
 
-
+        public bool UpdateQtLog(LOG lOG)
+        {
+            return _handler.UpdateQtLog(lOG);
+        }
 
 
 

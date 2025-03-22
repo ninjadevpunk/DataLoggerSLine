@@ -648,7 +648,9 @@ namespace Data_Logger_1._3.Services
             return id + Watcher.ChecklistItemID++;
         }
 
-        /** Create database records */
+        /// <summary>
+        /// Creates a batch of logs in the database from the DATAMASTER repo.
+        /// </summary>
         public void CreateLOGS()
         {
 
@@ -965,12 +967,11 @@ namespace Data_Logger_1._3.Services
         {
             try
             {
-                using (SQLiteCommand insert = _con.CreateCommand())
-                {
-                    InsertLogDetails(log, insert);
-                    InsertPostItDetails(log, insert);
-                    InsertLogCategorySpecificDetails(log, insert);
-                }
+                using SQLiteCommand insert = _con.CreateCommand();
+
+                InsertLogDetails(log, insert);
+                InsertPostItDetails(log, insert);
+                InsertLogCategorySpecificDetails(log, insert);
 
                 return true;
             }
@@ -1118,7 +1119,14 @@ namespace Data_Logger_1._3.Services
                 --Watcher.PostItID;
         }
 
-        private string GetDateTimeString(DateTime dateTime, string inputValue)
+        /// <summary>
+        /// Creates a Data Logger format date and time as a string for the database.
+        /// </summary>
+        /// <param name="dateTime">The DateTime provided that needs conversion.</param>
+        /// <returns>Returns a DateTime as a string in the format "1 January 2025 00:00:00.000".</returns>
+        public static string GetDateTimeString(DateTime dateTime) => dateTime.ToString("dddd dd MMMM yyyy HH:mm:ss.fff");
+
+        public static string GetDateTimeString(DateTime dateTime, string inputValue)
         {
             if (string.IsNullOrEmpty(inputValue) || dateTime == default)
                 return string.Empty;

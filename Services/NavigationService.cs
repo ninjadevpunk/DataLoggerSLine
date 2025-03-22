@@ -4,8 +4,13 @@ using Data_Logger_1._3.Models;
 using Data_Logger_1._3.ViewModels;
 using Data_Logger_1._3.ViewModels.Dashboard;
 using Data_Logger_1._3.ViewModels.Dialogs;
+using Data_Logger_1._3.ViewModels.Dialogs.Create;
+using Data_Logger_1._3.ViewModels.Dialogs.Edit;
 using Data_Logger_1._3.ViewModels.LogViewModels;
+using Data_Logger_1._3.ViewModels.Reporter;
 using Data_Logger_1._3.ViewModels.Reporter.Desk;
+using Data_Logger_1._3.ViewModels.Reporter.Logs;
+using Data_Logger_1._3.ViewModels.Reporter.Updater;
 using Data_Logger_1._3.ViewModels.ViewerViewModels;
 using Data_Logger_1._3.Views;
 using Data_Logger_1._3.Views.Dialogs;
@@ -39,6 +44,8 @@ namespace Data_Logger_1._3.Services
         private readonly PDFService _pdfService;
         bool editControlsLoaded = false, arrowFillSet = false;
         bool viewerControlsLoaded = false;
+        bool reportEditControlsLoaded = false;
+        bool reportViewerControlsLoaded = false;
 
         public LOG.CATEGORY CurrentCategory { get; set; } = LOG.CATEGORY.CODING;
         public CacheContext Context { get; set; } = CacheContext.Coding;
@@ -56,6 +63,11 @@ namespace Data_Logger_1._3.Services
         private Frame _VIEW_frame; // Sub class Logs Viewer Frame
         private Frame _VIEW_ASframe; // Android Studio Logs Viewer Frame
 
+        private Frame _UPD_frame;
+        private Frame _UPD_ASframe;
+        private Frame _VIEW_frame_Report;
+        private Frame _VIEW_ASframe_Report;
+
         public Login LoginWindow { get; set; }
 
         public SignUp SignUpWindow { get; set; }
@@ -69,6 +81,8 @@ namespace Data_Logger_1._3.Services
         public ReporterDashboard Reporter { get; set; }
 
         public LoggerEditPage Editor { get; set; }
+
+        public ReporterEditPage Updater { get; set; }
 
         public LoggerViewPage Viewer { get; set; }
 
@@ -153,6 +167,23 @@ namespace Data_Logger_1._3.Services
         public flexiEditViewModel FlexiEditor { get; set; }
 
 
+        // REPORTER
+
+        public codeUpdateViewModel QtUpdater { get; set; }
+
+        public AScodeUpdateViewModel ASUpdater { get; set; }
+
+        public codeUpdateViewModel CodingUpdater { get; set; }
+
+        public graphicsUpdateViewModel GraphicsUpdater { get; set; }
+
+        public filmUpdateViewModel FilmUpdater { get; set; }
+
+        public flexiUpdateViewModel FlexiUpdater { get; set; }
+
+
+
+
 
         #endregion
 
@@ -208,6 +239,21 @@ namespace Data_Logger_1._3.Services
         public graphics_UserControl_View ViewerGraphicsFrame { get; set; }
         public film_UserControl_View ViewerFilmFrame { get; set; }
         public flexi_UserControl_View ViewerFlexiFrame { get; set; }
+
+
+        public coding_UserControl UpdateCodingFrame { get; set; }
+        public androidStudio_UserControl UpdateAndroidStudioFrame { get; set; }
+        public graphics_UserControl UpdateGraphicsFrame { get; set; }
+        public film_UserControl UpdateFilmFrame { get; set; }
+        public flexi_UserControl UpdateFlexiFrame { get; set; }
+
+
+        public coding_UserControl_View ReportViewerCodingFrame { get; set; }
+        public androidStudio_UserControl_View ReportViewerAndroidStudioFrame { get; set; }
+        public graphics_UserControl_View ReportViewerGraphicsFrame { get; set; }
+        public film_UserControl_View ReportViewerFilmFrame { get; set; }
+        public flexi_UserControl_View ReportViewerFlexiFrame { get; set; }
+
 
 
         #endregion
@@ -295,12 +341,20 @@ namespace Data_Logger_1._3.Services
                 Reporter = new ReporterDashboard();
                 Editor = new LoggerEditPage();
                 Viewer = new LoggerViewPage();
+
+                Updater = new ReporterEditPage();
+
                 _frame = Logger.frame_VARIATIONS;
                 _ASframe = Logger.frame_ANDROIDSTUDIO;
+
                 _EDS_frame = Editor.frame_VARIATIONS;
                 _EDS_ASframe = Editor.frame_ANDROIDSTUDIO;
+
                 _VIEW_frame = Viewer.frame_VARIATIONS;
                 _VIEW_ASframe = Viewer.frame_ANDROIDSTUDIO;
+
+                _UPD_frame = Updater.frame_VARIATIONS;
+                _UPD_ASframe = Updater.frame_ANDROIDSTUDIO;
 
                 NOTESList = new NOTESPage();
                 NOTESList.DataContext = notesDashboard;
@@ -328,7 +382,7 @@ namespace Data_Logger_1._3.Services
 
         public void LoadViewerControls()
         {
-            if(!viewerControlsLoaded)
+            if (!viewerControlsLoaded)
             {
                 ViewerCodingFrame = new coding_UserControl_View();
                 ViewerAndroidStudioFrame = new androidStudio_UserControl_View();
@@ -338,6 +392,36 @@ namespace Data_Logger_1._3.Services
                 ViewerFlexiFrame = new flexi_UserControl_View();
 
                 viewerControlsLoaded = true;
+            }
+        }
+
+        public void LoadReportViewerControls()
+        {
+            if (!reportViewerControlsLoaded)
+            {
+                ReportViewerCodingFrame = new coding_UserControl_View();
+                ReportViewerAndroidStudioFrame = new androidStudio_UserControl_View();
+                ReportViewerAndroidStudioFrame.DataContext = ASCodingViewer;
+                ReportViewerGraphicsFrame = new graphics_UserControl_View();
+                ReportViewerFilmFrame = new film_UserControl_View();
+                ReportViewerFlexiFrame = new flexi_UserControl_View();
+
+                reportViewerControlsLoaded = true;
+            }
+        }
+
+        public void LoadReportEditControls()
+        {
+            if (!reportEditControlsLoaded)
+            {
+                UpdateCodingFrame = new coding_UserControl();
+                UpdateAndroidStudioFrame = new androidStudio_UserControl();
+                UpdateAndroidStudioFrame.DataContext = ASCodingEditor;
+                UpdateGraphicsFrame = new graphics_UserControl();
+                UpdateFilmFrame = new film_UserControl();
+                UpdateFlexiFrame = new flexi_UserControl();
+
+                reportEditControlsLoaded = true;
             }
         }
 
@@ -506,29 +590,29 @@ namespace Data_Logger_1._3.Services
 
             var graList = _dataService.RetrieveGraphicsCache(graphicsDashboard);
 
-            if(graList is not null && graList.Count > 0)
+            if (graList is not null && graList.Count > 0)
             {
                 graphicsDashboard.CacheItems = graList;
 
                 cachedItems += graList.Count;
 
-                foreach(GraphicsLOGViewModel item in graList)
+                foreach (GraphicsLOGViewModel item in graList)
                 {
                     cachedPostIts += item._GraphicsLOG.PostItList.Count;
-                }    
+                }
             }
 
             // Retrieve Film Logs that weren't stored
 
             var flmList = _dataService.RetrieveFilmCache(filmDashboard);
 
-            if(flmList is not null && flmList.Count > 0)
+            if (flmList is not null && flmList.Count > 0)
             {
                 filmDashboard.CacheItems = flmList;
 
                 cachedItems += flmList.Count;
 
-                foreach(FilmLOGViewModel item in flmList)
+                foreach (FilmLOGViewModel item in flmList)
                 {
                     cachedPostIts += item._FilmLOG.PostItList.Count;
                 }
@@ -538,13 +622,13 @@ namespace Data_Logger_1._3.Services
 
             var flxList = _dataService.RetrieveFlexibleCache(flexiDashboard);
 
-            if(flxList is not null &&  flxList.Count > 0)
+            if (flxList is not null && flxList.Count > 0)
             {
                 flexiDashboard.CacheItems = flxList;
 
                 cachedItems += flxList.Count;
 
-                foreach(FlexiLOGViewModel item in flxList)
+                foreach (FlexiLOGViewModel item in flxList)
                 {
                     cachedPostIts += item._FlexiLOG.PostItList.Count;
                 }
@@ -758,7 +842,7 @@ namespace Data_Logger_1._3.Services
             catch (Exception ex)
             {
                 Debug.WriteLine($"Exception found near ChangeData(context): {ex.Message}");
-                
+
                 // TODO
 
 
@@ -797,7 +881,7 @@ namespace Data_Logger_1._3.Services
         public void NavigateToLoggerEditor(LogCacheViewModel logCacheViewModel, ViewModelBase viewModelBase, CacheContext Category)
         {
 
-            switch (Category)
+            switch (Context)
             {
                 case CacheContext.Qt:
                     {
@@ -913,8 +997,8 @@ namespace Data_Logger_1._3.Services
                         ASCodingEditor.ConfigureBuildMinutes = log._AndroidCodingLOG.ConfigureBuild.Minute;
                         ASCodingEditor.ConfigureBuildSeconds = log._AndroidCodingLOG.ConfigureBuild.Second;
                         ASCodingEditor.ConfigureBuildMilliseconds = log._AndroidCodingLOG.ConfigureBuild.Millisecond;
-                        
-                        ASCodingEditor.AllProjectsVisibility = ASCodingEditor.IsSimple? Visibility.Collapsed: Visibility.Visible;
+
+                        ASCodingEditor.AllProjectsVisibility = ASCodingEditor.IsSimple ? Visibility.Collapsed : Visibility.Visible;
                         ASCodingEditor.AllProjectsTime = log._AndroidCodingLOG.AllProjects;
                         ASCodingEditor.AllProjectsHours = log._AndroidCodingLOG.AllProjects.Hour;
                         ASCodingEditor.AllProjectsMinutes = log._AndroidCodingLOG.AllProjects.Minute;
@@ -1132,6 +1216,369 @@ namespace Data_Logger_1._3.Services
             _MainFrame.Navigate(Editor);
         }
 
+        public void NavigateToReporterUpdater(REPORTViewModel reportViewModel, ReportDeskViewModel reportDeskViewModel)
+        {
+            switch (Context)
+            {
+                case CacheContext.Qt:
+                    {
+
+                        var qtReport = (qtREPORTViewModel)reportViewModel;
+                        var log = qtReport.GetQtCodingLog;
+
+                        QtUpdater = new(this, reportDeskViewModel, Qt, _dataService, qtReport, _pdfService);
+
+                        QtUpdater.SignUpImage = _authService.Account.ProfilePic;
+
+                        QtUpdater.Author = $"{log.Author.FirstName} {log.Author.LastName}";
+                        QtUpdater.ProjectName = log.Project.Name;
+                        QtUpdater.ApplicationName = log.Application.Name;
+
+                        QtUpdater.StartDate = log.Start;
+                        QtUpdater.StartHours = log.Start.Hour;
+                        QtUpdater.StartMinutes = log.Start.Minute;
+                        QtUpdater.StartSeconds = log.Start.Second;
+                        QtUpdater.StartMilliseconds = log.Start.Millisecond;
+
+                        QtUpdater.EndDate = log.End;
+                        QtUpdater.EndHours = log.End.Hour;
+                        QtUpdater.EndMinutes = log.End.Minute;
+                        QtUpdater.EndSeconds = log.End.Second;
+                        QtUpdater.EndMilliseconds = log.End.Millisecond;
+
+                        QtUpdater.Output = log.Output.Name;
+                        QtUpdater.Type = log.Type.Name;
+
+                        foreach (PostIt p in log.PostItList)
+                        {
+                            QtUpdater.PostIts.Add(new CreateReporterPostItViewModel(this, _dataService, QtUpdater, log.Project, p.Subject.Subject, p.Error, p.ERCaptureTime, p.Solution,
+                                p.SOCaptureTime, p.Suggestion, p.Comment));
+                        }
+
+                        QtUpdater.BugsFound = log.Bugs;
+                        QtUpdater.ApplicationOpened = log.Success;
+
+                        Dashboard.DataContext = codingQtDashboard;
+                        Updater.DataContext = QtUpdater;
+                        LoadReportEditControls();
+                        _UPD_frame.Navigate(UpdateCodingFrame);
+                        _UPD_ASframe.Navigate(null);
+                        UpdateCodingFrame.DataContext = QtUpdater;
+
+                        break;
+                    }
+                case CacheContext.AndroidStudio:
+                    {
+                        var asReport = (asREPORTViewModel)reportViewModel;
+                        var log = asReport.GetAndroidCodingLog;
+
+                        ASUpdater = new(this, reportDeskViewModel, _dataService, asReport, _pdfService);
+
+                        ASUpdater.SignUpImage = _authService.Account.ProfilePic;
+
+                        ASUpdater.Author = $"{log.Author.FirstName} {log.Author.LastName}";
+                        ASUpdater.ProjectName = log.Project.Name;
+                        ASUpdater.ApplicationName = log.Application.Name;
+
+                        ASUpdater.StartDate = log.Start;
+                        ASUpdater.StartHours = log.Start.Hour;
+                        ASUpdater.StartMinutes = log.Start.Minute;
+                        ASUpdater.StartSeconds = log.Start.Second;
+                        ASUpdater.StartMilliseconds = log.Start.Millisecond;
+
+                        ASUpdater.EndDate = log.End;
+                        ASUpdater.EndHours = log.End.Hour;
+                        ASUpdater.EndMinutes = log.End.Minute;
+                        ASUpdater.EndSeconds = log.End.Second;
+                        ASUpdater.EndMilliseconds = log.End.Millisecond;
+
+                        ASUpdater.Output = log.Output.Name;
+                        ASUpdater.Type = log.Type.Name;
+
+                        foreach (PostIt p in log.PostItList)
+                        {
+                            ASUpdater.PostIts.Add(new CreateReporterPostItViewModel(this, _dataService, ASUpdater, log.Project, p.Subject.Subject, p.Error, p.ERCaptureTime, p.Solution,
+                                p.SOCaptureTime, p.Suggestion, p.Comment));
+                        }
+
+                        ASUpdater.BugsFound = log.Bugs;
+                        ASUpdater.ApplicationOpened = log.Success;
+
+                        ASUpdater.IsSimple = log.Scope.Equals(AndroidCodingLOG.SCOPE.SIMPLE);
+                        ASUpdater.SyncTime = log.Sync;
+                        ASUpdater.SyncHours = log.Sync.Hour;
+                        ASUpdater.SyncMinutes = log.Sync.Minute;
+                        ASUpdater.SyncSeconds = log.Sync.Second;
+                        ASUpdater.SyncMilliseconds = log.Sync.Millisecond;
+
+                        ASUpdater.GradleDaemonVisibility = ASUpdater.IsSimple ? Visibility.Collapsed : Visibility.Visible;
+                        ASUpdater.GradleDaemonTime = log.StartingGradleDaemon;
+                        ASUpdater.GradleDaemonHours = log.StartingGradleDaemon.Hour;
+                        ASUpdater.GradleDaemonMinutes = log.StartingGradleDaemon.Minute;
+                        ASUpdater.GradleDaemonSeconds = log.StartingGradleDaemon.Second;
+                        ASUpdater.GradleDaemonMilliseconds = log.StartingGradleDaemon.Millisecond;
+
+                        ASUpdater.RunBuildVisibility = ASUpdater.IsSimple ? Visibility.Collapsed : Visibility.Visible;
+                        ASUpdater.RunBuildTime = log.RunBuild;
+                        ASUpdater.RunBuildHours = log.RunBuild.Hour;
+                        ASUpdater.RunBuildMinutes = log.RunBuild.Minute;
+                        ASUpdater.RunBuildSeconds = log.RunBuild.Second;
+                        ASUpdater.RunBuildMilliseconds = log.RunBuild.Millisecond;
+
+                        ASUpdater.LoadBuildVisibility = ASUpdater.IsSimple ? Visibility.Collapsed : Visibility.Visible;
+                        ASUpdater.LoadBuildTime = log.LoadBuild;
+                        ASUpdater.LoadBuildHours = log.LoadBuild.Hour;
+                        ASUpdater.LoadBuildMinutes = log.LoadBuild.Minute;
+                        ASUpdater.LoadBuildSeconds = log.LoadBuild.Second;
+                        ASUpdater.LoadBuildMilliseconds = log.LoadBuild.Millisecond;
+
+                        ASUpdater.ConfigureBuildVisibility = ASUpdater.IsSimple ? Visibility.Collapsed : Visibility.Visible;
+                        ASUpdater.ConfigureBuildTime = log.ConfigureBuild;
+                        ASUpdater.ConfigureBuildHours = log.ConfigureBuild.Hour;
+                        ASUpdater.ConfigureBuildMinutes = log.ConfigureBuild.Minute;
+                        ASUpdater.ConfigureBuildSeconds = log.ConfigureBuild.Second;
+                        ASUpdater.ConfigureBuildMilliseconds = log.ConfigureBuild.Millisecond;
+
+                        ASUpdater.AllProjectsVisibility = ASUpdater.IsSimple ? Visibility.Collapsed : Visibility.Visible;
+                        ASUpdater.AllProjectsTime = log.AllProjects;
+                        ASUpdater.AllProjectsHours = log.AllProjects.Hour;
+                        ASUpdater.AllProjectsMinutes = log.AllProjects.Minute;
+                        ASUpdater.AllProjectsSeconds = log.AllProjects.Second;
+                        ASUpdater.AllProjectsMilliseconds = log.AllProjects.Millisecond;
+
+                        Dashboard.DataContext = codingQtDashboard;
+                        Updater.DataContext = QtUpdater;
+                        LoadReportEditControls();
+                        _UPD_frame.Navigate(UpdateCodingFrame);
+                        _UPD_ASframe.Navigate(null);
+                        ReportViewerCodingFrame.DataContext = QtUpdater;
+
+                        Dashboard.DataContext = codingAndroidDashboard;
+                        Updater.DataContext = ASUpdater;
+                        LoadReportEditControls();
+                        _UPD_frame.Navigate(UpdateCodingFrame);
+                        _UPD_ASframe.Navigate(UpdateAndroidStudioFrame);
+                        UpdateCodingFrame.DataContext = ASUpdater;
+                        UpdateAndroidStudioFrame.DataContext = ASUpdater;
+
+                        break;
+                    }
+                case CacheContext.Graphics:
+                    {
+                        var graphicsReport = (graphicsREPORTViewModel)reportViewModel;
+                        var log = graphicsReport.GetGraphicsLog;
+
+                        GraphicsUpdater = new(this, reportDeskViewModel, _dataService, graphicsReport, _pdfService);
+
+                        GraphicsUpdater.SignUpImage = _authService.Account.ProfilePic;
+
+                        GraphicsUpdater.Author = $"{log.Author.FirstName} {log.Author.LastName}";
+                        GraphicsUpdater.ProjectName = log.Project.Name;
+                        GraphicsUpdater.ApplicationName = log.Application.Name;
+
+                        GraphicsUpdater.StartDate = log.Start;
+                        GraphicsUpdater.StartHours = log.Start.Hour;
+                        GraphicsUpdater.StartMinutes = log.Start.Minute;
+                        GraphicsUpdater.StartSeconds = log.Start.Second;
+                        GraphicsUpdater.StartMilliseconds = log.Start.Millisecond;
+
+                        GraphicsUpdater.EndDate = log.End;
+                        GraphicsUpdater.EndHours = log.End.Hour;
+                        GraphicsUpdater.EndMinutes = log.End.Minute;
+                        GraphicsUpdater.EndSeconds = log.End.Second;
+                        GraphicsUpdater.EndMilliseconds = log.End.Millisecond;
+
+                        GraphicsUpdater.Output = log.Output.Name;
+                        GraphicsUpdater.Type = log.Type.Name;
+
+                        foreach (PostIt p in log.PostItList)
+                        {
+                            GraphicsUpdater.PostIts.Add(new CreateReporterPostItViewModel(this, _dataService, GraphicsUpdater, log.Project, p.Subject.Subject, p.Error, p.ERCaptureTime, p.Solution,
+                                p.SOCaptureTime, p.Suggestion, p.Comment));
+                        }
+
+                        GraphicsUpdater.Height = log.Height.ToString();
+                        GraphicsUpdater.Width = log.Width.ToString();
+                        GraphicsUpdater.Medium = log.Medium;
+                        GraphicsUpdater.Format = log.Format;
+                        GraphicsUpdater.Brush = log.Brush;
+                        GraphicsUpdater.MeasuringUnit = log.Unit;
+                        GraphicsUpdater.Size = log.Size;
+                        GraphicsUpdater.DPI = log.DPI.ToString();
+                        GraphicsUpdater.ColourDepth = log.Depth;
+                        GraphicsUpdater.IsCompleted = log.IsCompleted;
+                        GraphicsUpdater.Source = log.Source;
+
+                        Dashboard.DataContext = codingQtDashboard;
+                        Updater.DataContext = QtUpdater;
+                        LoadReportEditControls();
+                        _UPD_frame.Navigate(UpdateCodingFrame);
+                        _UPD_ASframe.Navigate(null);
+                        UpdateCodingFrame.DataContext = QtUpdater;
+
+                        Dashboard.DataContext = graphicsDashboard;
+                        Updater.DataContext = GraphicsUpdater;
+                        LoadReportEditControls();
+                        _UPD_frame.Navigate(UpdateGraphicsFrame);
+                        _UPD_ASframe.Navigate(null);
+                        UpdateGraphicsFrame.DataContext = GraphicsUpdater;
+
+                        break;
+                    }
+                case CacheContext.Film:
+                    {
+                        var filmReport = (filmREPORTViewModel)reportViewModel;
+                        var log = filmReport.GetFilmLog;
+
+                        FilmUpdater = new(this, reportDeskViewModel, _dataService, filmReport, _pdfService);
+
+                        FilmEditor.SignUpImage = _authService.Account.ProfilePic;
+
+                        FilmUpdater.Author = $"{log.Author.FirstName} {log.Author.LastName}";
+                        FilmUpdater.ProjectName = log.Project.Name;
+                        FilmUpdater.ApplicationName = log.Application.Name;
+
+                        FilmUpdater.StartDate = log.Start;
+                        FilmUpdater.StartHours = log.Start.Hour;
+                        FilmUpdater.StartMinutes = log.Start.Minute;
+                        FilmUpdater.StartSeconds = log.Start.Second;
+                        FilmUpdater.StartMilliseconds = log.Start.Millisecond;
+
+                        FilmUpdater.EndDate = log.End;
+                        FilmUpdater.EndHours = log.End.Hour;
+                        FilmUpdater.EndMinutes = log.End.Minute;
+                        FilmUpdater.EndSeconds = log.End.Second;
+                        FilmUpdater.EndMilliseconds = log.End.Millisecond;
+
+                        FilmUpdater.Output = log.Output.Name;
+                        FilmUpdater.Type = log.Type.Name;
+
+                        foreach (PostIt p in log.PostItList)
+                        {
+                            FilmUpdater.PostIts.Add(new CreateReporterPostItViewModel(this, _dataService, FilmUpdater, log.Project, p.Subject.Subject, p.Error, p.ERCaptureTime, p.Solution,
+                                p.SOCaptureTime, p.Suggestion, p.Comment));
+                        }
+
+                        FilmUpdater.Height = log.Height.ToString();
+                        FilmUpdater.Width = log.Width.ToString();
+                        FilmUpdater.IsCompleted = log.IsCompleted;
+                        FilmUpdater.Source = log.Source;
+
+
+                        Dashboard.DataContext = filmDashboard;
+                        Updater.DataContext = FilmUpdater;
+                        LoadReportEditControls();
+                        _UPD_frame.Navigate(UpdateFilmFrame);
+                        _UPD_ASframe.Navigate(null);
+                        UpdateFilmFrame.DataContext = FilmUpdater;
+
+                        break;
+                    }
+                case CacheContext.Flexi:
+                    {
+                        var flexiReport = (flexiREPORTViewModel)reportViewModel;
+                        var log = flexiReport.GetFlexiLog;
+
+                        FlexiUpdater = new(this, reportDeskViewModel, _dataService, flexiReport, _pdfService);
+
+                        FlexiUpdater.SignUpImage = _authService.Account.ProfilePic;
+
+                        FlexiUpdater.Author = $"{log.Author.FirstName} {log.Author.LastName}";
+                        FlexiUpdater.ProjectName = log.Project.Name;
+                        FlexiUpdater.ApplicationName = log.Application.Name;
+
+                        FlexiUpdater.StartDate = log.Start;
+                        FlexiUpdater.StartHours = log.Start.Hour;
+                        FlexiUpdater.StartMinutes = log.Start.Minute;
+                        FlexiUpdater.StartSeconds = log.Start.Second;
+                        FlexiUpdater.StartMilliseconds = log.Start.Millisecond;
+
+                        FlexiUpdater.EndDate = log.End;
+                        FlexiUpdater.EndHours = log.End.Hour;
+                        FlexiUpdater.EndMinutes = log.End.Minute;
+                        FlexiUpdater.EndSeconds = log.End.Second;
+                        FlexiUpdater.EndMilliseconds = log.End.Millisecond;
+
+                        FlexiUpdater.Output = log.Output.Name;
+                        FlexiUpdater.Type = log.Type.Name;
+
+                        foreach (PostIt p in log.PostItList)
+                        {
+                            FlexiUpdater.PostIts.Add(new CreateReporterPostItViewModel(this, _dataService, FlexiUpdater, log.Project, p.Subject.Subject, p.Error, p.ERCaptureTime, p.Solution,
+                                p.SOCaptureTime, p.Suggestion, p.Comment));
+                        }
+
+                        FlexiUpdater.FlexibleLogCategory = log.flexinotetype.ToString();
+                        FlexiUpdater.Medium = log.Medium;
+                        FlexiUpdater.Format = log.Format;
+                        FlexiUpdater.Bitrate = log.Bitrate.ToString();
+                        FlexiUpdater.Duration = log.Length;
+                        FlexiUpdater.IsCompleted = log.IsCompleted;
+                        FlexiUpdater.Source = log.Source;
+
+
+                        Dashboard.DataContext = flexiDashboard;
+                        Updater.DataContext = FlexiUpdater;
+                        LoadReportEditControls();
+                        _UPD_frame.Navigate(UpdateFlexiFrame);
+                        _UPD_ASframe.Navigate(null);
+                        UpdateFlexiFrame.DataContext = FlexiUpdater;
+
+                        break;
+                    }
+                default:
+                    {
+                        var codeReport = (codeREPORTViewModel)reportViewModel;
+                        var log = codeReport.GetCodingLog;
+
+                        CodingUpdater = new(this, reportDeskViewModel, _dataService, codeReport, _pdfService);
+
+                        CodingUpdater.SignUpImage = _authService.Account.ProfilePic;
+
+                        CodingUpdater.Author = $"{log.Author.FirstName} {log.Author.LastName}";
+                        CodingUpdater.ProjectName = log.Project.Name;
+                        CodingUpdater.ApplicationName = log.Application.Name;
+
+                        CodingUpdater.StartDate = log.Start;
+                        CodingUpdater.StartHours = log.Start.Hour;
+                        CodingUpdater.StartMinutes = log.Start.Minute;
+                        CodingUpdater.StartSeconds = log.Start.Second;
+                        CodingUpdater.StartMilliseconds = log.Start.Millisecond;
+
+                        CodingUpdater.EndDate = log.End;
+                        CodingUpdater.EndHours = log.End.Hour;
+                        CodingUpdater.EndMinutes = log.End.Minute;
+                        CodingUpdater.EndSeconds = log.End.Second;
+                        CodingUpdater.EndMilliseconds = log.End.Millisecond;
+
+                        CodingUpdater.Output = log.Output.Name;
+                        CodingUpdater.Type = log.Type.Name;
+
+                        foreach (PostIt p in log.PostItList)
+                        {
+                            CodingUpdater.PostIts.Add(new CreateReporterPostItViewModel(this, _dataService, CodingUpdater, log.Project, p.Subject.Subject, p.Error, p.ERCaptureTime, p.Solution,
+                                p.SOCaptureTime, p.Suggestion, p.Comment));
+                        }
+
+                        CodingUpdater.BugsFound = log.Bugs;
+                        CodingUpdater.ApplicationOpened = log.Success;
+
+                        Dashboard.DataContext = codingDashboard;
+                        Updater.DataContext = CodingUpdater;
+                        LoadReportEditControls();
+                        _UPD_frame.Navigate(UpdateCodingFrame);
+                        _UPD_ASframe.Navigate(null);
+                        UpdateCodingFrame.DataContext = CodingUpdater;
+
+                        break;
+                    }
+            }
+
+            _MainFrame.Navigate(Updater);
+        }
+
+
+
         public void NavigateToViewer(ViewModelBase viewModelBase, CacheContext cacheContext)
         {
             try
@@ -1240,7 +1687,7 @@ namespace Data_Logger_1._3.Services
 
                             foreach (PostIt p in log._GraphicsLOG.PostItList)
                             {
-                                GraphicsViewer.AddPostIt(new CreatePostItViewModel(this, log._GraphicsLOG.Project, p.Subject.Subject, p.Error,p.Solution,
+                                GraphicsViewer.AddPostIt(new CreatePostItViewModel(this, log._GraphicsLOG.Project, p.Subject.Subject, p.Error, p.Solution,
                                     p.Suggestion, p.Comment));
                             }
 
@@ -1385,7 +1832,7 @@ namespace Data_Logger_1._3.Services
 
                 _MainFrame.Navigate(Viewer);
             }
-            catch(InvalidOperationException invex)
+            catch (InvalidOperationException invex)
             {
                 Debug.WriteLine($"An invalid operation exception has been found: {invex.Message}");
             }
@@ -1403,9 +1850,27 @@ namespace Data_Logger_1._3.Services
             _MainFrame.Navigate(postItPage);
         }
 
+        public void NavigateToReporterPostItCreator(ReporterUpdaterViewModel reporterUpdaterViewModel)
+        {
+            PostItPage postItPage = _dataService.CurrentProject is null ? new PostItPage(new CreateReporterPostItViewModel(this, _dataService, reporterUpdaterViewModel, CurrentCategory)) :
+                new PostItPage(new CreateReporterPostItViewModel(this, _dataService, reporterUpdaterViewModel, _dataService.CurrentProject));
+
+            _MainFrame.Navigate(postItPage);
+        }
+
+
         public void NavigateToPostItEditor(LoggerCreateViewModel loggerCreator, CreatePostItViewModel createPostItViewModel)
         {
             var editPostItViewModel = new EditPostItViewModel(this, _dataService, loggerCreator, CurrentCategory, createPostItViewModel);
+
+            PostItPage postItPage = new PostItPage(editPostItViewModel);
+
+            _MainFrame.Navigate(postItPage);
+        }
+
+        public void NavigateToReporterPostItEditor(ReporterUpdaterViewModel reporterUpdaterViewModel, CreateReporterPostItViewModel postItViewModel)
+        {
+            var editPostItViewModel = new UpdatePostItViewModel(this, _dataService, reporterUpdaterViewModel, CurrentCategory, postItViewModel);
 
             PostItPage postItPage = new PostItPage(editPostItViewModel);
 
@@ -1438,14 +1903,14 @@ namespace Data_Logger_1._3.Services
             {
                 case CacheContext.Qt:
                     {
-                        if(_dataService.QtLogCount() != 0)
+                        if (_dataService.QtLogCount() != 0)
                         {
 
                             QtReportDesk.Projects = list;
                             _MainFrame.Navigate(Reporter);
                         }
                         else
-                            MessageBox.Show("Please create a log if you need to make a report.", "No logs Found", 
+                            MessageBox.Show("Please create a log if you need to make a report.", "No logs Found",
                                 MessageBoxButton.OK, MessageBoxImage.Information, MessageBoxResult.OK);
                         break;
                     }

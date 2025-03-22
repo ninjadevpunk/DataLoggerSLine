@@ -11,7 +11,6 @@ using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Net.Http;
-using System.Runtime.InteropServices;
 using System.Windows;
 
 namespace Data_Logger_1._3.Services

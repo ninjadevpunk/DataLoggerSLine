@@ -58,15 +58,35 @@ namespace Data_Logger_1._3.Services
         /// <exception cref="EmailConflictException"></exception>
         public bool EmailExists(string email)
         {
-            using SQLiteCommand query = _con.CreateCommand();
-            query.CommandText = "SELECT email FROM ACCOUNT WHERE email = @email;";
-            query.Parameters.AddWithValue("@email", email);
+            using SQLiteCommand read = _con.CreateCommand();
+            read.CommandText = "SELECT email FROM ACCOUNT WHERE email = @email;";
+            read.Parameters.AddWithValue("@email", email);
 
-            SQLiteDataReader reader = query.ExecuteReader();
+            SQLiteDataReader reader = read.ExecuteReader();
             if (reader.Read())
             {
                 throw new EmailConflictException("This email already exists.");
             }
+
+            return false;
+        }
+
+        /// <summary>
+        /// Checks if a log with a given logID has PostIts in the PostIt table.
+        /// </summary>
+        /// <param name="logID">The log ID of the log that is being updated.</param>
+        /// <param name="postItID">The PostIt ID of the PostIt being checked.</param>
+        /// <param name="transaction">The transaction that is currently occurring.</param>
+        /// <returns></returns>
+        public bool PostItsExists(int logID, int postItID, SQLiteTransaction transaction)
+        {
+            using var read = _con.CreateCommand();
+            read.Transaction = transaction;
+
+            read.CommandText = $@"SELECT {Column.PostItID} FROM PostIt
+                                    WHERE {Column.LogID} = @logID 
+;";
+
 
             return false;
         }
