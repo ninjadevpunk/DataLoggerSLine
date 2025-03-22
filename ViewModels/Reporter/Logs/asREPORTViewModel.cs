@@ -12,7 +12,7 @@ namespace Data_Logger_1._3.ViewModels.Reporter.Logs
         public asREPORTViewModel(AndroidCodingLOG androidCodingLOG, NavigationService navigationService, DataService dataService, PDFService pdfService) : base(androidCodingLOG, navigationService, dataService)
         {
             _AndroidCodingLOG = androidCodingLOG;
-            SingleExport = new SingleExportCommand(Context, navigationService, dataService, pdfService);
+            SingleExport = new SingleExportCommand(Context, pdfService);
         }
 
 

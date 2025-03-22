@@ -178,7 +178,7 @@ namespace Data_Logger_1._3.Commands.ReporterCommands.UpdateCommands
                                 qtDesk.Logs = list;
 
                                 // Update database with the new log
-                                _dataService.UpdateLog(newLOG.GetQtCodingLog);
+                                _dataService.UpdateQtLog(newLOG.GetQtCodingLog);
                             }
 
 

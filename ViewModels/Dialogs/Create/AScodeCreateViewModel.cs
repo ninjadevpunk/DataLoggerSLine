@@ -18,6 +18,7 @@ namespace Data_Logger_1._3.ViewModels.Dialogs.Create
             ASOnly = true;
             AppFieldEnabled = false;
             IsSimple = false;
+            IsConsidered = false;
 
             _ASviewModel = (CodingAndroidViewModel)_viewModel;
 
@@ -59,6 +60,20 @@ namespace Data_Logger_1._3.ViewModels.Dialogs.Create
                 isSimple = value;
                 SetGradleDaemonVisibility();
                 OnPropertyChanged(nameof(IsSimple));
+            }
+        }
+
+        private bool isConsidered;
+        public bool IsConsidered
+        {
+            get
+            {
+                return isConsidered;
+            }
+            set
+            {
+                isConsidered = value;
+                OnPropertyChanged(nameof(IsConsidered));
             }
         }
 

@@ -18,6 +18,7 @@ namespace Data_Logger_1._3.ViewModels.Reporter.Updater
             ASOnly = true;
             AppFieldEnabled = false;
             IsSimple = false;
+            IsConsidered = false;
 
             _ASviewModel = (ASReportDeskViewModel)reportDeskViewModel;
 
@@ -47,6 +48,20 @@ namespace Data_Logger_1._3.ViewModels.Reporter.Updater
                 isSimple = value;
                 SetGradleDaemonVisibility();
                 OnPropertyChanged(nameof(IsSimple));
+            }
+        }
+
+        private bool isConsidered;
+        public bool IsConsidered
+        {
+            get
+            {
+                return isConsidered;
+            }
+            set
+            {
+                isConsidered = value;
+                OnPropertyChanged(nameof(IsConsidered));
             }
         }
 

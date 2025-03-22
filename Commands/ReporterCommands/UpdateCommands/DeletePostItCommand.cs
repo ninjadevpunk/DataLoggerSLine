@@ -26,7 +26,7 @@ namespace Data_Logger_1._3.Commands.ReporterCommands.UpdateCommands
         {
             try
             {
-                var item = parameter as CreatePostItViewModel;
+                var item = parameter as CreateReporterPostItViewModel;
 
                 _viewModel.PostIts.Remove(item);
             }

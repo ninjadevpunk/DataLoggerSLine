@@ -82,11 +82,11 @@ namespace Data_Logger_1._3.Services
                 }
 
                 // Update PostIts in separate function
-                if (!UpdatePostIt(log, transaction))
+                /*if (!UpdatePostIt(log, transaction))
                 {
                     transaction.Rollback();
                     return false;
-                }
+                }*/
 
 
                 // Update for subclasses
@@ -111,7 +111,7 @@ namespace Data_Logger_1._3.Services
             return IsUpdated;
         }
 
-        public bool UpdatePostIt(LOG log, SQLiteTransaction transaction)
+        /*public bool UpdatePostIt(LOG log, SQLiteTransaction transaction)
         {
             bool isUpdated = true;
 
@@ -154,7 +154,7 @@ namespace Data_Logger_1._3.Services
             }
 
             return isUpdated;
-        }
+        }*/
 
         public bool PostItExists(int logID, int postItID, SQLiteTransaction transaction)
         {

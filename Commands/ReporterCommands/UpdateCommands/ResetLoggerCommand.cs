@@ -114,7 +114,7 @@ namespace Data_Logger_1._3.Commands.ReporterCommands.UpdateCommands
                         }
                     case LOG.CATEGORY.GRAPHICS:
                         {
-                            var graphicsViewModel = (graphicCreateViewModel)_viewModel;
+                            var graphicsViewModel = (graphicsUpdateViewModel)_viewModel;
                             graphicsViewModel.Output = "Portable Network Graphics (*.PNG)";
                             graphicsViewModel.Type = "NONE";
                             graphicsViewModel.Medium = "Pencil";
@@ -133,7 +133,7 @@ namespace Data_Logger_1._3.Commands.ReporterCommands.UpdateCommands
                         }
                     case LOG.CATEGORY.FILM:
                         {
-                            var filmViewModel = (filmCreateViewModel)_viewModel;
+                            var filmViewModel = (filmUpdateViewModel)_viewModel;
                             filmViewModel.Height = string.Empty;
                             filmViewModel.Width = string.Empty;
                             filmViewModel.Resolution = string.Empty;
@@ -145,7 +145,7 @@ namespace Data_Logger_1._3.Commands.ReporterCommands.UpdateCommands
                         }
                     case LOG.CATEGORY.NOTES:
                         {
-                            var flexiViewModel = (flexiCreateViewModel)_viewModel;
+                            var flexiViewModel = (flexiUpdateViewModel)_viewModel;
                             flexiViewModel.FlexibleLogCategory = string.Empty;
                             flexiViewModel.Medium = "Song";
                             flexiViewModel.Format = "CD";
