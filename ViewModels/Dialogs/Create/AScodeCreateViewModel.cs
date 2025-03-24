@@ -175,7 +175,7 @@ namespace Data_Logger_1._3.ViewModels.Dialogs.Create
 
         private void UpdateTime(ref DateTime timeField, int hours, int minutes, int seconds, int milliseconds)
         {
-            timeField = DateTime.Parse($"{DateTime.Now.ToLongDateString} {hours}:{minutes}:{seconds}.{milliseconds}");
+            timeField = DateTime.Parse($"{DateTime.Now.ToLongDateString()} {hours}:{minutes}:{seconds}.{milliseconds}");
         }
 
         private void SetAndNotify(ref DateTime field, DateTime value, string propertyName)

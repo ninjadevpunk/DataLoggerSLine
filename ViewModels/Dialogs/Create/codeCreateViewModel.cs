@@ -46,7 +46,7 @@ namespace Data_Logger_1._3.ViewModels.Dialogs.Create
         {
             _dataService.InitialiseProjectsLIST(Category);
 
-            if (application == Qt)
+            if (application is Qt || application is "Qt")
             {
                 _QtviewModel = (CodingQtViewModel)logCacheViewModel;
                 InitializeQtFields(logCacheViewModel);
