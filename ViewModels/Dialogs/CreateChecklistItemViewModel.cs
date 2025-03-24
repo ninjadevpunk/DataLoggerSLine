@@ -1,11 +1,15 @@
-﻿using Data_Logger_1._3.Models;
+﻿using Data_Logger_1._3.Commands.NotesCommands;
+using Data_Logger_1._3.Models;
 using MVVMEssentials.ViewModels;
+using System.Windows.Input;
 
 namespace Data_Logger_1._3.ViewModels.Dialogs
 {
     public class CreateChecklistItemViewModel : ViewModelBase
     {
-        private readonly CheckListItem _checkListItem;
+        public readonly CheckListItem _CheckListItem;
+
+        public ICommand DeleteItem {  get; set; }
 
 
         #region Constructors 
@@ -17,9 +21,12 @@ namespace Data_Logger_1._3.ViewModels.Dialogs
             //
         }
 
-        public CreateChecklistItemViewModel(CheckListItem checkListItem)
+        public CreateChecklistItemViewModel(CreateCheckListViewModel createCheckListViewModel, CheckListItem checkListItem)
         {
-            _checkListItem = checkListItem;
+            _CheckListItem = checkListItem;
+            DeleteItem = new DeleteCheckListItemCommand(createCheckListViewModel, this);
+
+            Item = $"Item {createCheckListViewModel.ChecklistItems.Count+1}";
         }
 
 
@@ -34,9 +41,33 @@ namespace Data_Logger_1._3.ViewModels.Dialogs
 
 
 
-        public bool IsDone => _checkListItem.IsChecked;
+        private bool isDone;
+        public bool IsDone
+        {
+            get
+            {
+                return isDone;
+            }
+            set
+            {
+                isDone = value;
+                OnPropertyChanged(nameof(IsDone));
+            }
+        }
 
-        public string Item => _checkListItem.Item;
+        private string item;
+        public string Item
+        {
+            get
+            {
+                return item;
+            }
+            set
+            {
+                item = value;
+                OnPropertyChanged(nameof(Item));
+            }
+        }
 
 
 
