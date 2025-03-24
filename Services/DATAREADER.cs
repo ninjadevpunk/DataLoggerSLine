@@ -25,7 +25,7 @@ namespace Data_Logger_1._3.Services
 
         public DATAREADER()
         {
-            
+
         }
 
         public DATAREADER(bool status) : base(status) { }
@@ -178,7 +178,7 @@ namespace Data_Logger_1._3.Services
 
                     if (result != null && result != DBNull.Value)
                         return Convert.ToInt32(result);
-                    
+
 
                 }
             }
@@ -260,7 +260,7 @@ namespace Data_Logger_1._3.Services
                 if (result != null && result != DBNull.Value)
                     return Convert.ToInt32(result);
 
-                
+
             }
             catch (SQLiteException sqlex)
             {
@@ -287,7 +287,7 @@ namespace Data_Logger_1._3.Services
 
         public List<CodingLOG> SearchQtLogs(string searchBarText, int projectID)
         {
-            if(string.IsNullOrEmpty(searchBarText))
+            if (string.IsNullOrEmpty(searchBarText))
             {
                 return new List<CodingLOG>();
             }
@@ -372,9 +372,9 @@ namespace Data_Logger_1._3.Services
 
 ;";
 
-                    using(var read = query.ExecuteReader())
+                    using (var read = query.ExecuteReader())
                     {
-                        while(read.Read())
+                        while (read.Read())
                         {
                             var logID = read.GetInt32(read.GetOrdinal("logID"));
                             if (codingLogs.ContainsKey(logID))
@@ -388,7 +388,7 @@ namespace Data_Logger_1._3.Services
                                         ID = read.GetInt32(read.GetOrdinal("postItID")),
                                         Subject = FindSubjectByID(read.GetInt32(read.GetOrdinal("subjectID"))),
                                         Error = read.GetString(read.GetOrdinal("error")),
-                                        ERCaptureTime = string.IsNullOrEmpty(dateFound) ? new() : 
+                                        ERCaptureTime = string.IsNullOrEmpty(dateFound) ? new() :
                                             DateTime.Parse(dateFound),
                                         Solution = read.GetString(read.GetOrdinal("solution")),
                                         SOCaptureTime = string.IsNullOrEmpty(dateSolved) ? new() :
@@ -399,7 +399,7 @@ namespace Data_Logger_1._3.Services
                                     );
                             }
                         }
-                        
+
                         read.Close();
                     }
 
@@ -414,7 +414,7 @@ namespace Data_Logger_1._3.Services
 
                     using (var read = query.ExecuteReader())
                     {
-                        while(read.Read())
+                        while (read.Read())
                         {
                             var logID = read.GetInt32(read.GetOrdinal("logID"));
                             if (codingLogs.ContainsKey(logID))
@@ -512,7 +512,7 @@ namespace Data_Logger_1._3.Services
 
                     if (result != null)
                         return Convert.ToInt32(result);
-                    
+
                 }
             }
             catch (SQLiteException sqlex)
@@ -566,7 +566,7 @@ namespace Data_Logger_1._3.Services
 
                         if (result != null)
                             return Convert.ToInt32(result);
-                        
+
                     }
                 }
 
@@ -580,7 +580,7 @@ namespace Data_Logger_1._3.Services
                 Debug.WriteLine($"Exception near FindProjectID(projectClass): {ex.Message}");
             }
 
-            return -1;
+            return 1;
         }
 
 
@@ -945,7 +945,11 @@ namespace Data_Logger_1._3.Services
             return new();
         }
 
-
+        /// <summary>
+        /// Looks for a category's categoryID in the Category table.
+        /// </summary>
+        /// <param name="id">The categoryID in the category table.</param>
+        /// <returns>The category's LOG.CATEGORY enum.</returns>
         public LOG.CATEGORY FindCategoryByID(int id)
         {
             SQLiteCommand query = _con.CreateCommand();
@@ -1831,22 +1835,23 @@ namespace Data_Logger_1._3.Services
 
 
                 query.CommandText = @"SELECT * FROM NotesLOG ORDER BY logID;";
-                
 
-                using(var read = query.ExecuteReader())
+
+                using (var read = query.ExecuteReader())
                 {
+                    logs = new();
+                    Initialised = true;
 
                     while (read.Read())
                     {
 
-                        if (!Initialised)
-                        {
-                            logs = new();
-                            Initialised = true;
-                        }
-                        else if (logs is not null)
+
+                        if (logs is not null)
                         {
                             var type = FindNoteLogTypeByID(read.GetInt32(noteLogTypeIDColumn));
+
+
+
                             switch (type)
                             {
                                 case NotesLOG.NOTELOGType.GENERIC:
@@ -1962,14 +1967,14 @@ namespace Data_Logger_1._3.Services
 
                     read.Close();
                 }
-                    
+
 
 
 
 
                 query.CommandText = @"SELECT * FROM POSTIT ORDER BY logID ASC, postItID ASC;";
 
-                using(var read = query.ExecuteReader())
+                using (var read = query.ExecuteReader())
                 {
                     var logIDColumn = 1;
                     var subjectColumn = 2;
