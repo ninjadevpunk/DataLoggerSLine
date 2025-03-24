@@ -48,7 +48,7 @@ namespace Data_Logger_1._3.ViewModels.LogViewModels
             _LOG = log;
             NotaryContent = PostItContent(createPostItViewModels);
             _LOG.Content = NotaryContent;
-            TimeRemaining = 30;
+            TimeRemaining = 1200;
             StartCountdown();
 
             // TODO 

@@ -1,21 +1,49 @@
-﻿using Data_Logger_1._3.Models;
+﻿using Data_Logger_1._3.Commands.NotesCommands;
+using Data_Logger_1._3.Models;
+using Data_Logger_1._3.Services;
+using Data_Logger_1._3.ViewModels.Dashboard;
+using Data_Logger_1._3.ViewModels.Dialogs;
 using MVVMEssentials.ViewModels;
+using System.Collections.ObjectModel;
+using System.Windows.Input;
 
 namespace Data_Logger_1._3.ViewModels.LogViewModels
 {
     public class NoteLOGViewModel : ViewModelBase
     {
-        private readonly NoteItem _noteItem;
+        public readonly NoteItem _NoteItem;
 
+        public ICommand DeleteNoteItemCommand { get; set; }
+
+        public ICommand EditNoteItemCommand { get; set; }
 
 
 
         #region Constructors
 
 
-        public NoteLOGViewModel(NoteItem noteItem)
+        public NoteLOGViewModel(DataService dataService, NOTESViewModel notesViewModel, NoteItem noteItem)
         {
-            _noteItem = noteItem;
+            _NoteItem = noteItem;
+
+            IsCollection = _NoteItem != null && _NoteItem.Items != null;
+
+
+            if(_NoteItem is not null && IsCollection)
+            {
+                Items = new();
+
+                foreach (var item in _NoteItem.Items)
+                {
+                    if(!item.IsChecked)
+                        Items.Add(new CheckListItemViewModel(item));
+                }
+
+            }
+
+            NoteContent = CreatePostItViewModel.ConvertRtfToPlainText(_NoteItem.Content);
+
+            DeleteNoteItemCommand = new DeleteNoteItemCommand(notesViewModel, dataService);
         }
 
 
@@ -31,11 +59,18 @@ namespace Data_Logger_1._3.ViewModels.LogViewModels
 
 
 
-        public string Subject => _noteItem.Subject;
+        public int ViewModelID => _NoteItem.ID;
 
-        public string Content => _noteItem.Content;
+        public bool IsCollection { get; set; }
 
-        public string Date => $"Created {_noteItem.Start.ToString("d/M/yyyy HH:mm:ss")}";
+        public string Subject => _NoteItem.Subject;
+
+        public string NoteContent { get; set; } = "This is text";
+
+        public ObservableCollection<CheckListItemViewModel> Items { get; set; }
+
+        public string Date => $"Created {_NoteItem.Start.ToString("d/M/yyyy HH:mm")}";
+
 
 
 
@@ -65,7 +100,7 @@ namespace Data_Logger_1._3.ViewModels.LogViewModels
 
 
 
-
+        
 
 
 
