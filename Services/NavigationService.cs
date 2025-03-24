@@ -312,7 +312,7 @@ namespace Data_Logger_1._3.Services
                 FilmReportDesk = new(this, _dataService, _pdfService);
                 FlexiReportDesk = new(this, _dataService, _pdfService);
 
-                notesDashboard = new NOTESViewModel(this);
+                notesDashboard = new NOTESViewModel(this, _dataService);
 
                 QtCodingLogger = new codeCreateViewModel(this, codingQtDashboard, "Qt", _dataService);
                 ASCodingLogger = new AScodeCreateViewModel(this, codingAndroidDashboard, _dataService);
@@ -322,9 +322,9 @@ namespace Data_Logger_1._3.Services
                 FlexiLogger = new flexiCreateViewModel(this, flexiDashboard, _dataService);
 
                 createNotesPage = new CreateNotePage();
-                createNotesPage.DataContext = new CreateNoteViewModel(this);
+                createNotesPage.DataContext = new CreateNoteViewModel(this, _dataService, notesDashboard);
                 createCheckListPage = new CreateCheckListPage();
-                createCheckListPage.DataContext = new CreateCheckListViewModel(this);
+                createCheckListPage.DataContext = new CreateCheckListViewModel(this, _dataService, notesDashboard);
 
 
                 CodingFrame = new coding_UserControl();
@@ -853,18 +853,47 @@ namespace Data_Logger_1._3.Services
 
         public void NavigateToNOTESDashboard()
         {
-            _MainFrame.Navigate(NOTESList);
+
+            try
+            {
+                try
+                {
+                    var list = notesDashboard.NoteItems;
+                    list.Clear();
+
+                    foreach (var item in _dataService.RetrieveNotes())
+                    {
+                        list.Add(new NoteLOGViewModel(_dataService, notesDashboard, (NoteItem)item));
+                    }
+
+                    notesDashboard.NoteItems = list;
+                }
+                catch (Exception ex)
+                {
+                    //
+                }
+
+                
+                _MainFrame.Navigate(NOTESList);
+            }
+            catch (Exception ex)
+            {
+                //
+            }
         }
 
         public void NavigateToCreateNotesPage()
         {
+            createNotesPage.DataContext = new CreateNoteViewModel(this, _dataService, notesDashboard);
             Main.GenericNotesChecked = true;
             _MainFrame.Navigate(createNotesPage);
         }
 
         public void NavigateToCreateCheckListPage()
         {
-            Main.GenericNotesChecked = true;
+            createCheckListPage.DataContext = new CreateCheckListViewModel(this, _dataService, notesDashboard);
+
+            Main.ChecklistNotesChecked = true;
             _MainFrame.Navigate(createCheckListPage);
         }
 
