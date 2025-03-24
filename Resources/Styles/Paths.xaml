@@ -685,6 +685,8 @@
     <Style x:Key="ellipse_ERSO" TargetType="Ellipse">
         <Setter Property="Height" Value="12"/>
         <Setter Property="Width" Value="12"/>
+        <Setter Property="Margin" Value="0 3 0 0"/>
+        <Setter Property="VerticalAlignment" Value="Top"/>
     </Style>
 
     <Style x:Key="ellipse_DATABASE_CONNECTION" TargetType="Ellipse" BasedOn="{StaticResource ellipse_ERSO}">

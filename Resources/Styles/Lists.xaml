@@ -240,8 +240,8 @@
 
                                 <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Visibility="{Binding NoLogsMessageVisibility, UpdateSourceTrigger=PropertyChanged, 
                                     Mode=TwoWay}" >
-                                    
-                                    
+
+
                                     <Grid.RowDefinitions>
                                         <RowDefinition Height="*"/>
                                         <RowDefinition Height="30"/>
@@ -383,7 +383,7 @@
                                       CommandParameter="{Binding}" />
                         </ContextMenu>
                     </ControlTemplate.Resources>
-                    
+
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsMouseOver" Value="True">
                             <Setter Property="ContextMenu" Value="{StaticResource ItemContextMenu}" />
@@ -433,15 +433,14 @@
                             CornerRadius="3">
 
                         <ScrollViewer Focusable="false" Padding="{TemplateBinding Padding}">
-                            <!-- Grid makes the items in ListView behave. -->
                             <Grid>
                                 <WrapPanel Orientation="Horizontal" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" IsItemsHost="True"
                                     />
 
-                                <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Visibility="{Binding NoLogsMessageVisibility, UpdateSourceTrigger=PropertyChanged, 
+                                <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Visibility="{Binding NoNotesMessageVisibility, UpdateSourceTrigger=PropertyChanged, 
                                     Mode=TwoWay}" >
-                                    
-                                    
+
+
                                     <Grid.RowDefinitions>
                                         <RowDefinition Height="*"/>
                                         <RowDefinition Height="30"/>
@@ -474,60 +473,67 @@
         </Setter>
     </Style>
 
-
-    <Style x:Key="template_NOTE_checklist_ITEM_inner_checklist" TargetType="{x:Type ListViewItem}" >
-        <Setter Property="HorizontalAlignment" Value="Stretch" />
-        <Setter Property="VerticalAlignment" Value="Stretch" />
+    <!-- CheckListItem Container -->
+    <Style x:Key="CheckListItemStyle" TargetType="{x:Type ListViewItem}">
+        <Setter Property="Height" Value="auto"/>
+        <Setter Property="Width" Value="auto"/>
+        <Setter Property="Margin" Value="0"/>
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+        <Setter Property="VerticalContentAlignment" Value="Center"/>
         <Setter Property="Template">
             <Setter.Value>
-                <ControlTemplate TargetType="{x:Type ListViewItem}">
-
-                    <Border Padding="10 0 10 0" >
-
-                        <Grid>
-
-                            <Ellipse Fill="{DynamicResource BLACK}"
-                                Height="8" Width="8" />
-                            <TextBlock Text="{Binding CheckListItem}"
-                                       Height="32"
-                                       HorizontalAlignment="Stretch"
-                                       VerticalAlignment="Center"
-                                       FontFamily="{DynamicResource Red Hat Display}"
-                                       FontWeight="Regular"
-                                       FontSize="13" />
-
-                        </Grid>
-
+                <ControlTemplate TargetType="ListViewItem">
+                    <Border Name="ItemBorder" Background="{TemplateBinding Background}"
+                        Padding="{TemplateBinding Padding}"
+                        Margin="{TemplateBinding Margin}" CornerRadius="3">
+                        <ContentPresenter />
                     </Border>
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
 
+
     </Style>
 
-    <!-- CHECKLIST NOTE TEMPLATE -->
-    
-    
-    
-    <ControlTemplate x:Key="template_NOTE_checklist_ITEM" TargetType="{x:Type ListViewItem}">
-        <Border x:Name="Bd"
-            Background="{TemplateBinding Background}"
-            BorderBrush="{TemplateBinding BorderBrush}"
-            BorderThickness="{TemplateBinding BorderThickness}"
-            Padding="10"
-            SnapsToDevicePixels="true"
-            CornerRadius="3"
-            HorizontalAlignment="{TemplateBinding HorizontalAlignment}">
+    <!-- CheckListItem Data Template -->
+
+    <DataTemplate x:Key="CheckListItemTemplate">
+        <Border Padding="0 0 10 0">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="30"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <Ellipse Fill="{DynamicResource BLACK}"
+                         Height="10" Width="10"
+                         VerticalAlignment="Center"/>
+
+                <TextBlock Text="{Binding Item}" Grid.Column="2" 
+                           Height="auto"
+                           Padding="0 8"
+                           HorizontalAlignment="Stretch"
+                           VerticalAlignment="Center"
+                           FontFamily="{DynamicResource Red Hat Display}"
+                           FontWeight="Regular"
+                           FontSize="13" />
+
+            </Grid>
+        </Border>
+    </DataTemplate>
+
+
+
+
+    <DataTemplate x:Key="NoteItemTemplate">
+        <Border HorizontalAlignment="Stretch" VerticalAlignment="Stretch" 
+            BorderThickness="1" SnapsToDevicePixels="True" Padding="10">
 
             <Grid>
-                <Grid.Resources>
-                    <Style x:Key="border_NOTES" TargetType="Border">
-                        <Setter Property="Padding" Value="10"/>
-                    </Style>
-                </Grid.Resources>
-
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="40"/>
+                    <RowDefinition Height="50"/>
                     <RowDefinition Height="10"/>
                     <RowDefinition Height="*"/>
                     <RowDefinition Height="10"/>
@@ -535,172 +541,104 @@
                 </Grid.RowDefinitions>
 
                 <!-- NOTE SUBJECT -->
-                <Border Style="{StaticResource border_NOTES}"
-                        Padding="10 0">
-
-                    <Grid Height="40">
-
+                <Border>
+                    <Grid Height="40" HorizontalAlignment="Stretch">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*"/>
                             <ColumnDefinition Width="35"/>
                         </Grid.ColumnDefinitions>
 
-                        <!-- SUBJECT HERE -->
-                        <TextBlock x:Name="note_SUBJECT" Style="{DynamicResource text_NOTE_HEADING}"
-                                   Margin="0 0 10 0"
-                                   Text="{Binding Subject}"/>
+                        <TextBlock Text="{Binding Subject}"
+                               Style="{DynamicResource text_NOTE_HEADING}" Margin="0 0 10 0"/>
 
-                        <Button Grid.Column="1" x:Name="button_DELETE_NOTE" Style="{DynamicResource toolbutton_DELETE}"
-                                Command="{Binding DeleteNoteItemCommand}"/>
+                        <Button Grid.Column="1" Style="{DynamicResource toolbutton_DELETE}"
+                                Command="{Binding DeleteNoteItemCommand}"
+                                CommandParameter="{Binding}"/>
                     </Grid>
-
                 </Border>
 
                 <!-- NOTE CONTENT SNIPPET -->
-                <Border Grid.Row="2" Style="{StaticResource border_NOTES}">
-                    <Grid>
-                        <ListView x:Name="note_CHECKLIST" ItemContainerStyle="{StaticResource template_NOTE_checklist_ITEM_inner_checklist}"
-                                  ItemsSource="{Binding CheckListItems}"/>
-
-                    </Grid>
+                <Border Grid.Row="2">
+                    <ContentControl>
+                        <ContentControl.Style>
+                            <Style TargetType="ContentControl">
+                                <Setter Property="ContentTemplate">
+                                    <Setter.Value>
+                                        <DataTemplate>
+                                            <TextBlock Style="{DynamicResource text_NOTE_CONTENT}"
+                                                   Text="{Binding RelativeSource={RelativeSource AncestorType=ContentControl}, Path=DataContext.NoteContent, FallbackValue='No Content Available'}" VerticalAlignment="Stretch"/>
+                                        </DataTemplate>
+                                    </Setter.Value>
+                                </Setter>
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding IsCollection}" Value="True">
+                                        <Setter Property="ContentTemplate">
+                                            <Setter.Value>
+                                                <DataTemplate>
+                                                    <ListView ItemsSource="{Binding RelativeSource={RelativeSource AncestorType=ContentControl}, Path=DataContext.Items}"
+                                                              ItemTemplate="{StaticResource CheckListItemTemplate}"
+                                                              ItemContainerStyle="{StaticResource CheckListItemStyle}"
+                                                              Background="Transparent" BorderBrush="Transparent"
+                                                              ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                                                              ScrollViewer.VerticalScrollBarVisibility="Disabled"
+                                                              />
+                                                </DataTemplate>
+                                            </Setter.Value>
+                                        </Setter>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </ContentControl.Style>
+                    </ContentControl>
                 </Border>
 
                 <!-- NOTE DATE -->
-                <Border Grid.Row="4" Style="{StaticResource border_NOTES}">
-                    <TextBlock x:Name="note_DATE" Style="{DynamicResource text_NOTE_DATE02}"
-                           Text="{Binding Date}"/>
+                <Border Grid.Row="4">
+                    <TextBlock Text="{Binding Date}"
+                           Style="{DynamicResource text_NOTE_DATE02}"/>
                 </Border>
             </Grid>
-
         </Border>
-        <ControlTemplate.Triggers>
+    </DataTemplate>
+
+    <Style x:Key="NoteItemStyle" TargetType="{x:Type ListViewItem}">
+        <Setter Property="Height" Value="310"/>
+        <Setter Property="Width" Value="320"/>
+        <Setter Property="Margin" Value="5"/>
+        <Setter Property="Background" Value="{DynamicResource ListItem}"/>
+        <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+        <Setter Property="VerticalContentAlignment" Value="Stretch"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="ListViewItem">
+                    <Border Name="ItemBorder" Background="{TemplateBinding Background}"
+                            Padding="{TemplateBinding Padding}"
+                            Margin="{TemplateBinding Margin}" CornerRadius="3">
+                        <ContentPresenter />
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+
+
+        <Style.Triggers>
             <MultiTrigger>
                 <MultiTrigger.Conditions>
                     <Condition Property="IsMouseOver" Value="True"/>
                 </MultiTrigger.Conditions>
-                <Setter Property="Background" TargetName="Bd" Value="{DynamicResource SELECTEDListItem}"/>
+                <Setter Property="Background" Value="{DynamicResource SELECTEDListItem}"/>
             </MultiTrigger>
             <MultiTrigger>
                 <MultiTrigger.Conditions>
                     <Condition Property="Selector.IsSelectionActive" Value="False"/>
                     <Condition Property="IsSelected" Value="True"/>
                 </MultiTrigger.Conditions>
-                <Setter Property="Background" TargetName="Bd" Value="{DynamicResource SELECTEDListItem}"/>
-            </MultiTrigger>
-            <MultiTrigger>
-                <MultiTrigger.Conditions>
-                    <Condition Property="Selector.IsSelectionActive" Value="True"/>
-                    <Condition Property="IsSelected" Value="True"/>
-                </MultiTrigger.Conditions>
-                <Setter Property="Background" TargetName="Bd" Value="{DynamicResource SELECTEDListItem}"/>
+                <Setter Property="Background" Value="{DynamicResource SELECTEDListItem}"/>
             </MultiTrigger>
             <Trigger Property="IsEnabled" Value="False">
-                <Setter Property="TextElement.Foreground" TargetName="Bd" Value="{DynamicResource {x:Static SystemColors.GrayTextBrushKey}}"/>
+                <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.GrayTextBrushKey}}"/>
             </Trigger>
-        </ControlTemplate.Triggers>
-    </ControlTemplate>
-
-    <Style x:Key="listView_NOTES_list_ITEM" TargetType="{x:Type ListViewItem}"  BasedOn="{StaticResource listView_LOGCACHE_ITEM}">
-        <Setter Property="Height" Value="310"/>
-        <Setter Property="Width" Value="320"/>
-        <Setter Property="Margin" Value="5"/>
-        <Setter Property="Template">
-            <Setter.Value>
-                <!-- NOTE TEMPLATE -->
-                <ControlTemplate TargetType="{x:Type ListViewItem}">
-                    <Border x:Name="Bd"
-                            Background="{TemplateBinding Background}"
-                            BorderBrush="{TemplateBinding BorderBrush}"
-                            BorderThickness="{TemplateBinding BorderThickness}"
-                            Padding="10"
-                            SnapsToDevicePixels="true"
-                            CornerRadius="3"
-                            HorizontalAlignment="{TemplateBinding HorizontalAlignment}">
-
-                        <Grid>
-                            <Grid.Resources>
-                                <Style x:Key="border_NOTES" TargetType="Border">
-                                    <Setter Property="Padding" Value="10"/>
-                                </Style>
-                            </Grid.Resources>
-
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="40"/>
-                                <RowDefinition Height="10"/>
-                                <RowDefinition Height="*"/>
-                                <RowDefinition Height="10"/>
-                                <RowDefinition Height="35"/>
-                            </Grid.RowDefinitions>
-
-                            <!-- NOTE SUBJECT -->
-                            <Border Style="{StaticResource border_NOTES}"
-                                    Padding="10 0">
-
-                                <Grid Height="40">
-
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="*"/>
-                                        <ColumnDefinition Width="35"/>
-                                    </Grid.ColumnDefinitions>
-
-                                    <!-- SUBJECT HERE -->
-                                    <TextBlock x:Name="note_SUBJECT" Style="{DynamicResource text_NOTE_HEADING}"
-                                               Margin="0 0 10 0"
-                                               Text="{Binding Subject}"/>
-
-                                    <Button Grid.Column="1" x:Name="button_DELETE_NOTE" Style="{DynamicResource toolbutton_DELETE}"
-                                            Command="{Binding DeleteNoteItemCommand}"
-                                            CommandParameter="{Binding}" />
-                                </Grid>
-
-                            </Border>
-
-                            <!-- NOTE CONTENT SNIPPET -->
-                            <Border Grid.Row="2" Style="{StaticResource border_NOTES}">
-                                <TextBlock x:Name="note_CONTENT" Style="{DynamicResource text_NOTE_CONTENT}"
-                                           Text="{Binding Content}"/>
-                            </Border>
-
-                            <!-- NOTE DATE -->
-                            <Border Grid.Row="4" Style="{StaticResource border_NOTES}">
-                                <TextBlock x:Name="note_DATE" Style="{DynamicResource text_NOTE_DATE02}"
-                                           Text="{Binding Date}"/>
-                            </Border>
-                        </Grid>
-
-                    </Border>
-                    <ControlTemplate.Triggers>
-                        <MultiTrigger>
-                            <MultiTrigger.Conditions>
-                                <Condition Property="IsMouseOver" Value="True"/>
-                            </MultiTrigger.Conditions>
-                            <Setter Property="Background" TargetName="Bd" Value="{DynamicResource SELECTEDListItem}"/>
-                        </MultiTrigger>
-                        <MultiTrigger>
-                            <MultiTrigger.Conditions>
-                                <Condition Property="Selector.IsSelectionActive" Value="False"/>
-                                <Condition Property="IsSelected" Value="True"/>
-                            </MultiTrigger.Conditions>
-                            <Setter Property="Background" TargetName="Bd" Value="{DynamicResource SELECTEDListItem}"/>
-                        </MultiTrigger>
-                        <MultiTrigger>
-                            <MultiTrigger.Conditions>
-                                <Condition Property="Selector.IsSelectionActive" Value="True"/>
-                                <Condition Property="IsSelected" Value="True"/>
-                            </MultiTrigger.Conditions>
-                            <Setter Property="Background" TargetName="Bd" Value="{DynamicResource SELECTEDListItem}"/>
-                        </MultiTrigger>
-                        <Trigger Property="IsEnabled" Value="False">
-                            <Setter Property="TextElement.Foreground" TargetName="Bd" Value="{DynamicResource {x:Static SystemColors.GrayTextBrushKey}}"/>
-                        </Trigger>
-                        <!--<DataTrigger Binding="{Binding ItemType}" Value="Checklist">
-                            <Setter Property="Template" Value="{StaticResource template_NOTE_checklist_ITEM}"/>
-                        </DataTrigger>-->
-                    </ControlTemplate.Triggers>
-                </ControlTemplate>
-            </Setter.Value>
-        </Setter>
-
+        </Style.Triggers>
     </Style>
 
 
@@ -997,12 +935,11 @@
                                             </Grid.ColumnDefinitions>
 
                                             <Ellipse x:Name="ellipse_POSTIT_ERROR" Style="{DynamicResource ellipse_ERSO}"
-                                                     VerticalAlignment="Center"
-                                             Fill="{DynamicResource postIT_ERROR}" />
+                                                     Fill="{DynamicResource postIT_ERROR}" />
 
                                             <TextBlock Grid.Column="2" x:Name="text_POSTIT_ERROR" Style="{DynamicResource text_LIST_ERROR_LABEL_CONTENT_View}"
                                                        HorizontalAlignment="Stretch"
-                                               Text="{Binding Display_Error, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
+                                                       Text="{Binding Display_Error, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
 
                                         </Grid>
                                     </Border>
@@ -1058,11 +995,11 @@
                                             </Grid.ColumnDefinitions>
 
                                             <Ellipse x:Name="ellipse_POSTIT_COMMENT" Style="{DynamicResource ellipse_ERSO}"
-                                                 Fill="{DynamicResource postIT_COMMENT}" />
+                                                     Fill="{DynamicResource postIT_COMMENT}" />
 
                                             <TextBlock Grid.Column="2" x:Name="text_POSTIT_COMMENT" Style="{DynamicResource text_LIST_COMMENT_LABEL_CONTENT_View}"
-                                                   HorizontalAlignment="Stretch"
-                                                   Text="{Binding Display_Comment, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
+                                                       HorizontalAlignment="Stretch"
+                                                       Text="{Binding Display_Comment, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
 
                                         </Grid>
                                     </Border>
@@ -1084,13 +1021,6 @@
                         <MultiTrigger>
                             <MultiTrigger.Conditions>
                                 <Condition Property="Selector.IsSelectionActive" Value="False"/>
-                                <Condition Property="IsSelected" Value="True"/>
-                            </MultiTrigger.Conditions>
-                            <Setter Property="Background" TargetName="border" Value="{DynamicResource SELECTEDListItem}"/>
-                        </MultiTrigger>
-                        <MultiTrigger>
-                            <MultiTrigger.Conditions>
-                                <Condition Property="Selector.IsSelectionActive" Value="True"/>
                                 <Condition Property="IsSelected" Value="True"/>
                             </MultiTrigger.Conditions>
                             <Setter Property="Background" TargetName="border" Value="{DynamicResource SELECTEDListItem}"/>
@@ -1237,16 +1167,17 @@
 
                             <!-- CHECKBOX -->
                             <CheckBox Style="{DynamicResource check_SIGNUP}"
-                                      IsChecked="False"/>
+                                      IsChecked="{Binding IsDone, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"/>
 
 
                             <!-- ITEM -->
                             <TextBox Grid.Column="2" x:Name="inputText_CHECKLIST_item" Style="{DynamicResource inputText_CHECKLIST_itemContent}"
-                                     Text="Item" />
+                                     Text="{Binding Item, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
 
                             <!-- DELETE BUTTON -->
                             <Button Grid.Column="4" x:Name="button_DELETE_CHECKLIST_item" Style="{DynamicResource toolbutton_DELETE}"
-                                    Command="{Binding}"/>
+                                    Command="{Binding DeleteItem}"
+                                    CommandParameter="{Binding}"/>
 
 
                         </Grid>
