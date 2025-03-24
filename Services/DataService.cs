@@ -83,6 +83,7 @@ namespace Data_Logger_1._3.Services
             {
                 _writer.SetCurrentUser(_account);
                 _reader.SetCurrentUser(_account);
+                _handler.SetCurrentUser(_account);
             }
         }
 
@@ -335,6 +336,8 @@ namespace Data_Logger_1._3.Services
             return _writer.CreatePostItID(unUsedIDs);
         }
 
+        public int CreateChecklistID() => _writer.CreateChecklistItemID();
+
         public List<int>? RetrievePostItIndex()
         {
             return _cachemaster.RetrievePostItIndex();
@@ -436,6 +439,15 @@ namespace Data_Logger_1._3.Services
             return _reader.FindAppByID(id);
         }
 
+
+        public OutputClass? FindOutputByID(int id) => _reader.FindOutputByID(id);
+
+        public TypeClass? FindTypeByID(int id) => _reader.FindTypeByID(id);
+
+
+
+
+
         #endregion
 
 
@@ -496,8 +508,28 @@ namespace Data_Logger_1._3.Services
 
             foreach (LOG log in _reader)
             {
-                if (log.Category == category)
+                if (log.Category == category && log.Author == _account)
                     logs.Add(log);
+            }
+
+            return logs;
+        }
+
+        /// <summary>
+        /// Retrieve notes from database. Useful for start up loading. Call again when notes page is selected.
+        /// </summary>
+        /// <returns></returns>
+        public List<NotesLOG> RetrieveNotes()
+        {
+            List<NotesLOG> logs = new();
+            _reader.RetrieveLOGS();
+
+            foreach (LOG log in _reader)
+            {
+                if (log.Category == LOG.CATEGORY.NOTES && log is NotesLOG notesLOG && log.Author == _account)
+                {
+                    logs.Add(notesLOG);
+                }
             }
 
             return logs;
@@ -582,6 +614,8 @@ namespace Data_Logger_1._3.Services
             return _handler.UpdateQtLog(lOG);
         }
 
+        public bool UpdateNotesLog(NoteItem noteItem) => _handler.UpdateNotesLog(noteItem);
+
 
 
 
@@ -603,9 +637,10 @@ namespace Data_Logger_1._3.Services
 
 
 
-        public bool DeleteLog(int logID)
+
+        public bool DeleteLog(LOG log)
         {
-            return _handler.DeleteLog(logID);
+            return _handler.DeleteLog(log);
         }
 
 
