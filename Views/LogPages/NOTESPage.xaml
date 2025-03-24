@@ -44,9 +44,10 @@
 
 
         <!-- NOTES LIST -->
-        <ListView x:Name="listVIew_NOTES" Style="{DynamicResource listView_NOTES_list}" Grid.Column="0" Grid.Row="3"
-                  ItemContainerStyle="{DynamicResource listView_NOTES_list_ITEM}"
-                  ItemsSource="{Binding NoteItems}" />
+        <ListView x:Name="listView_NOTES_list" Style="{DynamicResource listView_NOTES_list}" Grid.Column="0" Grid.Row="3"
+                  ItemContainerStyle="{DynamicResource NoteItemStyle}"
+                  ItemTemplate="{DynamicResource NoteItemTemplate}"
+                  ItemsSource="{Binding NoteItems, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"/>
 
 
 
