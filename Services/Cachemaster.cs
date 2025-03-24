@@ -19,14 +19,14 @@ namespace Data_Logger_1._3.Services
     public class Cachemaster
     {
 
-        const string MAIN_FOLDER = @"C:\DLS";
-        const string DEPOSITORY_PATH = @"C:\DLS\Depository";
+        const string MAIN_FOLDER = @"C:\Data Logger Central";
+        const string DEPOSITORY_PATH = $@"{MAIN_FOLDER}\Depository";
 
 
-        const string IDENTIFIERS_PATH = $@"{DEPOSITORY_PATH}\res\_identifiers.index";
-        const string SUBJECT_IDS_PATH = $@"{DEPOSITORY_PATH}\res\subject.index";
-        const string POSTIT_IDS_PATH = $@"{DEPOSITORY_PATH}\res\postit.index";
         const string RESOURCE_DIRECTORY = $@"{DEPOSITORY_PATH}\res";
+        const string IDENTIFIERS_PATH = $@"{RESOURCE_DIRECTORY}\_identifiers.index";
+        const string SUBJECT_IDS_PATH = $@"{RESOURCE_DIRECTORY}\subject.index";
+        const string POSTIT_IDS_PATH = $@"{RESOURCE_DIRECTORY}\postit.index";
 
         public List<int>? Identifiers { get; set; } = new();
         public StreamWriter Writer { get; set; }

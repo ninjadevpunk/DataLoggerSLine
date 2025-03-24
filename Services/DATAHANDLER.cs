@@ -226,9 +226,17 @@ namespace Data_Logger_1._3.Services
 
                     // PostIt
 
-                    var noteLogType = _reader.FindNoteLogTypeByLogID(logID, _con, transaction);
+                    NOTELOGType noteLogType = NOTELOGType.FLEXI;
 
-                    if (noteLogType is not null && noteLogType is NOTELOGType.FLEXI)
+                    if (log.Category == LOG.CATEGORY.NOTES)
+                    {
+                        var note = (NotesLOG)log;
+                        var genericNote = (NoteItem)note;
+
+                        noteLogType = genericNote.notelogtype;
+                    }
+
+                    if (noteLogType is NOTELOGType.FLEXI)
                     {
                         if (!DeleteLog(logID, "PostIt", transaction))
                         {
@@ -280,11 +288,6 @@ namespace Data_Logger_1._3.Services
                             {
                                 isDeleted = DeleteLog(logID, "NotesLOG", transaction);
 
-                                if (noteLogType is null)
-                                {
-                                    transaction.Rollback();
-                                    return false;
-                                }
 
                                 if (noteLogType == NOTELOGType.GENERIC)
                                 {
