@@ -3,6 +3,7 @@ using Data_Logger_1._3.Services;
 using Data_Logger_1._3.ViewModels.LogViewModels;
 using MVVMEssentials.ViewModels;
 using System.Collections.ObjectModel;
+using System.Windows;
 using System.Windows.Input;
 
 namespace Data_Logger_1._3.ViewModels.Dashboard
@@ -20,6 +21,38 @@ namespace Data_Logger_1._3.ViewModels.Dashboard
 
 
 
+        public NOTESViewModel(NavigationService navigationService, DataService dataService)
+        {
+            _navigationService = navigationService;
+
+            NoNotesMessageVisibility = Visibility.Visible;
+
+            NewNoteCommand = new NewNoteCommand(_navigationService);
+            NoteItems = new();
+        }
+
+        public void InitialiseNotesList(DataService dataService)
+        {
+
+        }
+
+
+        private Visibility noNotesMessageVisibility;
+        public Visibility NoNotesMessageVisibility  
+        {
+            get
+            {
+                return noNotesMessageVisibility;
+            }
+            set
+            {
+                noNotesMessageVisibility = value;
+                OnPropertyChanged(nameof(NoNotesMessageVisibility));
+            }
+        }
+
+
+
         private ObservableCollection<NoteLOGViewModel> noteItems;
         public ObservableCollection<NoteLOGViewModel> NoteItems
         {
@@ -30,6 +63,9 @@ namespace Data_Logger_1._3.ViewModels.Dashboard
             set
             {
                 noteItems = value;
+
+                UpdateNotesMessageVisibility();
+
                 OnPropertyChanged(nameof(NoteItems));
             }
         }
@@ -51,18 +87,14 @@ namespace Data_Logger_1._3.ViewModels.Dashboard
 
         public ICommand NewNoteCommand { get; set; }
 
-        public ICommand DeleteNoteItemCommand { get; set; }
 
 
 
-
-        public NOTESViewModel(NavigationService navigationService)
+        private void UpdateNotesMessageVisibility()
         {
-            _navigationService = navigationService;
-
-            NewNoteCommand = new NewNoteCommand(_navigationService);
-            DeleteNoteItemCommand = new DeleteNoteItemCommand(this);
+            NoNotesMessageVisibility = NoteItems.Count == 0 ? Visibility.Visible : Visibility.Hidden;
         }
+
 
     }
 }
