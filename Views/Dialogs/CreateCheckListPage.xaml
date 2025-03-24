@@ -31,10 +31,10 @@
 
 
         <TextBox Grid.Column="0" Grid.Row="0" Style="{DynamicResource inputText_NOTE_subject}"
-                 Text="{Binding NoteSubject}" />
+                 Text="{Binding NoteSubject, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
 
         <TextBlock Grid.Column="0" Grid.Row="1" x:Name="text_DATE" Style="{DynamicResource text_NOTE_DATE01}"
-                   Text="{Binding Date}"/>
+                   Text="{Binding Date, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"/>
 
 
 
@@ -48,7 +48,7 @@
 
         <ListView Style="{DynamicResource listView_CHECKLIST}" Grid.Column="0" Grid.Row="3"
                   ItemContainerStyle="{DynamicResource listView_CHECKLIST_ITEM}"
-                  ItemsSource="{Binding ChecklistItems}" />
+                  ItemsSource="{Binding ChecklistItems, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
 
 
 

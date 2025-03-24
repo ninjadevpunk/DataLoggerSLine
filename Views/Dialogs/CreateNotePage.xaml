@@ -3,7 +3,8 @@
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-      xmlns:local="clr-namespace:Data_Logger_1._3.Views.LogPages"
+      xmlns:local="clr-namespace:Data_Logger_1._3.Views.LogPages" 
+      xmlns:toolkit="http://schemas.xceed.com/wpf/xaml/toolkit"
       mc:Ignorable="d" 
       MinHeight="899"
       d:Width="1100"
@@ -94,10 +95,10 @@
 
 
         <TextBox Grid.Column="0" Grid.Row="0" Style="{DynamicResource inputText_NOTE_subject}"
-                 Text="{Binding NoteSubject}" />
+                 Text="{Binding NoteSubject, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
 
         <TextBlock Grid.Column="0" Grid.Row="1" x:Name="text_DATE" Style="{DynamicResource text_NOTE_DATE01}"
-                   Text="{Binding Date}"/>
+                   Text="{Binding Date, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"/>
 
 
 
@@ -117,10 +118,11 @@
 
                 <!-- NOTE PAD -->
                 <Grid>
-                    <RichTextBox x:Name="richTextBox_NOTEPAD" Style="{DynamicResource inputText_NOTEPAD}"
-                                 TextChanged="on_NOTEPAD_modified" />
-                    
-                </Grid>
+                <toolkit:RichTextBox x:Name="richTextBox_NOTEPAD" Style="{DynamicResource inputText_NOTEPAD}"
+                     Text="{Binding NoteContent, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                     />
+
+            </Grid>
             
         </ScrollViewer>
 
