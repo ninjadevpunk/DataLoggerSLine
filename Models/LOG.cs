@@ -37,7 +37,7 @@ namespace Data_Logger_1._3.Models
         /// The log's identifier. Important for database and caching operations.
         /// </summary>
 
-        public int ID { get; set; }
+        public int ID { get; set; } = -1;
 
         /// <summary>
         /// The creator of a log.
