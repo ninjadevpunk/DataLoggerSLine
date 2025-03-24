@@ -1,6 +1,7 @@
 ﻿using Data_Logger_1._3.Models;
 using System.Data.SQLite;
 using System.Diagnostics;
+using static Data_Logger_1._3.Models.NotesLOG;
 
 namespace Data_Logger_1._3.Services
 {
@@ -167,6 +168,21 @@ namespace Data_Logger_1._3.Services
 
 
 
+        public bool UpdateNotesLog(NoteItem noteItem)
+        {
+            bool notesIsUpdated = false;
+
+
+
+
+
+
+
+            return notesIsUpdated;
+        }
+
+
+
 
 
         #endregion
@@ -177,9 +193,15 @@ namespace Data_Logger_1._3.Services
 
 
 
-        public bool DeleteLog(int logID)
+        /// <summary>
+        /// Deletes a log from the LOG table. It also deletes related records in other tables.
+        /// </summary>
+        /// <param name="logID"></param>
+        /// <returns>Returns if the log and records with the log's log ID has been successfully deleted in full.</returns>
+        public bool DeleteLog(LOG log)
         {
             bool isDeleted = false;
+            int logID = log.ID;
 
             using (var transaction = _con.BeginTransaction())
             {
@@ -204,14 +226,85 @@ namespace Data_Logger_1._3.Services
 
                     // PostIt
 
-                    if (!DeletePostIt(logID, transaction))
+                    var noteLogType = _reader.FindNoteLogTypeByLogID(logID, _con, transaction);
+
+                    if (noteLogType is not null && noteLogType is NOTELOGType.FLEXI)
                     {
-                        transaction.Rollback();
-                        return false;
+                        if (!DeleteLog(logID, "PostIt", transaction))
+                        {
+                            transaction.Rollback();
+                            return false;
+                        }
                     }
 
                     // Do for subclasses
+                    using var read = _con.CreateCommand();
+                    read.Transaction = transaction;
 
+                    read.CommandText = $@"SELECT {Column.CategoryID} FROM LOG WHERE logID = @logID
+;";
+                    read.Parameters.AddWithValue("@logID", logID);
+
+                    object result = read.ExecuteScalar();
+
+
+
+
+                    switch (log.Category)
+                    {
+                        case LOG.CATEGORY.CODING:
+                            {
+                                if (!DeleteLog(logID, "CodingLOG", transaction))
+                                {
+                                    transaction.Rollback();
+                                    return false;
+                                }
+
+                                DeleteLog(logID, "AndroidCodingLOG", transaction);
+
+                                break;
+                            }
+                        case LOG.CATEGORY.GRAPHICS:
+                            {
+                                isDeleted = DeleteLog(logID, "GraphicsLOG", transaction);
+
+                                break;
+                            }
+                        case LOG.CATEGORY.FILM:
+                            {
+                                isDeleted = DeleteLog(logID, "FilmLOG", transaction);
+
+                                break;
+                            }
+                        case LOG.CATEGORY.NOTES:
+                            {
+                                isDeleted = DeleteLog(logID, "NotesLOG", transaction);
+
+                                if (noteLogType is null)
+                                {
+                                    transaction.Rollback();
+                                    return false;
+                                }
+
+                                if (noteLogType == NOTELOGType.GENERIC)
+                                {
+                                    isDeleted = DeleteLog(logID, "NoteItem", transaction);
+
+                                    var note = (NotesLOG)log;
+                                    var noteItem = (NoteItem)note;
+
+                                    var isChecklist = noteItem.Items is not null;
+                                    if(isChecklist)
+                                        isDeleted = DeleteLog(logID, "Checklist", transaction);
+
+                                }
+                                else
+                                {
+                                    isDeleted = DeleteLog(logID, "FlexiNotesLOG", transaction);
+                                }
+                                break;
+                            }
+                    }
 
 
 
@@ -237,34 +330,37 @@ namespace Data_Logger_1._3.Services
             return isDeleted;
         }
 
-
-        public bool DeletePostIt(int logID, SQLiteTransaction transaction)
+        /// <summary>
+        /// Helps DeleteLog(logID) to delete related records. Shouldn't be used outside the DATAHANDLER.
+        /// </summary>
+        /// <param name="logID"></param>
+        /// <param name="transaction"></param>
+        /// <returns>Returns whether the record(s) has been successfully deleted.</returns>
+        public bool DeleteLog(int logID, string tableName, SQLiteTransaction transaction)
         {
-            bool postItDeleted = false;
+            bool logDeleted = false;
 
             try
             {
                 using var delete = _con.CreateCommand();
                 delete.Transaction = transaction;
-                delete.CommandText = $@"DELETE FROM PostIt WHERE {Column.LogID} = @logID;";
+                delete.CommandText = $@"DELETE FROM {tableName} WHERE {Column.LogID} = @logID;";
                 delete.Parameters.AddWithValue("@logID", logID);
 
                 int rowsAffected = delete.ExecuteNonQuery();
 
-                postItDeleted = rowsAffected > 0;
+                logDeleted = rowsAffected > 0;
             }
             catch (SQLiteException sqlex)
             {
-                Debug.WriteLine($"SQLiteException found in DeletePostIt(logID,transaction): {sqlex.Message}");
-                postItDeleted = false;
+                Debug.WriteLine($"SQLiteException found in DeleteLog(logID,transaction): {sqlex.Message}");
             }
             catch (Exception ex)
             {
-                Debug.WriteLine($"Exception found in DeletePostIt(logID,transaction): {ex.Message}");
-                postItDeleted = false;
+                Debug.WriteLine($"Exception found in DeleteLog(logID,transaction): {ex.Message}");
             }
 
-            return postItDeleted;
+            return logDeleted;
         }
 
 
