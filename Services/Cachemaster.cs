@@ -19,14 +19,14 @@ namespace Data_Logger_1._3.Services
     public class Cachemaster
     {
 
-        const string MAIN_FOLDER = @"C:\Data Logger Central";
-        const string DEPOSITORY_PATH = @"C:\Data Logger Central\Depository";
+        const string MAIN_FOLDER = @"C:\DLS";
+        const string DEPOSITORY_PATH = @"C:\DLS\Depository";
 
 
-        const string IDENTIFIERS_PATH = @"C:\Data Logger Central\Depository\res\_identifiers.index";
-        const string SUBJECT_IDS_PATH = @"C:\Data Logger Central\Depository\res\subject.index";
-        const string POSTIT_IDS_PATH = @"C:\Data Logger Central\Depository\res\postit.index";
-        const string RESOURCE_DIRECTORY = @"C:\Data Logger Central\Depository\res";
+        const string IDENTIFIERS_PATH = $@"{DEPOSITORY_PATH}\res\_identifiers.index";
+        const string SUBJECT_IDS_PATH = $@"{DEPOSITORY_PATH}\res\subject.index";
+        const string POSTIT_IDS_PATH = $@"{DEPOSITORY_PATH}\res\postit.index";
+        const string RESOURCE_DIRECTORY = $@"{DEPOSITORY_PATH}\res";
 
         public List<int>? Identifiers { get; set; } = new();
         public StreamWriter Writer { get; set; }
@@ -56,28 +56,35 @@ namespace Data_Logger_1._3.Services
             try
             {
 
-                // Ensure the base folder exists
+                // Base Folder
                 if (!Directory.Exists(MAIN_FOLDER))
                 {
                     Directory.CreateDirectory(MAIN_FOLDER);
                     GrantFolderPermissions(MAIN_FOLDER);
                 }
 
-                // Ensure the Depository folder exists
+                // Depository
                 if (!Directory.Exists(DEPOSITORY_PATH))
                 {
                     Directory.CreateDirectory(DEPOSITORY_PATH);
+
+                    // Hide Depository
                     DirectoryInfo depositoryInfo = new DirectoryInfo(DEPOSITORY_PATH);
                     depositoryInfo.Attributes |= FileAttributes.Hidden;
                 }
 
-                // Ensure RESOURCE_DIRECTORY exists
+                // Respurces Folder
                 if (!Directory.Exists(RESOURCE_DIRECTORY))
                 {
                     Directory.CreateDirectory(RESOURCE_DIRECTORY);
 
+                    // Main Index File
                     using (var fileStream = new FileStream(IDENTIFIERS_PATH, FileMode.CreateNew)) { }
+
+                    // Subject ID Index
                     using (var fileStream = new FileStream(SUBJECT_IDS_PATH, FileMode.CreateNew)) { }
+
+                    // PostIt ID Index
                     using (var fileStream = new FileStream(POSTIT_IDS_PATH, FileMode.CreateNew)) { }
                 }
             }
