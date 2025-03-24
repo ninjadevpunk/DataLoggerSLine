@@ -303,6 +303,8 @@ namespace Data_Logger_1._3.Services
             insert.Parameters.AddWithValue("@done", isChecked);
 
             insert.ExecuteNonQuery();
+
+            --Watcher.ChecklistItemID;
         }
 
 
@@ -373,20 +375,6 @@ namespace Data_Logger_1._3.Services
         }
 
 
-        public int CreateProjectID()
-        {
-            SQLiteCommand query = _con.CreateCommand();
-            const int baseID = 1;
-
-            query.CommandText = $"SELECT MAX({Column.ProjectID}) FROM PROJECT;";
-
-            object result = query.ExecuteScalar();
-            int maxID = result != null && result != DBNull.Value ? Convert.ToInt32(result) : baseID - 1;
-
-            int id = ++maxID;
-
-            return id + Watcher.ProjectID++;
-        }
 
         public int CreateProjectID(ACCOUNT account, ApplicationClass app, string project)
         {
@@ -1020,6 +1008,8 @@ namespace Data_Logger_1._3.Services
 
         private void InsertLogDetails(LOG log, SQLiteCommand insert)
         {
+            AppAlreadyAdded = false;
+            ProjectAlreadyAdded = false;
             insert.CommandText = $@"INSERT INTO LOG(logID, {Column.CategoryID}, {Column.AccountID}, {Column.ProjectID}, {Column.AppID}, start, end, outputID, typeID)
                            VALUES(@id, @category, @author, @project, @app, @start, @end, @output, @type);";
 
@@ -1042,7 +1032,7 @@ namespace Data_Logger_1._3.Services
 
             var project = log.Project;
             temporaryID = _reader.FindProjectID(project);
-            if (!ProjectAlreadyAdded && temporaryID == -1)
+            if (!ProjectAlreadyAdded && temporaryID == 1)
             {
                 AddProject(project);
                 ProjectAlreadyAdded = true;
@@ -1239,7 +1229,8 @@ namespace Data_Logger_1._3.Services
                            VALUES(@id, @category);";
 
             insert.Parameters.AddWithValue("@id", log.ID);
-            insert.Parameters.AddWithValue("@category", _reader.FindNoteLogTypeID(log.notelogtype));
+            var noteLogType = log.notelogtype == NotesLOG.NOTELOGType.GENERIC ? 1 : 2;
+            insert.Parameters.AddWithValue("@category", noteLogType);
 
             insert.ExecuteNonQuery();
 
