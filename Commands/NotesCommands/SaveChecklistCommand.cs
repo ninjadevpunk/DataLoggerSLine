@@ -1,5 +1,9 @@
-﻿using Data_Logger_1._3.Services;
+﻿using Data_Logger_1._3.Models.App_Models;
+using Data_Logger_1._3.Models;
+using Data_Logger_1._3.Services;
+using Data_Logger_1._3.ViewModels.Dashboard;
 using Data_Logger_1._3.ViewModels.Dialogs;
+using Data_Logger_1._3.ViewModels.LogViewModels;
 using MVVMEssentials.Commands;
 
 namespace Data_Logger_1._3.Commands.NotesCommands
@@ -7,7 +11,9 @@ namespace Data_Logger_1._3.Commands.NotesCommands
     public class SaveChecklistCommand : CommandBase
     {
         private readonly NavigationService _navigationService;
+        private readonly DataService _dataService;
         private readonly CreateCheckListViewModel _createCheckListViewModel;
+        private readonly NOTESViewModel _notesViewModel;
 
 
         public SaveChecklistCommand(NavigationService navigationService)
@@ -23,12 +29,14 @@ namespace Data_Logger_1._3.Commands.NotesCommands
             }
         }
 
-        public SaveChecklistCommand(NavigationService navigationService, CreateCheckListViewModel createCheckListViewModel)
+        public SaveChecklistCommand(NavigationService navigationService, DataService dataService, CreateCheckListViewModel createCheckListViewModel, NOTESViewModel notesViewModel)
         {
             try
             {
                 _navigationService = navigationService ?? throw new ArgumentNullException(nameof(navigationService));
+                _dataService = dataService ?? throw new ArgumentNullException(nameof(dataService));
                 _createCheckListViewModel = createCheckListViewModel ?? throw new ArgumentNullException(nameof(createCheckListViewModel));
+                _notesViewModel = notesViewModel ?? throw new ArgumentNullException(nameof(notesViewModel));
 
             }
             catch (Exception)
@@ -41,6 +49,44 @@ namespace Data_Logger_1._3.Commands.NotesCommands
         {
             try
             {
+                NoteItem noteItem = new();
+
+                noteItem.ID = _dataService.CreateLogID();
+
+                ACCOUNT account = _dataService.GetUser();
+                ApplicationClass DataLoggerNotesApp = _dataService.FindApplicationByID(15);
+
+                noteItem.Author = account;
+                noteItem.Project = new(_dataService.CreateProjectID(), account, _createCheckListViewModel.NoteSubject, DataLoggerNotesApp,
+                    LOG.CATEGORY.NOTES, false);
+
+                noteItem.Application = DataLoggerNotesApp;
+                noteItem.Start = DateTime.Parse(_createCheckListViewModel.CreationDate);
+                noteItem.End = DateTime.Parse(_createCheckListViewModel.ModifiedDate);
+                noteItem.Output = _dataService.FindOutputByID(37);
+                noteItem.Type = _dataService.FindTypeByID(39);
+
+                noteItem.Subject = _createCheckListViewModel.NoteSubject;
+
+                noteItem.Items = new();
+                
+                foreach(var item in _createCheckListViewModel.ChecklistItems)
+                {
+                    CheckListItem checkListItem = new CheckListItem(_dataService.CreateChecklistID(), item.IsDone, item.Item);
+                    noteItem.Items.Add(checkListItem);
+                }
+
+
+
+
+                // Send to database
+                _dataService.StoreLog(noteItem);
+
+                var list = _notesViewModel.NoteItems;
+                list.Add(new NoteLOGViewModel(_dataService, _notesViewModel, noteItem));
+
+                _notesViewModel.NoteItems = list;
+
                 _navigationService.NavigateToNOTESDashboard();
                 _navigationService.Main.ChecklistNotesChecked = false;
             }

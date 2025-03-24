@@ -6,17 +6,20 @@ namespace Data_Logger_1._3.Commands.NotesCommands
 {
     public class AddChecklistItemCommand : CommandBase
     {
-        private readonly CreateCheckListViewModel _viewModel;
+        private readonly CreateCheckListViewModel _checklist;
 
 
         public AddChecklistItemCommand(CreateCheckListViewModel viewModel)
         {
-            _viewModel = viewModel;
+            _checklist = viewModel;
         }
 
         public override void Execute(object parameter)
         {
-            _viewModel.ChecklistItems.Add(new CreateChecklistItemViewModel(new CheckListItem(false, "")));
+            var list = _checklist.ChecklistItems;
+            list.Add(new CreateChecklistItemViewModel(_checklist, new CheckListItem(false, "")));
+
+            _checklist.ChecklistItems = list;
         }
     }
 }
