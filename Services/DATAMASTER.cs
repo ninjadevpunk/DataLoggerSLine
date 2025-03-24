@@ -56,7 +56,7 @@ namespace Data_Logger_1._3.Services
         /// <summary>
         /// The database's location.
         /// </summary>
-        private const string CONNECTION_STRING = @"Data Source=C:\Data Logger Central\Depository\LOGS_TEST.db";
+        private const string CONNECTION_STRING = @"Data Source=C:\DLS\Depository\LOGS.db";
         protected const string Qt = "Qt Creator";
         protected const string Android = "Android Studio Hedgehog 2023.1.1";
 
