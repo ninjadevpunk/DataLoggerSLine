@@ -60,7 +60,7 @@ namespace Data_Logger_1._3.Commands.NotesCommands
                 ApplicationClass DataLoggerNotesApp = _dataService.FindApplicationByID(15);
 
                 noteItem.Author = account;
-                noteItem.Project = new(_dataService.CreateProjectID(), account, "", DataLoggerNotesApp,
+                noteItem.Project = new(_dataService.CreateProjectID(account, DataLoggerNotesApp, "Unknown"), account, "", DataLoggerNotesApp,
                     LOG.CATEGORY.NOTES, false);
 
                 noteItem.Application = DataLoggerNotesApp;
