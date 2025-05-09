@@ -1,11 +1,8 @@
 ﻿using Data_Logger_1._3.Services;
 using Data_Logger_1._3.ViewModels.Reporter;
-using Microsoft.Win32;
 using MVVMEssentials.Commands;
 using System.Diagnostics;
-using System.Reflection.Metadata;
-using System.Windows.Documents;
-using System.Windows;
+using static Data_Logger_1._3.Services.Cachemaster;
 
 namespace Data_Logger_1._3.Commands.ReporterCommands
 {

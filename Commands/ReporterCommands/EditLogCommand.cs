@@ -30,7 +30,7 @@ namespace Data_Logger_1._3.Commands.ReporterCommands
         {
             try
             {
-                _navigationService.NavigateToReporterUpdater(_viewModel, _reportDeskViewModel);
+                //_navigationService.NavigateToReporterUpdater(_viewModel, _reportDeskViewModel);
 
 
             }

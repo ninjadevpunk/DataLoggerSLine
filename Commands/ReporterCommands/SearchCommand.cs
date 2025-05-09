@@ -5,6 +5,7 @@ using Data_Logger_1._3.ViewModels.Reporter.Desk;
 using MVVMEssentials.Commands;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
+using static Data_Logger_1._3.Services.Cachemaster;
 
 namespace Data_Logger_1._3.Commands.ReporterCommands
 {
@@ -37,7 +38,7 @@ namespace Data_Logger_1._3.Commands.ReporterCommands
             {
                 ProjectClass projectFilter = null;
 
-                _dataService.InitialiseProjectsLIST();
+                _dataService.InitialiseProjectsLISTAsync();
                 foreach(ProjectClass project in _dataService.SQLITE_PROJECTS)
                 {
                     if(_reportDesk.Project == project.Name)
@@ -53,7 +54,7 @@ namespace Data_Logger_1._3.Commands.ReporterCommands
                         {
                             var list = projectFilter is null ? 
                                 throw new ArgumentNullException("Project not found.") : 
-                                _dataService.SearchForQtRecords(_reportDesk.Query, projectFilter.ProjectID);
+                                _dataService.SearchForQtRecords(_reportDesk.Query, projectFilter.projectID);
 
                             var items = new ObservableCollection<SearchResultViewModel>();
 
