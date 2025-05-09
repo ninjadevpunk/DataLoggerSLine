@@ -23,7 +23,7 @@ namespace Data_Logger_1._3.Commands.NotesCommands
         {
             try
             {
-                _navigationService.NavigateToCreateNotesPage();
+                //_navigationService.NavigateToCreateNotesPage();
             }
             catch (Exception)
             {

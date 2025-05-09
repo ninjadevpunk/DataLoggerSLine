@@ -8,7 +8,7 @@ using MVVMEssentials.Commands;
 
 namespace Data_Logger_1._3.Commands.NotesCommands
 {
-    public class SaveChecklistCommand : CommandBase
+    public class SaveChecklistCommand : AsyncCommandBase
     {
         private readonly NavigationService _navigationService;
         private readonly DataService _dataService;
@@ -45,35 +45,34 @@ namespace Data_Logger_1._3.Commands.NotesCommands
             }
         }
 
-        public override void Execute(object parameter)
+        protected override async Task ExecuteAsync(object parameter)
         {
             try
             {
                 NoteItem noteItem = new();
 
-                noteItem.ID = _dataService.CreateLogID();
 
                 ACCOUNT account = _dataService.GetUser();
-                ApplicationClass DataLoggerNotesApp = _dataService.FindApplicationByID(15);
+                ApplicationClass DataLoggerNotesApp = await _dataService.FindApplicationByID(15);
 
                 noteItem.Author = account;
-                noteItem.Project = new(_dataService.CreateProjectID(account, DataLoggerNotesApp, "Unknown"), account, "", DataLoggerNotesApp,
+                noteItem.Project = new(-1, account, "", DataLoggerNotesApp,
                     LOG.CATEGORY.NOTES, false);
 
                 noteItem.Application = DataLoggerNotesApp;
                 noteItem.Start = DateTime.Parse(_createCheckListViewModel.CreationDate);
                 noteItem.End = DateTime.Parse(_createCheckListViewModel.ModifiedDate);
-                noteItem.Output = _dataService.FindOutputByID(37);
-                noteItem.Type = _dataService.FindTypeByID(39);
+                noteItem.Output = await _dataService.FindOutputByID(37);
+                noteItem.Type = await _dataService.FindTypeByID(39);
 
                 noteItem.Subject = _createCheckListViewModel.NoteSubject;
 
-                noteItem.Items = new();
+                noteItem.Checklist = new();
                 
                 foreach(var item in _createCheckListViewModel.ChecklistItems)
                 {
-                    CheckListItem checkListItem = new CheckListItem(_dataService.CreateChecklistID(), item.IsDone, item.Item);
-                    noteItem.Items.Add(checkListItem);
+                    CheckListItem checkListItem = new CheckListItem(-1, item.IsDone, item.Item);
+                    noteItem.Checklist.Items.Add(checkListItem);
                 }
 
 
@@ -88,7 +87,7 @@ namespace Data_Logger_1._3.Commands.NotesCommands
                 _notesViewModel.NoteItems = list;
 
                 _navigationService.NavigateToNOTESDashboard();
-                _navigationService.Main.ChecklistNotesChecked = false;
+                _navigationService.SetChecklistNotesChecked(false);
             }
             catch (Exception)
             {

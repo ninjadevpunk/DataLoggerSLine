@@ -7,7 +7,7 @@ using System.Windows;
 
 namespace Data_Logger_1._3.Commands.NotesCommands
 {
-    public class DeleteNoteItemCommand : CommandBase
+    public class DeleteNoteItemCommand : AsyncCommandBase
     {
         private readonly NOTESViewModel _notesViewModel;
         private readonly DataService _dataService;
@@ -26,14 +26,14 @@ namespace Data_Logger_1._3.Commands.NotesCommands
             }
         }
 
-        public override void Execute(object parameter)
+        protected override async Task ExecuteAsync(object parameter)
         {
             try
             {
                 if (parameter is NoteLOGViewModel noteToDelete)
                 {
                     // Delete from database first
-                    var noteDeleted = _dataService.DeleteLog(noteToDelete._NoteItem);
+                    var noteDeleted = await _dataService.DeleteLog(noteToDelete._NoteItem);
 
                     // Remove the note from the ObservableCollection
                     if(noteDeleted)

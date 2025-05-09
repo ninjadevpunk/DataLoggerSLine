@@ -8,7 +8,7 @@ using MVVMEssentials.Commands;
 
 namespace Data_Logger_1._3.Commands.NotesCommands
 {
-    public class SaveNoteCommand : CommandBase
+    public class SaveNoteCommand : AsyncCommandBase
     {
         protected readonly NavigationService _navigationService;
         protected readonly DataService _dataService;
@@ -48,26 +48,26 @@ namespace Data_Logger_1._3.Commands.NotesCommands
             }
         }
 
-        public override void Execute(object parameter)
+        protected override async Task ExecuteAsync(object parameter)
         {
             try
             {
                 NoteItem noteItem = new();
 
-                noteItem.ID = _dataService.CreateLogID();
+                noteItem.ID = -1;
 
                 ACCOUNT account = _dataService.GetUser();
-                ApplicationClass DataLoggerNotesApp = _dataService.FindApplicationByID(15);
+                ApplicationClass DataLoggerNotesApp = await _dataService.FindApplicationByID(15);
 
                 noteItem.Author = account;
-                noteItem.Project = new(_dataService.CreateProjectID(account, DataLoggerNotesApp, "Unknown"), account, "", DataLoggerNotesApp,
+                noteItem.Project = new(-1, account, "", DataLoggerNotesApp,
                     LOG.CATEGORY.NOTES, false);
 
                 noteItem.Application = DataLoggerNotesApp;
                 noteItem.Start = DateTime.Parse(_createNoteViewModel.CreationDate);
                 noteItem.End = DateTime.Parse(_createNoteViewModel.ModifiedDate);
-                noteItem.Output = _dataService.FindOutputByID(37);
-                noteItem.Type = _dataService.FindTypeByID(39);
+                noteItem.Output = await _dataService.FindOutputByID(37);
+                noteItem.Type = await _dataService.FindTypeByID(39);
 
                 noteItem.Subject = _createNoteViewModel.NoteSubject;
                 noteItem.Content = _createNoteViewModel.NoteContent;
@@ -83,7 +83,7 @@ namespace Data_Logger_1._3.Commands.NotesCommands
 
                 _notesViewModel.NoteItems = list;
                 _navigationService.NavigateToNOTESDashboard();
-                _navigationService.Main.GenericNotesChecked = false;
+                _navigationService.SetGenericNotesChecked(false);
             }
             catch (Exception ex)
             {
