@@ -25,7 +25,7 @@ namespace Data_Logger_1._3.Commands.PostItCommands
         {
             try
             {
-                var item = parameter as CreatePostItViewModel;
+                var item = parameter as PostItViewModel;
 
                 _viewModel.PostIts.Remove(item);
             }

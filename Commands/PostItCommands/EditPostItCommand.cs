@@ -36,7 +36,7 @@ namespace Data_Logger_1._3.Commands.PostItCommands
         {
             try
             {
-                _navigationService.NavigateToPostItEditor(_loggerCreateViewModel, parameter as CreatePostItViewModel);
+                //_navigationService.NavigateToPostItEditor(_loggerCreateViewModel, parameter as CreatePostItViewModel);
             }
             catch (ArgumentNullException nullex)
             {

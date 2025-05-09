@@ -1,18 +1,17 @@
 ﻿using Data_Logger_1._3.ViewModels.Dialogs;
 using MVVMEssentials.Commands;
 using System.Diagnostics;
-using System.Windows;
 using System.Windows.Documents;
 using System.Windows.Media;
-using static Data_Logger_1._3.ViewModels.Dialogs.CreatePostItViewModel;
+using static Data_Logger_1._3.ViewModels.Dialogs.PostItViewModel;
 
 namespace Data_Logger_1._3.Commands.PostItCommands.ToolCommands
 {
     public class HighlighterCommand : CommandBase
     {
-        private readonly CreatePostItViewModel _createPostItViewModel;
+        private readonly PostItViewModel _createPostItViewModel;
 
-        public HighlighterCommand(CreatePostItViewModel createPostItViewModel)
+        public HighlighterCommand(PostItViewModel createPostItViewModel)
         {
             try
             {
@@ -64,18 +63,6 @@ namespace Data_Logger_1._3.Commands.PostItCommands.ToolCommands
             catch (Exception)
             {
                 //
-            }
-        }
-
-        private static Brush? TryParseBrush(string value)
-        {
-            try
-            {
-                return (Brush)Application.Current.FindResource(value);
-            }
-            catch (ResourceReferenceKeyNotFoundException)
-            {
-                return Brushes.Transparent;
             }
         }
     }

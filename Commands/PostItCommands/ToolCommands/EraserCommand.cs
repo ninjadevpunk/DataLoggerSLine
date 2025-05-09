@@ -1,15 +1,15 @@
 ﻿using Data_Logger_1._3.ViewModels.Dialogs;
 using MVVMEssentials.Commands;
 using System.Diagnostics;
-using static Data_Logger_1._3.ViewModels.Dialogs.CreatePostItViewModel;
+using static Data_Logger_1._3.ViewModels.Dialogs.PostItViewModel;
 
 namespace Data_Logger_1._3.Commands.PostItCommands.ToolCommands
 {
     public class EraserCommand : CommandBase
     {
-        private readonly CreatePostItViewModel _createPostItViewModel;
+        private readonly PostItViewModel _createPostItViewModel;
 
-        public EraserCommand(CreatePostItViewModel createPostItViewModel)
+        public EraserCommand(PostItViewModel createPostItViewModel)
         {
             try
             {

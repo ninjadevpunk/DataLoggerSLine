@@ -13,11 +13,11 @@ namespace Data_Logger_1._3.Commands.PostItCommands
 
         private readonly NavigationService _navigationService;
         private readonly LoggerCreateViewModel _loggerCreateViewModel;
-        private readonly CreatePostItViewModel _createPostItViewModel;
+        private readonly PostItViewModel _createPostItViewModel;
         private readonly EditPostItViewModel _editPostItViewModel;
         private readonly ActionType _actionType = ActionType.Create;
 
-        public PostCommand(NavigationService navigationService, LoggerCreateViewModel loggerCreateViewModel, CreatePostItViewModel createPostItViewModel)
+        public PostCommand(NavigationService navigationService, LoggerCreateViewModel loggerCreateViewModel, PostItViewModel createPostItViewModel)
         {
             try
             {
@@ -38,7 +38,7 @@ namespace Data_Logger_1._3.Commands.PostItCommands
             }
         }
 
-        public PostCommand(ActionType actionType, NavigationService navigationService, LoggerCreateViewModel loggerCreateViewModel, EditPostItViewModel editPostItViewModel, CreatePostItViewModel createPostItViewModel)
+        public PostCommand(ActionType actionType, NavigationService navigationService, LoggerCreateViewModel loggerCreateViewModel, EditPostItViewModel editPostItViewModel, PostItViewModel createPostItViewModel)
         {
             try
             {
@@ -84,7 +84,7 @@ namespace Data_Logger_1._3.Commands.PostItCommands
                                 else
                                 {
                                     _loggerCreateViewModel.PostIts.Add(_createPostItViewModel);
-                                    _navigationService.GoBack();
+                                    //_navigationService.GoBack();
                                 }
                             }
                             break;
@@ -109,7 +109,7 @@ namespace Data_Logger_1._3.Commands.PostItCommands
                                 {
                                     var index = _loggerCreateViewModel.PostIts.IndexOf(_createPostItViewModel);
                                     _loggerCreateViewModel.PostIts[index] = _editPostItViewModel;
-                                    _navigationService.GoBack();
+                                    //_navigationService.GoBack();
                                 }
                             }
                             break;
