@@ -9,6 +9,7 @@ using MVVMEssentials.Commands;
 using MVVMEssentials.ViewModels;
 using System.Diagnostics;
 using System.Windows;
+using static Data_Logger_1._3.Services.Cachemaster;
 
 namespace Data_Logger_1._3.Commands.LoggerCommands
 {
@@ -18,7 +19,7 @@ namespace Data_Logger_1._3.Commands.LoggerCommands
         Edit
     }
 
-    public class AnnotateCommand : CommandBase
+    public class AnnotateCommand : AsyncCommandBase
     {
         private readonly NavigationService _navigationService;
         private readonly DataService _dataService;
@@ -26,9 +27,9 @@ namespace Data_Logger_1._3.Commands.LoggerCommands
         private readonly LogCacheViewModel _dashboard;
 
         private const string Qt = "Qt Creator";
-        private readonly ApplicationClass QtCreator;
-        private const string Android = "Android Studio Hedgehog 2023.1.1";
-        private readonly ApplicationClass AndroidStudio;
+        private ApplicationClass QtCreator;
+        private const string Android = "Android Studio Meerkat 2024.3.1";
+        private ApplicationClass AndroidStudio;
 
         // Edit Only
         private readonly ViewModelBase _viewModelBase;
@@ -50,11 +51,7 @@ namespace Data_Logger_1._3.Commands.LoggerCommands
                 _dataService = dataService ?? throw new ArgumentNullException(nameof(dataService));
                 ActionType = ActionType.Add;
 
-                if (ActionType == ActionType.Add)
-                {
-                    QtCreator = _dataService.FindApplicationByID(1);
-                    AndroidStudio = _dataService.FindApplicationByID(2);
-                }
+                
             }
             catch (Exception e)
             {
@@ -102,12 +99,6 @@ namespace Data_Logger_1._3.Commands.LoggerCommands
                 ActionType = actionType;
                 _viewModelBase = viewModelBase ?? throw new ArgumentNullException(nameof(viewModelBase));
 
-                if (ActionType == ActionType.Add)
-                {
-                    QtCreator = _dataService.FindApplicationByID(1);
-                    AndroidStudio = _dataService.FindApplicationByID(2);
-                }
-
             }
             catch (Exception e)
             {
@@ -120,15 +111,20 @@ namespace Data_Logger_1._3.Commands.LoggerCommands
         }
 
 
-        public override void Execute(object parameter)
+        protected override async Task ExecuteAsync(object parameter)
         {
             try
             {
                 var account = _dataService.GetUser();
+                if (ActionType == ActionType.Add)
+                {
+                    QtCreator = await _dataService.FindApplicationByID(1);
+                    AndroidStudio = await _dataService.FindApplicationByID(2);
+                }
 
 
                 List<PostIt> posts = new();
-                ApplicationClass? application = ActionType == ActionType.Add ? new(_dataService.CreateAppID(_viewModel.Category, account, _viewModel.ApplicationName), account,
+                ApplicationClass? application = ActionType == ActionType.Add ? new(account,
                     _viewModel.ApplicationName, _viewModel.Category, false) : null;
 
                 if (ActionType == ActionType.Add)
@@ -137,7 +133,7 @@ namespace Data_Logger_1._3.Commands.LoggerCommands
                         application.IsDefault = true;
                 }
 
-                ProjectClass? project = ActionType == ActionType.Add ? new(_dataService.CreateProjectID(account, application, _viewModel.ProjectName), account,
+                ProjectClass? project = ActionType == ActionType.Add ? new(account,
                     _viewModel.ProjectName, application, _viewModel.Category, false) :
                     new(1, account, _viewModel.ProjectName, application, _viewModel.Category, false);
 
@@ -147,10 +143,9 @@ namespace Data_Logger_1._3.Commands.LoggerCommands
                         project.IsDefault = true;
                 }
 
-                OutputClass? output = ActionType == ActionType.Add ? new(_dataService.CreateOutputID(account, application, _viewModel.ApplicationName), account, _viewModel.Output, application, _viewModel.Category) :
-                    new(0, account, _viewModel.Output, application, _viewModel.Category);
-                TypeClass? type = ActionType == ActionType.Add ? new(_dataService.CreateTypeID(account, application, _viewModel.Type), account, _viewModel.Type, application, _viewModel.Category) :
-                    new(0, account, _viewModel.Type, application, _viewModel.Category);
+                OutputClass? output = new(account, _viewModel.Output, application, _viewModel.Category);
+                TypeClass? type = new(account, _viewModel.Type, application, _viewModel.Category);
+                
                 SubjectClass subject;
 
                 PostIt postIt;
@@ -165,22 +160,15 @@ namespace Data_Logger_1._3.Commands.LoggerCommands
                 {
                     postIt = new();
 
-                    postIt.ID = ActionType == ActionType.Add ? _dataService.CreatePostItID(null) : 0;
 
-                    subject = ActionType == ActionType.Add ? new(_dataService.CreateSubjectID(project, item.Subject, null),
-                                    _viewModel.Category,
-                                    account,
-                                    item.Subject,
-                                    project,
-                                    application) :
-
-                                    new(0,
+                    subject = new(
                                     _viewModel.Category,
                                     account,
                                     item.Subject,
                                     project,
                                     application);
 
+                    postIt.Author = account;
                     postIt.Subject = subject;
 
                     postIt.Error = item.Error;
@@ -223,7 +211,7 @@ namespace Data_Logger_1._3.Commands.LoggerCommands
                                 {
 
                                     list.Add(new QtLOGViewModel(new CodingLOG(
-                                        _dataService.CreateLogID(),
+                                        -1,
                                         account,
                                         project,
                                         QtCreator,
@@ -240,7 +228,7 @@ namespace Data_Logger_1._3.Commands.LoggerCommands
                                 else
                                 {
                                     list.Add(new QtLOGViewModel(new CodingLOG(
-                                        _dataService.CreateLogID(),
+                                        -1,
                                         account,
                                         project,
                                         QtCreator,
@@ -283,7 +271,7 @@ namespace Data_Logger_1._3.Commands.LoggerCommands
                                 if (DateIsWrong)
                                 {
                                     list.Add(new AndroidLOGViewModel(new AndroidCodingLOG(
-                                        _dataService.CreateLogID(),
+                                        -1,
                                         account,
                                         project,
                                         AndroidStudio,
@@ -307,7 +295,7 @@ namespace Data_Logger_1._3.Commands.LoggerCommands
                                 else
                                 {
                                     list.Add(new AndroidLOGViewModel(new AndroidCodingLOG(
-                                        _dataService.CreateLogID(),
+                                        -1,
                                         account,
                                         project,
                                         AndroidStudio,
@@ -333,6 +321,7 @@ namespace Data_Logger_1._3.Commands.LoggerCommands
 
                                 _navigationService.NavigateToLogCachePage(CacheContext.AndroidStudio);
 
+
                                 break;
                             }
                         case CacheContext.Coding:
@@ -345,7 +334,7 @@ namespace Data_Logger_1._3.Commands.LoggerCommands
                                 if (DateIsWrong)
                                 {
                                     list.Add(new CodeLOGViewModel(new CodingLOG(
-                                        _dataService.CreateLogID(),
+                                        -1,
                                         account,
                                         project,
                                         application,
@@ -362,7 +351,7 @@ namespace Data_Logger_1._3.Commands.LoggerCommands
                                 else
                                 {
                                     list.Add(new CodeLOGViewModel(new CodingLOG(
-                                        _dataService.CreateLogID(),
+                                        -1,
                                         account,
                                         project,
                                         application,
@@ -379,7 +368,8 @@ namespace Data_Logger_1._3.Commands.LoggerCommands
 
                                 genvm.CacheItems = list;
 
-                                _navigationService.NavigateToLogCachePage(CacheContext.Coding);
+                                _navigationService.NavigateToLogCachePage<CodingViewModel>(CacheContext.Coding);
+
                                 break;
                             }
                         case CacheContext.Graphics:
@@ -392,7 +382,7 @@ namespace Data_Logger_1._3.Commands.LoggerCommands
                                 if (DateIsWrong)
                                 {
                                     list.Add(new GraphicsLOGViewModel(new GraphicsLOG(
-                                        _dataService.CreateLogID(),
+                                        -1,
                                         account,
                                         project,
                                         application,
@@ -401,12 +391,12 @@ namespace Data_Logger_1._3.Commands.LoggerCommands
                                         output,
                                         type,
                                         posts,
-                                        _GRAviewModel.Medium,
-                                        _GRAviewModel.Format,
+                                        new(_GRAviewModel.Medium),
+                                        new(_GRAviewModel.Format),
                                         _GRAviewModel.Brush,
                                         double.Parse(_GRAviewModel.Height),
                                         double.Parse(_GRAviewModel.Width),
-                                        _GRAviewModel.MeasuringUnit,
+                                        new(_GRAviewModel.MeasuringUnit),
                                         _GRAviewModel.Size,
                                         double.Parse(_GRAviewModel.DPI),
                                         _GRAviewModel.ColourDepth,
@@ -418,7 +408,7 @@ namespace Data_Logger_1._3.Commands.LoggerCommands
                                 else
                                 {
                                     list.Add(new GraphicsLOGViewModel(new GraphicsLOG(
-                                        _dataService.CreateLogID(),
+                                        -1,
                                         account,
                                         project,
                                         application,
@@ -427,12 +417,12 @@ namespace Data_Logger_1._3.Commands.LoggerCommands
                                         output,
                                         type,
                                         posts,
-                                        _GRAviewModel.Medium,
-                                        _GRAviewModel.Format,
+                                        new(_GRAviewModel.Medium),
+                                        new(_GRAviewModel.Format),
                                         _GRAviewModel.Brush,
                                         double.Parse(_GRAviewModel.Height),
                                         double.Parse(_GRAviewModel.Width),
-                                        _GRAviewModel.MeasuringUnit,
+                                        new(_GRAviewModel.MeasuringUnit),
                                         _GRAviewModel.Size,
                                         double.Parse(_GRAviewModel.DPI),
                                         _GRAviewModel.ColourDepth,
@@ -459,7 +449,7 @@ namespace Data_Logger_1._3.Commands.LoggerCommands
                                 {
 
                                     list.Add(new FilmLOGViewModel(new FilmLOG(
-                                        _dataService.CreateLogID(),
+                                        -1,
                                         account,
                                         project,
                                         application,
@@ -478,7 +468,7 @@ namespace Data_Logger_1._3.Commands.LoggerCommands
                                 else
                                 {
                                     list.Add(new FilmLOGViewModel(new FilmLOG(
-                                        _dataService.CreateLogID(),
+                                        -1,
                                         account,
                                         project,
                                         application,
@@ -523,7 +513,7 @@ namespace Data_Logger_1._3.Commands.LoggerCommands
                                 if (DateIsWrong)
                                 {
                                     list.Add(new FlexiLOGViewModel(new FlexiNotesLOG(
-                                        _dataService.CreateLogID(),
+                                        -1,
                                         account,
                                         project,
                                         application,
@@ -534,8 +524,8 @@ namespace Data_Logger_1._3.Commands.LoggerCommands
                                         posts,
                                         temp,
                                         FlexiNotesLOG.GAMINGContext.Create,
-                                        _FLEXIviewModel.Medium,
-                                        _FLEXIviewModel.Format,
+                                        new(_FLEXIviewModel.Medium),
+                                        new(_FLEXIviewModel.Format),
                                         int.Parse(_FLEXIviewModel.Bitrate),
                                         _FLEXIviewModel.Duration,
                                         _FLEXIviewModel.IsCompleted,
@@ -548,7 +538,7 @@ namespace Data_Logger_1._3.Commands.LoggerCommands
                                 else
                                 {
                                     list.Add(new FlexiLOGViewModel(new FlexiNotesLOG(
-                                        _dataService.CreateLogID(),
+                                        -1,
                                         account,
                                         project,
                                         application,
@@ -559,8 +549,8 @@ namespace Data_Logger_1._3.Commands.LoggerCommands
                                         posts,
                                         temp,
                                         FlexiNotesLOG.GAMINGContext.Create,
-                                        _FLEXIviewModel.Medium,
-                                        _FLEXIviewModel.Format,
+                                        new(_FLEXIviewModel.Medium),
+                                        new(_FLEXIviewModel.Format),
                                         int.Parse(_FLEXIviewModel.Bitrate),
                                         _FLEXIviewModel.Duration,
                                         _FLEXIviewModel.IsCompleted,
@@ -595,31 +585,17 @@ namespace Data_Logger_1._3.Commands.LoggerCommands
                                 QtLOGViewModel oldLOG = (QtLOGViewModel)_viewModelBase;
 
                                 var oldApp = oldLOG._QtcodingLOG.Application;
-                                project.ProjectID = oldLOG._QtcodingLOG.Project.ProjectID;
+                                project.projectID = oldLOG._QtcodingLOG.Project.projectID;
                                 project.Application = oldApp;
                                 application = oldApp;
-                                application.AppID = 1;
+                                application.appID = 1;
                                 application.IsDefault = true;
                                 output.Application = oldApp;
                                 type.Application = oldApp;
 
-                                var usedPostItIDs = new List<int>();
-                                var usedSubjectIDs = new List<int>();
-
-                                foreach (var item in oldLOG._QtcodingLOG.PostItList)
-                                {
-                                    usedPostItIDs.Add(item.ID);
-                                    if (!usedSubjectIDs.Contains(item.Subject.SubjectID))
-                                    {
-                                        usedSubjectIDs.Add(item.Subject.SubjectID);
-                                    }
-                                }
-
                                 foreach (var item in posts)
                                 {
-                                    item.ID = _dataService.CreatePostItID(usedPostItIDs);
 
-                                    item.Subject.SubjectID = _dataService.CreateSubjectID(project, item.Subject.Subject, usedSubjectIDs);
                                     item.Subject.Application = oldApp;
                                     item.Subject.Project = project;
                                 }
@@ -683,31 +659,17 @@ namespace Data_Logger_1._3.Commands.LoggerCommands
                                 AndroidLOGViewModel oldLOG = (AndroidLOGViewModel)_viewModelBase;
 
                                 var oldApp = oldLOG._AndroidCodingLOG.Application;
-                                project.ProjectID = oldLOG._AndroidCodingLOG.Project.ProjectID;
+                                project.projectID = oldLOG._AndroidCodingLOG.Project.projectID;
                                 project.Application = oldApp;
                                 application = oldApp;
-                                application.AppID = 2;
+                                application.appID = 2;
                                 application.IsDefault = true;
                                 output.Application = oldApp;
                                 type.Application = oldApp;
 
-                                var usedPostItIDs = new List<int>();
-                                var usedSubjectIDs = new List<int>();
-
-                                foreach (var item in oldLOG._AndroidCodingLOG.PostItList)
-                                {
-                                    usedPostItIDs.Add(item.ID);
-                                    if (!usedSubjectIDs.Contains(item.Subject.SubjectID))
-                                    {
-                                        usedSubjectIDs.Add(item.Subject.SubjectID);
-                                    }
-                                }
-
                                 foreach (var item in posts)
                                 {
-                                    item.ID = _dataService.CreatePostItID(usedPostItIDs);
 
-                                    item.Subject.SubjectID = _dataService.CreateSubjectID(project, item.Subject.Subject, usedSubjectIDs);
                                     item.Subject.Application = oldApp;
                                     item.Subject.Project = project;
                                 }
@@ -799,7 +761,7 @@ namespace Data_Logger_1._3.Commands.LoggerCommands
                                 }
                                 else if(IsNewApp)
                                 {
-                                    application = new(_dataService.CreateAppID(_viewModel.Category, account, _viewModel.ApplicationName), account,
+                                    application = new(-1, account,
                                         _viewModel.ApplicationName, _GENviewModel.Category, false);
 
                                     if (application.Name == "Visual Studio Community 2022")
@@ -810,7 +772,6 @@ namespace Data_Logger_1._3.Commands.LoggerCommands
                                     application = oldApp;
                                 }
 
-                                project.ProjectID = _dataService.CreateProjectID(account, application, _GENviewModel.ProjectName);
                                 if (_GENviewModel.ProjectName == "Unknown")
                                     project.IsDefault = true;
                                 project.Application = application;
@@ -818,20 +779,9 @@ namespace Data_Logger_1._3.Commands.LoggerCommands
                                 output.Application = application;
                                 type.Application = application;
 
-                                var usedPostItIDs = new List<int>();
-                                var usedSubjectIDs = new List<int>();
-
-                                foreach (var item in oldLOG._CodeLOG.PostItList)
-                                {
-                                    usedPostItIDs.Add(item.ID);
-                                    usedSubjectIDs.Add(item.Subject.SubjectID);
-                                }
-
                                 foreach (var item in posts)
                                 {
-                                    item.ID = _dataService.CreatePostItID(usedPostItIDs);
 
-                                    item.Subject.SubjectID = _dataService.CreateSubjectID(project, item.Subject.Subject, usedSubjectIDs);
                                     item.Subject.Application = application;
                                     item.Subject.Project = project;
                                 }
@@ -922,7 +872,7 @@ namespace Data_Logger_1._3.Commands.LoggerCommands
                                 }
                                 else if (IsNewApp)
                                 {
-                                    application = new(_dataService.CreateAppID(_viewModel.Category, account, _viewModel.ApplicationName), account,
+                                    application = new(-1, account,
                                         _viewModel.ApplicationName, _GRAviewModel.Category, false);
                                 }
                                 else
@@ -930,7 +880,6 @@ namespace Data_Logger_1._3.Commands.LoggerCommands
                                     application = oldApp;
                                 }
 
-                                project.ProjectID = _dataService.CreateProjectID(account, application, _GRAviewModel.ProjectName);
                                 if (_GRAviewModel.ProjectName == "Unknown")
                                     project.IsDefault = true;
                                 project.Application = application;
@@ -938,20 +887,9 @@ namespace Data_Logger_1._3.Commands.LoggerCommands
                                 output.Application = application;
                                 type.Application = application;
 
-                                var usedPostItIDs = new List<int>();
-                                var usedSubjectIDs = new List<int>();
-
-                                foreach (var item in oldLOG._GraphicsLOG.PostItList)
-                                {
-                                    usedPostItIDs.Add(item.ID);
-                                    usedSubjectIDs.Add(item.Subject.SubjectID);
-                                }
-
                                 foreach (var item in posts)
                                 {
-                                    item.ID = _dataService.CreatePostItID(usedPostItIDs);
 
-                                    item.Subject.SubjectID = _dataService.CreateSubjectID(project, item.Subject.Subject, usedSubjectIDs);
                                     item.Subject.Application = application;
                                     item.Subject.Project = project;
                                 }
@@ -977,12 +915,12 @@ namespace Data_Logger_1._3.Commands.LoggerCommands
                                             output,
                                             type,
                                             posts,
-                                            _GRAviewModel.Medium,
-                                            _GRAviewModel.Format,
+                                            new(_GRAviewModel.Medium),
+                                            new(_GRAviewModel.Format),
                                             _GRAviewModel.Brush,
                                             double.Parse(_GRAviewModel.Height),
                                             double.Parse(_GRAviewModel.Width),
-                                            _GRAviewModel.MeasuringUnit,
+                                            new(_GRAviewModel.MeasuringUnit),
                                             _GRAviewModel.Size,
                                             double.Parse(_GRAviewModel.DPI),
                                             _GRAviewModel.ColourDepth,
@@ -1003,12 +941,12 @@ namespace Data_Logger_1._3.Commands.LoggerCommands
                                             output,
                                             type,
                                             posts,
-                                            _GRAviewModel.Medium,
-                                            _GRAviewModel.Format,
+                                            new(_GRAviewModel.Medium),
+                                            new(_GRAviewModel.Format),
                                             _GRAviewModel.Brush,
                                             double.Parse(_GRAviewModel.Height),
                                             double.Parse(_GRAviewModel.Width),
-                                            _GRAviewModel.MeasuringUnit,
+                                            new(_GRAviewModel.MeasuringUnit),
                                             _GRAviewModel.Size,
                                             double.Parse(_GRAviewModel.DPI),
                                             _GRAviewModel.ColourDepth,
@@ -1059,7 +997,7 @@ namespace Data_Logger_1._3.Commands.LoggerCommands
                                 }
                                 else if (IsNewApp)
                                 {
-                                    application = new(_dataService.CreateAppID(_viewModel.Category, account, _viewModel.ApplicationName), account,
+                                    application = new(-1, account,
                                         _viewModel.ApplicationName, _FILMviewModel.Category, false);
                                 }
                                 else
@@ -1067,7 +1005,6 @@ namespace Data_Logger_1._3.Commands.LoggerCommands
                                     application = oldApp;
                                 }
 
-                                project.ProjectID = _dataService.CreateProjectID(account, application, _FILMviewModel.ProjectName);
                                 if (_FILMviewModel.ProjectName == "Unknown")
                                     project.IsDefault = true;
                                 project.Application = application;
@@ -1075,20 +1012,9 @@ namespace Data_Logger_1._3.Commands.LoggerCommands
                                 output.Application = application;
                                 type.Application = application;
 
-                                var usedPostItIDs = new List<int>();
-                                var usedSubjectIDs = new List<int>();
-
-                                foreach (var item in oldLOG._FilmLOG.PostItList)
-                                {
-                                    usedPostItIDs.Add(item.ID);
-                                    usedSubjectIDs.Add(item.Subject.SubjectID);
-                                }
-
                                 foreach (var item in posts)
                                 {
-                                    item.ID = _dataService.CreatePostItID(usedPostItIDs);
 
-                                    item.Subject.SubjectID = _dataService.CreateSubjectID(project, item.Subject.Subject, usedSubjectIDs);
                                     item.Subject.Application = application;
                                     item.Subject.Project = project;
                                 }
@@ -1202,7 +1128,7 @@ namespace Data_Logger_1._3.Commands.LoggerCommands
                                 }
                                 else if (IsNewApp)
                                 {
-                                    application = new(_dataService.CreateAppID(_viewModel.Category, account, _viewModel.ApplicationName), account,
+                                    application = new(-1, account,
                                         _viewModel.ApplicationName, _FLEXIviewModel.Category, false);
                                 }
                                 else
@@ -1210,7 +1136,6 @@ namespace Data_Logger_1._3.Commands.LoggerCommands
                                     application = oldApp;
                                 }
 
-                                project.ProjectID = _dataService.CreateProjectID(account, application, _FLEXIviewModel.ProjectName);
                                 if (_FLEXIviewModel.ProjectName == "Unknown")
                                     project.IsDefault = true;
                                 project.Application = application;
@@ -1218,20 +1143,8 @@ namespace Data_Logger_1._3.Commands.LoggerCommands
                                 output.Application = application;
                                 type.Application = application;
 
-                                var usedPostItIDs = new List<int>();
-                                var usedSubjectIDs = new List<int>();
-
-                                foreach (var item in oldLOG._FlexiLOG.PostItList)
-                                {
-                                    usedPostItIDs.Add(item.ID);
-                                    usedSubjectIDs.Add(item.Subject.SubjectID);
-                                }
-
                                 foreach (var item in posts)
                                 {
-                                    item.ID = _dataService.CreatePostItID(usedPostItIDs);
-
-                                    item.Subject.SubjectID = _dataService.CreateSubjectID(project, item.Subject.Subject, usedSubjectIDs);
                                     item.Subject.Application = application;
                                     item.Subject.Project = project;
                                 }
@@ -1271,8 +1184,8 @@ namespace Data_Logger_1._3.Commands.LoggerCommands
                                             posts,
                                             temp,
                                             FlexiNotesLOG.GAMINGContext.Create,
-                                            _FLEXIviewModel.Medium,
-                                            _FLEXIviewModel.Format,
+                                            new(_FLEXIviewModel.Medium),
+                                            new(_FLEXIviewModel.Format),
                                             int.Parse(_FLEXIviewModel.Bitrate),
                                             _FLEXIviewModel.Duration,
                                             _FLEXIviewModel.IsCompleted,
@@ -1296,8 +1209,8 @@ namespace Data_Logger_1._3.Commands.LoggerCommands
                                             posts,
                                             temp,
                                             FlexiNotesLOG.GAMINGContext.Create,
-                                            _FLEXIviewModel.Medium,
-                                            _FLEXIviewModel.Format,
+                                            new(_FLEXIviewModel.Medium),
+                                            new(_FLEXIviewModel.Format),
                                             int.Parse(_FLEXIviewModel.Bitrate),
                                             _FLEXIviewModel.Duration,
                                             _FLEXIviewModel.IsCompleted,
