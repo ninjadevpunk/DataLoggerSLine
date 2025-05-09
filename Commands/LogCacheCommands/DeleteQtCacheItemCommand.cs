@@ -2,10 +2,11 @@
 using Data_Logger_1._3.ViewModels.Dashboard;
 using Data_Logger_1._3.ViewModels.LogViewModels;
 using MVVMEssentials.Commands;
+using static Data_Logger_1._3.Services.Cachemaster;
 
 namespace Data_Logger_1._3.Commands.LogCacheCommands
 {
-    public class DeleteQtCacheItemCommand : CommandBase
+    public class DeleteQtCacheItemCommand : AsyncCommandBase
     {
         private readonly LogCacheViewModel _viewModel;
         private readonly DataService _dataService;
@@ -26,7 +27,7 @@ namespace Data_Logger_1._3.Commands.LogCacheCommands
             }
         }
 
-        public override void Execute(object parameter)
+        protected override async Task ExecuteAsync(object parameter)
         {
             try
             {
@@ -42,7 +43,7 @@ namespace Data_Logger_1._3.Commands.LogCacheCommands
                     if (_timeUp)
                     {
                         // Send data to database first
-                        isLogged = _dataService.StoreLog(item._QtcodingLOG);
+                        isLogged = await _dataService.StoreLog(item._QtcodingLOG);
 
                         if (isLogged)
                         {

@@ -3,6 +3,7 @@ using Data_Logger_1._3.ViewModels.Dashboard;
 using Data_Logger_1._3.ViewModels.LogViewModels;
 using MVVMEssentials.Commands;
 using System.Diagnostics;
+using static Data_Logger_1._3.Services.Cachemaster;
 
 namespace Data_Logger_1._3.Commands.LogCacheCommands
 {
@@ -56,7 +57,7 @@ namespace Data_Logger_1._3.Commands.LogCacheCommands
 
         public override void Execute(object parameter)
         {
-            try
+            /*try
             {
                 switch (viewType)
                 {
@@ -119,7 +120,7 @@ namespace Data_Logger_1._3.Commands.LogCacheCommands
             catch (Exception e)
             {
                 Debug.WriteLine($"Exception: {e.Message}");
-            }
+            }*/
         }
     }
 }

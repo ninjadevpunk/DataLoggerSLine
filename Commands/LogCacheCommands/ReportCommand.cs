@@ -28,7 +28,7 @@ namespace Data_Logger_1._3.Commands.LogCacheCommands
         {
 			try
 			{
-                _navigationService.NavigateToReporter();
+                //_navigationService.NavigateToReporter();
 			}
 			catch (Exception ex)
 			{

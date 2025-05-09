@@ -3,6 +3,7 @@ using Data_Logger_1._3.ViewModels.Dashboard;
 using Data_Logger_1._3.ViewModels.LogViewModels;
 using MVVMEssentials.Commands;
 using System.Diagnostics;
+using static Data_Logger_1._3.Services.Cachemaster;
 
 namespace Data_Logger_1._3.Commands.LogCacheCommands
 {
@@ -31,7 +32,7 @@ namespace Data_Logger_1._3.Commands.LogCacheCommands
             }
         }
 
-        public override void Execute(object parameter)
+        public override async void Execute(object parameter)
         {
             try
             {
@@ -61,17 +62,15 @@ namespace Data_Logger_1._3.Commands.LogCacheCommands
             }
             catch (InvalidCastException castx)
             {
-                Debug.WriteLine($"Invalid cast found: {castx.Message}");
+                _dataService.CreateFeedback(castx, "Execute() DeleteCacheItemCommand", "InvalidCastException");
             }
             catch (Exception e)
             {
-                Debug.WriteLine($"Exception found: {e.Message}");
-
-                // TODO
+                _dataService.CreateFeedback(e, "Execute() DeleteCacheItemCommand");
             }
         }
 
-        private void HandleQtCacheItem(QtLOGViewModel item)
+        private async void HandleQtCacheItem(QtLOGViewModel item)
         {
             var tempQtDashBoardItems = ((CodingQtViewModel)_viewModel).CacheItems;
             bool isLogged = false;
@@ -79,7 +78,7 @@ namespace Data_Logger_1._3.Commands.LogCacheCommands
             if (_timeUp)
             {
                 // Send data to database first
-                isLogged = _dataService.StoreLog(item._QtcodingLOG);
+                isLogged = await _dataService.StoreLog(item._QtcodingLOG);
 
                 if (isLogged)
                 {
@@ -96,7 +95,7 @@ namespace Data_Logger_1._3.Commands.LogCacheCommands
             }
         }
 
-        private void HandleAndroidCacheItem(AndroidLOGViewModel item)
+        private async void HandleAndroidCacheItem(AndroidLOGViewModel item)
         {
             var tempASDashboardItems = ((CodingAndroidViewModel)_viewModel).CacheItems;
             bool isLogged = false;
@@ -104,7 +103,7 @@ namespace Data_Logger_1._3.Commands.LogCacheCommands
             if (_timeUp)
             {
                 // Send data to database first
-                isLogged = _dataService.StoreLog(item._AndroidCodingLOG);
+                isLogged = await _dataService.StoreLog(item._AndroidCodingLOG);
 
                 if (isLogged)
                 {
@@ -121,7 +120,7 @@ namespace Data_Logger_1._3.Commands.LogCacheCommands
             }
         }
 
-        private void HandleCodingCacheItem(CodeLOGViewModel item)
+        private async void HandleCodingCacheItem(CodeLOGViewModel item)
         {
             var tempCodingDashboardItems = ((CodingViewModel)_viewModel).CacheItems;
             bool isLogged = false;
@@ -129,7 +128,7 @@ namespace Data_Logger_1._3.Commands.LogCacheCommands
             if (_timeUp)
             {
                 // Send data to database first
-                isLogged = _dataService.StoreLog(item._CodeLOG);
+                isLogged = await _dataService.StoreLog(item._CodeLOG);
 
                 if (isLogged)
                 {
@@ -146,7 +145,7 @@ namespace Data_Logger_1._3.Commands.LogCacheCommands
             }
         }
 
-        private void HandleGraphicsCacheItem(GraphicsLOGViewModel item)
+        private async void HandleGraphicsCacheItem(GraphicsLOGViewModel item)
         {
             var tempGraphicsDashboard = ((GraphicsViewModel)_viewModel).CacheItems;
             bool isLogged = false;
@@ -154,7 +153,7 @@ namespace Data_Logger_1._3.Commands.LogCacheCommands
             if (_timeUp)
             {
                 // Send data to database first
-                isLogged = _dataService.StoreLog(item._GraphicsLOG);
+                isLogged = await _dataService.StoreLog(item._GraphicsLOG);
 
                 if (isLogged)
                 {
@@ -171,7 +170,7 @@ namespace Data_Logger_1._3.Commands.LogCacheCommands
             }
         }
 
-        private void HandleFilmCacheItem(FilmLOGViewModel item)
+        private async void HandleFilmCacheItem(FilmLOGViewModel item)
         {
             var tempFilmDashboardItems = ((FilmViewModel)_viewModel).CacheItems;
             bool isLogged = false;
@@ -179,7 +178,7 @@ namespace Data_Logger_1._3.Commands.LogCacheCommands
             if (_timeUp)
             {
                 // Send data to database first
-                isLogged = _dataService.StoreLog(item._FilmLOG);
+                isLogged = await _dataService.StoreLog(item._FilmLOG);
 
                 if (isLogged)
                 {
@@ -196,7 +195,7 @@ namespace Data_Logger_1._3.Commands.LogCacheCommands
             }
         }
 
-        private void HandleFlexiCacheItem(FlexiLOGViewModel item)
+        private async void HandleFlexiCacheItem(FlexiLOGViewModel item)
         {
             var tempFlexiDashboardItems = ((FlexiViewModel)_viewModel).CacheItems;
             bool isLogged = false;
@@ -204,7 +203,7 @@ namespace Data_Logger_1._3.Commands.LogCacheCommands
             if (_timeUp)
             {
                 // Send data to database first
-                isLogged = _dataService.StoreLog(item._FlexiLOG);
+                isLogged = await _dataService.StoreLog(item._FlexiLOG);
 
                 if (isLogged)
                 {

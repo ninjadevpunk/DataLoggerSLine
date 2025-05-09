@@ -5,7 +5,7 @@ using MVVMEssentials.Commands;
 
 namespace Data_Logger_1._3.Commands.LogCacheCommands
 {
-    public class DeleteCodingCacheItemCommand : CommandBase
+    public class DeleteCodingCacheItemCommand : AsyncCommandBase
     {
         private readonly LogCacheViewModel _viewModel;
         private readonly DataService _dataService;
@@ -40,7 +40,7 @@ namespace Data_Logger_1._3.Commands.LogCacheCommands
             }
         }
 
-        public override void Execute(object parameter)
+        protected override async Task ExecuteAsync(object parameter)
         {
             try
             {
@@ -56,7 +56,7 @@ namespace Data_Logger_1._3.Commands.LogCacheCommands
                     if (_timeUp)
                     {
                         // Send data to Firebase first
-                        isLogged = _dataService.StoreLog(item._CodeLOG);
+                        isLogged = await _dataService.StoreLog(item._CodeLOG);
 
                         if (isLogged)
                         {

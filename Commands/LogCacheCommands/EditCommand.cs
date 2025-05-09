@@ -3,6 +3,7 @@ using Data_Logger_1._3.ViewModels.Dashboard;
 using Data_Logger_1._3.ViewModels.LogViewModels;
 using MVVMEssentials.Commands;
 using System.Diagnostics;
+using static Data_Logger_1._3.Services.Cachemaster;
 
 namespace Data_Logger_1._3.Commands.LogCacheCommands
 {
@@ -41,42 +42,37 @@ namespace Data_Logger_1._3.Commands.LogCacheCommands
                     case CacheContext.Qt:
                         {
                             var log = parameter as QtLOGViewModel;
-                            _navigationService.NavigateToLoggerEditor(_dashboard, log, _cacheContext);
+                            
 
                             break;
                         }
                     case CacheContext.AndroidStudio:
                         {
                             var log = parameter as AndroidLOGViewModel;
-                            _navigationService.NavigateToLoggerEditor(_dashboard, log, _cacheContext);
 
                             break;
                         }
                     case CacheContext.Coding:
                         {
                             var log = parameter as CodeLOGViewModel;
-                            _navigationService.NavigateToLoggerEditor(_dashboard, log, _cacheContext);
 
                             break;
                         }
                     case CacheContext.Graphics:
                         {
                             var log = parameter as GraphicsLOGViewModel;
-                            _navigationService.NavigateToLoggerEditor(_dashboard, log, _cacheContext);
 
                             break;
                         }
                     case CacheContext.Film:
                         {
                             var log = parameter as FilmLOGViewModel;
-                            _navigationService.NavigateToLoggerEditor(_dashboard, log, _cacheContext);
 
                             break;
                         }
                     case CacheContext.Flexi:
                         {
                             var log = parameter as FlexiLOGViewModel;
-                            _navigationService.NavigateToLoggerEditor(_dashboard, log, _cacheContext);
 
                             break;
                         }
