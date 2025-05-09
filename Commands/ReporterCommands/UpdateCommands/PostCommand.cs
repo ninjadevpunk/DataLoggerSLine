@@ -83,7 +83,7 @@ namespace Data_Logger_1._3.Commands.ReporterCommands.UpdateCommands
                                 else
                                 {
                                     _reporterUpdaterViewModel.PostIts.Add(_postItViewModel);
-                                    _navigationService.GoBack();
+                                    //_navigationService.GoBack();
                                 }
                             }
                             break;
@@ -108,7 +108,7 @@ namespace Data_Logger_1._3.Commands.ReporterCommands.UpdateCommands
                                 {
                                     var index = _reporterUpdaterViewModel.PostIts.IndexOf(_postItViewModel);
                                     _reporterUpdaterViewModel.PostIts[index] = _updatePostItViewModel;
-                                    _navigationService.GoBack();
+                                    //_navigationService.GoBack();
                                 }
                             }
                             break;

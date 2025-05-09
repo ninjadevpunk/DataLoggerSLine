@@ -8,6 +8,7 @@ using System.Diagnostics;
 using System.Windows;
 using Data_Logger_1._3.ViewModels.Reporter.Logs;
 using Data_Logger_1._3.ViewModels.Reporter;
+using static Data_Logger_1._3.Services.Cachemaster;
 
 namespace Data_Logger_1._3.Commands.ReporterCommands.UpdateCommands
 {
@@ -72,7 +73,7 @@ namespace Data_Logger_1._3.Commands.ReporterCommands.UpdateCommands
                 {
                     postIt = new();
 
-                    postIt.ID = 0;
+                    postIt.postItID = 0;
 
                     subject = new(0, _editor.Category, account, item.Subject, project, application);
 
@@ -102,31 +103,17 @@ namespace Data_Logger_1._3.Commands.ReporterCommands.UpdateCommands
                             qtREPORTViewModel oldLOG = (qtREPORTViewModel)_report;
 
                             var oldApp = oldLOG.GetQtCodingLog.Application;
-                            project.ProjectID = oldLOG.GetQtCodingLog.Project.ProjectID;
+                            project.projectID = oldLOG.GetQtCodingLog.Project.projectID;
                             project.Application = oldApp;
                             application = oldApp;
-                            application.AppID = 1;
+                            application.appID = 1;
                             application.IsDefault = true;
                             output.Application = oldApp;
                             type.Application = oldApp;
 
-                            var usedPostItIDs = new List<int>();
-                            var usedSubjectIDs = new List<int>();
-
-                            foreach (var item in oldLOG.GetQtCodingLog.PostItList)
-                            {
-                                usedPostItIDs.Add(item.ID);
-                                if (!usedSubjectIDs.Contains(item.Subject.SubjectID))
-                                {
-                                    usedSubjectIDs.Add(item.Subject.SubjectID);
-                                }
-                            }
-
                             foreach (var item in posts)
                             {
-                                item.ID = _dataService.CreatePostItID(usedPostItIDs);
 
-                                item.Subject.SubjectID = _dataService.CreateSubjectID(project, item.Subject.Subject, usedSubjectIDs);
                                 item.Subject.Application = oldApp;
                                 item.Subject.Project = project;
                             }

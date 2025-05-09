@@ -1,7 +1,7 @@
-﻿using Data_Logger_1._3.Services;
-using Data_Logger_1._3.ViewModels.Reporter.Updater;
+﻿using Data_Logger_1._3.ViewModels.Reporter.Updater;
 using MVVMEssentials.Commands;
 using System.Diagnostics;
+using static Data_Logger_1._3.Services.Cachemaster;
 
 namespace Data_Logger_1._3.Commands.ReporterCommands.UpdateCommands
 {

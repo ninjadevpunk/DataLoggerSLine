@@ -28,7 +28,7 @@ namespace Data_Logger_1._3.Commands.ReporterCommands.UpdateCommands
 
         public override void Execute(object parameter)
         {
-            _navigationService.NavigateToReporterPostItCreator(_reporterUpdaterViewModel);
+            //_navigationService.NavigateToReporterPostItCreator(_reporterUpdaterViewModel);
         }
     }
 }

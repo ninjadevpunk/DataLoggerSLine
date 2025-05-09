@@ -32,7 +32,7 @@ namespace Data_Logger_1._3.Commands.ReporterCommands.UpdateCommands
         {
             try
             {
-                _navigationService.NavigateToReporterPostItEditor(_viewModel, parameter as CreateReporterPostItViewModel);
+                //_navigationService.NavigateToReporterPostItEditor(_viewModel, parameter as CreateReporterPostItViewModel);
             }
             catch (ArgumentNullException nullex)
             {
