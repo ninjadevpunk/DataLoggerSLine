@@ -9,7 +9,7 @@ namespace Data_Logger_1._3.Commands.LoggerCommands
     {
         private readonly LoggerCreateViewModel _viewModel;
         private const string Qt = "Qt Creator";
-        private const string Android = "Android Studio Hedgehog 2023.1.1";
+        private const string Android = "Android Studio Meerkat 2024.3.1";
         private const string VisualStudio = "Visual Studio Community 2022";
 
         public LOG.CATEGORY Category { get; set; } = LOG.CATEGORY.CODING;

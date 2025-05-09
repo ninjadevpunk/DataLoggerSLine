@@ -4,15 +4,16 @@ using Data_Logger_1._3.Services;
 using Data_Logger_1._3.ViewModels.Dialogs.Create;
 using MVVMEssentials.Commands;
 using System.Diagnostics;
+using static Data_Logger_1._3.Services.Cachemaster;
 
 namespace Data_Logger_1._3.Commands.LoggerCommands
 {
-    public class SaveCommand : CommandBase
+    public class SaveCommand : AsyncCommandBase
     {
         private readonly LoggerCreateViewModel _loggerCreateViewModel;
         private readonly DataService _dataService;
-        private readonly ApplicationClass QtCreator;
-        private readonly ApplicationClass AndroidStudio;
+        private ApplicationClass QtCreator;
+        private ApplicationClass AndroidStudio;
 
 
         public SaveCommand(LoggerCreateViewModel loggerCreateViewModel, DataService dataService)
@@ -22,8 +23,6 @@ namespace Data_Logger_1._3.Commands.LoggerCommands
                 _loggerCreateViewModel = loggerCreateViewModel ?? throw new ArgumentNullException(nameof(loggerCreateViewModel));
                 _dataService = dataService ?? throw new ArgumentNullException(nameof(dataService));
 
-                QtCreator = _dataService.FindApplicationByID(1);
-                AndroidStudio = _dataService.FindApplicationByID(2);
             }
             catch (ArgumentNullException nullx)
             {
@@ -35,10 +34,13 @@ namespace Data_Logger_1._3.Commands.LoggerCommands
             }
         }
 
-        public override void Execute(object parameter)
+        protected async override Task ExecuteAsync(object parameter)
         {
             try
             {
+                QtCreator = await _dataService.FindApplicationByID(1);
+                AndroidStudio = await _dataService.FindApplicationByID(2);
+
                 var dialog = new Microsoft.Win32.SaveFileDialog();
                 ProjectClass project = new(_loggerCreateViewModel.ProjectName);
                 OutputClass output = new(_loggerCreateViewModel.Output);
@@ -51,7 +53,7 @@ namespace Data_Logger_1._3.Commands.LoggerCommands
                 {
                     postIt = new();
 
-                    postIt.ID = 0;
+                    postIt.postItID = 0;
 
                     subject = new(item.Subject);
 
