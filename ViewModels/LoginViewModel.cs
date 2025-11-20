@@ -15,47 +15,38 @@ namespace Data_Logger_1._3.ViewModels
 
         private readonly AuthService _authService;
         private readonly NavigationService _navigationService;
+        private readonly UIFactory _factory;
 
 
 
 
 
-        public LoginViewModel(AuthService authService, NavigationService navigationService)
+        public LoginViewModel(AuthService authService, NavigationService navigationService, UIFactory uiFactory)
         {
 
             _authService = authService;
             _navigationService = navigationService;
+            _factory = uiFactory;
 
             SignUpImage = "";
             ShowDefault = Visibility.Visible;
+            StatusMessage = "";
+            StatusMessageColour = _factory.MessageBad;
 
-            // Set initial button states
+            MessageGood = _factory.MessageGood;
+            MessageBad = _factory.MessageBad;
+
             IsButtonBackEnabled = true;
             IsButtonForwardEnabled = false;
 
             LoginCommand = new LoginCommand(this, _authService, _navigationService);
+            ForgotPasswordCommand = new ForgotPasswordCommand();
             GoogleLoginCommand = new GoogleLoginCommand(this, _authService);
-        }
-
-        public LoginViewModel(AuthService authService, NavigationService navigationService, string displayPicSource)
-        {
-
-            _authService = authService;
-            _navigationService = navigationService;
-
-            SignUpImage = displayPicSource;
-            ShowDefault = Visibility.Visible;
-
-            // Set initial button states
-            IsButtonBackEnabled = true;
-            IsButtonForwardEnabled = false;
-
-            LoginCommand = new LoginCommand(this, _authService, _navigationService);
-            GoogleLoginCommand = new GoogleLoginCommand(this, _authService);
+            NavigateToSignUpCommand = new NavigateToSignUpCommand(_navigationService, this);
         }
 
 
-
+        public void CloseLogin() => RequestClose?.Invoke();
 
 
 
@@ -100,8 +91,8 @@ namespace Data_Logger_1._3.ViewModels
             {
                 username = value;
 
-                SignUpImage = _navigationService.UpdateProfilePic(username);
-                ShowDefault = SignUpImage != "" ? Visibility.Collapsed : Visibility.Visible;
+                // SignUpImage = _navigationService.UpdateProfilePic(username);
+                // ShowDefault = SignUpImage != "" ? Visibility.Collapsed : Visibility.Visible;
 
                 OnPropertyChanged(nameof(Username));
             }
@@ -121,10 +112,40 @@ namespace Data_Logger_1._3.ViewModels
             }
         }
 
+        private string statusMessage;
+        public string StatusMessage
+        {
+            get
+            {
+                return statusMessage;
+            }
+            set
+            {
+                statusMessage = value;
+                OnPropertyChanged(nameof(StatusMessage));
+            }
+        }
+
+        private Brush statusMessageColour;
+        public Brush StatusMessageColour
+        {
+            get
+            {
+                return statusMessageColour;
+            }
+            set
+            {
+                statusMessageColour = value;
+                OnPropertyChanged(nameof(StatusMessageColour));
+            }
+        }
 
 
-        private static readonly Brush? EnabledColor = TryParseBrush("iconColourAccent02");
-        private static readonly Brush? DisabledColor = TryParseBrush("AccentColour");
+
+        private static readonly Brush EnabledColor = UIFactory.TryParseBrush("iconColourAccent02");
+        private static readonly Brush DisabledColor = UIFactory.TryParseBrush("AccentColour");
+        public Brush MessageGood { get; set; }
+        public Brush MessageBad { get; set; }
 
         private bool _isButtonBackEnabled;
         public bool IsButtonBackEnabled
@@ -155,21 +176,13 @@ namespace Data_Logger_1._3.ViewModels
 
         public ICommand GoogleLoginCommand { get; set; }
 
-        public void UpdateNavigationButtons()
-        {
+        public ICommand ForgotPasswordCommand {  get; set; }
 
-        }
+        public ICommand NavigateToSignUpCommand {  get; set; }
 
-        private static Brush? TryParseBrush(string value)
-        {
-            try
-            {
-                return (Brush)Application.Current.FindResource(value);
-            }
-            catch (ResourceReferenceKeyNotFoundException)
-            {
-                return Brushes.Transparent;
-            }
-        }
+        public event Action? RequestClose;
+
+
+
     }
 }
