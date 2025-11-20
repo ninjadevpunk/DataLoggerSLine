@@ -3,6 +3,7 @@ using Data_Logger_1._3.Services;
 using MVVMEssentials.ViewModels;
 using System.Windows;
 using System.Windows.Input;
+using System.Windows.Media;
 
 namespace Data_Logger_1._3.ViewModels
 {
@@ -12,11 +13,13 @@ namespace Data_Logger_1._3.ViewModels
 
         private readonly AuthService _authService;
         private readonly NavigationService _navigationService;
+        private readonly UIFactory _factory;
 
-        public SignUpViewModel(AuthService authService, NavigationService navigationService)
+        public SignUpViewModel(AuthService authService, NavigationService navigationService, UIFactory uiFactory)
         {
             _authService = authService;
             _navigationService = navigationService;
+            _factory = uiFactory;
 
             SignUpImage = "";
             Name = "";
@@ -26,14 +29,26 @@ namespace Data_Logger_1._3.ViewModels
             CompanyAddress = "";
             CompanyLogo = "";
 
+            StatusMessage = "";
+            StatusMessageColour = UIFactory.TryParseBrush("RED");
+
+            MessageGood = _factory.MessageGood;
+            MessageBad = _factory.MessageBad;
+
             DisplayPicCommand = new DisplayPicCommand(this, _authService);
             EmailSignUpCommand = new EmailSignUpCommand(this, _authService, _navigationService);
             GoogleSignInCommand = new GoogleSignInCommand(this, _authService);
+            NavigateToLoginCommand = new NavigateToLoginCommand(_navigationService, this);
 
             ShowDefault = Visibility.Visible;
         }
 
+
+        public void CloseSignUp() => RequestClose?.Invoke();
+
         /* PROPERTIES */
+
+        
 
         private string signUpImage;
         public string SignUpImage
@@ -206,6 +221,46 @@ namespace Data_Logger_1._3.ViewModels
             }
         }
 
+        private string statusMessage;
+        public string StatusMessage
+        {
+            get
+            {
+                return statusMessage;
+            }
+            set
+            {
+                statusMessage = value;
+                OnPropertyChanged(nameof(StatusMessage));
+            }
+        }
+
+        private Brush statusMessageColour;
+        public Brush StatusMessageColour
+        {
+            get
+            {
+                return statusMessageColour;
+            }
+            set
+            {
+                statusMessageColour = value;
+                OnPropertyChanged(nameof(StatusMessageColour));
+            }
+        }
+
+
+        public Brush MessageGood { get; set; }
+        public Brush MessageBad { get; set; }
+
+
+
+
+
+
+
+
+
         private bool fieldEnabled;
         public bool FieldEnabled
         {
@@ -225,6 +280,10 @@ namespace Data_Logger_1._3.ViewModels
         public ICommand EmailSignUpCommand { get; set; }
 
         public ICommand GoogleSignInCommand { get; set; }
+
+        public ICommand NavigateToLoginCommand { get; set; }
+
+        public event Action? RequestClose;
 
 
     }
