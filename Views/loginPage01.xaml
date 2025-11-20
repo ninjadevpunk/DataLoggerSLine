@@ -13,7 +13,7 @@
 
     <StackPanel Margin="10"
                 Orientation="Vertical"
-                VerticalAlignment="Stretch"
+                VerticalAlignment="Center"
                 HorizontalAlignment="Stretch"
                 Height="758" >
 
@@ -37,16 +37,12 @@
 
 
 
-            <Grid Margin="20 0" HorizontalAlignment="Center" Height="38.1" Width="40">
-                <Path Style="{DynamicResource pathLOGO1}" />
-                <Path Style="{DynamicResource pathLOGO2}" />
-                <Path Style="{DynamicResource pathLOGO3}" />
-                <Path Style="{DynamicResource pathLOGO4}" />
-                <Path Style="{DynamicResource pathLOGO5}" />
-                <Path Style="{DynamicResource pathLOGO6}" />
-            </Grid>
+            <Border Style="{DynamicResource image_viewer_logo}" />
+
+            <Border Width="15" />
 
             <TextBlock Text="DATA LOGGER" Style="{DynamicResource text_logoSPLASHscreen}"/>
+            
         </StackPanel>
 
         <!--#endregion-->
@@ -82,6 +78,13 @@
                                       UserInput="{Binding Password, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay, BindsDirectlyToSource=True}" />
         </Grid>
 
+        <Grid Margin="0 5">
+            <TextBlock x:Name="text_UserInputStatus" Style="{DynamicResource text_LOGIN_InputStatus}"
+                       Text="{Binding StatusMessage, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                       Foreground="{Binding StatusMessageColour, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                       />
+        </Grid>
+
         <Grid Height="50"
           Margin="0 5"
           HorizontalAlignment="Stretch">
@@ -94,9 +97,11 @@
             <TextBlock Grid.Column="0" x:Name="link_FORGOTPASSWORD" Style="{DynamicResource text_LINK01}"
                    Text="Forgot Password"
                    Margin="0 0 10 0"
-                   HorizontalAlignment="Left"
-                   MouseDown="on_FORGOTPASSWORD_clicked"                       
-                   />
+                   HorizontalAlignment="Left" >
+                <TextBlock.InputBindings>
+                    <MouseBinding Gesture="LeftClick" Command="{Binding ForgotPasswordCommand}" />
+                </TextBlock.InputBindings>
+            </TextBlock>
 
             <Button Grid.Column="1" x:Name="button_LOGIN" Style="{DynamicResource PRIMARY}"
                     HorizontalAlignment="Right"
@@ -116,11 +121,16 @@
             </Grid.ColumnDefinitions>
             <TextBlock Grid.Column="0" Text="Don't have an account? Sign up " Style="{DynamicResource text_LABEL01}" 
                    TextAlignment="Right"/>
-            
+
             <TextBlock x:Name="link_SIGNUP" Grid.Column="1" Style="{DynamicResource text_LINK01}"
                        Text="here"
-                       FontWeight="SemiBold"
-                       MouseDown="on_SIGNUP_clicked" />
+                       Cursor="Hand"
+                       IsHitTestVisible="True"
+                       FontWeight="SemiBold" >
+                <TextBlock.InputBindings>
+                    <MouseBinding Gesture="LeftClick" Command="{Binding NavigateToSignUpCommand}"/>
+                </TextBlock.InputBindings>
+            </TextBlock>
         </Grid>
 
         <Grid Height="35"

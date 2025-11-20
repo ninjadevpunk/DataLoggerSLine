@@ -3,8 +3,9 @@ using Data_Logger_1._3.Models.App_Models;
 using Data_Logger_1._3.ViewModels.Dashboard;
 using Data_Logger_1._3.ViewModels.LogViewModels;
 using System.Collections.ObjectModel;
-using System.Diagnostics;
 using System.Text.RegularExpressions;
+using static Data_Logger_1._3.Models.LOG;
+using static Data_Logger_1._3.Services.Cachemaster;
 
 namespace Data_Logger_1._3.Services
 {
@@ -26,14 +27,14 @@ namespace Data_Logger_1._3.Services
 
     public class DataService
     {
-        private readonly DATAWRITER _writer;
-        private readonly DATAREADER _reader;
-        private readonly DATAHANDLER _handler;
+        private readonly ENTITYWRITER _writer;
+        private readonly ENTITYREADER _reader;
+        private readonly ENTITYHANDLER _handler;
         private readonly Cachemaster _cachemaster;
 
         private ACCOUNT _account;
         private const string Qt = "Qt Creator";
-        private const string Android = "Android Studio Hedgehog 2023.1.1";
+        private const string Android = "Android Studio Meerkat 2024.3.1";
 
         public ProjectClass CurrentProject { get; set; }
 
@@ -45,27 +46,8 @@ namespace Data_Logger_1._3.Services
 
         public List<SubjectClass> SQLITE_SUBJECTS { get; set; } = new();
 
-        public DataService(DATAWRITER writer, DATAREADER reader, Cachemaster cachemaster)
-        {
-            _writer = writer;
-            _reader = reader;
-            _cachemaster = cachemaster;
 
-
-        }
-
-        public DataService(DATAWRITER writer, DATAREADER reader, Cachemaster cachemaster, AuthService authService)
-        {
-            _writer = writer;
-            _reader = reader;
-            _cachemaster = cachemaster;
-
-            _account = authService.Account;
-            SignInUser();
-
-        }
-
-        public DataService(DATAWRITER writer, DATAREADER reader, DATAHANDLER handler, Cachemaster cachemaster, AuthService authService)
+        public DataService(ENTITYWRITER writer, ENTITYREADER reader, ENTITYHANDLER handler, Cachemaster cachemaster, AuthService authService)
         {
             _writer = writer;
             _reader = reader;
@@ -73,24 +55,23 @@ namespace Data_Logger_1._3.Services
             _cachemaster = cachemaster;
 
             _account = authService.Account;
+
             SignInUser();
 
         }
 
-        public void SignInUser()
+        public async void SignInUser()
         {
             if (_account is not null)
             {
-                _writer.SetCurrentUser(_account);
-                _reader.SetCurrentUser(_account);
-                _handler.SetCurrentUser(_account);
+                await _writer.SetCurrentUser(_account);
             }
         }
 
-        public void SignOutUser()
+        public async Task SignOutUser()
         {
             if (_account is not null)
-                _writer.UnsetCurrentUser(_account);
+                await _writer.UnsetCurrentUser(_account);
         }
 
         public static bool IsValidEmail(string email)
@@ -102,14 +83,9 @@ namespace Data_Logger_1._3.Services
             return Regex.IsMatch(email, pattern);
         }
 
-        public string UpdateProfilePic(string emailAddress)
+        public async Task<string> UpdateProfilePic(string emailAddress)
         {
-            return _reader.UpdateProfilePic(emailAddress);
-        }
-
-        public void UpdateWatcher(int CachedItems, int CachedPostIts)
-        {
-            _writer.Watcher.UpdateOnStart(CachedItems, CachedPostIts);
+            return await _reader.RetrieveProfilePic(emailAddress);
         }
 
         public ACCOUNT GetUser()
@@ -132,24 +108,19 @@ namespace Data_Logger_1._3.Services
             return _account.ProfilePic;
         }
 
-        public void SetAccount(ACCOUNT account)
-        {
-            _account = account;
-        }
-
 
 
 
         /// <summary>
         /// Retrieves projects from the database.
         /// </summary>
-        public void InitialiseProjectsLIST()
+        public async void InitialiseProjectsLISTAsync()
         {
             try
             {
                 SQLITE_PROJECTS.Clear();
 
-                var collection = _reader.ListProjects();
+                var collection = await _reader.ListProjects();
 
                 foreach (ProjectClass pro in collection)
                 {
@@ -170,13 +141,13 @@ namespace Data_Logger_1._3.Services
         /// Retrieves projects from the database of a specified category.
         /// </summary>
         /// <param name="category">The type of project.</param>
-        public void InitialiseProjectsLIST(LOG.CATEGORY category)
+        public async void InitialiseProjectsLISTAsync(LOG.CATEGORY category)
         {
             try
             {
                 SQLITE_PROJECTS.Clear();
 
-                var collection = _reader.ListProjects(category);
+                var collection = await _reader.ListProjects(category);
 
                 foreach (ProjectClass pro in collection)
                 {
@@ -195,13 +166,13 @@ namespace Data_Logger_1._3.Services
         /// <summary>
         /// Retrieves applications from the database.
         /// </summary>
-        public void InitialiseApplicationsLIST()
+        public async void InitialiseApplicationsLISTAsync()
         {
             try
             {
                 SQLITE_APPLICATIONS.Clear();
 
-                var collection = _reader.ListApplications();
+                var collection = await _reader.ListApplications();
 
                 foreach (ApplicationClass app in collection)
                 {
@@ -224,13 +195,13 @@ namespace Data_Logger_1._3.Services
         /// Retrieves applications from the database of a specified category.
         /// </summary>
         /// <param name="category">The type of application.</param>
-        public void InitialiseApplicationsLIST(LOG.CATEGORY category)
+        public async void InitialiseApplicationsLIST(LOG.CATEGORY category)
         {
             try
             {
                 SQLITE_APPLICATIONS.Clear();
 
-                var collection = _reader.ListApplications(category);
+                var collection = await _reader.ListApplications(category);
 
                 foreach (ApplicationClass app in collection)
                 {
@@ -254,13 +225,13 @@ namespace Data_Logger_1._3.Services
         /// Retrieves subjects from the database.
         /// </summary>
         /// <param name="category">The type of subjects being retrieved.</param>
-        public void InitialiseSubjectsLIST(LOG.CATEGORY category)
+        public async void InitialiseSubjectsLIST(LOG.CATEGORY category)
         {
             try
             {
                 SQLITE_SUBJECTS.Clear();
 
-                var collection = _reader.ListSubjects(category);
+                var collection = await _reader.ListSubjects(category);
 
                 foreach (SubjectClass subject in collection)
                 {
@@ -276,16 +247,16 @@ namespace Data_Logger_1._3.Services
         }
 
         /// <summary>
-        /// Retrieves subjects from the database.
+        /// Retrieves subjects from the database. Also adds the subjects in DataService's subject list property for easy retrieval in cases where the most recent database update is not needed.
         /// </summary>
         /// <param name="project">Subjects from the specified ProjectClass will be retrieved ONLY.</param>
-        public void InitialiseSubjectsLIST(ProjectClass project)
+        public async void InitialiseSubjectsLIST(ProjectClass project)
         {
             try
             {
                 SQLITE_SUBJECTS.Clear();
 
-                var collection = _reader.ListSubjects(project);
+                var collection = await _reader.ListSubjects(project);
 
                 foreach (SubjectClass subject in collection)
                 {
@@ -301,154 +272,35 @@ namespace Data_Logger_1._3.Services
         }
 
 
-        #region ID Generation
-
-
-
-
-        public int CreateAccountID()
+        /// <summary>
+        /// Retrieves subjects from the database. Used every time the subjects are needed as a list immediately.
+        /// </summary>
+        /// <param name="project">Subjects from the specified ProjectClass will be retrieved ONLY.</param>
+        /// <returns>Returns the subjects as a List.</returns>
+        public async Task<List<SubjectClass>> ListSubjects(ProjectClass project)
         {
-            return _writer.CreateAccountID();
+            return await _reader.ListSubjects(project);
         }
 
-        public int CreateLogID()
-        {
-            return _writer.CreateLogID();
-        }
+        public async Task<List<OutputClass>> ListQtOutputs() => await _reader.ListQtOutputs();
 
-        public int CreateProjectID(ACCOUNT account, ApplicationClass application, string projectName)
-        {
-            return _writer.CreateProjectID(account, application, projectName);
-        }
+        public async Task<List<OutputClass>> ListASOutputs() => await _reader.ListASOutputs();
 
-        public ProjectClass RetrieveProject(int projectID)
-        {
-            return _reader.FindProjectByID(projectID);
-        }
-
-        public int CreateAppID(LOG.CATEGORY category, ACCOUNT account, string applicationName)
-        {
-            return _writer.CreateAppID(category, account, applicationName);
-        }
-
-        public int CreatePostItID(List<int>? unUsedIDs)
-        {
-            return _writer.CreatePostItID(unUsedIDs);
-        }
-
-        public int CreateChecklistID() => _writer.CreateChecklistItemID();
-
-        public List<int>? RetrievePostItIndex()
-        {
-            return _cachemaster.RetrievePostItIndex();
-        }
-
-        public void SavePostItIndex()
-        {
-            _cachemaster.SavePostItIndex(_writer.Watcher.AvailablePostItIDs);
-        }
-
-        public void UpdateAvailablePostItIDs(List<int>? unUsedIDs)
-        {
-            try
-            {
-                if (_writer.Watcher.AvailablePostItIDs is not null)
-                {
-                    _writer.Watcher.AvailablePostItIDs.AddRange(unUsedIDs);
-                }
-                else
-                {
-                    _writer.Watcher.AvailablePostItIDs = unUsedIDs;
-                }
-            }
-            catch(ArgumentNullException nullx)
-            {
-                Debug.WriteLine($"Null exception found near UpdateAvailablePostItIDs(unusedIDs): {nullx.Message}");
-            }
-            catch (Exception ex)
-            {
-
-                Debug.WriteLine($"Exception found near UpdateAvailablePostItIDs(unusedIDs): {ex.Message}");
-
-                // TODO
+        public async Task<List<OutputClass>> ListOutputs(CATEGORY category) => await _reader.ListOutputs(category);
 
 
-            }
-        }
+        public async Task<List<TypeClass>> ListQtTypes() => await _reader.ListQtTypes();
 
-        public int CreateSubjectID(ProjectClass project, string subjectName, List<int>? unUsedIDs)
-        {
-            return _writer.CreateSubjectID(project, subjectName, unUsedIDs);
-        }
+        public async Task<List<TypeClass>> ListASTypes() => await _reader.ListASTypes();
 
-        public List<int>? RetrieveSubjectIndex()
-        {
-            return _cachemaster.RetrieveSubjectIndex();
-        }
-
-        public void SaveSubjectIndex()
-        {
-            _cachemaster.SaveSubjectIndex(_writer.Watcher.AvailableSubjectIDs);
-        }
-
-        public void UpdateAvailableSubjectIDs(List<int>? unUsedIDs)
-        {
-            try
-            {
-                if (_writer.Watcher.AvailableSubjectIDs is not null)
-                {
-                    _writer.Watcher.AvailableSubjectIDs.AddRange(unUsedIDs);
-                }
-                else
-                {
-                    _writer.Watcher.AvailableSubjectIDs = unUsedIDs;
-                }
-            }
-            catch (ArgumentNullException nullx)
-            {
-                Debug.WriteLine($"Null exception found near UpdateAvailableSubjectIDs(unusedIDs): {nullx.Message}");
-            }
-            catch (Exception ex)
-            {
-
-                Debug.WriteLine($"Exception found near UpdateAvailableSubjectIDs(unusedIDs): {ex.Message}");
-
-                // TODO
+        public async Task<List<TypeClass>> ListTypes(CATEGORY category) => await _reader.ListTypes(category);
 
 
-            }
-        }
+        public async Task<ApplicationClass?> FindApplicationByID(int appID) => await _reader.FindApplicationByID(appID);
 
-        public int CreateOutputID(ACCOUNT account, ApplicationClass applicationName, string outputName)
-        {
-            return _writer.CreateOutputID(account, applicationName, outputName);
-        }
+        public async Task<OutputClass> FindOutputByID(int outputID) => await _reader.FindOutputByID(outputID);
 
-        public int CreateTypeID(ACCOUNT account, ApplicationClass applicationName, string typeName)
-        {
-            return _writer.CreateTypeID(account, applicationName, typeName);
-        }
-
-        public ACCOUNT FindAccountByID(int accountID)
-        {
-            return _writer.FindAccountByID(accountID);
-        }
-
-        public ApplicationClass? FindApplicationByID(int id)
-        {
-            return _reader.FindAppByID(id);
-        }
-
-
-        public OutputClass? FindOutputByID(int id) => _reader.FindOutputByID(id);
-
-        public TypeClass? FindTypeByID(int id) => _reader.FindTypeByID(id);
-
-
-
-
-
-        #endregion
+        public async Task<TypeClass> FindTypeByID(int typeID) => await _reader.FindTypeByID(typeID);
 
 
 
@@ -465,12 +317,11 @@ namespace Data_Logger_1._3.Services
             _cachemaster.SaveLog(log, filePath);
         }
 
-        public bool StoreLog(LOG log)
+        public async Task<bool> StoreLog(LOG log)
         {
             bool IsStored = false;
-            var initialCount = _reader.LogCount();
 
-            if (_writer.CreateLOG(log))
+            if (await _writer.CreateLOG(log))
             {
                 IsStored = true;
                 CurrentProject = log.Project;
@@ -494,19 +345,17 @@ namespace Data_Logger_1._3.Services
 
 
 
-        public List<LOG> RetrieveLogs()
+        public async Task<List<LOG>> RetrieveLogs()
         {
-            _reader.RetrieveLOGS();
 
-            return _reader;
+            return await _reader.RetrieveLOGS();
         }
 
-        public List<LOG> RetrieveLogs(LOG.CATEGORY category)
+        public async Task<List<LOG>> RetrieveLogs(LOG.CATEGORY category)
         {
             List<LOG> logs = new();
-            _reader.RetrieveLOGS();
 
-            foreach (LOG log in _reader)
+            foreach (LOG log in await _reader.RetrieveLOGS())
             {
                 if (log.Category == category && log.Author == _account)
                     logs.Add(log);
@@ -521,27 +370,16 @@ namespace Data_Logger_1._3.Services
         /// <returns></returns>
         public List<NotesLOG> RetrieveNotes()
         {
-            List<NotesLOG> logs = new();
-            _reader.RetrieveLOGS();
-
-            foreach (LOG log in _reader)
-            {
-                if (log.Category == LOG.CATEGORY.NOTES && log is NotesLOG notesLOG && log.Author == _account)
-                {
-                    logs.Add(notesLOG);
-                }
-            }
-
-            return logs;
+            return new();
         }
 
-        public List<LOG> RetrieveQtLogs()
+        public async Task<List<LOG>> RetrieveQtLogs()
         {
             List<LOG> logs = new();
             
-            foreach(LOG log in RetrieveLogs(LOG.CATEGORY.CODING))
+            foreach(LOG log in await RetrieveLogs(LOG.CATEGORY.CODING))
             {
-                if(log.Application.AppID == 1)
+                if(log.Application.appID == 1)
                     logs.Add(log);
             }
 
@@ -553,35 +391,36 @@ namespace Data_Logger_1._3.Services
         /// Counts the total number of logs.
         /// </summary>
         /// <returns>The count of logs.</returns>
-        public int LogCount()
+        public async Task<int> LogCount()
         {
-            return _reader.LogCount();
+            return await _reader.LogCount();
         }
 
-        public int LogCount(LOG.CATEGORY category)
+        public async Task<int> LogCount(LOG.CATEGORY category)
         {
-            return _reader.LogCount(category);
+            return await _reader.LogCount(category);
         }
 
-        public int QtLogCount()
+        public async Task<int> QtLogCount()
         {
-            return _reader.QtLogCount();
+            return await _reader.QtLogCount();
         }
 
-        public int ASLogCount()
+        public async Task<int> ASLogCount()
         {
-            return _reader.ASLogCount();
+            return await _reader.ASLogCount();
         }
 
-        public int FlexiLogCount()
+        public async Task<int> FlexiLogCountAsync()
         {
-            return _reader.FlexiLogCount();
+            return await _reader.FlexiNotesLogCount();
         }
 
-        public List<SubjectClass> ListSubjects(ProjectClass project)
-        {
-            return _reader.ListSubjects(project);
-        }
+
+
+
+
+        
 
 
 
@@ -609,12 +448,9 @@ namespace Data_Logger_1._3.Services
 
 
 
-        public bool UpdateQtLog(LOG lOG)
-        {
-            return _handler.UpdateQtLog(lOG);
-        }
+        public async Task<bool> UpdateQtLog(LOG lOG) => await _handler.UpdateQtLog(lOG);
 
-        public bool UpdateNotesLog(NoteItem noteItem) => _handler.UpdateNotesLog(noteItem);
+        public async Task<bool> UpdateNotesLog(NoteItem noteItem) => await _handler.UpdateNotesLog(noteItem);
 
 
 
@@ -638,10 +474,7 @@ namespace Data_Logger_1._3.Services
 
 
 
-        public bool DeleteLog(LOG log)
-        {
-            return _handler.DeleteLog(log);
-        }
+        public async Task<bool> DeleteLog(LOG log) => await _handler.DeleteLog(log);
 
 
 
@@ -680,10 +513,9 @@ namespace Data_Logger_1._3.Services
 
 
 
-
-
-
         #endregion
+        
+
 
 
         #region Cache Retrieval
@@ -699,7 +531,7 @@ namespace Data_Logger_1._3.Services
         /// <returns>An observable collection of QtLOGViewModels</returns>
         public ObservableCollection<QtLOGViewModel> RetrieveQtCache(LogCacheViewModel logCacheViewModel, DataService dataService)
         {
-            return _cachemaster.LoadQtViewModels(logCacheViewModel, dataService, _account);
+            return _cachemaster.LoadQtViewModels(logCacheViewModel, dataService, _account) ?? new();
         }
 
         /// <summary>
@@ -709,7 +541,7 @@ namespace Data_Logger_1._3.Services
         /// <returns>An observable collection of AndroidLOGViewModels</returns>
         public ObservableCollection<AndroidLOGViewModel> RetrieveASCache(LogCacheViewModel logCacheViewModel)
         {
-            return _cachemaster.LoadASViewModels(logCacheViewModel, this, _account);
+            return _cachemaster.LoadASViewModels(logCacheViewModel, this, _account) ?? new();
         }
 
         /// <summary>
@@ -719,7 +551,7 @@ namespace Data_Logger_1._3.Services
         /// <returns>An observable collection of CodeLOGViewModels</returns>
         public ObservableCollection<CodeLOGViewModel> RetrieveCodeCache(LogCacheViewModel logCacheViewModel)
         {
-            return _cachemaster.LoadCodeViewModels(logCacheViewModel, this, _account);
+            return _cachemaster.LoadCodeViewModels(logCacheViewModel, this, _account) ?? new();
         }
 
         /// <summary>
@@ -729,7 +561,7 @@ namespace Data_Logger_1._3.Services
         /// <returns>An observable collection of GraphicsLOGViewModels</returns>
         public ObservableCollection<GraphicsLOGViewModel> RetrieveGraphicsCache(LogCacheViewModel logCacheViewModel)
         {
-            return _cachemaster.LoadGraphicsViewModels(logCacheViewModel, this, _account);
+            return _cachemaster.LoadGraphicsViewModels(logCacheViewModel, this, _account) ?? new();
         }
 
         /// <summary>
@@ -739,7 +571,7 @@ namespace Data_Logger_1._3.Services
         /// <returns>An observable collection of FilmLOGViewModels</returns>
         public ObservableCollection<FilmLOGViewModel> RetrieveFilmCache(LogCacheViewModel logCacheViewModel)
         {
-            return _cachemaster.LoadFilmViewModels(logCacheViewModel, this, _account);
+            return _cachemaster.LoadFilmViewModels(logCacheViewModel, this, _account) ?? new();
         }
 
         /// <summary>
@@ -749,8 +581,27 @@ namespace Data_Logger_1._3.Services
         /// <returns>An observable collection of FlexiLOGViewModels</returns>
         public ObservableCollection<FlexiLOGViewModel> RetrieveFlexibleCache(LogCacheViewModel logCacheViewModel)
         {
-            return _cachemaster.LoadFlexiViewModels(logCacheViewModel, this, _account);
+            return _cachemaster.LoadFlexiViewModels(logCacheViewModel, this, _account) ?? new();
         }
+
+        #endregion
+
+
+
+
+
+
+
+        #region Feedback Management
+
+
+
+        public async void CreateFeedback(Exception exception, string methodName, string exceptionType = "Exception")
+        {
+            await _writer.HandleExceptionAsync(exception, methodName, exceptionType);
+        }
+
+
 
         #endregion
 

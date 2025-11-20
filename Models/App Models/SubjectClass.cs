@@ -1,19 +1,35 @@
 ﻿
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+
 namespace Data_Logger_1._3.Models.App_Models
 {
+    /// <summary>
+    /// The most important part of a LOG. Provides clear context of the problem at hand.
+    /// </summary>
+    [Table("Subject")]
     public class SubjectClass
     {
 
-        public int SubjectID { get; set; } = 1;
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public int subjectID { get; set; }
 
         public LOG.CATEGORY Category { get; set; } = LOG.CATEGORY.CODING;
 
+
         public ACCOUNT User { get; set; }
+
+        public int accountID { get; set; }
+
 
         public string Subject { get; set; } = "";
 
+        public int projectID { get; set; } = 1;
         public ProjectClass Project { get; set; }
 
+
+        public int appID { get; set; } = 3;
         public ApplicationClass Application { get; set; }
 
         public SubjectClass()
@@ -27,7 +43,16 @@ namespace Data_Logger_1._3.Models.App_Models
 
         public SubjectClass(int subjectID, LOG.CATEGORY category, ACCOUNT user, string subject, ProjectClass project, ApplicationClass application)
         {
-            SubjectID = subjectID;
+            this.subjectID = subjectID;
+            Category = category;
+            User = user;
+            Subject = subject;
+            Project = project;
+            Application = application;
+        }
+        
+        public SubjectClass(LOG.CATEGORY category, ACCOUNT user, string subject, ProjectClass project, ApplicationClass application)
+        {
             Category = category;
             User = user;
             Subject = subject;
@@ -38,7 +63,7 @@ namespace Data_Logger_1._3.Models.App_Models
         public override bool Equals(object? obj)
         {
             return obj is SubjectClass @class &&
-                   SubjectID == @class.SubjectID &&
+                   subjectID == @class.subjectID &&
                    Category == @class.Category &&
                    User == @class.User &&
                    Subject == @class.Subject &&
@@ -48,7 +73,7 @@ namespace Data_Logger_1._3.Models.App_Models
 
         public override int GetHashCode()
         {
-            return HashCode.Combine(SubjectID, Category, User, Subject, Project, Application);
+            return HashCode.Combine(subjectID, Category, User, Subject, Project, Application);
         }
 
         public static bool operator ==(SubjectClass left, SubjectClass right)

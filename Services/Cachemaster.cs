@@ -18,6 +18,16 @@ namespace Data_Logger_1._3.Services
     /// </summary>
     public class Cachemaster
     {
+        public enum CacheContext
+        {
+            Qt,
+            AndroidStudio,
+            Coding,
+            Graphics,
+            Film,
+            NOTES,
+            Flexi
+        }
 
         const string MAIN_FOLDER = @"C:\Data Logger Central";
         const string DEPOSITORY_PATH = $@"{MAIN_FOLDER}\Depository";

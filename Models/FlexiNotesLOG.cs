@@ -1,4 +1,5 @@
 ﻿using Data_Logger_1._3.Models.App_Models;
+using System.ComponentModel.DataAnnotations.Schema;
 
 
 namespace Data_Logger_1._3.Models
@@ -8,7 +9,7 @@ namespace Data_Logger_1._3.Models
     /// Please use this flexible LOG class for logs that don't fit under coding, 
     /// graphics, or film.
     /// </summary>
-
+    [Table("FlexiNotesLOG")]
     public class FlexiNotesLOG : NotesLOG
     {
 
@@ -54,13 +55,15 @@ namespace Data_Logger_1._3.Models
         /// The medium. Used for music logs.
         /// </summary>
 
-        public string Medium { get; set; }
+        public MediumClass Medium { get; set; }
+        public int mediumID { get; set; }
 
         /// <summary>
         /// The format. Used for music logs.
         /// </summary>
 
-        public string Format { get; set; }
+        public FormatClass Format { get; set; }
+        public int formatID { get; set; }
 
         /// <summary>
         /// The bitrate. Used for music logs primarily.
@@ -97,7 +100,7 @@ namespace Data_Logger_1._3.Models
         {
         }
 
-        public FlexiNotesLOG(FLEXINOTEType flexinotetype, GAMINGContext gamingcontext, string medium, string format, int bitRate,
+        public FlexiNotesLOG(FLEXINOTEType flexinotetype, GAMINGContext gamingcontext, MediumClass medium, FormatClass format, int bitRate,
             string length, bool isCompleted, string source)
         {
             this.flexinotetype = flexinotetype;
@@ -112,7 +115,7 @@ namespace Data_Logger_1._3.Models
 
         public FlexiNotesLOG(int id, ACCOUNT author, ProjectClass projectName, ApplicationClass applicationName, DateTime startTime, DateTime endTime,
             OutputClass output, TypeClass type, List<PostIt> postItList,
-            FLEXINOTEType flexinotetype, GAMINGContext gamingcontext, string medium, string format, int bitRate,
+            FLEXINOTEType flexinotetype, GAMINGContext gamingcontext, MediumClass medium, FormatClass format, int bitRate,
             string length, bool isCompleted, string source) : base(id, author, projectName, applicationName, startTime, endTime, output, type, postItList)
         {
             this.flexinotetype = flexinotetype;

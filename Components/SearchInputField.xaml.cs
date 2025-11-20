@@ -55,7 +55,7 @@ namespace Data_Logger_1._3.Components
         public static readonly DependencyProperty UserComboInputProperty =
             DependencyProperty.Register("UserComboInput", typeof(string), typeof(SearchInputField));
 
-        // Items in the combo box
+        // Checklist in the combo box
         public IEnumerable<string> Items
         {
             get { return (IEnumerable<string>)GetValue(ItemsProperty); }
@@ -63,7 +63,7 @@ namespace Data_Logger_1._3.Components
         }
 
         public static readonly DependencyProperty ItemsProperty =
-            DependencyProperty.Register("Items", typeof(IEnumerable<string>), typeof(SearchInputField));
+            DependencyProperty.Register("Checklist", typeof(IEnumerable<string>), typeof(SearchInputField));
 
 
         // For enabling and disabling editing the control. Will allow it to be a normal combo box if false.

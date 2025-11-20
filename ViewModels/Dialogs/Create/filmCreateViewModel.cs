@@ -3,6 +3,7 @@ using Data_Logger_1._3.Models;
 using Data_Logger_1._3.Models.App_Models;
 using Data_Logger_1._3.Services;
 using Data_Logger_1._3.ViewModels.Dashboard;
+using static Data_Logger_1._3.Services.Cachemaster;
 
 namespace Data_Logger_1._3.ViewModels.Dialogs.Create
 {
@@ -33,7 +34,7 @@ namespace Data_Logger_1._3.ViewModels.Dialogs.Create
 
         private void InitializeProjectsAndApplications()
         {
-            _dataService.InitialiseProjectsLIST(Category);
+            _dataService.InitialiseProjectsLISTAsync(Category);
             var items = _dataService.SQLITE_PROJECTS;
 
             var apps = _dataService.SQLITE_APPLICATIONS;

@@ -1,15 +1,38 @@
-﻿namespace Data_Logger_1._3.Models
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+
+namespace Data_Logger_1._3.Models
 {
+
 
     /// <summary>
     /// The class for creating checklists. 
     /// These items are stored within a NoteItem log.
     /// </summary>
+    [Table("Item")]
     public class CheckListItem
     {
         /* PROPERTIES */
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public int itemID { get; set; } = -1;
 
-        public int ID { get; set; } = -1;
+
+
+        public int logID { get; set; }
+
+        public virtual CheckList Checklist { get; set; }
+
+
+
+
+        [ForeignKey("accountID")]
+        public ACCOUNT Author { get; set; }
+
+        public int accountID { get; set; }
+
+
+
 
         public bool IsChecked { get; set; } = false;
 
@@ -32,7 +55,7 @@
 
         public CheckListItem(int id, bool isChecked, string item)
         {
-            ID = id;
+            itemID = id;
             IsChecked = isChecked;
             Item = item;
         }
@@ -46,14 +69,14 @@
         public override bool Equals(object? obj)
         {
             return obj is CheckListItem item &&
-                   ID == item.ID &&
+                   itemID == item.itemID &&
                    IsChecked == item.IsChecked &&
                    Item == item.Item;
         }
 
         public override int GetHashCode()
         {
-            return HashCode.Combine(ID, IsChecked, Item);
+            return HashCode.Combine(itemID, IsChecked, Item);
         }
 
         public static bool operator ==(CheckListItem left, CheckListItem right)

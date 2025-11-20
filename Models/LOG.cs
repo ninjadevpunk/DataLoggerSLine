@@ -1,6 +1,8 @@
 ﻿using Data_Logger_1._3.Models.App_Models;
-
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.RegularExpressions;
+using static Data_Logger_1._3.Models.LOG;
 
 namespace Data_Logger_1._3.Models
 {
@@ -8,7 +10,7 @@ namespace Data_Logger_1._3.Models
     /// <summary>
     /// The parent class. Defines all common log properties.
     /// </summary>
-
+    [Table("LOG")]
     public abstract class LOG
     {
         /* ENUMS */
@@ -31,55 +33,69 @@ namespace Data_Logger_1._3.Models
 
 
 
-        public abstract CATEGORY Category { get; }
+        public CATEGORY Category { get; private set; }
 
         /// <summary>
         /// The log's identifier. Important for database and caching operations.
         /// </summary>
-
-        public int ID { get; set; } = -1;
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public int ID { get; set; }
 
         /// <summary>
         /// The creator of a log.
         /// </summary>
-
+        [ForeignKey("accountID")]
         public ACCOUNT Author { get; set; }
+
+        public int accountID { get; set; }
 
         /// <summary>
         /// The project that is associated with the log.
         /// </summary>
 
+        [ForeignKey("projectID")]
         public ProjectClass Project { get; set; }
+
+        public int projectID { get; set; }
 
         /// <summary>
         /// The application in which the project was created in.
         /// </summary>
-
+        [ForeignKey("appID")]
         public ApplicationClass Application { get; set; }
+
+        public int appID { get; set; }
+
+
 
         /// <summary>
         /// The start date and time of the project.
         /// </summary>
-
         public DateTime Start { get; set; } = DateTime.Now;
 
         /// <summary>
         /// The end date and time of the project.
         /// </summary>
-
         public DateTime End { get; set; } = DateTime.Now;
+
+
 
         /// <summary>
         /// The deliverable for the project.
         /// </summary>
-
+        [ForeignKey("outputID")]
         public OutputClass Output { get; set; }
+
+        public int outputID { get; set; }
 
         /// <summary>
         /// What type of build is created in this project.
         /// </summary>
-
+        [ForeignKey("typeID")]
         public TypeClass Type { get; set; }
+
+        public int typeID { get; set; }
 
         /// <summary>
         /// The most important property of the log. All the thoughts, 
@@ -89,7 +105,14 @@ namespace Data_Logger_1._3.Models
         public List<PostIt> PostItList { get; set; } = new();
 
 
+        /* ENTITY FRAMEWORK */
+
+
+
+
+
         public string Content { get; set; } = string.Empty;
+
 
 
         /** CONSTRUCTOR */
@@ -98,8 +121,9 @@ namespace Data_Logger_1._3.Models
             // Blank
         }
 
-        protected LOG(int id, ACCOUNT author, ProjectClass projectName, ApplicationClass applicationName, DateTime startTime, DateTime endTime, OutputClass output, TypeClass type, List<PostIt> postItList)
+        protected LOG(CATEGORY category, int id, ACCOUNT author, ProjectClass projectName, ApplicationClass applicationName, DateTime startTime, DateTime endTime, OutputClass output, TypeClass type, List<PostIt> postItList)
         {
+            Category = category;
             ID = id;
             Author = author;
             Project = projectName;

@@ -42,11 +42,11 @@ namespace Data_Logger_1._3.ViewModels.Dashboard
             }
         }
 
-        public override void UpdateLogCount()
+        public override async void UpdateLogCount()
         {
             if (CacheItems is not null)
             {
-                var count = _dataService.ASLogCount();
+                var count = await _dataService.ASLogCount();
                 LogCount = $"{CacheItems.Count} android logs cached | {count} total logs";
             }
         }

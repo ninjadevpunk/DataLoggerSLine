@@ -37,4 +37,17 @@
         </Setter>
     </Style>
 
+    <Style x:Key="image_viewer_logo" TargetType="Border">
+        <Setter Property="BorderThickness" Value="0"/>
+        <Setter Property="HorizontalAlignment" Value="Stretch"/>
+        <Setter Property="VerticalAlignment" Value="Stretch"/>
+        <Setter Property="Height" Value="19.05"/>
+        <Setter Property="Width" Value="20"/>
+        <Setter Property="Background">
+            <Setter.Value>
+                <ImageBrush ImageSource="/Assets/login_logo.png" Stretch="UniformToFill"/>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
 </ResourceDictionary>

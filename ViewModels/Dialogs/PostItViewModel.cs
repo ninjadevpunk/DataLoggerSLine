@@ -16,7 +16,7 @@ using Xceed.Wpf.Toolkit;
 
 namespace Data_Logger_1._3.ViewModels.Dialogs
 {
-    public class CreatePostItViewModel : ViewModelBase
+    public class PostItViewModel : ViewModelBase
     {
         public enum PostItField { Error, Solution, Suggestion, Comment }
 
@@ -24,7 +24,12 @@ namespace Data_Logger_1._3.ViewModels.Dialogs
         protected readonly DataService _dataService;
         protected readonly LoggerCreateViewModel _loggerCreateViewModel;
 
-        public CreatePostItViewModel(NavigationService navigationService, DataService dataService, LoggerCreateViewModel loggerCreateViewModel, LOG.CATEGORY category)
+        public PostItViewModel()
+        {
+            
+        }
+
+        public PostItViewModel(NavigationService navigationService, DataService dataService, LoggerCreateViewModel loggerCreateViewModel, LOG.CATEGORY category)
         {
             _navigationService = navigationService;
             _dataService = dataService;
@@ -61,7 +66,7 @@ namespace Data_Logger_1._3.ViewModels.Dialogs
             HighlighterCommand = new HighlighterCommand(this);
         }
 
-        public CreatePostItViewModel(NavigationService navigationService, DataService dataService, LoggerCreateViewModel loggerCreateViewModel, ProjectClass project)
+        public PostItViewModel(NavigationService navigationService, DataService dataService, LoggerCreateViewModel loggerCreateViewModel, ProjectClass project)
         {
             _navigationService = navigationService;
             _dataService = dataService;
@@ -96,7 +101,7 @@ namespace Data_Logger_1._3.ViewModels.Dialogs
             HighlighterCommand = new HighlighterCommand(this);
         }
 
-        public CreatePostItViewModel(NavigationService navigationService, DataService dataService, LoggerCreateViewModel loggerCreateViewModel, ProjectClass project, 
+        public PostItViewModel(NavigationService navigationService, DataService dataService, LoggerCreateViewModel loggerCreateViewModel, ProjectClass project, 
             string subject, string error, DateTime dateFound, string solution, DateTime dateSolved, string suggestion, string comment)
         {
             _navigationService = navigationService;
@@ -140,7 +145,7 @@ namespace Data_Logger_1._3.ViewModels.Dialogs
             HighlighterCommand = new HighlighterCommand(this);
         }
 
-        public CreatePostItViewModel(NavigationService navigationService, ProjectClass project, string subject, string error,
+        public PostItViewModel(NavigationService navigationService, ProjectClass project, string subject, string error,
             string solution, string suggestion, string comment)
         {
             _navigationService = navigationService;

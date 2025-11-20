@@ -1,5 +1,6 @@
 ﻿
 using Data_Logger_1._3.Models.App_Models;
+using System.ComponentModel.DataAnnotations.Schema;
 
 
 namespace Data_Logger_1._3.Models
@@ -10,11 +11,9 @@ namespace Data_Logger_1._3.Models
     /// and is used for coding projects in any coding app - 
     /// especially Qt Creator and Android Studio.
     /// </summary>
-
+    [Table("CodingLOG")]
     public class CodingLOG : LOG
     {
-        /* ENUMS */
-        public override CATEGORY Category => CATEGORY.CODING;
 
         /* MEMBER VARIABLES */
 
@@ -46,7 +45,7 @@ namespace Data_Logger_1._3.Models
         }
 
         public CodingLOG(int id, ACCOUNT author, ProjectClass projectName, ApplicationClass applicationName, DateTime startTime, DateTime endTime,
-            OutputClass output, TypeClass type, List<PostIt> postItList, int bugs, bool success) : base(id, author, projectName, applicationName, startTime, endTime, output, type, postItList)
+            OutputClass output, TypeClass type, List<PostIt> postItList, int bugs, bool success) : base(LOG.CATEGORY.CODING, id, author, projectName, applicationName, startTime, endTime, output, type, postItList)
         {
             Bugs = bugs;
             Success = success;
@@ -54,31 +53,17 @@ namespace Data_Logger_1._3.Models
 
         public override bool Equals(object? obj)
         {
+            if (obj is not CodingLOG log)
+                return false;
 
-            // TODO
-
-            return obj is CodingLOG lOG &&
-                   Category == lOG.Category &&
-                   ID == lOG.ID &&
-                   Author == lOG.Author &&
-                   Project == lOG.Project &&
-                   Application == lOG.Application &&
-                   Start == lOG.Start &&
-                   End == lOG.End &&
-                   Output == lOG.Output &&
-                   Type == lOG.Type &&
-                   PostItList.Equals(lOG.PostItList) &&
-                   Category == lOG.Category &&
-                   Bugs == lOG.Bugs &&
-                   Success == lOG.Success;
+            return base.Equals(log) &&
+                   Bugs == log.Bugs &&
+                   Success == log.Success;
         }
 
         public override int GetHashCode()
         {
-            HashCode hash = new HashCode();
-            hash.Add(Bugs);
-            hash.Add(Success);
-            return hash.ToHashCode();
+            return HashCode.Combine(base.GetHashCode(), Bugs, Success);
         }
 
         public static bool operator ==(CodingLOG cLOG1, CodingLOG cLOG2)

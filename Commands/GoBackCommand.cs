@@ -34,7 +34,7 @@ namespace Data_Logger_1._3.Commands
 
             try
             {
-                _navigationService.GoBack();
+                //_navigationService.GoBack();
             }
             catch (Exception)
             {

@@ -3,6 +3,7 @@ using Data_Logger_1._3.Models;
 using Data_Logger_1._3.Models.App_Models;
 using Data_Logger_1._3.Services;
 using Data_Logger_1._3.ViewModels.Dashboard;
+using static Data_Logger_1._3.Services.Cachemaster;
 
 namespace Data_Logger_1._3.ViewModels.Dialogs.Create
 {
@@ -16,11 +17,16 @@ namespace Data_Logger_1._3.ViewModels.Dialogs.Create
         private readonly CodingQtViewModel? _QtviewModel;
 
         private const string Qt = "Qt Creator";
-        protected const string AndroidStudio = "Android Studio Hedgehog 2023.1.1";
+        protected const string AndroidStudio = "Android Studio Meerkat 2024.3.1";
         protected const string VisualStudio = "Visual Studio Community 2022";
 
         private bool QtOnly = false;
         protected bool ASOnly = false;
+
+        public codeCreateViewModel()
+        {
+            
+        }
 
         public codeCreateViewModel(NavigationService navigationService, LogCacheViewModel logCacheViewModel, DataService dataService)
             : base(navigationService, logCacheViewModel, dataService)
@@ -44,7 +50,7 @@ namespace Data_Logger_1._3.ViewModels.Dialogs.Create
         public codeCreateViewModel(NavigationService navigationService, LogCacheViewModel logCacheViewModel, string application, DataService dataService)
             : base(navigationService, logCacheViewModel, dataService)
         {
-            _dataService.InitialiseProjectsLIST(Category);
+            _dataService.InitialiseProjectsLISTAsync(Category);
 
             if (application is Qt || application is "Qt")
             {
@@ -95,14 +101,12 @@ namespace Data_Logger_1._3.ViewModels.Dialogs.Create
 
             foreach (ProjectClass project in items)
             {
-                if (project.Application.Name != Qt && project.Application.Name != AndroidStudio)
-                    _projects.Add(project.Name);
+                _projects.Add(project.Name);
             }
 
             foreach (ApplicationClass app in apps)
             {
-                if (app.Category == LOG.CATEGORY.CODING && app.Name != Qt && app.Name != AndroidStudio)
-                    _applications.Add(app.Name);
+                _applications.Add(app.Name);
             }
         }
 
@@ -117,48 +121,53 @@ namespace Data_Logger_1._3.ViewModels.Dialogs.Create
             }
         }
 
-        private void LoadDefaultOutputs()
+        private async void LoadDefaultOutputs()
         {
             Output = "C# Application (*.exe)";
-            _outputs.Add("C# Application (*.exe)");
-            _outputs.Add("C++ Application (*.exe)");
-            _outputs.Add("C Application (*.exe)");
-            _outputs.Add("Java Application (*.exe)");
-            _outputs.Add("Database (*.db)");
-            _outputs.Add("Database (SQL, Oracle)");
+            
+            foreach(var output in await _dataService.ListOutputs(Category))
+            {
+                _outputs.Add(output.Name);
+            }
+            
         }
 
-        private void LoadQtOutputs()
+        private async void LoadQtOutputs()
         {
             Output = "Widgets Application";
-            _outputs.Add("Console Application");
-            _outputs.Add("Widgets Application");
-            _outputs.Add("QtQuick Application");
+
+            foreach(var output in await _dataService.ListQtOutputs())
+            {
+                _outputs.Add(output.Name);
+            }
         }
 
-        private void LoadDefaultTypes()
+        private async void LoadDefaultTypes()
         {
             Type = "Exception";
-            _types.Add("NONE");
-            _types.Add("Compilation");
-            _types.Add("Runtime");
-            _types.Add("Exception");
+            
+            foreach(var type in await _dataService.ListTypes(Category))
+            {
+                _types.Add(type.Name);
+            }
+
         }
 
-        private void LoadQtTypes()
+        private async void LoadQtTypes()
         {
             Type = "Build";
-            _types.Add("NONE");
-            _types.Add("Build");
-            _types.Add("Runtime");
-            _types.Add("Exception");
+            
+            foreach(var type in await _dataService.ListQtTypes())
+            {
+                _types.Add(type.Name);
+            }
         }
 
         public string ApplicationToolTip { get; set; } = "The application's name.";
         public string TimeStartToolTip { get; set; } = "Updates the current start time AND end time. Does not update automatically!";
         public string TimeEndToolTip { get; set; } = "Updates the END TIME ONLY. Does not update automatically.";
-        public string OutputToolTip { get; set; } = "Please select from this list. Items cannot be modified.";
-        public string TypeToolTip { get; set; } = "Please select from this list. Items cannot be modified.";
+        public string OutputToolTip { get; set; } = "Please select from this list. Checklist cannot be modified.";
+        public string TypeToolTip { get; set; } = "Please select from this list. Checklist cannot be modified.";
 
 
 

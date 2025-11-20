@@ -39,9 +39,9 @@ namespace Data_Logger_1._3.ViewModels.Dashboard
             LogCount = logCount;
         }
 
-        public virtual void UpdateLogCount()
+        public virtual async void UpdateLogCount()
         {
-            var count = _dataService.LogCount(LOG.CATEGORY.CODING);
+            var count = await _dataService.LogCount(LOG.CATEGORY.CODING);
             LogCount = $"{CacheItems.Count} coding logs cached | {count} total logs";
         }
     }

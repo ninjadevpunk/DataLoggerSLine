@@ -8,6 +8,7 @@ using System.Collections.ObjectModel;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
+using static Data_Logger_1._3.Services.Cachemaster;
 
 namespace Data_Logger_1._3.ViewModels.Dialogs.Create
 {
@@ -24,6 +25,11 @@ namespace Data_Logger_1._3.ViewModels.Dialogs.Create
         public abstract CacheContext Context { get; }
 
         public abstract string LogType { get; }
+
+        protected LoggerCreateViewModel()
+        {
+            
+        }
 
         protected LoggerCreateViewModel(NavigationService navigationService, LogCacheViewModel logCacheViewModel, DataService dataService)
         {
@@ -63,7 +69,7 @@ namespace Data_Logger_1._3.ViewModels.Dialogs.Create
             _types = new();
 
 
-            PostIts = new ObservableCollection<CreatePostItViewModel>();
+            PostIts = new ObservableCollection<PostItViewModel>();
 
             CurrentStartDateCommand = new CurrentStartDateCommand(this);
             CurrentEndDateCommand = new CurrentEndDateCommand(this);
@@ -385,8 +391,8 @@ namespace Data_Logger_1._3.ViewModels.Dialogs.Create
         }
 
 
-        private ObservableCollection<CreatePostItViewModel> postIts;
-        public ObservableCollection<CreatePostItViewModel> PostIts
+        private ObservableCollection<PostItViewModel> postIts;
+        public ObservableCollection<PostItViewModel> PostIts
         {
             get
             {

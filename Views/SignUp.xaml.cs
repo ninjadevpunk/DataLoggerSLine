@@ -1,6 +1,6 @@
 ﻿using Data_Logger_1._3.Services;
+using Data_Logger_1._3.ViewModels;
 using System.Windows;
-using System.Windows.Input;
 
 namespace Data_Logger_1._3.Views
 {
@@ -9,18 +9,17 @@ namespace Data_Logger_1._3.Views
     /// </summary>
     public partial class SignUp : Window
     {
-        private readonly NavigationService _navigationService;
-
         public SignUp()
         {
             InitializeComponent();
         }
 
-        public SignUp(NavigationService navigationService)
+        public SignUp(NavigationService navigationService, SignUpViewModel signUpViewModel)
         {
             InitializeComponent();
+            DataContext = signUpViewModel;
 
-            _navigationService = navigationService;
+            signUpViewModel.RequestClose += () => this.Close();
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
@@ -36,20 +35,6 @@ namespace Data_Logger_1._3.Views
             // Set the new left and top positions
             this.Left = newLeft;
             this.Top = newTop;
-        }
-
-        private void on_LOGIN_clicked(object sender, MouseButtonEventArgs e)
-        {
-
-            try
-            {
-                _navigationService.NavigateToLogin(true);
-                this.Close();
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"An error occurred: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-            }
         }
 
 

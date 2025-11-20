@@ -1,5 +1,4 @@
-﻿using Data_Logger_1._3.Services;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Media;
 
 namespace Data_Logger_1._3.Views
@@ -11,24 +10,11 @@ namespace Data_Logger_1._3.Views
     {
         private readonly Brush? enabledColor = TryParseBrush("iconCOLOURAccent02");
         private readonly Brush? disabledColor = TryParseBrush("AccentColour");
-        private readonly NavigationService _navigationService;
 
 
         public Login()
         {
             InitializeComponent();
-        }
-
-        public Login(NavigationService navigationService)
-        {
-            InitializeComponent();
-
-            _navigationService = navigationService;
-        }
-
-        public void Navigator(string pageUri)
-        {
-            frame_LOGIN.NavigationService.Navigate(new Uri(pageUri, UriKind.Relative));
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)

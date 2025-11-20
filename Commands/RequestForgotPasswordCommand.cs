@@ -28,7 +28,7 @@ namespace Data_Logger_1._3.Commands
             {
                 _authService.ForgotPasswordRequest();
 
-                _navigationService.NavigateToLogin(true);
+                _navigationService.NavigateToLogin(false);
             }
             catch (Exception)
             {

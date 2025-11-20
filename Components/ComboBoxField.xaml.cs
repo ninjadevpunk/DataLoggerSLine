@@ -27,7 +27,7 @@ namespace Data_Logger_1._3.Components
 
 
         /// <summary>
-        /// Items in the combo box.
+        /// Checklist in the combo box.
         /// </summary>
         public IEnumerable<string> Items
         {
@@ -36,7 +36,7 @@ namespace Data_Logger_1._3.Components
         }
 
         public static readonly DependencyProperty ItemsProperty =
-            DependencyProperty.Register("Items", typeof(IEnumerable<string>), typeof(ComboBoxField));
+            DependencyProperty.Register("Checklist", typeof(IEnumerable<string>), typeof(ComboBoxField));
 
 
         /// <summary>

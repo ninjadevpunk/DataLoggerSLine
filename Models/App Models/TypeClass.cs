@@ -1,15 +1,30 @@
 ﻿
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+
 namespace Data_Logger_1._3.Models.App_Models
 {
+    /// <summary>
+    /// Represents a reason for the log being logged.
+    /// </summary>
+    [Table("TYPE")]
     public class TypeClass
     {
-        public int TypeID { get; set; } = 1;
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public int typeID { get; set; }
+
 
         public ACCOUNT User { get; set; }
 
+        public int accountID { get; set; }
+
+
         public string Name { get; set; } = "NONE";
 
+
         public ApplicationClass Application { get; set; }
+        public int appID { get; set; } = 3;
 
         public LOG.CATEGORY Category { get; set; } = LOG.CATEGORY.CODING;
 
@@ -24,7 +39,15 @@ namespace Data_Logger_1._3.Models.App_Models
 
         public TypeClass(int typeID, ACCOUNT user, string name, ApplicationClass application, LOG.CATEGORY category)
         {
-            TypeID = typeID;
+            typeID = typeID;
+            User = user;
+            Name = name;
+            Application = application;
+            Category = category;
+        }
+        
+        public TypeClass(ACCOUNT user, string name, ApplicationClass application, LOG.CATEGORY category)
+        {
             User = user;
             Name = name;
             Application = application;
@@ -34,7 +57,7 @@ namespace Data_Logger_1._3.Models.App_Models
         public override bool Equals(object? obj)
         {
             return obj is TypeClass @class &&
-                   TypeID == @class.TypeID &&
+                   typeID == @class.typeID &&
                    User.Equals(@class.User) &&
                    Name == @class.Name &&
                    Application.Equals(@class.Application) &&
@@ -43,7 +66,7 @@ namespace Data_Logger_1._3.Models.App_Models
 
         public override int GetHashCode()
         {
-            return HashCode.Combine(TypeID, User, Name, Application, Category);
+            return HashCode.Combine(typeID, User, Name, Application, Category);
         }
 
         public static bool operator ==(TypeClass left, TypeClass right)

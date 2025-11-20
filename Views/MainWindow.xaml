@@ -39,41 +39,6 @@
                 CornerRadius="2 2 0 0"
                 Visibility="Collapsed" />
 
-        <!-- NAVIGATION ARROWS -->
-        <StackPanel Orientation="Horizontal" Grid.Column="1" Grid.Row="0"
-                    HorizontalAlignment="Left"
-                    Margin="60 5"
-                    d:Background="Aqua" 
-                    Visibility="Collapsed" >
-            <Button x:Name="button_BACK" Style="{DynamicResource button_TITLE_bar}"
-                    Margin="0 0 20 0"
-                    Height="25"
-                    Width="25"
-                    Command="{Binding GoBackCommand}" >
-                <Path x:Name="icon_BACK" Style="{DynamicResource path_ARROW_BACK}"
-                      Fill="{Binding IconBackFill, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
-                      />
-
-            </Button>
-
-            <Button x:Name="button_FORWARD" Style="{DynamicResource button_TITLE_bar}"
-                    Margin="20 0 0 0"
-                    Height="25"
-                    Width="25"
-                    Command="{Binding GoForwardCommand}"
-                    >
-
-
-                <Path x:Name="icon_FORWARD"  Style="{DynamicResource path_ARROW_FORWARD}"
-                      Fill="{Binding IconForwardFill, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
-                      />
-
-
-            </Button>
-        </StackPanel>
-
-        
-        
         
         <!-- TITLE BAR -->
         <Border x:Name="customTITLEBar_MAINWINDOW" Grid.Column="1" Grid.Row="0" Grid.ColumnSpan="2"
@@ -211,7 +176,9 @@
                                             MENUIcon="{DynamicResource path_CODING}"
                                             Category="CODING"
                                             Checked="{Binding CodingChecked, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
-                                            Crew="Menu" />
+                                            Crew="Menu"
+                                            IsEnabled="{Binding MenuActivated, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                                            />
 
                 <!--#region CODING SUB MENU -->
 
@@ -223,6 +190,7 @@
                                                    SubCategory="Qt"
                                                    SubChecked="{Binding CodingQtChecked, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
                                                    SubCrew="CODING_SubMenu"
+                                                   IsEnabled="{Binding MenuActivated, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
                                                    />
 
                     <!-- Android Studio -->
@@ -231,6 +199,7 @@
                                                    SubCategory="Android Studio"
                                                    SubChecked="{Binding CodingAndroidChecked, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
                                                    SubCrew="CODING_SubMenu"
+                                                   IsEnabled="{Binding MenuActivated, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
                                                    />
 
                     <!-- Generic CODE Logs -->
@@ -239,6 +208,7 @@
                                                    SubCategory="Generic"
                                                    SubChecked="{Binding CodingGenericChecked, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
                                                    SubCrew="CODING_SubMenu"
+                                                   IsEnabled="{Binding MenuActivated, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
                                                    />
 
                 </StackPanel>
@@ -253,26 +223,29 @@
 
                 <!-- GRAPHICS -->
                 <components:MENURadioButton Grid.Row="4" x:Name="radio_GRAPHICS"
-                            MENUIcon="{DynamicResource path_GRAPHICS}"
-                            Category="GRAPHICS"
-                            Checked="{Binding GraphicsChecked, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
-                            Crew="Menu"
+                                            MENUIcon="{DynamicResource path_GRAPHICS}"
+                                            Category="GRAPHICS"
+                                            Checked="{Binding GraphicsChecked, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                                            Crew="Menu"
+                                            IsEnabled="{Binding MenuActivated, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
                             />
 
                 <!-- FILM -->
                 <components:MENURadioButton Grid.Row="5" x:Name="radio_FILM"
-                    MENUIcon="{DynamicResource path_FILM}"
-                    Category="FILM"
-                    Checked="{Binding FilmChecked, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
-                    Crew="Menu"
+                                            MENUIcon="{DynamicResource path_FILM}"
+                                            Category="FILM"
+                                            Checked="{Binding FilmChecked, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                                            Crew="Menu"
+                                            IsEnabled="{Binding MenuActivated, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
                     />
 
                 <!-- NOTES -->
                 <components:MENURadioButton Grid.Row="6" x:Name="radio_NOTES"
-                    MENUIcon="{DynamicResource path_NOTES}"
-                    Category="NOTES"
-                    Checked="{Binding NotesChecked, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
-                    Crew="Menu"
+                                            MENUIcon="{DynamicResource path_NOTES}"
+                                            Category="NOTES"
+                                            Checked="{Binding NotesChecked, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                                            Crew="Menu"
+                                            IsEnabled="{Binding MenuActivated, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
                     />
 
 
@@ -283,26 +256,29 @@
 
                     <!-- FREE FORM NOTES -->
                     <components:SubMENURadioButton x:Name="radio_FREE_NOTES"
-                                   SubMENUIcon="{DynamicResource path_FREE_NOTES}"
-                                   SubCategory="Create Notes"
-                                   SubChecked="{Binding GenericNotesChecked, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
-                                   SubCrew="NOTES_SubMenu"
+                                                   SubMENUIcon="{DynamicResource path_FREE_NOTES}"
+                                                   SubCategory="Create Notes"
+                                                   SubChecked="{Binding GenericNotesChecked, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                                                   SubCrew="NOTES_SubMenu"
+                                                   IsEnabled="{Binding MenuActivated, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
                                    />
 
                     <!-- CHECKLIST -->
                     <components:SubMENURadioButton x:Name="radio_CHECKLIST"
-                                    SubMENUIcon="{DynamicResource path_CHECKLIST}"
-                                    SubCategory="Create Checklist"
-                                    SubChecked="{Binding ChecklistNotesChecked, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
-                                    SubCrew="NOTES_SubMenu"
+                                                   SubMENUIcon="{DynamicResource path_CHECKLIST}"
+                                                   SubCategory="Create Checklist"
+                                                   SubChecked="{Binding ChecklistNotesChecked, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                                                   SubCrew="NOTES_SubMenu"
+                                                   IsEnabled="{Binding MenuActivated, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
                                     />
 
                     <!-- OTHER -->
                     <components:SubMENURadioButton x:Name="radio_OTHER"
-                                    SubMENUIcon="{DynamicResource path_OTHER}"
-                                    SubCategory="Other"
-                                    SubChecked="{Binding FlexiChecked, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
-                                    SubCrew="NOTES_SubMenu"
+                                                   SubMENUIcon="{DynamicResource path_OTHER}"
+                                                   SubCategory="Other"
+                                                   SubChecked="{Binding FlexiChecked, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                                                   SubCrew="NOTES_SubMenu"
+                                                   IsEnabled="{Binding MenuActivated, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
                                     />
 
                 </StackPanel>
@@ -348,6 +324,7 @@
 
                         <!-- ACCOUNT -->
                         <Button Grid.Column="0"  x:Name="button_ACCOUNT" Style="{DynamicResource button_SUPPORT}"
+                                Command="{Binding LogOutCommand}"
                                 >
                             <Grid>
                                 <Border x:Name="image_USER" Style="{DynamicResource image_displayPic}"

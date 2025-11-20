@@ -12,7 +12,7 @@ namespace Data_Logger_1._3.ViewModels.Dialogs
         public ICommand DeleteItem {  get; set; }
 
 
-        #region Constructors 
+        #region Constructors
 
 
 

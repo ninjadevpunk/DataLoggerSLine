@@ -92,7 +92,7 @@
     <!-- LOGO SPLASH SCREEN -->
     <Style x:Key="text_logoSPLASHscreen" TargetType="TextBlock">
         <Setter Property="FontFamily" Value="{StaticResource ZektonBold}"/>
-        <Setter Property="FontSize" Value="20"/>
+        <Setter Property="FontSize" Value="16"/>
         <Setter Property="FontStyle" Value="Normal"/>
         <Setter Property="FontWeight" Value="Normal"/>
         <Setter Property="Margin" Value="0 20"/>
@@ -216,6 +216,10 @@
 
     <!-- #region LABELS -->
 
+
+    <Style x:Key="text_LOGIN_InputStatus" TargetType="TextBlock" BasedOn="{StaticResource text_login_PLACEHOLDER}">
+        <Setter Property="Foreground" Value="{DynamicResource GREEN}" />
+    </Style>
 
     <Style x:Key="text_LABEL01" TargetType="TextBlock">
         <Setter Property="FontFamily" Value="{DynamicResource Red Hat Display}"/>

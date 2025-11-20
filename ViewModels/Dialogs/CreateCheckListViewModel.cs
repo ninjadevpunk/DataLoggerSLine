@@ -11,25 +11,27 @@ namespace Data_Logger_1._3.ViewModels.Dialogs
     {
         private readonly DataService _dataService;
         private readonly NavigationService _navigationService;
+        private readonly ViewModelFactory _viewModelFactory;
 
-        public CreateCheckListViewModel(NavigationService navigationService, DataService dataService, NOTESViewModel notesViewModel)
+        public CreateCheckListViewModel(NavigationService navigationService, DataService dataService, NOTESViewModel notesViewModel, ViewModelFactory viewModelFactory)
         {
-            _navigationService = navigationService;
             _dataService = dataService;
+            _navigationService = navigationService;
+            _viewModelFactory = viewModelFactory;
 
-            InitialiseCommonFields();
-
-            AddChecklistItem = new AddChecklistItemCommand(this);
-            SaveChecklistCommand = new SaveChecklistCommand(_navigationService, _dataService, this, notesViewModel);
+            InitialiseCommonFields(notesViewModel);
         }
 
-        public void InitialiseCommonFields()
+        public void InitialiseCommonFields(NOTESViewModel notesViewModel)
         {
             ChecklistItems = new();
 
             CreationDate = DateTime.Now.ToString("dd MMMM yyyy HH:mm");
             StartandEndDate();
             NoteSubject = "No Subject";
+
+            AddChecklistItem = new AddChecklistItemCommand(this, _viewModelFactory);
+            SaveChecklistCommand = new SaveChecklistCommand(_navigationService, _dataService, this, notesViewModel);
         }
 
         private string noteSubject;

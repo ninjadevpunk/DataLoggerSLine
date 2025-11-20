@@ -676,7 +676,7 @@
                             Style="{DynamicResource image_displayPic}">
                         <Grid>
                             <Path x:Name="path_USER" Style="{DynamicResource path_USER}"
-                                  Visibility="{Binding ShowDefault}" />
+                                  Visibility="{Binding ShowDefault, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
                             <Path x:Name="ACTIONCreateICON" Style="{DynamicResource ACTIONCreateICON}"
                                   Fill="{DynamicResource iconCOLOURAccent02}"
                                   Margin="0"

@@ -1,4 +1,5 @@
 ﻿using Data_Logger_1._3.Models.App_Models;
+using System.ComponentModel.DataAnnotations.Schema;
 
 
 namespace Data_Logger_1._3.Models
@@ -7,12 +8,9 @@ namespace Data_Logger_1._3.Models
     /// <summary>
     /// The LOG class for video projects.
     /// </summary>
-
+    [Table("FilmLOG")]
     public class FilmLOG : LOG
     {
-
-        /* ENUMS */
-        public override CATEGORY Category => CATEGORY.FILM;
 
 
 
@@ -70,7 +68,7 @@ namespace Data_Logger_1._3.Models
 
         public FilmLOG(int id, ACCOUNT author, ProjectClass projectName, ApplicationClass applicationName, DateTime startTime, DateTime endTime,
             OutputClass output, TypeClass type, List<PostIt> postItList,
-            double height, double width, string length, bool isCompleted, string source) : base(id, author, projectName, applicationName,
+            double height, double width, string length, bool isCompleted, string source) : base(LOG.CATEGORY.FILM, id, author, projectName, applicationName,
                                                                                                             startTime, endTime, output, type, postItList)
         {
             Height = height;

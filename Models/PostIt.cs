@@ -1,11 +1,13 @@
 ﻿
 using Data_Logger_1._3.Models.App_Models;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 
 namespace Data_Logger_1._3.Models
 {
 
-
+    [Table("PostIt")]
     public class PostIt
     {
         /* MEMBER VARIABLES */
@@ -16,15 +18,31 @@ namespace Data_Logger_1._3.Models
         /// <summary>
         /// The PostIt's identifier.
         /// </summary>
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public int postItID { get; set; } = -1;
 
-        public int ID { get; set; } = -1;
+
+
+        [ForeignKey("logID")]
+        public virtual LOG Log { get; set; }
+
+        public int logID { get; set; }
+
+
+
+        [ForeignKey("accountID")]
+        public ACCOUNT Author { get; set; }
+
+        public int accountID { get; set; }
 
 
         /// <summary>
         /// The PostIt's subject. Gives context to the PostIt's content.
         /// </summary>
-
+        [ForeignKey("subjectID")]
         public SubjectClass Subject { get; set; } = new();
+        public int subjectID { get; set; }
 
         /// <summary>
         /// The error section. For explaining bug occurences or problems that 
@@ -58,7 +76,7 @@ namespace Data_Logger_1._3.Models
 
 
         /// <summary>
-        /// When was the particular note category created. This only captures 
+        /// When was the error found. This only captures 
         /// the error's "found" date and time. The other PostIt field edit times will 
         /// not be recorded here.
         /// </summary>
@@ -83,7 +101,7 @@ namespace Data_Logger_1._3.Models
 
         public PostIt(int id, SubjectClass subject, string error, string solution, string suggestion, string comment)
         {
-            ID = id;
+            postItID = id;
             Subject = subject;
             Error = error;
             Solution = solution;
@@ -93,7 +111,20 @@ namespace Data_Logger_1._3.Models
 
         public PostIt(int id, SubjectClass subject, string error, string solution, string suggestion, string comment, DateTime ercapturetime, DateTime socapturetime)
         {
-            ID = id;
+            postItID = id;
+            Subject = subject;
+            Error = error;
+            Solution = solution;
+            Suggestion = suggestion;
+            Comment = comment;
+            ERCaptureTime = ercapturetime;
+            SOCaptureTime = socapturetime;
+        }
+
+        public PostIt(int id, ACCOUNT account, SubjectClass subject, string error, string solution, string suggestion, string comment, DateTime ercapturetime, DateTime socapturetime)
+        {
+            postItID = id;
+            Author = account;
             Subject = subject;
             Error = error;
             Solution = solution;
@@ -111,7 +142,7 @@ namespace Data_Logger_1._3.Models
         public override bool Equals(object? obj)
         {
             return obj is PostIt it &&
-                   ID == it.ID &&
+                   postItID == it.postItID &&
                    Subject == it.Subject &&
                    Error == it.Error &&
                    Solution == it.Solution &&
@@ -124,7 +155,7 @@ namespace Data_Logger_1._3.Models
         public override int GetHashCode()
         {
             HashCode hash = new HashCode();
-            hash.Add(ID);
+            hash.Add(postItID);
             hash.Add(Subject);
             hash.Add(Error);
             hash.Add(Solution);

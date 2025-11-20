@@ -78,8 +78,9 @@
                                 <Setter Property="Foreground" TargetName="text_ITEM_name" Value="{DynamicResource WHITE}"/>
                             </Trigger>
                             <Trigger Property="IsEnabled" Value="false">
-                                <Setter Property="Background" TargetName="radioButtonBorder" Value="{StaticResource RadioButton.Disabled.Background}"/>
-                                <Setter Property="BorderBrush" TargetName="radioButtonBorder" Value="{StaticResource RadioButton.Disabled.Border}"/>
+                                <Setter Property="Opacity" TargetName="radioButtonBorder" Value=".3"/>
+                                <Setter Property="Opacity" TargetName="path_icon" Value=".3"/>
+                                <Setter Property="Opacity" TargetName="text_ITEM_name" Value=".3"/>
                             </Trigger>
                             <Trigger Property="IsPressed" Value="true">
                                 <Setter Property="Background" TargetName="radioButtonBorder" Value="{DynamicResource HOVERMainMenuItem}"/>

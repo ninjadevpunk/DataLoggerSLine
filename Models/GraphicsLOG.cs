@@ -1,5 +1,6 @@
 ﻿
 using Data_Logger_1._3.Models.App_Models;
+using System.ComponentModel.DataAnnotations.Schema;
 
 
 namespace Data_Logger_1._3.Models
@@ -7,18 +8,18 @@ namespace Data_Logger_1._3.Models
     /// <summary>
     /// This class is reserved for graphics such as drawing, painting and logging for those kinds of projects.
     /// </summary>
-
+    [Table("GraphicsLOG")]
     public class GraphicsLOG : LOG
     {
-        /* ENUMS */
-        public override CATEGORY Category => CATEGORY.GRAPHICS;
 
         /* MEMBER VARIABLES */
 
-        public string Medium { get; set; } = "Pencil";
+        public MediumClass Medium { get; set; }
+        public int mediumID { get; set; }
 
 
-        public string Format { get; set; } = "Digital Canvas";
+        public FormatClass Format { get; set; }
+        public int formatID { get; set; }
 
 
         public string Brush { get; set; } = "";
@@ -30,7 +31,8 @@ namespace Data_Logger_1._3.Models
         public double Width { get; set; } = 0.0;
 
 
-        public string Unit { get; set; } = "cm";
+        public MeasuringUnitClass Unit { get; set; }
+        public int unitID { get; set; }
 
 
         public string Size { get; set; } = "A4";
@@ -56,7 +58,7 @@ namespace Data_Logger_1._3.Models
 
         public GraphicsLOG() { }
 
-        public GraphicsLOG(string medium, string format, string brush, double height, double width, string unit, string size, double dPI, string depth, bool isCompleted, string source)
+        public GraphicsLOG(MediumClass medium, FormatClass format, string brush, double height, double width, MeasuringUnitClass unit, string size, double dPI, string depth, bool isCompleted, string source)
         {
             Medium = medium;
             Format = format;
@@ -73,8 +75,8 @@ namespace Data_Logger_1._3.Models
 
         public GraphicsLOG(int id, ACCOUNT author, ProjectClass projectName, ApplicationClass applicationName, DateTime startTime, DateTime endTime,
             OutputClass output, TypeClass type, List<PostIt> postItList,
-            string medium, string format, string brush, double height, double width,
-            string unit, string size, double dPI, string depth, bool isCompleted, string source) : base(id, author, projectName, applicationName,
+            MediumClass medium, FormatClass format, string brush, double height, double width,
+            MeasuringUnitClass unit, string size, double dPI, string depth, bool isCompleted, string source) : base(LOG.CATEGORY.GRAPHICS, id, author, projectName, applicationName,
                                                                                                             startTime, endTime, output, type, postItList)
         {
             Medium = medium;

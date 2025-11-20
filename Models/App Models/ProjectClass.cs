@@ -1,16 +1,31 @@
 ﻿
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+
 namespace Data_Logger_1._3.Models.App_Models
 {
+    /// <summary>
+    /// Represents a project in which a log is based in.
+    /// </summary>
+    [Table("PROJECT")]
     public class ProjectClass
     {
 
-        public int ProjectID { get; set; } = 1;
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public int projectID { get; set; }
 
+        public int accountID { get; set; }
         public ACCOUNT User { get; set; }
+
 
         public string Name { get; set; } = "Unknown";
 
-        public ApplicationClass Application { get; set; } = new();
+
+        public int appID { get; set; }
+        public virtual ApplicationClass Application { get; set; }
+
+
 
         public LOG.CATEGORY Category { get; set; } = LOG.CATEGORY.CODING;
 
@@ -30,7 +45,7 @@ namespace Data_Logger_1._3.Models.App_Models
 
         public ProjectClass(int projectID, string name, ApplicationClass application)
         {
-            ProjectID = projectID;
+            this.projectID = projectID;
             Name = name;
             Application = application;
             Category = LOG.CATEGORY.CODING;
@@ -40,7 +55,7 @@ namespace Data_Logger_1._3.Models.App_Models
 
         public ProjectClass(int projectID, ACCOUNT user, string name, ApplicationClass application, LOG.CATEGORY category)
         {
-            ProjectID = projectID;
+            this.projectID = projectID;
             User = user;
             Name = name;
             Application = application;
@@ -49,7 +64,16 @@ namespace Data_Logger_1._3.Models.App_Models
 
         public ProjectClass(int projectID, ACCOUNT user, string name, ApplicationClass application, LOG.CATEGORY category, bool isDefault)
         {
-            ProjectID = projectID;
+            this.projectID = projectID;
+            User = user;
+            Name = name;
+            Application = application;
+            Category = category;
+            IsDefault = isDefault;
+        }
+        
+        public ProjectClass(ACCOUNT user, string name, ApplicationClass application, LOG.CATEGORY category, bool isDefault)
+        {
             User = user;
             Name = name;
             Application = application;
@@ -60,7 +84,7 @@ namespace Data_Logger_1._3.Models.App_Models
         public override bool Equals(object? obj)
         {
             return obj is ProjectClass @class &&
-                   ProjectID == @class.ProjectID &&
+                   projectID == @class.projectID &&
                    User == @class.User &&
                    IsDefault == @class.IsDefault &&
                    Name == @class.Name &&
@@ -70,7 +94,7 @@ namespace Data_Logger_1._3.Models.App_Models
 
         public override int GetHashCode()
         {
-            return HashCode.Combine(ProjectID, User, Name, Application, Category, IsDefault);
+            return HashCode.Combine(projectID, User, Name, Application, Category, IsDefault);
         }
 
         public static bool operator ==(ProjectClass left, ProjectClass right)

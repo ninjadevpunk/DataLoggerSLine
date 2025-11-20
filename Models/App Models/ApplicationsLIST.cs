@@ -24,7 +24,7 @@
 
             try
             {
-                if (ContainsApplicationWithID(application.AppID))
+                if (ContainsApplicationWithID(application.appID))
                 {
                     return;
                 }
@@ -41,7 +41,7 @@
         {
             foreach (var app in this)
             {
-                if (app.AppID == appId)
+                if (app.appID == appId)
                 {
                     return true;
                 }

@@ -4,6 +4,7 @@ using Data_Logger_1._3.Models.App_Models;
 using Data_Logger_1._3.Services;
 using Data_Logger_1._3.ViewModels.Dashboard;
 using System.Collections.ObjectModel;
+using static Data_Logger_1._3.Services.Cachemaster;
 
 namespace Data_Logger_1._3.ViewModels.Dialogs.Create
 {
@@ -84,7 +85,7 @@ namespace Data_Logger_1._3.ViewModels.Dialogs.Create
 
         private void LoadProjectsAndApplications()
         {
-            _dataService.InitialiseProjectsLIST(Category);
+            _dataService.InitialiseProjectsLISTAsync(Category);
             var items = _dataService.SQLITE_PROJECTS;
             foreach (ProjectClass project in items)
             {

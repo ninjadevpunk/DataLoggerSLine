@@ -39,9 +39,9 @@ namespace Data_Logger_1._3.ViewModels.Dashboard
             }
         }
 
-        private void UpdateLogCount()
+        public async void UpdateLogCount()
         {
-            var count = _dataService.QtLogCount();
+            var count = await _dataService.QtLogCount();
             LogCount = $"{CacheItems.Count} qt logs cached | {count} total logs";
         }
 

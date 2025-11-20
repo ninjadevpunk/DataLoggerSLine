@@ -12,6 +12,7 @@ using System.Drawing;
 using System.IO;
 using System.Net.Http;
 using System.Windows;
+using static Data_Logger_1._3.Services.Cachemaster;
 
 namespace Data_Logger_1._3.Services
 {
@@ -841,10 +842,10 @@ namespace Data_Logger_1._3.Services
                             }
                         }
 
-                        DrawPostItSection(CreatePostItViewModel.ConvertRtfToPlainText(postIt.Error), PdfBrushes.Red);
-                        DrawPostItSection(CreatePostItViewModel.ConvertRtfToPlainText(postIt.Solution), new PdfSolidBrush(Color.FromArgb(0, 211, 34)));
-                        DrawPostItSection(CreatePostItViewModel.ConvertRtfToPlainText(postIt.Suggestion), new PdfSolidBrush(Color.FromArgb(255, 0, 245)));
-                        DrawPostItSection(CreatePostItViewModel.ConvertRtfToPlainText(postIt.Comment), new PdfSolidBrush(Color.FromArgb(255, 245, 0)));
+                        DrawPostItSection(PostItViewModel.ConvertRtfToPlainText(postIt.Error), PdfBrushes.Red);
+                        DrawPostItSection(PostItViewModel.ConvertRtfToPlainText(postIt.Solution), new PdfSolidBrush(Color.FromArgb(0, 211, 34)));
+                        DrawPostItSection(PostItViewModel.ConvertRtfToPlainText(postIt.Suggestion), new PdfSolidBrush(Color.FromArgb(255, 0, 245)));
+                        DrawPostItSection(PostItViewModel.ConvertRtfToPlainText(postIt.Comment), new PdfSolidBrush(Color.FromArgb(255, 245, 0)));
 
                         Ycoordinate += 10;
 

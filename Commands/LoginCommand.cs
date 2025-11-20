@@ -4,31 +4,39 @@ using MVVMEssentials.Commands;
 
 namespace Data_Logger_1._3.Commands
 {
-    public class LoginCommand : CommandBase
+    public class LoginCommand : AsyncCommandBase
     {
 
-        private readonly LoginViewModel _loginViewModel;
+        private readonly LoginViewModel _login;
         private readonly AuthService _authService;
         private readonly NavigationService _navigationService;
 
 
         public LoginCommand(LoginViewModel loginViewModel, AuthService authService, NavigationService navigationService)
         {
-            _loginViewModel = loginViewModel;
+            _login = loginViewModel;
             _authService = authService;
             _navigationService = navigationService;
         }
 
-        public override void Execute(object parameter)
+        protected override async Task ExecuteAsync(object parameter)
         {
 
             try
             {
-                bool SignInSuccessful = _authService.SignIn(_loginViewModel.Username, _loginViewModel.Password);
+                bool SignInSuccessful = await _authService.SignIn(_login.Username, _login.Password);
 
                 if (SignInSuccessful)
                 {
+                    _login.StatusMessage = "Login Successful";
+                    _login.StatusMessageColour = _login.MessageGood;
                     _navigationService.NavigateToMainWindow();
+                    _login.CloseLogin();
+                }
+                else
+                {
+                    _login.StatusMessage = "Your username/password is incorrect";
+                    _login.StatusMessageColour = _login.MessageBad;
                 }
 
             }

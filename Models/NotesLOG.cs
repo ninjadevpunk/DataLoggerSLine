@@ -1,11 +1,15 @@
 ﻿
 using Data_Logger_1._3.Models.App_Models;
+using System.ComponentModel.DataAnnotations.Schema;
 
 
 namespace Data_Logger_1._3.Models
 {
 
-
+    /// <summary>
+    /// The base class for FlexiNotesLOGs and NoteItems.
+    /// </summary>
+    [Table("NotesLOG")]
     public abstract class NotesLOG : LOG
     {
         /* DOCUMENTATION
@@ -14,10 +18,6 @@ namespace Data_Logger_1._3.Models
          */
 
 
-        /* ENUMS */
-
-        // Log Category
-        public override CATEGORY Category => CATEGORY.NOTES;
 
         // Generic Note or Flexi Note
         public enum NOTELOGType { GENERIC, FLEXI }
@@ -43,7 +43,7 @@ namespace Data_Logger_1._3.Models
 
 
         public NotesLOG(int id, ACCOUNT author, ProjectClass projectName, ApplicationClass applicationName, DateTime startTime, DateTime endTime,
-            OutputClass output, TypeClass type, List<PostIt> postItList) : base(id, author, projectName, applicationName, startTime, endTime, output, type, postItList)
+            OutputClass output, TypeClass type, List<PostIt> postItList) : base(LOG.CATEGORY.NOTES, id, author, projectName, applicationName, startTime, endTime, output, type, postItList)
         {
         }
 

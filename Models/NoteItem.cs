@@ -1,8 +1,10 @@
 ﻿
 using Data_Logger_1._3.Models.App_Models;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Data_Logger_1._3.Models
 {
+    [Table("NoteItem")]
     public class NoteItem : NotesLOG
     {
         /* DOCUMENTATION
@@ -35,7 +37,11 @@ namespace Data_Logger_1._3.Models
         /// will be used to store CheckListItems. In the event that a 
         /// checklist is not created it will remain null.
         /// </summary>
-        public CheckList? Items { get; set; } = null;
+        public int? CheckListID { get; set; }
+
+        [ForeignKey("CheckListID")]
+        public virtual CheckList? Checklist { get; set; }
+
 
 
 
@@ -59,7 +65,7 @@ namespace Data_Logger_1._3.Models
         {
             Subject = subject;
             Content = genericNote;
-            Items = items;
+            Checklist = items;
         }
 
         public NoteItem(int id, ACCOUNT author, ProjectClass projectName, ApplicationClass applicationName, DateTime startTime, DateTime endTime,
@@ -76,7 +82,7 @@ namespace Data_Logger_1._3.Models
         {
             Subject = subject;
             Content = genericNote;
-            Items = items;
+            Checklist = items;
         }
 
 
@@ -100,7 +106,7 @@ namespace Data_Logger_1._3.Models
                    notelogtype == item.notelogtype &&
                    Subject == item.Subject &&
                    Content == item.Content &&
-                   Items == item.Items;
+                   Checklist == item.Checklist;
         }
 
         public override int GetHashCode()
@@ -119,7 +125,7 @@ namespace Data_Logger_1._3.Models
             hash.Add(notelogtype);
             hash.Add(Subject);
             hash.Add(Content);
-            hash.Add(Items);
+            hash.Add(Checklist);
             return hash.ToHashCode();
         }
 

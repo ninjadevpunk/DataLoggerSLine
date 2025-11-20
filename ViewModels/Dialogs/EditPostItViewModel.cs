@@ -7,10 +7,10 @@ using static Data_Logger_1._3.Commands.PostItCommands.PostCommand;
 
 namespace Data_Logger_1._3.ViewModels.Dialogs
 {
-    public class EditPostItViewModel : CreatePostItViewModel
+    public class EditPostItViewModel : PostItViewModel
     {
         public EditPostItViewModel(NavigationService navigationService, DataService dataService, LoggerCreateViewModel loggerCreateViewModel, LOG.CATEGORY category,
-            CreatePostItViewModel createPostItViewModel) :
+            PostItViewModel createPostItViewModel) :
             base(navigationService, dataService, loggerCreateViewModel, category)
         {
             Subject = createPostItViewModel.Subject;
@@ -30,7 +30,7 @@ namespace Data_Logger_1._3.ViewModels.Dialogs
         }
 
         public EditPostItViewModel(NavigationService navigationService, DataService dataService, LoggerCreateViewModel loggerCreateViewModel, ProjectClass project,
-            CreatePostItViewModel createPostItViewModel) :
+            PostItViewModel createPostItViewModel) :
             base(navigationService, dataService, loggerCreateViewModel, project)
         {
             Subject = createPostItViewModel.Subject;

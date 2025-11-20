@@ -13,7 +13,7 @@
 
             foreach (var item in this)
             {
-                if (item.ProjectID == ID)
+                if (item.projectID == ID)
                     return true;
             }
 

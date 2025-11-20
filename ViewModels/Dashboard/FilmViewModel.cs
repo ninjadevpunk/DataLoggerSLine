@@ -40,9 +40,9 @@ namespace Data_Logger_1._3.ViewModels.Dashboard
             }
         }
 
-        private void UpdateLogCount()
+        public async void UpdateLogCount()
         {
-            var count = _dataService.LogCount(LOG.CATEGORY.FILM);
+            var count = await _dataService.LogCount(LOG.CATEGORY.FILM);
             LogCount = $"{CacheItems.Count} film logs cached | {count} total logs";
         }
 

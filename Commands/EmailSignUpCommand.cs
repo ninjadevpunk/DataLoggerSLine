@@ -5,18 +5,13 @@ using System.Windows;
 
 namespace Data_Logger_1._3.Commands
 {
-    public class EmailSignUpCommand : CommandBase
+    public class EmailSignUpCommand : AsyncCommandBase
     {
 
 
         private readonly SignUpViewModel _signUpViewModel;
         private readonly AuthService _authService;
         private readonly NavigationService _navigationService;
-
-        public EmailSignUpCommand(SignUpViewModel signUpViewModel)
-        {
-            _signUpViewModel = signUpViewModel;
-        }
 
         public EmailSignUpCommand(SignUpViewModel signUpViewModel, AuthService authService, NavigationService navigationService)
         {
@@ -25,11 +20,12 @@ namespace Data_Logger_1._3.Commands
             _navigationService = navigationService;
         }
 
-        public override void Execute(object parameter)
+        protected override async Task ExecuteAsync(object parameter)
         {
             try
             {
                 // Retrieve user input from the view model
+                var displayPic = _signUpViewModel.SignUpImage;
                 string email = _signUpViewModel.Email;
                 string password = _signUpViewModel.Password;
                 string displayName = _signUpViewModel.Name;
@@ -42,11 +38,19 @@ namespace Data_Logger_1._3.Commands
                 _authService.Account.ProfilePic = _signUpViewModel.SignUpImage;
 
                 // Call the SignUp method in AuthService to handle user registration
-                var isSignedUp = _authService.SignUp(email, password, displayName, surname, IsHired, company, address, logo);
+                var isSignedUp = await _authService.SignUp(displayPic, email, password, displayName, surname, IsHired, company, address, logo);
 
                 if (isSignedUp)
                 {
+                    _signUpViewModel.StatusMessage = "Sign up Successful";
+                    _signUpViewModel.StatusMessageColour = _signUpViewModel.MessageGood;
                     _navigationService.NavigateToMainWindow();
+                    _signUpViewModel.CloseSignUp();
+                }
+                else
+                {
+                    _signUpViewModel.StatusMessage = "An error occurred";
+                    _signUpViewModel.StatusMessageColour = _signUpViewModel.MessageBad;
                 }
             }
             catch (Exception)

@@ -86,36 +86,41 @@ namespace Data_Logger_1._3.ViewModels.Dialogs.Create
 
         #region Initialization Methods
 
+
+
+
         private void InitializeProjects()
         {
             _projects.Clear();
-            _dataService.InitialiseProjectsLIST(LOG.CATEGORY.CODING);
-            foreach (var project in _dataService.SQLITE_PROJECTS)
-            {
-                if (project.Application.Name == AndroidStudio)
-                    _projects.Add(project.Name);
-            }
+            _dataService.InitialiseProjectsLISTAsync(LOG.CATEGORY.CODING);
+
             _applications.Clear();
         }
 
-        private void InitializeOutputTypes()
+        private async void InitializeOutputTypes()
         {
             Output = "APK (*.apk)";
             _outputs.Clear();
-            _outputs.Add("APK (*.apk)");
-            _outputs.Add("USB");
-            _outputs.Add("Emulator (*.exe)");
+            
+            foreach(var output in await _dataService.ListASOutputs())
+            {
+                _outputs.Add(output.Name);
+            }
         }
 
-        private void InitializeLogTypes()
+        private async void InitializeLogTypes()
         {
             Type = "Sync";
             _types.Clear();
-            _types.Add("Sync");
-            _types.Add("Build");
-            _types.Add("Runtime");
-            _types.Add("Exception");
+
+            foreach(var type in await _dataService.ListASTypes())
+            {
+                _types.Add(type.Name);
+            }
         }
+
+
+
 
         #endregion
 

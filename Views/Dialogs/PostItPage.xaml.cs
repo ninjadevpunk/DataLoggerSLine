@@ -10,10 +10,10 @@ namespace Data_Logger_1._3.Views.Dialogs
     /// </summary>
     public partial class PostItPage : Page
     {
-        private readonly CreatePostItViewModel _postItViewModel;
+        private readonly PostItViewModel _postItViewModel;
         private readonly CreateReporterPostItViewModel _createReporterPostItViewModel1;
 
-        public PostItPage(CreatePostItViewModel createPostItViewModel)
+        public PostItPage(PostItViewModel createPostItViewModel)
         {
             InitializeComponent();
 

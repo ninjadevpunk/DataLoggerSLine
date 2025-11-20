@@ -1,18 +1,23 @@
 ﻿
 
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+
 namespace Data_Logger_1._3.Models
 {
 
     /// <summary>
     /// The main authoring class. Represents Data Logger users.
     /// </summary>
-
+    [Table("ACCOUNT")]
     public class ACCOUNT
     {
         /* PROPERTIES */
 
 
-        public int ID { get; set; }
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public int accountID { get; set; }
 
 
         public string ProfilePic { get; set; } = "/Assets/login/user.png";
@@ -55,7 +60,7 @@ namespace Data_Logger_1._3.Models
 
         public ACCOUNT(int id, string profilePic, string firstName, string lastName, string email, string password, bool isEmplyee, string companyName, string companyAddress, string companyLogo, bool status)
         {
-            ID = id;
+            accountID = id;
             ProfilePic = profilePic;
             FirstName = firstName;
             LastName = lastName;
@@ -70,7 +75,7 @@ namespace Data_Logger_1._3.Models
 
         public ACCOUNT(int id, string firstName, string lastName, string email, string password, bool isEmplyee, string companyName, string companyAddress)
         {
-            ID = id;
+            accountID = id;
             FirstName = firstName;
             LastName = lastName;
             Email = email;
@@ -82,7 +87,7 @@ namespace Data_Logger_1._3.Models
 
         public ACCOUNT(int id, string firstName, string lastName, string email, bool isEmplyee, string companyName, string companyAddress, string companyLogo, bool status)
         {
-            ID = id;
+            accountID = id;
             FirstName = firstName;
             LastName = lastName;
             Email = email;
@@ -95,7 +100,7 @@ namespace Data_Logger_1._3.Models
 
         public ACCOUNT(int id, string firstName, string lastName, string email, string password, bool isEmplyee, string companyName, string companyAddress, string companyLogo, bool status)
         {
-            ID = id;
+            accountID = id;
             FirstName = firstName;
             LastName = lastName;
             Email = email;
@@ -109,7 +114,7 @@ namespace Data_Logger_1._3.Models
 
         public ACCOUNT(int id, string firstName, string lastName, string password, bool status)
         {
-            ID = id;
+            accountID = id;
             FirstName = firstName;
             LastName = lastName;
             Password = password;
@@ -124,7 +129,7 @@ namespace Data_Logger_1._3.Models
         public override bool Equals(object? obj)
         {
             return obj is ACCOUNT aCCOUNT &&
-                   ID == aCCOUNT.ID &&
+                   accountID == aCCOUNT.accountID &&
                    ProfilePic == aCCOUNT.ProfilePic &&
                    FirstName == aCCOUNT.FirstName &&
                    LastName == aCCOUNT.LastName &&
@@ -140,7 +145,7 @@ namespace Data_Logger_1._3.Models
         public override int GetHashCode()
         {
             HashCode hash = new HashCode();
-            hash.Add(ID);
+            hash.Add(accountID);
             hash.Add(ProfilePic);
             hash.Add(FirstName);
             hash.Add(LastName);

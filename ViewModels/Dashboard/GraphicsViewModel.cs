@@ -41,9 +41,9 @@ namespace Data_Logger_1._3.ViewModels.Dashboard
             }
         }
 
-        private void UpdateLogCount()
+        public async void UpdateLogCount()
         {
-            var count = _dataService.LogCount(Models.LOG.CATEGORY.GRAPHICS);
+            var count = await _dataService.LogCount(Models.LOG.CATEGORY.GRAPHICS);
             LogCount = $"{CacheItems.Count} graphics logs cached | {count} total logs";
         }
 
