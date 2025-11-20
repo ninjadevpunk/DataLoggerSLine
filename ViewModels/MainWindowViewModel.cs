@@ -4,13 +4,15 @@ using MVVMEssentials.ViewModels;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
+using static Data_Logger_1._3.Services.Cachemaster;
+using static Data_Logger_1._3.Services.NavigationService;
 
 namespace Data_Logger_1._3.ViewModels
 {
     public class MainWindowViewModel : ViewModelBase
     {
         private readonly NavigationService _navigationService;
-        private readonly AuthService _authService;
+
 
         public MainWindowViewModel(NavigationService navigationService)
         {
@@ -18,23 +20,7 @@ namespace Data_Logger_1._3.ViewModels
 
             ShowDefault = Visibility.Visible;
 
-            CodingChecked = true;
-            CodingQtChecked = true;
-            NotesChecked = false;
-
-            GoBackCommand = new GoBackCommand(_navigationService, this);
-            GoForwardCommand = new GoForwardCommand(_navigationService, this);
-
-            IconBackFill = DisabledColor;
-            IconForwardFill = DisabledColor;
-        }
-
-        public MainWindowViewModel(NavigationService navigationService, AuthService authService)
-        {
-            _navigationService = navigationService;
-            _authService = authService;
-
-            ShowDefault = Visibility.Visible;
+            MenuActivated = true;
 
             CodingChecked = true;
             CodingQtChecked = true;
@@ -42,6 +28,7 @@ namespace Data_Logger_1._3.ViewModels
 
             GoBackCommand = new GoBackCommand(_navigationService, this);
             GoForwardCommand = new GoForwardCommand(_navigationService, this);
+            LogOutCommand = new LogOutCommand(_navigationService);
 
             IconBackFill = DisabledColor;
             IconForwardFill = DisabledColor;
@@ -51,8 +38,8 @@ namespace Data_Logger_1._3.ViewModels
 
 
 
-        private static readonly Brush? EnabledColor = TryParseBrush("iconCOLOURAccent01");
-        private static readonly Brush? DisabledColor = TryParseBrush("AccentColour");
+        private static readonly Brush? EnabledColor = UIFactory.TryParseBrush("iconCOLOURAccent01");
+        private static readonly Brush? DisabledColor = UIFactory.TryParseBrush("AccentColour");
 
 
         private Brush? iconBackFill;
@@ -116,6 +103,20 @@ namespace Data_Logger_1._3.ViewModels
             }
         }
 
+        private bool menuActivated;
+        public bool MenuActivated
+        {
+            get
+            {
+                return menuActivated;
+            }
+            set
+            {
+                menuActivated = value;
+                OnPropertyChanged(nameof(MenuActivated));
+            }
+        }
+
 
         private bool codingChecked;
         public bool CodingChecked
@@ -135,7 +136,6 @@ namespace Data_Logger_1._3.ViewModels
                     {
                         // Navigate to the Coding page
                         _navigationService.NavigateToLogCachePage();
-                        _navigationService.ChangeData(CacheContext.Qt);
                         CodingQtChecked = true;
                         UncheckButtons();
                     }
@@ -306,7 +306,7 @@ namespace Data_Logger_1._3.ViewModels
 
                     if (genericNotesChecked)
                     {
-                        _navigationService.NavigateToCreateNotesPage();
+                        //_navigationService.NavigateToCreateNotesPage();
                     }
                 }
             }
@@ -329,7 +329,7 @@ namespace Data_Logger_1._3.ViewModels
 
                     if (checklistNotesChecked)
                     {
-                        _navigationService.NavigateToCreateCheckListPage();
+                        //_navigationService.NavigateToCreateCheckListPage();
                     }
                 }
             }
@@ -352,7 +352,7 @@ namespace Data_Logger_1._3.ViewModels
 
                     if (flexiChecked)
                     {
-                        _navigationService.NavigateToLogCachePage(CacheContext.Flexi);
+                        //_navigationService.NavigateToLogCachePage(CacheContext.Flexi);
                     }
                 }
             }
@@ -412,21 +412,31 @@ namespace Data_Logger_1._3.ViewModels
         public ICommand GoBackCommand { get; set; }
         public ICommand GoForwardCommand { get; set; }
 
+        public ICommand LogOutCommand { get; set; }
 
-        private static Brush? TryParseBrush(string value)
+
+        private void UpdateByNavigationContext()
         {
-            try
+            if(_navigationService.NavigationContext == NavContext.LOGGER ||
+                _navigationService.NavigationContext == NavContext.POSTIT ||
+                _navigationService.NavigationContext == NavContext.VIEWER || 
+                _navigationService.NavigationContext == NavContext.EDITOR ||
+                _navigationService.NavigationContext == NavContext.REPORTER_DASHBOARD)
             {
-                return (Brush)Application.Current.FindResource(value);
+                MenuActivated = false;
             }
-            catch (ResourceReferenceKeyNotFoundException)
-            {
-                return Brushes.Transparent;
-            }
-            catch (Exception ex)
-            {
-                return Brushes.Black;
-            }
+            else
+                MenuActivated = true;
+        }
+
+        internal void SetGenericNotesChecked(bool isChecked)
+        {
+            GenericNotesChecked = isChecked;
+        }
+
+        internal void SetChecklistNotesChecked(bool isChecked)
+        {
+            ChecklistNotesChecked = isChecked;
         }
     }
 }
