@@ -4,6 +4,7 @@ using Data_Logger_1._3.Services;
 using Data_Logger_1._3.ViewModels.Dashboard;
 using Data_Logger_1._3.ViewModels.Dialogs;
 using System.Collections.ObjectModel;
+using static Data_Logger_1._3.Services.Cachemaster;
 
 namespace Data_Logger_1._3.ViewModels.LogViewModels
 {
@@ -20,7 +21,7 @@ namespace Data_Logger_1._3.ViewModels.LogViewModels
 
 
 
-        public AndroidLOGViewModel(AndroidCodingLOG androidCodingLOG, LogCacheViewModel logCacheViewModel, ObservableCollection<CreatePostItViewModel> createPostItViewModels, DataService dataService) :
+        public AndroidLOGViewModel(AndroidCodingLOG androidCodingLOG, LogCacheViewModel logCacheViewModel, ObservableCollection<PostItViewModel> createPostItViewModels, DataService dataService) :
             base(androidCodingLOG, logCacheViewModel, createPostItViewModels, dataService)
 
         {
@@ -29,8 +30,6 @@ namespace Data_Logger_1._3.ViewModels.LogViewModels
             ViewCommand = new ViewCommand(_vm._navigationService, _vm, LOGViewModelContext);
 
             _cacheMaster.SaveASViewModel(this, LOGViewModelContext);
-            dataService.SaveSubjectIndex();
-            dataService.SavePostItIndex();
         }
 
         public AndroidLOGViewModel(AndroidCodingLOG androidCodingLOG, LogCacheViewModel logCacheViewModel, DataService dataService) :

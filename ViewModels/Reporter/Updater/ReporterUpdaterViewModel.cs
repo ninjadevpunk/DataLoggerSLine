@@ -7,6 +7,7 @@ using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
 using Data_Logger_1._3.Commands.ReporterCommands.UpdateCommands;
+using static Data_Logger_1._3.Services.Cachemaster;
 
 namespace Data_Logger_1._3.ViewModels.Reporter.Updater
 {

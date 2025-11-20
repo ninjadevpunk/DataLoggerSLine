@@ -4,6 +4,7 @@ using Data_Logger_1._3.Models.App_Models;
 using Data_Logger_1._3.Services;
 using Data_Logger_1._3.ViewModels.Reporter.Desk;
 using System.Collections.ObjectModel;
+using static Data_Logger_1._3.Services.Cachemaster;
 
 namespace Data_Logger_1._3.ViewModels.Reporter.Updater
 {
@@ -82,7 +83,7 @@ namespace Data_Logger_1._3.ViewModels.Reporter.Updater
 
         private void InitializeProjectsAndApplications(DataService dataService)
         {
-            dataService.InitialiseProjectsLIST(Category);
+            dataService.InitialiseProjectsLISTAsync(Category);
             var items = dataService.SQLITE_PROJECTS;
             var apps = dataService.SQLITE_APPLICATIONS;
 

@@ -4,6 +4,7 @@ using Data_Logger_1._3.Services;
 using Data_Logger_1._3.ViewModels.Dashboard;
 using Data_Logger_1._3.ViewModels.Dialogs;
 using System.Collections.ObjectModel;
+using static Data_Logger_1._3.Services.Cachemaster;
 
 namespace Data_Logger_1._3.ViewModels.LogViewModels
 {
@@ -17,7 +18,7 @@ namespace Data_Logger_1._3.ViewModels.LogViewModels
         #region Constructor
 
 
-        public FilmLOGViewModel(FilmLOG filmLOG, LogCacheViewModel logCacheViewModel, ObservableCollection<CreatePostItViewModel> createPostItViewModels, DataService dataService) :
+        public FilmLOGViewModel(FilmLOG filmLOG, LogCacheViewModel logCacheViewModel, ObservableCollection<PostItViewModel> createPostItViewModels, DataService dataService) :
             base(filmLOG, logCacheViewModel, createPostItViewModels, dataService)
         {
             _FilmLOG = filmLOG;
@@ -25,8 +26,6 @@ namespace Data_Logger_1._3.ViewModels.LogViewModels
             ViewCommand = new ViewCommand(_vm._navigationService, _vm, LOGViewModelContext);
 
             _cacheMaster.SaveFilmViewModel(this, LOGViewModelContext);
-            dataService.SaveSubjectIndex();
-            dataService.SavePostItIndex();
         }
 
         public FilmLOGViewModel(FilmLOG filmLOG, LogCacheViewModel logCacheViewModel, DataService dataService) :

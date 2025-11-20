@@ -2,6 +2,7 @@
 using Data_Logger_1._3.Services;
 using MVVMEssentials.ViewModels;
 using System.Windows.Input;
+using static Data_Logger_1._3.Services.Cachemaster;
 
 namespace Data_Logger_1._3.ViewModels.Reporter
 {

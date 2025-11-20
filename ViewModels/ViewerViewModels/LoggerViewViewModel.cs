@@ -3,13 +3,14 @@ using Data_Logger_1._3.Services;
 using Data_Logger_1._3.ViewModels.Dialogs;
 using System.Windows.Input;
 using System.Windows;
+using static Data_Logger_1._3.Services.Cachemaster;
 
 namespace Data_Logger_1._3.ViewModels.ViewerViewModels
 {
     public abstract class LoggerViewViewModel
     {
         protected readonly NavigationService _navigationService;
-        private readonly List<CreatePostItViewModel> _postIts;
+        private readonly List<PostItViewModel> _postIts;
 
         public abstract LOG.CATEGORY Category { get; }
 
@@ -18,10 +19,10 @@ namespace Data_Logger_1._3.ViewModels.ViewerViewModels
         protected LoggerViewViewModel(NavigationService navigationService)
         {
             _navigationService = navigationService;
-            _postIts = new List<CreatePostItViewModel>();
+            _postIts = new List<PostItViewModel>();
         }
 
-        public void AddPostIt(CreatePostItViewModel postIt)
+        public void AddPostIt(PostItViewModel postIt)
         {
             _postIts.Add(postIt);
         }
@@ -47,7 +48,7 @@ namespace Data_Logger_1._3.ViewModels.ViewerViewModels
 
         public string Type { get; set; }
 
-        public IEnumerable<CreatePostItViewModel> PostIts => _postIts;
+        public IEnumerable<PostItViewModel> PostIts => _postIts;
 
         public ICommand OKCommand { get; set; }
     }

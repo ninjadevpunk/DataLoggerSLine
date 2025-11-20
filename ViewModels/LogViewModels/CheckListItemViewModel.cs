@@ -20,7 +20,7 @@ namespace Data_Logger_1._3.ViewModels.LogViewModels
 
 
 
-        public int ViewModelID => _CheckListItem.ID;
+        public int ViewModelID => _CheckListItem.itemID;
 
         public string Item => _CheckListItem.Item;
 

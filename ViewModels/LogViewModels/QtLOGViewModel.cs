@@ -4,6 +4,7 @@ using Data_Logger_1._3.Services;
 using Data_Logger_1._3.ViewModels.Dashboard;
 using Data_Logger_1._3.ViewModels.Dialogs;
 using System.Collections.ObjectModel;
+using static Data_Logger_1._3.Services.Cachemaster;
 
 namespace Data_Logger_1._3.ViewModels.LogViewModels
 {
@@ -22,7 +23,7 @@ namespace Data_Logger_1._3.ViewModels.LogViewModels
 
 
 
-        public QtLOGViewModel(CodingLOG QtcodingLOG, LogCacheViewModel logCacheViewModel, ObservableCollection<CreatePostItViewModel> createPostItViewModels, DataService dataService) :
+        public QtLOGViewModel(CodingLOG QtcodingLOG, LogCacheViewModel logCacheViewModel, ObservableCollection<PostItViewModel> createPostItViewModels, DataService dataService) :
             base(QtcodingLOG, logCacheViewModel, createPostItViewModels, dataService)
         {
             _QtcodingLOG = QtcodingLOG;
@@ -30,8 +31,6 @@ namespace Data_Logger_1._3.ViewModels.LogViewModels
             ViewCommand = new ViewCommand(_vm._navigationService, _vm, LOGViewModelContext);
 
             _cacheMaster.SaveQtViewModel(this, LOGViewModelContext);
-            dataService.SaveSubjectIndex();
-            dataService.SavePostItIndex();
 
         }
 

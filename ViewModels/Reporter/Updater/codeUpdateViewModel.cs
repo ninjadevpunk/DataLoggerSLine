@@ -3,6 +3,7 @@ using Data_Logger_1._3.Models;
 using Data_Logger_1._3.Models.App_Models;
 using Data_Logger_1._3.Services;
 using Data_Logger_1._3.ViewModels.Reporter.Desk;
+using static Data_Logger_1._3.Services.Cachemaster;
 
 namespace Data_Logger_1._3.ViewModels.Reporter.Updater
 {
@@ -16,7 +17,7 @@ namespace Data_Logger_1._3.ViewModels.Reporter.Updater
         private readonly QtReportDeskViewModel? _QtviewModel;
 
         private const string Qt = "Qt Creator";
-        protected const string AndroidStudio = "Android Studio Hedgehog 2023.1.1";
+        protected const string AndroidStudio = "Android Studio Meerkat 2024.3.1";
         protected const string VisualStudio = "Visual Studio Community 2022";
 
         private bool QtOnly = false;
@@ -153,8 +154,8 @@ namespace Data_Logger_1._3.ViewModels.Reporter.Updater
         public string ApplicationToolTip { get; set; } = "The application's name.";
         public string TimeStartToolTip { get; set; } = "Updates the current start time AND end time. Does not update automatically!";
         public string TimeEndToolTip { get; set; } = "Updates the END TIME ONLY. Does not update automatically.";
-        public string OutputToolTip { get; set; } = "Please select from this list. Items cannot be modified.";
-        public string TypeToolTip { get; set; } = "Please select from this list. Items cannot be modified.";
+        public string OutputToolTip { get; set; } = "Please select from this list. Checklist cannot be modified.";
+        public string TypeToolTip { get; set; } = "Please select from this list. Checklist cannot be modified.";
 
 
 

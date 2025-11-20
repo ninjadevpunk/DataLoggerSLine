@@ -26,14 +26,14 @@ namespace Data_Logger_1._3.ViewModels.LogViewModels
         {
             _NoteItem = noteItem;
 
-            IsCollection = _NoteItem != null && _NoteItem.Items != null;
+            IsCollection = _NoteItem != null && _NoteItem.Checklist != null;
 
 
             if(_NoteItem is not null && IsCollection)
             {
                 Items = new();
 
-                foreach (var item in _NoteItem.Items)
+                foreach (var item in _NoteItem.Checklist.Items)
                 {
                     if(!item.IsChecked)
                         Items.Add(new CheckListItemViewModel(item));
@@ -41,7 +41,7 @@ namespace Data_Logger_1._3.ViewModels.LogViewModels
 
             }
 
-            NoteContent = CreatePostItViewModel.ConvertRtfToPlainText(_NoteItem.Content);
+            NoteContent = PostItViewModel.ConvertRtfToPlainText(_NoteItem.Content);
 
             DeleteNoteItemCommand = new DeleteNoteItemCommand(notesViewModel, dataService);
         }

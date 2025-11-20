@@ -5,6 +5,7 @@ using Data_Logger_1._3.Services;
 using Data_Logger_1._3.ViewModels.Reporter.Logs;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
+using static Data_Logger_1._3.Services.Cachemaster;
 
 namespace Data_Logger_1._3.ViewModels.Reporter.Desk
 {
@@ -22,11 +23,11 @@ namespace Data_Logger_1._3.ViewModels.Reporter.Desk
         /// <param name="dataService">The service required to perform database operations.</param>
         public QtReportDeskViewModel(NavigationService navigationService, DataService dataService) : base(navigationService, dataService)
         {
-            _dataService.InitialiseProjectsLIST(LOG.CATEGORY.CODING);
+            _dataService.InitialiseProjectsLISTAsync(LOG.CATEGORY.CODING);
 
             foreach(ProjectClass project in _dataService.SQLITE_PROJECTS)
             {
-                if(project.Application.AppID == 1)
+                if(project.Application.appID == 1)
                 {
                     Projects.Add(project.Name);
 
@@ -75,11 +76,11 @@ namespace Data_Logger_1._3.ViewModels.Reporter.Desk
         /// <param name="pdfService">The service for generating PDFs.</param>
         public QtReportDeskViewModel(NavigationService navigationService, DataService dataService, PDFService pdfService) : base(navigationService, dataService, pdfService)
         {
-            _dataService.InitialiseProjectsLIST(LOG.CATEGORY.CODING);
+            _dataService.InitialiseProjectsLISTAsync(LOG.CATEGORY.CODING);
 
             foreach (ProjectClass project in _dataService.SQLITE_PROJECTS)
             {
-                if (project.Application.AppID == 1)
+                if (project.Application.appID == 1)
                 {
                     Projects.Add(project.Name);
 
@@ -125,33 +126,33 @@ namespace Data_Logger_1._3.ViewModels.Reporter.Desk
         /// </summary>
         /// <param name="project">The Qt project you want logs from.</param>
 
-        public override void UpdateLogs(string project)
+        public override async void UpdateLogs(string project)
         {
             Logs.Clear();
             ObservableCollection<REPORTViewModel> list = new ObservableCollection<REPORTViewModel>();
             int projectID = 1;
 
-            _dataService.InitialiseProjectsLIST(LOG.CATEGORY.CODING);
+            _dataService.InitialiseProjectsLISTAsync(LOG.CATEGORY.CODING);
             foreach(ProjectClass item in _dataService.SQLITE_PROJECTS)
             {
                 if(item.Name == project)
-                    projectID = item.ProjectID;
+                    projectID = item.projectID;
             }
 
-            foreach (LOG log in _dataService.RetrieveLogs(LOG.CATEGORY.CODING))
+            foreach (LOG log in await _dataService.RetrieveLogs(LOG.CATEGORY.CODING))
             {
-                if(log.Project.ProjectID == projectID)
+                if(log.Project.projectID == projectID)
                     list.Add(new qtREPORTViewModel((CodingLOG)log, this, _navigationService, _dataService, _pdfService));
             }
 
             Logs = list;
         }
 
-        public void UpdateLogs()
+        public async void UpdateLogs()
         {
             ObservableCollection<REPORTViewModel> list = new ObservableCollection<REPORTViewModel>();
 
-            foreach (LOG log in _dataService.RetrieveLogs(LOG.CATEGORY.CODING))
+            foreach (LOG log in await _dataService.RetrieveLogs(LOG.CATEGORY.CODING))
             {
                 if(Project == log.Project.Name)
                     list.Add(new qtREPORTViewModel((CodingLOG)log, this, _navigationService, _dataService, _pdfService));

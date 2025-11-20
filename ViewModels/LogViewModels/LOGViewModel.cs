@@ -9,6 +9,7 @@ using System.Diagnostics;
 using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Input;
+using static Data_Logger_1._3.Services.Cachemaster;
 
 namespace Data_Logger_1._3.ViewModels.LogViewModels
 {
@@ -41,7 +42,7 @@ namespace Data_Logger_1._3.ViewModels.LogViewModels
 
 
 
-        public LOGViewModel(LOG log, LogCacheViewModel logCacheViewModel, ObservableCollection<CreatePostItViewModel> createPostItViewModels, DataService dataService)
+        public LOGViewModel(LOG log, LogCacheViewModel logCacheViewModel, ObservableCollection<PostItViewModel> createPostItViewModels, DataService dataService)
         {
             _vm = logCacheViewModel;
 
@@ -214,12 +215,12 @@ namespace Data_Logger_1._3.ViewModels.LogViewModels
 
 
 
-        public static string PostItContent(ObservableCollection<CreatePostItViewModel> createPostItViewModel)
+        public static string PostItContent(ObservableCollection<PostItViewModel> createPostItViewModel)
         {
             string pattern = @"\S";
             Regex regex = new Regex(pattern);
 
-            foreach (CreatePostItViewModel postItViewModel in createPostItViewModel)
+            foreach (PostItViewModel postItViewModel in createPostItViewModel)
             {
                 if (!string.IsNullOrWhiteSpace(postItViewModel.Display_Error) && regex.IsMatch(postItViewModel.Display_Error))
                     return postItViewModel.Display_Error;

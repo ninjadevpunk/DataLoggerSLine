@@ -4,6 +4,7 @@ using Data_Logger_1._3.Services;
 using Data_Logger_1._3.ViewModels.Dashboard;
 using Data_Logger_1._3.ViewModels.Dialogs;
 using System.Collections.ObjectModel;
+using static Data_Logger_1._3.Services.Cachemaster;
 
 namespace Data_Logger_1._3.ViewModels.LogViewModels
 {
@@ -17,7 +18,7 @@ namespace Data_Logger_1._3.ViewModels.LogViewModels
         #region Constructor
 
 
-        public GraphicsLOGViewModel(GraphicsLOG graphicsLOG, LogCacheViewModel logCacheViewModel, ObservableCollection<CreatePostItViewModel> createPostItViewModels, DataService dataService) :
+        public GraphicsLOGViewModel(GraphicsLOG graphicsLOG, LogCacheViewModel logCacheViewModel, ObservableCollection<PostItViewModel> createPostItViewModels, DataService dataService) :
             base(graphicsLOG, logCacheViewModel, createPostItViewModels, dataService)
         {
             _GraphicsLOG = graphicsLOG;
@@ -26,8 +27,6 @@ namespace Data_Logger_1._3.ViewModels.LogViewModels
 
 
             _cacheMaster.SaveGraphicsViewModel(this, LOGViewModelContext);
-            dataService.SaveSubjectIndex();
-            dataService.SavePostItIndex();
         }
 
         public GraphicsLOGViewModel(GraphicsLOG graphicsLOG, LogCacheViewModel logCacheViewModel, DataService dataService) :

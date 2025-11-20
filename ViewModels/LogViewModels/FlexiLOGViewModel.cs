@@ -4,6 +4,7 @@ using Data_Logger_1._3.Services;
 using Data_Logger_1._3.ViewModels.Dashboard;
 using Data_Logger_1._3.ViewModels.Dialogs;
 using System.Collections.ObjectModel;
+using static Data_Logger_1._3.Services.Cachemaster;
 
 namespace Data_Logger_1._3.ViewModels.LogViewModels
 {
@@ -18,7 +19,7 @@ namespace Data_Logger_1._3.ViewModels.LogViewModels
 
 
 
-        public FlexiLOGViewModel(FlexiNotesLOG flexiLOG, LogCacheViewModel logCacheViewModel, ObservableCollection<CreatePostItViewModel> createPostItViewModels, DataService dataService) :
+        public FlexiLOGViewModel(FlexiNotesLOG flexiLOG, LogCacheViewModel logCacheViewModel, ObservableCollection<PostItViewModel> createPostItViewModels, DataService dataService) :
             base(flexiLOG, logCacheViewModel, createPostItViewModels, dataService)
         {
             _FlexiLOG = flexiLOG;
@@ -26,10 +27,7 @@ namespace Data_Logger_1._3.ViewModels.LogViewModels
             ViewCommand = new ViewCommand(_vm._navigationService, _vm, LOGViewModelContext);
 
             _cacheMaster.SaveFlexiViewModel(this, LOGViewModelContext);
-            dataService.SaveSubjectIndex();
-            dataService.SavePostItIndex();
         }
-
         public FlexiLOGViewModel(FlexiNotesLOG flexiLOG, LogCacheViewModel logCacheViewModel, DataService dataService) :
             base(flexiLOG, logCacheViewModel, dataService)
         {

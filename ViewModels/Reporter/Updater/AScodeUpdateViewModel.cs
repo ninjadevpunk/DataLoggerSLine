@@ -77,7 +77,7 @@ namespace Data_Logger_1._3.ViewModels.Reporter.Updater
         private void InitializeProjects()
         {
             _projects.Clear();
-            _dataService.InitialiseProjectsLIST(LOG.CATEGORY.CODING);
+            _dataService.InitialiseProjectsLISTAsync(LOG.CATEGORY.CODING);
             foreach (var project in _dataService.SQLITE_PROJECTS)
             {
                 if (project.Application.Name == AndroidStudio)
