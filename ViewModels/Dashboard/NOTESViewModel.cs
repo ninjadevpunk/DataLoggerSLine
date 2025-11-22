@@ -31,11 +31,6 @@ namespace Data_Logger_1._3.ViewModels.Dashboard
             NoteItems = new();
         }
 
-        public void InitialiseNotesList(DataService dataService)
-        {
-
-        }
-
 
         private Visibility noNotesMessageVisibility;
         public Visibility NoNotesMessageVisibility  
@@ -93,6 +88,11 @@ namespace Data_Logger_1._3.ViewModels.Dashboard
         private void UpdateNotesMessageVisibility()
         {
             NoNotesMessageVisibility = NoteItems.Count == 0 ? Visibility.Visible : Visibility.Hidden;
+        }
+
+        public void StartUpVisibilitySet(bool hasNotes = false)
+        {
+            NoNotesMessageVisibility = !hasNotes ? Visibility.Visible : Visibility.Hidden;
         }
 
 
