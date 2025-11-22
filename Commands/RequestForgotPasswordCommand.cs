@@ -3,7 +3,7 @@ using MVVMEssentials.Commands;
 
 namespace Data_Logger_1._3.Commands
 {
-    public class RequestForgotPasswordCommand : CommandBase
+    public class RequestForgotPasswordCommand : AsyncCommandBase
     {
         private readonly AuthService _authService;
         private readonly NavigationService _navigationService;
@@ -21,19 +21,18 @@ namespace Data_Logger_1._3.Commands
             }
         }
 
-        public override void Execute(object parameter)
+        protected override async Task ExecuteAsync(object parameter)
         {
 
             try
             {
                 _authService.ForgotPasswordRequest();
 
-                _navigationService.NavigateToLogin(false);
+                await _navigationService.NavigateToLogin(false);
             }
             catch (Exception)
             {
-
-                throw;
+                //
             }
 
         }

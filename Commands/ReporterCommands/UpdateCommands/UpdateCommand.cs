@@ -15,7 +15,7 @@ namespace Data_Logger_1._3.Commands.ReporterCommands.UpdateCommands
     /// <summary>
     /// This class will ne used to update database logs from the log editor.
     /// </summary>
-    public class UpdateCommand : CommandBase
+    public class UpdateCommand : AsyncCommandBase
     {
         private readonly CacheContext _cacheContext;
         private readonly ReporterUpdaterViewModel _editor;
@@ -48,7 +48,7 @@ namespace Data_Logger_1._3.Commands.ReporterCommands.UpdateCommands
             }
         }
 
-        public override void Execute(object parameter)
+        protected override async Task ExecuteAsync(object parameter)
         {
             try
             {
@@ -165,7 +165,7 @@ namespace Data_Logger_1._3.Commands.ReporterCommands.UpdateCommands
                                 qtDesk.Logs = list;
 
                                 // Update database with the new log
-                                _dataService.UpdateQtLog(newLOG.GetQtCodingLog);
+                                await _dataService.UpdateQtLog(newLOG.GetQtCodingLog);
                             }
 
 

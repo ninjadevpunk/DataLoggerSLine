@@ -4,7 +4,7 @@ using MVVMEssentials.Commands;
 
 namespace Data_Logger_1._3.Commands.PostItCommands
 {
-    public class AddPostItCommand : CommandBase
+    public class AddPostItCommand : AsyncCommandBase
     {
         private readonly NavigationService _navigationService;
         private readonly LoggerCreateViewModel _loggerCreateViewModel;
@@ -26,9 +26,9 @@ namespace Data_Logger_1._3.Commands.PostItCommands
 
         }
 
-        public override void Execute(object parameter)
+        protected override async Task ExecuteAsync(object parameter)
         {
-            _navigationService.NavigateToPostItCreator(_loggerCreateViewModel);
+            await _navigationService.NavigateToPostItCreator(_loggerCreateViewModel);
         }
     }
 }

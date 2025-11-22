@@ -7,7 +7,7 @@ using System.Windows;
 /// <summary>
 /// Logs out a user and takes them to the login page.
 /// </summary>
-public class LogOutCommand : CommandBase
+public class LogOutCommand : AsyncCommandBase
 {
     private readonly NavigationService _navigationService;
 
@@ -16,7 +16,7 @@ public class LogOutCommand : CommandBase
         _navigationService = navigationService;
     }
 
-    public override void Execute(object parameter)
+    protected override async Task ExecuteAsync(object parameter)
     {
         try
         {
@@ -24,7 +24,7 @@ public class LogOutCommand : CommandBase
 
             if (result == MessageBoxResult.Yes)
             {
-                _navigationService.NavigateToLogin(true);
+                await _navigationService.NavigateToLogin(true);
             }
 
             

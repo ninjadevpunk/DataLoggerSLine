@@ -44,7 +44,7 @@ namespace Data_Logger_1._3.Commands
                 {
                     _signUpViewModel.StatusMessage = "Sign up Successful";
                     _signUpViewModel.StatusMessageColour = _signUpViewModel.MessageGood;
-                    _navigationService.NavigateToMainWindow();
+                    await _navigationService.NavigateToMainWindow();
                     _signUpViewModel.CloseSignUp();
                 }
                 else

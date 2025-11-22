@@ -6,7 +6,7 @@ using System.Diagnostics;
 /// <summary>
 /// A command to send the user to the login page.
 /// </summary>
-public class NavigateToLoginCommand : CommandBase
+public class NavigateToLoginCommand : AsyncCommandBase
 {
     private readonly NavigationService _navigationService;
     private readonly SignUpViewModel _signUpViewModel;
@@ -17,11 +17,11 @@ public class NavigateToLoginCommand : CommandBase
         _signUpViewModel = signUpViewModel;
     }
 
-    public override void Execute(object parameter)
+    protected override async Task ExecuteAsync(object parameter)
     {
         try
         {
-            _navigationService.NavigateToLogin(false);
+            await _navigationService.NavigateToLogin(false);
             _signUpViewModel.CloseSignUp();
         }
         catch (Exception e)

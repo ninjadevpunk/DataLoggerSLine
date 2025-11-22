@@ -4,7 +4,7 @@ using System.Diagnostics;
 
 namespace Data_Logger_1._3.Commands.LogCacheCommands
 {
-    public class CreateLogCommand : CommandBase
+    public class CreateLogCommand : AsyncCommandBase
     {
         private readonly NavigationService _navigationService;
 
@@ -21,12 +21,12 @@ namespace Data_Logger_1._3.Commands.LogCacheCommands
             }
         }
 
-        public override void Execute(object parameter)
+        protected override async Task ExecuteAsync(object parameter)
         {
 
             try
             {
-                _navigationService.NavigateToLoggerCreator();
+                await _navigationService.NavigateToLoggerCreator();
             }
             catch (Exception)
             {
