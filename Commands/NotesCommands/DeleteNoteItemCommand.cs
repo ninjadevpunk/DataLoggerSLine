@@ -33,7 +33,7 @@ namespace Data_Logger_1._3.Commands.NotesCommands
                 if (parameter is NoteLOGViewModel noteToDelete)
                 {
                     // Delete from database first
-                    var noteDeleted = await _dataService.DeleteLog(noteToDelete._NoteItem);
+                    var noteDeleted = await _dataService.DeleteNote(noteToDelete.ViewModelID);
 
                     // Remove the note from the ObservableCollection
                     if(noteDeleted)

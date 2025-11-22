@@ -3,7 +3,7 @@ using MVVMEssentials.Commands;
 
 namespace Data_Logger_1._3.Commands.NotesCommands
 {
-    public class NewNoteCommand : CommandBase
+    public class NewNoteCommand : AsyncCommandBase
     {
         private readonly NavigationService _navigationService;
 
@@ -19,11 +19,11 @@ namespace Data_Logger_1._3.Commands.NotesCommands
             }
         }
 
-        public override void Execute(object parameter)
+        protected override async Task ExecuteAsync(object parameter)
         {
             try
             {
-                //_navigationService.NavigateToCreateNotesPage();
+                await _navigationService.NavigateToCreateNotesPage();
             }
             catch (Exception)
             {

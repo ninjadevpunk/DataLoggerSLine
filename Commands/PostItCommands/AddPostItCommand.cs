@@ -28,7 +28,7 @@ namespace Data_Logger_1._3.Commands.PostItCommands
 
         public override void Execute(object parameter)
         {
-            //_navigationService.NavigateToPostItCreator(_loggerCreateViewModel);
+            _navigationService.NavigateToPostItCreator(_loggerCreateViewModel);
         }
     }
 }

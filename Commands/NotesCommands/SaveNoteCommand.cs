@@ -54,40 +54,39 @@ namespace Data_Logger_1._3.Commands.NotesCommands
             {
                 NoteItem noteItem = new();
 
-                noteItem.ID = -1;
-
                 ACCOUNT account = _dataService.GetUser();
-                ApplicationClass DataLoggerNotesApp = await _dataService.FindApplicationByID(15);
+                ApplicationClass? dataLoggerNotesApp = await _dataService.FindApplicationByID(15);
 
                 noteItem.Author = account;
-                noteItem.Project = new(-1, account, "", DataLoggerNotesApp,
-                    LOG.CATEGORY.NOTES, false);
+                noteItem.Project = await _dataService.FindProjectByID(1);
 
-                noteItem.Application = DataLoggerNotesApp;
-                noteItem.Start = DateTime.Parse(_createNoteViewModel.CreationDate);
-                noteItem.End = DateTime.Parse(_createNoteViewModel.ModifiedDate);
-                noteItem.Output = await _dataService.FindOutputByID(37);
-                noteItem.Type = await _dataService.FindTypeByID(39);
+                if (dataLoggerNotesApp != null)
+                {
+                    noteItem.Application = dataLoggerNotesApp;
+                    noteItem.Start = DateTime.Parse(_createNoteViewModel.CreationDate);
+                    noteItem.End = DateTime.Parse(_createNoteViewModel.ModifiedDate);
+                    noteItem.Output = await _dataService.FindOutputByID(37);
+                    noteItem.Type = await _dataService.FindTypeByID(39);
 
-                noteItem.Subject = _createNoteViewModel.NoteSubject;
-                noteItem.Content = _createNoteViewModel.NoteContent;
+                    noteItem.Subject = _createNoteViewModel.NoteSubject;
+                    noteItem.NoteContent = _createNoteViewModel.NoteContent;
 
 
 
 
-                // Send to database
-                _dataService.StoreLog(noteItem);
+                    // Send to database
+                    await _dataService.StoreLog(noteItem);
 
-                var list = _notesViewModel.NoteItems;
-                list.Add(new NoteLOGViewModel(_dataService, _notesViewModel, noteItem));
+                    var list = _notesViewModel.NoteItems;
+                    list.Add(new NoteLOGViewModel(_dataService, _notesViewModel, noteItem));
 
-                _notesViewModel.NoteItems = list;
-                _navigationService.NavigateToNOTESDashboard();
+                    _notesViewModel.NoteItems = list;
+                }
+                await _navigationService.NavigateToNOTESDashboard();
                 _navigationService.SetGenericNotesChecked(false);
             }
             catch (Exception ex)
             {
-
                 //
             }
         }

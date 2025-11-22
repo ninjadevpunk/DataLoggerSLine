@@ -7,7 +7,7 @@ using System.Windows;
 
 namespace Data_Logger_1._3.Commands.PostItCommands
 {
-    public class PostCommand : CommandBase
+    public class PostCommand : AsyncCommandBase
     {
         public enum ActionType { Create, Edit }
 
@@ -59,7 +59,7 @@ namespace Data_Logger_1._3.Commands.PostItCommands
             }
         }
 
-        public override void Execute(object parameter)
+        protected override async Task ExecuteAsync(object parameter)
         {
             try
             {
@@ -84,7 +84,7 @@ namespace Data_Logger_1._3.Commands.PostItCommands
                                 else
                                 {
                                     _loggerCreateViewModel.PostIts.Add(_createPostItViewModel);
-                                    //_navigationService.GoBack();
+                                    _navigationService.GoBack();
                                 }
                             }
                             break;
