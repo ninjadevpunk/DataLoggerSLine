@@ -56,11 +56,11 @@ namespace Data_Logger_1._3.Services
 
             _account = authService.Account;
 
-            SignInUser();
+            _ = SignInUser();
 
         }
 
-        public async void SignInUser()
+        public async Task SignInUser()
         {
             if (_account is not null)
             {
@@ -114,7 +114,7 @@ namespace Data_Logger_1._3.Services
         /// <summary>
         /// Retrieves projects from the database.
         /// </summary>
-        public async void InitialiseProjectsLISTAsync()
+        public async Task InitialiseProjectsLISTAsync()
         {
             try
             {
@@ -141,7 +141,7 @@ namespace Data_Logger_1._3.Services
         /// Retrieves projects from the database of a specified category.
         /// </summary>
         /// <param name="category">The type of project.</param>
-        public async void InitialiseProjectsLISTAsync(LOG.CATEGORY category)
+        public async Task InitialiseProjectsLISTAsync(LOG.CATEGORY category)
         {
             try
             {
@@ -166,7 +166,7 @@ namespace Data_Logger_1._3.Services
         /// <summary>
         /// Retrieves applications from the database.
         /// </summary>
-        public async void InitialiseApplicationsLISTAsync()
+        public async Task InitialiseApplicationsLISTAsync()
         {
             try
             {
@@ -195,7 +195,7 @@ namespace Data_Logger_1._3.Services
         /// Retrieves applications from the database of a specified category.
         /// </summary>
         /// <param name="category">The type of application.</param>
-        public async void InitialiseApplicationsLIST(LOG.CATEGORY category)
+        public async Task InitialiseApplicationsLIST(LOG.CATEGORY category)
         {
             try
             {
@@ -225,7 +225,7 @@ namespace Data_Logger_1._3.Services
         /// Retrieves subjects from the database.
         /// </summary>
         /// <param name="category">The type of subjects being retrieved.</param>
-        public async void InitialiseSubjectsLIST(LOG.CATEGORY category)
+        public async Task InitialiseSubjectsLIST(LOG.CATEGORY category)
         {
             try
             {
@@ -250,7 +250,7 @@ namespace Data_Logger_1._3.Services
         /// Retrieves subjects from the database. Also adds the subjects in DataService's subject list property for easy retrieval in cases where the most recent database update is not needed.
         /// </summary>
         /// <param name="project">Subjects from the specified ProjectClass will be retrieved ONLY.</param>
-        public async void InitialiseSubjectsLIST(ProjectClass project)
+        public async Task InitialiseSubjectsLIST(ProjectClass project)
         {
             try
             {
@@ -585,7 +585,7 @@ namespace Data_Logger_1._3.Services
 
 
 
-        public async void CreateFeedback(Exception exception, string methodName, string exceptionType = "Exception")
+        public async Task CreateFeedback(Exception exception, string methodName, string exceptionType = "Exception")
         {
             await _writer.HandleExceptionAsync(exception, methodName, exceptionType);
         }
