@@ -20,7 +20,7 @@ namespace Data_Logger_1._3.Services
             _master = entityMaster;
         }
 
-        
+
         /// <summary>
         /// Retrieve a profile pic from on an account with the matching email address.
         /// </summary>
@@ -33,6 +33,77 @@ namespace Data_Logger_1._3.Services
                 .Select(a => a.ProfilePic)
                 .FirstOrDefaultAsync() ?? string.Empty;
 
+        }
+
+        public async Task<List<LOG>> RetrieveLOGS()
+        {
+            return await _master.Logs
+                .Where(l => l.accountID == _master.User.accountID)
+                .OrderBy(l => l.Start)
+                .ToListAsync();
+        }
+
+        public async Task<List<CodingLOG>> RetrieveCodingLogs()
+        {
+            return await _master.CodingLogs
+                .Where(c => c.accountID == _master.User.accountID)
+                .OrderBy(c => c.Start)
+                .ToListAsync();
+        }
+
+        public async Task<List<CodingLOG>> RetrieveQtCodingLogs()
+        {
+            return await _master.CodingLogs
+                .Where(qt => qt.accountID == _master.User.accountID && qt.Application.appID == 1)
+                .OrderBy(qt => qt.Start)
+                .ToListAsync();
+        }
+
+        public async Task<List<AndroidCodingLOG>> RetrieveAndroidCodingLogs()
+        {
+            return await _master.AndroidCodingLogs
+                .Where(a => a.accountID == _master.User.accountID && a.Application.appID == 2)
+                .OrderBy(a => a.Start)
+                .ToListAsync();
+        }
+
+        public async Task<List<GraphicsLOG>> RetrieveGraphicsLogs()
+        {
+            return await _master.GraphicsLogs
+                .Where(g => g.accountID == _master.User.accountID)
+                .OrderBy(g => g.Start)
+                .ToListAsync();
+        }
+
+        public async Task<List<FilmLOG>> RetrieveFilmLogs()
+        {
+            return await _master.FilmLogs
+                .Where(f => f.accountID == _master.User.accountID)
+                .OrderBy(f => f.Start)
+                .ToListAsync();
+        }
+
+        public async Task<List<FlexiNotesLOG>> RetrieveFlexiNotesLogs()
+        {
+            return await _master.FlexiNotesLogs
+                .Where(fn => fn.accountID == _master.User.accountID)
+                .OrderBy(fn => fn.Start)
+                .ToListAsync();
+        }
+
+
+        public async Task<List<NoteItem>> RetrieveGenericNotes(int id)
+        {
+            return await _master.NoteItems
+                .Where(n => n.accountID == id)
+                .ToListAsync();
+        }
+
+        public async Task<List<CheckList>> RetrieveCheckList()
+        {
+            return await _master.Checklists
+                .Where((cl => cl.accountID == _master.User.accountID))
+                .ToListAsync();
         }
 
 
@@ -84,13 +155,30 @@ namespace Data_Logger_1._3.Services
             try
             {
                 var application = await _master.Applications
-                    .FirstOrDefaultAsync(app =>  app.appID == appID);
+                    .FirstOrDefaultAsync(app => app.appID == appID);
 
                 return application;
             }
             catch (Exception ex)
             {
                 await _master.HandleExceptionAsync(ex, "FindApplicationByID(appID)");
+            }
+
+            return null;
+        }
+
+        public async Task<ProjectClass> FindProjectByID(int projectID)
+        {
+            try
+            {
+                var project = await _master.Projects
+                    .FirstOrDefaultAsync((pro => pro.projectID == projectID));
+
+                return project;
+            }
+            catch (Exception ex)
+            {
+                await _master.HandleExceptionAsync(ex, "FindProjectByID(projectID)");
             }
 
             return null;
@@ -191,7 +279,7 @@ namespace Data_Logger_1._3.Services
         /// <returns>Returns whether the log with the specified logID has PostIts.</returns>
         public async Task<bool> PostItsExists(int logID)
         {
-            return await _master.PostIts.AnyAsync(p => 
+            return await _master.PostIts.AnyAsync(p =>
                     p.logID == logID);
         }
 
@@ -244,7 +332,7 @@ namespace Data_Logger_1._3.Services
 
                 return appID != 0 ? appID : -1;
             }
-            catch(ArgumentNullException nullex)
+            catch (ArgumentNullException nullex)
             {
                 await _master.HandleExceptionAsync(nullex, "FindAppID(app)", "ArgumentNullException");
             }
@@ -281,11 +369,11 @@ namespace Data_Logger_1._3.Services
                         .Where(p => p.Name == project.Name
                         && p.Category == project.Category
                         && p.Application.appID == project.Application.appID
-                        && (p.User.accountID == 1 || p.User.accountID ==  project.User.accountID))
+                        && (p.User.accountID == 1 || p.User.accountID == project.User.accountID))
                         .Select(p => p.projectID)
                         .FirstOrDefaultAsync();
 
-                    if(projectID != 0)
+                    if (projectID != 0)
                         return projectID;
                 }
 
@@ -322,7 +410,7 @@ namespace Data_Logger_1._3.Services
                     .Select(s => s.subjectID)
                     .FirstOrDefaultAsync();
 
-                if(subjectKey != 0)
+                if (subjectKey != 0)
                     return subjectKey;
             }
             catch (Exception ex)
@@ -412,7 +500,7 @@ namespace Data_Logger_1._3.Services
         /// <returns>The count of Android Studio logs ONLY.</returns>
         public async Task<int> ASLogCount()
         {
-            
+
             try
             {
                 var androidLogs = _master.Logs
@@ -895,10 +983,7 @@ namespace Data_Logger_1._3.Services
             throw new NotImplementedException();
         }
 
-        public async Task<List<LOG>> RetrieveLOGS()
-        {
-            return new();
-        }
+
 
 
 
