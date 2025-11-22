@@ -66,7 +66,7 @@ namespace Data_Logger_1._3.ViewModels.LogViewModels
 
         protected override void DeleteCacheItem()
         {
-            DeleteCacheFile(ViewModelID, LOGViewModelContext);
+            DeleteCacheFile(StartAsID, LOGViewModelContext);
             DeleteCacheItemCommand.Execute(this);
         }
 

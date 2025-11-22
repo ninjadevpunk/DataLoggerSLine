@@ -57,7 +57,7 @@ namespace Data_Logger_1._3.ViewModels.LogViewModels
             Setup(dataService);
 
             _cacheMaster = dataService.GetCachemaster();
-            _cacheMaster.IdentifiersChecked(_LOG.ID);
+            _cacheMaster.IdentifiersChecked(_LOG.Start.ToString("yyyyMMdd_HHmmss"));
 
         }
 
@@ -105,6 +105,8 @@ namespace Data_Logger_1._3.ViewModels.LogViewModels
         public int ViewModelID => _LOG.ID;
 
         public string ProjectName => $"{_LOG.Project.Name} ({_LOG.Application.Name})";
+
+        public string StartAsID => _LOG.Start.ToString("yyyyMMdd_HHmmss");
 
         public string ErrorCount => _LOG.ErrorCount().ToString();
 
@@ -205,7 +207,7 @@ namespace Data_Logger_1._3.ViewModels.LogViewModels
 
         protected abstract void DeleteCacheItem();
 
-        public void DeleteCacheFile(int id, CacheContext cacheContext)
+        public void DeleteCacheFile(string id, CacheContext cacheContext)
         {
             _cacheMaster.DeleteViewModel(id, cacheContext);
         }

@@ -41,7 +41,7 @@ namespace Data_Logger_1._3.ViewModels.LogViewModels
 
             }
 
-            NoteContent = PostItViewModel.ConvertRtfToPlainText(_NoteItem.Content);
+            NoteContent = PostItViewModel.ConvertRtfToPlainText(_NoteItem.NoteContent);
 
             DeleteNoteItemCommand = new DeleteNoteItemCommand(notesViewModel, dataService);
         }
@@ -65,7 +65,7 @@ namespace Data_Logger_1._3.ViewModels.LogViewModels
 
         public string Subject => _NoteItem.Subject;
 
-        public string NoteContent { get; set; } = "This is text";
+        public string NoteContent { get; set; }
 
         public ObservableCollection<CheckListItemViewModel> Items { get; set; }
 
