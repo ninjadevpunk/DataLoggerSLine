@@ -63,7 +63,7 @@ namespace Data_Logger_1._3.Components
         }
 
         public static readonly DependencyProperty ItemsProperty =
-            DependencyProperty.Register("Checklist", typeof(IEnumerable<string>), typeof(ComboBoxInputField));
+            DependencyProperty.Register("Items", typeof(IEnumerable<string>), typeof(ComboBoxInputField));
 
 
         // For enabling and disabling editing the control. Will allow it to be a normal combo box if false.

@@ -36,7 +36,7 @@ namespace Data_Logger_1._3.Components
         }
 
         public static readonly DependencyProperty ItemsProperty =
-            DependencyProperty.Register("Checklist", typeof(IEnumerable<string>), typeof(ComboBoxField));
+            DependencyProperty.Register("Items", typeof(IEnumerable<string>), typeof(ComboBoxField));
 
 
         /// <summary>
