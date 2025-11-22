@@ -38,7 +38,7 @@ namespace Data_Logger_1._3.Services
         const string SUBJECT_IDS_PATH = $@"{RESOURCE_DIRECTORY}\subject.index";
         const string POSTIT_IDS_PATH = $@"{RESOURCE_DIRECTORY}\postit.index";
 
-        public List<int>? Identifiers { get; set; } = new();
+        public List<string>? Identifiers { get; set; } = new();
         public StreamWriter Writer { get; set; }
 
         JsonSerializerSettings settings = new JsonSerializerSettings
@@ -184,7 +184,7 @@ namespace Data_Logger_1._3.Services
 
                     foreach (string s in File.ReadLines(IDENTIFIERS_PATH))
                     {
-                        Identifiers.Add(int.Parse(s));
+                        Identifiers.Add(s);
                     }
 
                 }
@@ -205,13 +205,13 @@ namespace Data_Logger_1._3.Services
         /// </summary>
         /// <param name="log">The log that will be cached.</param>
         /// <returns>The log's ID if the identifier was successfully inserted.</returns>
-        public int IdentifiersChecked(LOG log)
+        public string IdentifiersChecked(LOG log)
         {
             if (IdentifiersChecked() && Identifiers is not null)
             {
                 try
                 {
-                    int id = log.ID;
+                    var id = log.Start.ToString("yyyyMMdd_HHmmss");
 
                     /** If the id doesn't exist, add it to the Identifiers List and write the new id to the
                      * Identifiers.index file.
@@ -222,7 +222,7 @@ namespace Data_Logger_1._3.Services
                         Identifiers.Add(id);
 
                         Writer = new StreamWriter(IDENTIFIERS_PATH);
-                        foreach (int t in Identifiers.Order())
+                        foreach (string t in Identifiers.Order())
                         {
                             Writer.WriteLine(t);
                         }
@@ -237,27 +237,26 @@ namespace Data_Logger_1._3.Services
                 }
             }
 
-            return -1;
+            return "";
 
         }
 
-        public void IdentifiersChecked(int id)
+        public void IdentifiersChecked(string id)
         {
             if (IdentifiersChecked() && Identifiers is not null)
             {
                 try
                 {
 
-                    /** If the id doesn't exist, add it to the Identifiers List and write the new id to the
-                     * Identifiers.index file.
-                     */
+                    // If the id doesn't exist, add it to the Identifiers List and write the new id to the
+                    // Identifiers .index file.
 
                     if (!Identifiers.Contains(id))
                     {
                         Identifiers.Add(id);
 
                         Writer = new StreamWriter(IDENTIFIERS_PATH);
-                        foreach (int t in Identifiers.Order())
+                        foreach (string t in Identifiers.Order())
                         {
                             Writer.WriteLine(t);
                         }
@@ -531,7 +530,7 @@ namespace Data_Logger_1._3.Services
             }
         }
 
-        private void SaveViewModel(int logID, string json, CacheContext cacheContext)
+        private void SaveViewModel(string logID, string json, CacheContext cacheContext)
         {
             try
             {
@@ -553,7 +552,7 @@ namespace Data_Logger_1._3.Services
         }
 
 
-        public void DeleteViewModel(int logID, CacheContext cacheContext)
+        public void DeleteViewModel(string logID, CacheContext cacheContext)
         {
             if (Identifiers is null || !Identifiers.Contains(logID))
                 return;
@@ -577,7 +576,7 @@ namespace Data_Logger_1._3.Services
 
                 // Write IDENTIFIERS to new file
                 using var writer = new StreamWriter(IDENTIFIERS_PATH);
-                foreach (int id in Identifiers.Order())
+                foreach (string id in Identifiers.Order())
                 {
                     writer.WriteLine(id);
                 }
@@ -610,7 +609,7 @@ namespace Data_Logger_1._3.Services
         /// <param name="cacheContext">The type of log being cached.</param>
         public void SaveQtViewModel(QtLOGViewModel qtViewModel, CacheContext cacheContext)
         {
-            int logID = qtViewModel.ViewModelID;
+            var logID = qtViewModel.StartAsID;
 
             try
             {
@@ -644,7 +643,7 @@ namespace Data_Logger_1._3.Services
                     if (Identifiers.Count > 0)
                         list = new();
 
-                    foreach (int id in Identifiers)
+                    foreach (string id in Identifiers)
                     {
                         var filePath = $@"{root}{id}.{extenstion}";
 
@@ -700,7 +699,7 @@ namespace Data_Logger_1._3.Services
         /// <param name="cacheContext">The type of log being cached.</param>
         public void SaveASViewModel(AndroidLOGViewModel asViewModel, CacheContext cacheContext)
         {
-            int logID = asViewModel.ViewModelID;
+            var logID = asViewModel.StartAsID;
 
             try
             {
@@ -733,7 +732,7 @@ namespace Data_Logger_1._3.Services
                     if (Identifiers.Count > 0)
                         list = new();
 
-                    foreach (int id in Identifiers)
+                    foreach (string id in Identifiers)
                     {
                         var filePath = $@"{root}{id}.{extenstion}";
 
@@ -783,7 +782,7 @@ namespace Data_Logger_1._3.Services
         /// <param name="cacheContext">The type of log being cached.</param>
         public void SaveCodeViewModel(CodeLOGViewModel codeLOGViewModel, CacheContext cacheContext)
         {
-            int logID = codeLOGViewModel._CodeLOG.ID;
+            var logID = codeLOGViewModel.StartAsID;
 
             try
             {
@@ -818,7 +817,7 @@ namespace Data_Logger_1._3.Services
                     if (Identifiers.Count > 0)
                         list = new();
 
-                    foreach (int id in Identifiers)
+                    foreach (string id in Identifiers)
                     {
                         var filePath = $@"{root}{id}.{extenstion}";
 
@@ -870,7 +869,7 @@ namespace Data_Logger_1._3.Services
         /// <param name="cacheContext">The type of log being cached.</param>
         public void SaveGraphicsViewModel(GraphicsLOGViewModel graphicsLOGViewModel, CacheContext cacheContext)
         {
-            int logID = graphicsLOGViewModel._GraphicsLOG.ID;
+            var logID = graphicsLOGViewModel.StartAsID;
 
             try
             {
@@ -905,7 +904,7 @@ namespace Data_Logger_1._3.Services
                     if (Identifiers.Count > 0)
                         list = new();
 
-                    foreach (int id in Identifiers)
+                    foreach (string id in Identifiers)
                     {
                         var filePath = $@"{root}{id}.{extenstion}";
 
@@ -954,7 +953,7 @@ namespace Data_Logger_1._3.Services
 
         public void SaveFilmViewModel(FilmLOGViewModel filmLOGViewModel, CacheContext cacheContext)
         {
-            int logID = filmLOGViewModel._FilmLOG.ID;
+            var logID = filmLOGViewModel.StartAsID;
 
             try
             {
@@ -983,7 +982,7 @@ namespace Data_Logger_1._3.Services
                     if (Identifiers.Count > 0)
                         list = new();
 
-                    foreach (int id in Identifiers)
+                    foreach (string id in Identifiers)
                     {
                         var filePath = $@"{root}{id}.{extenstion}";
 
@@ -1031,7 +1030,7 @@ namespace Data_Logger_1._3.Services
 
         public void SaveFlexiViewModel(FlexiLOGViewModel flexiLOGViewModel, CacheContext cacheContext)
         {
-            int logID = flexiLOGViewModel.ViewModelID;
+            var logID = flexiLOGViewModel.StartAsID;
 
             try
             {
@@ -1060,7 +1059,7 @@ namespace Data_Logger_1._3.Services
                     if (Identifiers.Count > 0)
                         list = new();
 
-                    foreach (int id in Identifiers)
+                    foreach (string id in Identifiers)
                     {
                         var filePath = $@"{root}{id}.{extenstion}";
 
