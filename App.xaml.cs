@@ -139,7 +139,7 @@ namespace Data_Logger_1._3
 
             await AnimateProgressBar(splash.progressBar_splashscreen, 100, splash.text_progress);
 
-            navigationService.NavigateToLogin(false);
+            await navigationService.NavigateToLogin(false);
 
             splash.Close();
 

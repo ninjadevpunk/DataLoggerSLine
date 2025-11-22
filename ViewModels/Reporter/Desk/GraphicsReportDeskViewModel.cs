@@ -14,7 +14,7 @@ namespace Data_Logger_1._3.ViewModels.Reporter.Desk
         {
         }
 
-        public override void UpdateLogs(string project)
+        public override async Task UpdateLogs(string project)
         {
 
         }

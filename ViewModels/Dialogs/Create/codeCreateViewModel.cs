@@ -34,8 +34,8 @@ namespace Data_Logger_1._3.ViewModels.Dialogs.Create
             _viewModel = (CodingViewModel)logCacheViewModel;
             InitializeCommonFields(logCacheViewModel);
             LoadProjectsAndApplications();
-            LoadDefaultOutputs();
-            LoadDefaultTypes();
+            _ = LoadDefaultOutputs();
+            _ = LoadDefaultTypes();
 
             BugsFound = 0;
             ApplicationOpened = false;
@@ -44,7 +44,7 @@ namespace Data_Logger_1._3.ViewModels.Dialogs.Create
             AnnotateCommand = new AnnotateCommand(Context, _navigationService, this, _viewModel, _dataService);
             ClearLoggerCommand = new ResetLoggerCommand(this, Category);
 
-            UpdateLogCount();
+            _ = UpdateLogCount();
         }
 
         public codeCreateViewModel(NavigationService navigationService, LogCacheViewModel logCacheViewModel, string application, DataService dataService)
@@ -62,8 +62,8 @@ namespace Data_Logger_1._3.ViewModels.Dialogs.Create
                 _viewModel = (CodingViewModel)logCacheViewModel;
                 LoadProjectsAndApplications();
                 InitializeCommonFields(logCacheViewModel);
-                LoadDefaultOutputs();
-                LoadDefaultTypes();
+                _ = LoadDefaultOutputs();
+                _ = LoadDefaultTypes();
 
                 AnnotateCommand = new AnnotateCommand(Context, _navigationService, this, _viewModel, _dataService);
             }
@@ -71,7 +71,7 @@ namespace Data_Logger_1._3.ViewModels.Dialogs.Create
             SaveCommand = new SaveCommand(this, _dataService);
             ClearLoggerCommand = new ResetLoggerCommand(this, Category);
 
-            UpdateLogCount();
+            _ = UpdateLogCount();
         }
 
         private void InitializeCommonFields(LogCacheViewModel logCacheViewModel)
@@ -80,7 +80,7 @@ namespace Data_Logger_1._3.ViewModels.Dialogs.Create
             ApplicationName = VisualStudio;
         }
 
-        private void InitializeQtFields(LogCacheViewModel logCacheViewModel)
+        private async Task InitializeQtFields(LogCacheViewModel logCacheViewModel)
         {
             AppFieldEnabled = false;
             ApplicationToolTip = "This field cannot be changed. Only Qt logs are allowed in this tab.";
@@ -88,8 +88,8 @@ namespace Data_Logger_1._3.ViewModels.Dialogs.Create
             QtOnly = true;
 
             LoadQtProjects();
-            LoadQtOutputs();
-            LoadQtTypes();
+            await LoadQtOutputs();
+            await LoadQtTypes();
 
             AnnotateCommand = new AnnotateCommand(CacheContext.Qt, _navigationService, this, _QtviewModel, _dataService);
         }
@@ -121,7 +121,7 @@ namespace Data_Logger_1._3.ViewModels.Dialogs.Create
             }
         }
 
-        private async void LoadDefaultOutputs()
+        private async Task LoadDefaultOutputs()
         {
             Output = "C# Application (*.exe)";
             
@@ -132,7 +132,7 @@ namespace Data_Logger_1._3.ViewModels.Dialogs.Create
             
         }
 
-        private async void LoadQtOutputs()
+        private async Task LoadQtOutputs()
         {
             Output = "Widgets Application";
 
@@ -142,7 +142,7 @@ namespace Data_Logger_1._3.ViewModels.Dialogs.Create
             }
         }
 
-        private async void LoadDefaultTypes()
+        private async Task LoadDefaultTypes()
         {
             Type = "Exception";
             
@@ -153,7 +153,7 @@ namespace Data_Logger_1._3.ViewModels.Dialogs.Create
 
         }
 
-        private async void LoadQtTypes()
+        private async Task LoadQtTypes()
         {
             Type = "Build";
             
@@ -195,17 +195,17 @@ namespace Data_Logger_1._3.ViewModels.Dialogs.Create
 
         #region Member Functions
 
-        public virtual void UpdateLogCount()
+        public virtual async Task UpdateLogCount()
         {
             if (QtOnly && _QtviewModel is not null)
             {
-                var count = _dataService.QtLogCount();
+                var count = await _dataService.QtLogCount();
                 LogCount = $"{_QtviewModel.CacheItems.Count} Logs Cached";
                 _QtviewModel.LogCount = $"{_QtviewModel.CacheItems.Count} qt logs cached | {count} total logs";
             }
             else if (_viewModel is not null)
             {
-                var count = _dataService.LogCount(Category);
+                var count = await _dataService.LogCount(Category);
                 LogCount = $"{_viewModel.CacheItems.Count} Logs Cached";
                 _viewModel.LogCount = $"{_viewModel.CacheItems.Count} coding logs cached | {count} total logs";
             }

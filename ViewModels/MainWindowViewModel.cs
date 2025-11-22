@@ -160,7 +160,7 @@ namespace Data_Logger_1._3.ViewModels
 
                     if (codingQtChecked)
                     {
-                        _navigationService.NavigateToLogCachePage(CacheContext.Qt);
+                        _ = _navigationService.NavigateToLogCachePage(CacheContext.Qt);
                     }
                 }
 
@@ -184,7 +184,7 @@ namespace Data_Logger_1._3.ViewModels
 
                     if (codingAndroidChecked)
                     {
-                        _navigationService.NavigateToLogCachePage(CacheContext.AndroidStudio);
+                        _ = _navigationService.NavigateToLogCachePage(CacheContext.AndroidStudio);
 
                     }
                 }
@@ -208,7 +208,7 @@ namespace Data_Logger_1._3.ViewModels
 
                     if (codingGenericChecked)
                     {
-                        _navigationService.NavigateToLogCachePage(CacheContext.Coding);
+                        _ = _navigationService.NavigateToLogCachePage(CacheContext.Coding);
 
                     }
                 }
@@ -232,7 +232,7 @@ namespace Data_Logger_1._3.ViewModels
 
                     if (graphicsChecked)
                     {
-                        _navigationService.NavigateToLogCachePage(CacheContext.Graphics);
+                        _ = _navigationService.NavigateToLogCachePage(CacheContext.Graphics);
                         UncheckButtons();
 
                     }
@@ -257,7 +257,7 @@ namespace Data_Logger_1._3.ViewModels
 
                     if (filmChecked)
                     {
-                        _navigationService.NavigateToLogCachePage(CacheContext.Film);
+                        _ = _navigationService.NavigateToLogCachePage(CacheContext.Film);
                         UncheckButtons();
 
                     }
@@ -282,10 +282,22 @@ namespace Data_Logger_1._3.ViewModels
 
                     if (notesChecked)
                     {
-                        _navigationService.NavigateToNOTESDashboard();
-                        UncheckButtons();
+                        _ = NavigateToNotesAsync();
                     }
                 }
+            }
+        }
+
+        private async Task NavigateToNotesAsync()
+        {
+            try
+            {
+                await _navigationService.NavigateToNOTESDashboard();
+                UncheckButtons();
+            }
+            catch (Exception ex)
+            {
+                //
             }
         }
 
@@ -306,7 +318,7 @@ namespace Data_Logger_1._3.ViewModels
 
                     if (genericNotesChecked)
                     {
-                        //_navigationService.NavigateToCreateNotesPage();
+                        _ = _navigationService.NavigateToCreateNotesPage();
                     }
                 }
             }
@@ -329,7 +341,7 @@ namespace Data_Logger_1._3.ViewModels
 
                     if (checklistNotesChecked)
                     {
-                        //_navigationService.NavigateToCreateCheckListPage();
+                        //_ = _navigationService.NavigateToCreateCheckListPage();
                     }
                 }
             }
@@ -352,7 +364,7 @@ namespace Data_Logger_1._3.ViewModels
 
                     if (flexiChecked)
                     {
-                        //_navigationService.NavigateToLogCachePage(CacheContext.Flexi);
+                        //_ = _navigationService.NavigateToLogCachePage(CacheContext.Flexi);
                     }
                 }
             }
@@ -417,9 +429,9 @@ namespace Data_Logger_1._3.ViewModels
 
         private void UpdateByNavigationContext()
         {
-            if(_navigationService.NavigationContext == NavContext.LOGGER ||
+            if (_navigationService.NavigationContext == NavContext.LOGGER ||
                 _navigationService.NavigationContext == NavContext.POSTIT ||
-                _navigationService.NavigationContext == NavContext.VIEWER || 
+                _navigationService.NavigationContext == NavContext.VIEWER ||
                 _navigationService.NavigationContext == NavContext.EDITOR ||
                 _navigationService.NavigationContext == NavContext.REPORTER_DASHBOARD)
             {

@@ -23,7 +23,7 @@ namespace Data_Logger_1._3.ViewModels.Reporter.Desk
         /// <param name="dataService">The service required to perform database operations.</param>
         public QtReportDeskViewModel(NavigationService navigationService, DataService dataService) : base(navigationService, dataService)
         {
-            _dataService.InitialiseProjectsLISTAsync(LOG.CATEGORY.CODING);
+            _ = _dataService.InitialiseProjectsLISTAsync(LOG.CATEGORY.CODING);
 
             foreach(ProjectClass project in _dataService.SQLITE_PROJECTS)
             {
@@ -63,7 +63,7 @@ namespace Data_Logger_1._3.ViewModels.Reporter.Desk
             Export = new ExportCommand();
             ReturnToDashboard = new DashboardCommand(_navigationService, Context);
 
-            UpdateLogs();
+            _ = UpdateLogs();
 
             AwaitCall = false;
         }
@@ -76,7 +76,7 @@ namespace Data_Logger_1._3.ViewModels.Reporter.Desk
         /// <param name="pdfService">The service for generating PDFs.</param>
         public QtReportDeskViewModel(NavigationService navigationService, DataService dataService, PDFService pdfService) : base(navigationService, dataService, pdfService)
         {
-            _dataService.InitialiseProjectsLISTAsync(LOG.CATEGORY.CODING);
+            _ = _dataService.InitialiseProjectsLISTAsync(LOG.CATEGORY.CODING);
 
             foreach (ProjectClass project in _dataService.SQLITE_PROJECTS)
             {
@@ -116,7 +116,7 @@ namespace Data_Logger_1._3.ViewModels.Reporter.Desk
             Export = new ExportCommand();
             ReturnToDashboard = new DashboardCommand(_navigationService, Context);
 
-            UpdateLogs();
+            _ = UpdateLogs();
 
             AwaitCall = false;
         }
@@ -125,21 +125,20 @@ namespace Data_Logger_1._3.ViewModels.Reporter.Desk
         /// Updates logs in the Qt Report Desk.
         /// </summary>
         /// <param name="project">The Qt project you want logs from.</param>
-
-        public override async void UpdateLogs(string project)
+        public override async Task UpdateLogs(string project)
         {
             Logs.Clear();
             ObservableCollection<REPORTViewModel> list = new ObservableCollection<REPORTViewModel>();
             int projectID = 1;
 
-            _dataService.InitialiseProjectsLISTAsync(LOG.CATEGORY.CODING);
+            await _dataService.InitialiseProjectsLISTAsync(LOG.CATEGORY.CODING);
             foreach(ProjectClass item in _dataService.SQLITE_PROJECTS)
             {
                 if(item.Name == project)
                     projectID = item.projectID;
             }
 
-            foreach (LOG log in await _dataService.RetrieveLogs(LOG.CATEGORY.CODING))
+            foreach (LOG log in await _dataService.RetrieveLogs(CacheContext.Qt))
             {
                 if(log.Project.projectID == projectID)
                     list.Add(new qtREPORTViewModel((CodingLOG)log, this, _navigationService, _dataService, _pdfService));
@@ -148,11 +147,11 @@ namespace Data_Logger_1._3.ViewModels.Reporter.Desk
             Logs = list;
         }
 
-        public async void UpdateLogs()
+        public async Task UpdateLogs()
         {
             ObservableCollection<REPORTViewModel> list = new ObservableCollection<REPORTViewModel>();
 
-            foreach (LOG log in await _dataService.RetrieveLogs(LOG.CATEGORY.CODING))
+            foreach (LOG log in await _dataService.RetrieveLogs(CacheContext.Qt))
             {
                 if(Project == log.Project.Name)
                     list.Add(new qtREPORTViewModel((CodingLOG)log, this, _navigationService, _dataService, _pdfService));

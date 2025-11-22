@@ -39,7 +39,7 @@ namespace Data_Logger_1._3.ViewModels.Dialogs
 
             Subjects = new();
 
-            _dataService.InitialiseSubjectsLIST(category);
+            _ = _dataService.InitialiseSubjectsLIST(category);
 
             foreach (SubjectClass subject in _dataService.SQLITE_SUBJECTS)
             {
@@ -74,7 +74,7 @@ namespace Data_Logger_1._3.ViewModels.Dialogs
 
             Subject = "";
 
-            _dataService.InitialiseSubjectsLIST(project);
+            _ = _dataService.InitialiseSubjectsLIST(project);
 
             Subjects = new();
             foreach (SubjectClass subject in _dataService.SQLITE_SUBJECTS)
@@ -107,7 +107,7 @@ namespace Data_Logger_1._3.ViewModels.Dialogs
             _navigationService = navigationService;
             _loggerCreateViewModel = loggerCreateViewModel;
             _dataService = dataService;
-            _dataService.InitialiseSubjectsLIST(project);
+            _ = _dataService.InitialiseSubjectsLIST(project);
 
             Subjects = new();
             foreach (SubjectClass item in _dataService.SQLITE_SUBJECTS)
@@ -181,16 +181,16 @@ namespace Data_Logger_1._3.ViewModels.Dialogs
         public bool SolvedDateCaptured { get; set; } = false;
 
 
-        public int Error_RTFLength { get; set; } = 0;
-        public int Solution_RTFLength { get; set; } = 0;
-        public int Suggestion_RTFLength { get; set; } = 0;
-        public int Comment_RTFLength { get; set; } = 0;
-        public int backspaceCONSTANT { get; } = 274;
+        public int ErrorRtfLength { get; set; } = 0;
+        public int SolutionRtfLength { get; set; } = 0;
+        public int SuggestionRtfLength { get; set; } = 0;
+        public int CommentRtfLength { get; set; } = 0;
+        public int BackspaceConstant { get; } = 274;
 
-        public bool Error_LengthIsSet { get; set; } = false;
-        public bool Solution_LengthIsSet { get; set; } = false;
-        public bool Suggestion_LengthIsSet { get; set; } = false;
-        public bool Comment_LengthIsSet { get; set; } = false;
+        public bool ErrorLengthIsSet { get; set; } = false;
+        public bool SolutionLengthIsSet { get; set; } = false;
+        public bool SuggestionLengthIsSet { get; set; } = false;
+        public bool CommentLengthIsSet { get; set; } = false;
 
 
         public string PlaceholderText { get; set; } = "Subject";
@@ -315,19 +315,19 @@ namespace Data_Logger_1._3.ViewModels.Dialogs
                 ErrorVisible = Error != "" ? Visibility.Visible : Visibility.Collapsed;
 
 
-                if (!Error_LengthIsSet)
+                if (!ErrorLengthIsSet)
                 {
-                    Error_RTFLength = Error.Length - 1;
-                    Error_LengthIsSet = true;
+                    ErrorRtfLength = Error.Length - 1;
+                    ErrorLengthIsSet = true;
 
-                    if (Error_RTFLength < 0)
+                    if (ErrorRtfLength < 0)
                     {
-                        Error_RTFLength = 0;
-                        Error_LengthIsSet = false;
+                        ErrorRtfLength = 0;
+                        ErrorLengthIsSet = false;
                     }
                 }
 
-                if (Error_LengthIsSet && Error.Length == Error_RTFLength || Error_LengthIsSet && Error.Length == backspaceCONSTANT)
+                if (ErrorLengthIsSet && Error.Length == ErrorRtfLength || ErrorLengthIsSet && Error.Length == BackspaceConstant)
                 {
                     Error = "";
                 }
@@ -395,19 +395,19 @@ namespace Data_Logger_1._3.ViewModels.Dialogs
 
                 SolutionVisible = Solution != "" ? Visibility.Visible : Visibility.Collapsed;
 
-                if (!Solution_LengthIsSet)
+                if (!SolutionLengthIsSet)
                 {
-                    Solution_RTFLength = Solution.Length - 1;
-                    Solution_LengthIsSet = true;
+                    SolutionRtfLength = Solution.Length - 1;
+                    SolutionLengthIsSet = true;
 
-                    if (Solution_RTFLength < 0)
+                    if (SolutionRtfLength < 0)
                     {
-                        Solution_RTFLength = 0;
-                        Solution_LengthIsSet = false;
+                        SolutionRtfLength = 0;
+                        SolutionLengthIsSet = false;
                     }
                 }
 
-                if (Solution_LengthIsSet && Solution.Length == Solution_RTFLength || Solution_LengthIsSet && Solution.Length == backspaceCONSTANT)
+                if (SolutionLengthIsSet && Solution.Length == SolutionRtfLength || SolutionLengthIsSet && Solution.Length == BackspaceConstant)
                 {
                     Solution = "";
                 }
@@ -461,19 +461,19 @@ namespace Data_Logger_1._3.ViewModels.Dialogs
                 suggestion = value;
                 SuggestionVisible = Suggestion != "" ? Visibility.Visible : Visibility.Collapsed;
 
-                if (!Suggestion_LengthIsSet)
+                if (!SuggestionLengthIsSet)
                 {
-                    Suggestion_RTFLength = Suggestion.Length - 1;
-                    Suggestion_LengthIsSet = true;
+                    SuggestionRtfLength = Suggestion.Length - 1;
+                    SuggestionLengthIsSet = true;
 
-                    if (Suggestion_RTFLength < 0)
+                    if (SuggestionRtfLength < 0)
                     {
-                        Suggestion_RTFLength = 0;
-                        Suggestion_LengthIsSet = false;
+                        SuggestionRtfLength = 0;
+                        SuggestionLengthIsSet = false;
                     }
                 }
 
-                if (Suggestion_LengthIsSet && Suggestion.Length == Suggestion_RTFLength || Suggestion_LengthIsSet && Suggestion.Length == backspaceCONSTANT)
+                if (SuggestionLengthIsSet && Suggestion.Length == SuggestionRtfLength || SuggestionLengthIsSet && Suggestion.Length == BackspaceConstant)
                 {
                     Suggestion = "";
                 }
@@ -509,19 +509,19 @@ namespace Data_Logger_1._3.ViewModels.Dialogs
                 CommentVisible = Comment != "" ? Visibility.Visible : Visibility.Collapsed;
 
 
-                if (!Comment_LengthIsSet)
+                if (!CommentLengthIsSet)
                 {
-                    Comment_RTFLength = Comment.Length - 1;
-                    Comment_LengthIsSet = true;
+                    CommentRtfLength = Comment.Length - 1;
+                    CommentLengthIsSet = true;
 
-                    if (Comment_RTFLength < 0)
+                    if (CommentRtfLength < 0)
                     {
-                        Comment_RTFLength = 0;
-                        Comment_LengthIsSet = false;
+                        CommentRtfLength = 0;
+                        CommentLengthIsSet = false;
                     }
                 }
 
-                if (Comment_LengthIsSet && Comment.Length == Comment_RTFLength || Comment_LengthIsSet && Comment.Length == backspaceCONSTANT)
+                if (CommentLengthIsSet && Comment.Length == CommentRtfLength || CommentLengthIsSet && Comment.Length == BackspaceConstant)
                 {
                     Comment = "";
                 }

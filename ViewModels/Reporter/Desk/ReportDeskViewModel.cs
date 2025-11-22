@@ -208,7 +208,7 @@ namespace Data_Logger_1._3.ViewModels.Reporter.Desk
 
 
 
-        public abstract void UpdateLogs(string project);
+        public abstract Task UpdateLogs(string project);
 
 
 
