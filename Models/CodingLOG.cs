@@ -14,6 +14,8 @@ namespace Data_Logger_1._3.Models
     [Table("CodingLOG")]
     public class CodingLOG : LOG
     {
+        public override CATEGORY Category { get; protected set; } = CATEGORY.CODING;
+
 
         /* MEMBER VARIABLES */
 
@@ -50,6 +52,8 @@ namespace Data_Logger_1._3.Models
             Bugs = bugs;
             Success = success;
         }
+
+        
 
         public override bool Equals(object? obj)
         {

@@ -22,6 +22,8 @@ namespace Data_Logger_1._3.Models
         // Generic Note or Flexi Note
         public enum NOTELOGType { GENERIC, FLEXI }
 
+        public override CATEGORY Category { get; protected set; } = CATEGORY.NOTES;
+
 
         /* PROPERTIES */
 

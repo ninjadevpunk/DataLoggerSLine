@@ -29,7 +29,7 @@ namespace Data_Logger_1._3.Models
         /// <summary>
         /// The note's PostIt content.
         /// </summary>
-        public string Content { get; set; } = "";
+        public string NoteContent { get; set; } = "";
 
 
         /// <summary>
@@ -129,18 +129,19 @@ namespace Data_Logger_1._3.Models
             return hash.ToHashCode();
         }
 
-        public static bool operator ==(NoteItem left, NoteItem right)
+        public static bool operator ==(NoteItem? left, NoteItem? right)
         {
+            if (ReferenceEquals(left, right)) return true;
+            if (left is null || right is null) return false;
             return left.Equals(right);
         }
 
-        public static bool operator !=(NoteItem left, NoteItem right)
+        public static bool operator !=(NoteItem? left, NoteItem? right)
         {
+            if (ReferenceEquals(left, right)) return false;
+            if (left is null || right is null) return true;
             return !left.Equals(right);
         }
-
-
-
 
     }
 }

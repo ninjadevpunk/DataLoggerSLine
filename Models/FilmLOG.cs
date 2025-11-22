@@ -11,7 +11,7 @@ namespace Data_Logger_1._3.Models
     [Table("FilmLOG")]
     public class FilmLOG : LOG
     {
-
+        public override CATEGORY Category { get; protected set; } = CATEGORY.FILM;
 
 
         /* MEMBER VARIABLES */

@@ -11,6 +11,7 @@ namespace Data_Logger_1._3.Models
     [Table("GraphicsLOG")]
     public class GraphicsLOG : LOG
     {
+        public override CATEGORY Category { get; protected set; } = CATEGORY.GRAPHICS;
 
         /* MEMBER VARIABLES */
 
