@@ -24,13 +24,13 @@ namespace Data_Logger_1._3.Commands
 
             try
             {
-                bool SignInSuccessful = await _authService.SignIn(_login.Username, _login.Password);
+                bool signInSuccessful = await _authService.SignIn(_login.Username, _login.Password);
 
-                if (SignInSuccessful)
+                if (signInSuccessful)
                 {
                     _login.StatusMessage = "Login Successful";
                     _login.StatusMessageColour = _login.MessageGood;
-                    _navigationService.NavigateToMainWindow();
+                    await _navigationService.NavigateToMainWindow();
                     _login.CloseLogin();
                 }
                 else
