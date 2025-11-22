@@ -371,7 +371,7 @@ namespace Data_Logger_1._3.ViewModels
         }
 
 
-        private string signupImage;
+        private string signupImage = null!;
         public string SignUpImage
         {
             get
@@ -415,11 +415,11 @@ namespace Data_Logger_1._3.ViewModels
             FlexiChecked = false;
         }
 
-        public ICommand FeedbackCommand { get; set; }
+        public ICommand FeedbackCommand { get; set; } = null!;
 
-        public ICommand HelpCommand { get; set; }
+        public ICommand HelpCommand { get; set; } = null!;
 
-        public ICommand SettingsCommand { get; set; }
+        public ICommand SettingsCommand { get; set; } = null!;
 
         public ICommand GoBackCommand { get; set; }
         public ICommand GoForwardCommand { get; set; }
