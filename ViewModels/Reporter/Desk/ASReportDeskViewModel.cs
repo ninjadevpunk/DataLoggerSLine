@@ -18,7 +18,7 @@ namespace Data_Logger_1._3.ViewModels.Reporter.Desk
             ReturnToDashboard = new DashboardCommand(_navigationService, Context);
         }
 
-        public override void UpdateLogs(string project)
+        public override Task UpdateLogs(string project)
         {
             
         }

@@ -35,6 +35,11 @@ namespace Data_Logger_1._3.Views.Dialogs
 
         }
 
+        public PostItPage()
+        {
+            
+        }
+
         private void OnTextChanged(object sender, TextChangedEventArgs e, RichTextBox inputText, Action<string> setDisplayProperty)
         {
             try

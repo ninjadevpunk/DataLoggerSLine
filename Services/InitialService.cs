@@ -140,8 +140,8 @@ namespace Data_Logger_1._3.Services
         /// </summary>
         public async Task Initialise(int id)
         {
-            _dataService.InitialiseApplicationsLISTAsync();
-            _dataService.InitialiseProjectsLISTAsync();
+            await _dataService.InitialiseApplicationsLISTAsync();
+            await _dataService.InitialiseProjectsLISTAsync();
 
             LoadCachedLogs();
             await LoadNotes(id);

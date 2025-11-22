@@ -26,7 +26,7 @@ namespace Data_Logger_1._3.ViewModels.Dialogs.Create
             InitializeOutputTypes();
             InitializeLogTypes();
 
-            UpdateLogCount();
+            _ = UpdateLogCount();
 
             SaveCommand = new SaveCommand(this, _dataService);
             AnnotateCommand = new AnnotateCommand(Context, _navigationService, this, _ASviewModel, _dataService);
@@ -134,11 +134,11 @@ namespace Data_Logger_1._3.ViewModels.Dialogs.Create
 
         #region Log Count
 
-        public override void UpdateLogCount()
+        public override async Task UpdateLogCount()
         {
             if (ASOnly && _ASviewModel is not null)
             {
-                var count = _dataService.ASLogCount();
+                var count = await _dataService.ASLogCount();
                 LogCount = $"{_ASviewModel.CacheItems.Count} Logs Cached";
                 _ASviewModel.LogCount = $"{_ASviewModel.CacheItems.Count} android logs cached | {count} total logs";
             }
