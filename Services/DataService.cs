@@ -32,7 +32,7 @@ namespace Data_Logger_1._3.Services
         private readonly ENTITYHANDLER _handler;
         private readonly Cachemaster _cachemaster;
 
-        private ACCOUNT _account;
+        private readonly ACCOUNT _account;
         private const string Qt = "Qt Creator";
         private const string Android = "Android Studio Meerkat 2024.3.1";
 
@@ -298,6 +298,8 @@ namespace Data_Logger_1._3.Services
 
         public async Task<ApplicationClass?> FindApplicationByID(int appID) => await _reader.FindApplicationByID(appID);
 
+        public async Task<ProjectClass> FindProjectByID(int projectID) => await _reader.FindProjectByID(projectID);
+
         public async Task<OutputClass> FindOutputByID(int outputID) => await _reader.FindOutputByID(outputID);
 
         public async Task<TypeClass> FindTypeByID(int typeID) => await _reader.FindTypeByID(typeID);
@@ -351,39 +353,26 @@ namespace Data_Logger_1._3.Services
             return await _reader.RetrieveLOGS();
         }
 
-        public async Task<List<LOG>> RetrieveLogs(LOG.CATEGORY category)
+        public async Task<IEnumerable<LOG>> RetrieveLogs(CacheContext context)
         {
-            List<LOG> logs = new();
-
-            foreach (LOG log in await _reader.RetrieveLOGS())
+            switch (context)
             {
-                if (log.Category == category && log.Author == _account)
-                    logs.Add(log);
+                case CacheContext.Qt:
+                    return await _reader.RetrieveQtCodingLogs();
+                case CacheContext.AndroidStudio:
+                    return await _reader.RetrieveAndroidCodingLogs();
+                case CacheContext.Coding:
+                    return await _reader.RetrieveCodingLogs();
+                case CacheContext.Graphics:
+                    return await _reader.RetrieveGraphicsLogs();
+                case CacheContext.Film:
+                    return await _reader.RetrieveFilmLogs();
+                case CacheContext.Flexi:
+                    return await _reader.RetrieveFlexiNotesLogs();
+
             }
 
-            return logs;
-        }
-
-        /// <summary>
-        /// Retrieve notes from database. Useful for start up loading. Call again when notes page is selected.
-        /// </summary>
-        /// <returns></returns>
-        public List<NotesLOG> RetrieveNotes()
-        {
-            return new();
-        }
-
-        public async Task<List<LOG>> RetrieveQtLogs()
-        {
-            List<LOG> logs = new();
-            
-            foreach(LOG log in await RetrieveLogs(LOG.CATEGORY.CODING))
-            {
-                if(log.Application.appID == 1)
-                    logs.Add(log);
-            }
-
-            return logs;
+            return null;
         }
 
 
@@ -474,7 +463,7 @@ namespace Data_Logger_1._3.Services
 
 
 
-        public async Task<bool> DeleteLog(LOG log) => await _handler.DeleteLog(log);
+        public async Task<bool> DeleteNote(int ID) => await _handler.DeleteNote(ID);
 
 
 
@@ -503,7 +492,7 @@ namespace Data_Logger_1._3.Services
 
 
 
-        public void DeleteCacheFile(int id, CacheContext cacheContext)
+        public void DeleteCacheFile(string id, CacheContext cacheContext)
         {
             _cachemaster.DeleteViewModel(id, cacheContext);
         }
