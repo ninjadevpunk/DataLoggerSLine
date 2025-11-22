@@ -88,7 +88,7 @@ namespace Data_Logger_1._3.Commands.LogCacheCommands
             }
             else
             {
-                _dataService.DeleteCacheFile(item.ViewModelID, item.LOGViewModelContext);
+                _dataService.DeleteCacheFile(item.StartAsID, item.LOGViewModelContext);
                 item._timer.Dispose();
                 tempQtDashBoardItems.Remove(item);
                 ((CodingQtViewModel)_viewModel).CacheItems = tempQtDashBoardItems;
@@ -113,7 +113,7 @@ namespace Data_Logger_1._3.Commands.LogCacheCommands
             }
             else
             {
-                _dataService.DeleteCacheFile(item.ViewModelID, item.LOGViewModelContext);
+                _dataService.DeleteCacheFile(item.StartAsID, item.LOGViewModelContext);
                 item._timer.Dispose();
                 tempASDashboardItems.Remove(item);
                 ((CodingAndroidViewModel)_viewModel).CacheItems = tempASDashboardItems;
@@ -138,7 +138,7 @@ namespace Data_Logger_1._3.Commands.LogCacheCommands
             }
             else
             {
-                _dataService.DeleteCacheFile(item.ViewModelID, item.LOGViewModelContext);
+                _dataService.DeleteCacheFile(item.StartAsID, item.LOGViewModelContext);
                 item._timer.Dispose();
                 tempCodingDashboardItems.Remove(item);
                 ((CodingViewModel)_viewModel).CacheItems = tempCodingDashboardItems;
@@ -163,7 +163,7 @@ namespace Data_Logger_1._3.Commands.LogCacheCommands
             }
             else
             {
-                _dataService.DeleteCacheFile(item.ViewModelID, item.LOGViewModelContext);
+                _dataService.DeleteCacheFile(item.StartAsID, item.LOGViewModelContext);
                 item._timer.Dispose();
                 tempGraphicsDashboard.Remove(item);
                 ((GraphicsViewModel)_viewModel).CacheItems = tempGraphicsDashboard;
@@ -188,7 +188,7 @@ namespace Data_Logger_1._3.Commands.LogCacheCommands
             }
             else
             {
-                _dataService.DeleteCacheFile(item.ViewModelID, item.LOGViewModelContext);
+                _dataService.DeleteCacheFile(item.StartAsID, item.LOGViewModelContext);
                 item._timer.Dispose();
                 tempFilmDashboardItems.Remove(item);
                 ((FilmViewModel)_viewModel).CacheItems = tempFilmDashboardItems;
@@ -213,7 +213,7 @@ namespace Data_Logger_1._3.Commands.LogCacheCommands
             }
             else
             {
-                _dataService.DeleteCacheFile(item.ViewModelID, item.LOGViewModelContext);
+                _dataService.DeleteCacheFile(item.StartAsID, item.LOGViewModelContext);
                 item._timer.Dispose();
                 tempFlexiDashboardItems.Remove(item);
                 ((FlexiViewModel)_viewModel).CacheItems = tempFlexiDashboardItems;

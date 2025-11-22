@@ -56,7 +56,7 @@ namespace Data_Logger_1._3.Commands.LogCacheCommands
                         // TODO
 
 
-                        _dataService.DeleteCacheFile(item._QtcodingLOG.ID, CacheContext.Qt);
+                        _dataService.DeleteCacheFile(item.StartAsID, CacheContext.Qt);
                         item._timer.Dispose();
                         tempQtDashBoardItems.Remove(item);
                         QtDashboard.CacheItems = tempQtDashBoardItems;

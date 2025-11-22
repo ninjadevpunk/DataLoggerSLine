@@ -52,7 +52,7 @@ namespace Data_Logger_1._3.Commands.LogCacheCommands
                     }
                     else
                     {
-                        _dataService.DeleteCacheFile(item._AndroidCodingLOG.ID, CacheContext.AndroidStudio);
+                        _dataService.DeleteCacheFile(item.StartAsID, CacheContext.AndroidStudio);
                         item._timer.Dispose();
                         tempASDashboardItems.Remove(item);
                         ASDashboard.CacheItems = tempASDashboardItems;
