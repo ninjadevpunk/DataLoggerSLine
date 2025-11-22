@@ -100,7 +100,7 @@ namespace Data_Logger_1._3.Models.App_Models
             return left.Equals(right);
         }
 
-        public static bool operator !=(ApplicationClass left, ApplicationClass right)
+        public static bool operator !=(ApplicationClass? left, ApplicationClass? right)
         {
             return !left.Equals(right);
         }

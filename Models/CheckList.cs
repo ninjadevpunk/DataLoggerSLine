@@ -83,14 +83,18 @@ namespace Data_Logger_1._3.Models
             return HashCode.Combine(Items);
         }
 
-        public static bool operator ==(CheckList left, CheckList right)
+        public static bool operator !=(CheckList? left, CheckList? right)
         {
-            return left.Equals(right);
+            if (ReferenceEquals(left, right)) return false;
+            if (left is null || right is null) return true;
+            return !left.Equals(right);
         }
 
-        public static bool operator !=(CheckList left, CheckList right)
+        public static bool operator ==(CheckList? left, CheckList? right)
         {
-            return !left.Equals(right);
+            if (ReferenceEquals(left, right)) return true;
+            if (left is null || right is null) return false;
+            return left.Equals(right);
         }
     }
 }
