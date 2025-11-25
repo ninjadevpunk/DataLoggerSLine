@@ -2,6 +2,7 @@
 using Data_Logger_1._3.Models.App_Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
+using System.Data;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -42,7 +43,7 @@ namespace Data_Logger_1._3.Services
 
                 if (!await _reader.EmailExists(account.Email))
                 {
-                    account.Online = false;
+                    account.IsOnline = false;
 
                     var hiddenPassword = account.Password;
                     account.Password = string.Empty;
@@ -60,7 +61,7 @@ namespace Data_Logger_1._3.Services
                 }
                 else
                     throw new EmailConflictException("Email exists!");
-                
+
             }
             catch (EmailConflictException mailex)
             {
@@ -122,7 +123,7 @@ namespace Data_Logger_1._3.Services
                     item.User.accountID == project.User.accountID
                 );
 
-                if(exists)
+                if (exists)
                     return;
 
                 if (project.Application.appID != 3)
@@ -190,13 +191,12 @@ namespace Data_Logger_1._3.Services
         /// <param name="log">The log being stored.</param>
         public async Task<bool> CreateLOG(LOG log)
         {
-            using var transaction = await _master.Database.BeginTransactionAsync();
+            await using var transaction = await _master.Database.BeginTransactionAsync();
 
             try
             {
-
-                await InsertLogDetails(log);
-                await InsertPostItDetails(log);
+                await PrepareLogDetails(log);
+                await PreparePostItDetails(log);
                 await InsertSubLogDetails(log);
 
                 await _master.SaveChangesAsync();
@@ -219,7 +219,8 @@ namespace Data_Logger_1._3.Services
             }
             finally
             {
-                if (transaction.GetDbTransaction().Connection != null)
+                var dbConnection = transaction.GetDbTransaction().Connection;
+                if (dbConnection != null && !dbConnection.State.HasFlag(ConnectionState.Closed))
                 {
                     await transaction.RollbackAsync();
                 }
@@ -229,26 +230,38 @@ namespace Data_Logger_1._3.Services
         }
 
 
-        private async Task InsertLogDetails(LOG log)
+        private async Task PrepareLogDetails(LOG log)
         {
+            var onlineUser = await _reader.FindAccountByID((int)await _reader.GetOnlineAccountIDAsync());
+            var userID = onlineUser.accountID;
+
             var app = log.Application;
-            var temporaryID = await _reader.FindAppID(app);
-            if (temporaryID == -1)
-            {
-                await AddApplicationAsync(app);
+            app.User = onlineUser;
 
-                temporaryID = await _reader.FindAppID(app);
-            }
-
+            var existingApp = await _reader.FindApplication(userID, app.Name);
 
             var project = log.Project;
-            temporaryID = await _reader.FindProjectID(project);
-            if (temporaryID == 1)
+            project.User = onlineUser;
+
+            log.Output = await _reader.FindOutput(log.Output.Name);
+            log.Type = await _reader.FindType(log.Type.Name);
+
+            if (existingApp != null)
             {
-                await AddProjectAsync(project);
+                app = existingApp;
+
+                var existingProject = await _reader.FindProject(userID, project.Name, app.appID);
+
+                if (existingProject != null)
+                {
+                    project = existingProject;
+                }
+
             }
 
-            await _master.Logs.AddAsync(log);
+            log.Application = app;
+            project.Application = app;
+            log.Project = project;
         }
 
         private string ValidateString(string input)
@@ -258,24 +271,20 @@ namespace Data_Logger_1._3.Services
             return regex.IsMatch(input) ? input : string.Empty;
         }
 
-        private async Task InsertPostItDetails(LOG log)
+        private async Task PreparePostItDetails(LOG log)
         {
+            var onlineUser = await _reader.FindAccountByID((int)await _reader.GetOnlineAccountIDAsync());
+
             foreach (PostIt postIt in log.PostItList)
             {
-                string error = ValidateString(postIt.Error);
-                string solution = ValidateString(postIt.Solution);
-                string suggestion = ValidateString(postIt.Suggestion);
-                string comment = ValidateString(postIt.Comment);
 
-                var subject = postIt.Subject;
-                var tempSubjectID = await _reader.FindSubjectID(subject);
-
-                if (tempSubjectID == 1)
+                if (postIt.Subject != null)
                 {
-                    await AddSubjectAsync(subject);
+                    postIt.Author = onlineUser;
+                    postIt.Subject.User = onlineUser;
+                    postIt.Subject.Application = log.Application;
+                    postIt.Subject.Project = log.Project;
                 }
-
-                await _master.PostIts.AddAsync(postIt);
             }
         }
 
@@ -284,7 +293,16 @@ namespace Data_Logger_1._3.Services
             switch (log.Category)
             {
                 case LOG.CATEGORY.CODING when log is CodingLOG codingLog:
-                    await _master.CodingLogs.AddAsync(codingLog);
+
+                    if (codingLog is AndroidCodingLOG androidCodingLog)
+                    {
+                        await _master.AndroidCodingLogs.AddAsync(androidCodingLog);
+                    }
+                    else
+                    {
+                        await _master.CodingLogs.AddAsync(codingLog);
+                    }
+
                     break;
                 case LOG.CATEGORY.GRAPHICS when log is GraphicsLOG graphicsLog:
                     await _master.GraphicsLogs.AddAsync(graphicsLog);
@@ -293,8 +311,6 @@ namespace Data_Logger_1._3.Services
                     await _master.FilmLogs.AddAsync(filmLog);
                     break;
                 case LOG.CATEGORY.NOTES when log is NotesLOG notesLog:
-
-                    await _master.NotesLogs.AddAsync(notesLog);
 
                     switch (notesLog.notelogtype)
                     {
@@ -307,13 +323,13 @@ namespace Data_Logger_1._3.Services
                         default:
                             {
                                 var genericNotesLog = (NoteItem)notesLog;
-                                
 
-                                if(genericNotesLog.Checklist is not null && genericNotesLog.Checklist.Items.Count > 0)
+
+                                if (genericNotesLog.Checklist is not null && genericNotesLog.Checklist.Items.Count > 0)
                                 {
                                     _master.Checklists.Add(genericNotesLog.Checklist);
 
-                                    foreach(var item in  genericNotesLog.Checklist.Items)
+                                    foreach (var item in genericNotesLog.Checklist.Items)
                                         await _master.ChecklistItems.AddAsync(item);
                                 }
                                 else
