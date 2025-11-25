@@ -84,7 +84,7 @@ namespace Data_Logger_1._3.Commands.PostItCommands
                                 else
                                 {
                                     _loggerCreateViewModel.PostIts.Add(_createPostItViewModel);
-                                    _navigationService.GoBack();
+                                    _navigationService.GoBack(true);
                                 }
                             }
                             break;
@@ -109,7 +109,7 @@ namespace Data_Logger_1._3.Commands.PostItCommands
                                 {
                                     var index = _loggerCreateViewModel.PostIts.IndexOf(_createPostItViewModel);
                                     _loggerCreateViewModel.PostIts[index] = _editPostItViewModel;
-                                    //_navigationService.GoBack();
+                                    //_navigationService.GoBack(true);
                                 }
                             }
                             break;

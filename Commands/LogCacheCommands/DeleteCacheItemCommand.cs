@@ -7,7 +7,7 @@ using static Data_Logger_1._3.Services.Cachemaster;
 
 namespace Data_Logger_1._3.Commands.LogCacheCommands
 {
-    public class DeleteCacheItemCommand : CommandBase
+    public class DeleteCacheItemCommand : AsyncCommandBase
     {
         private readonly LogCacheViewModel _viewModel;
         private readonly DataService _dataService;
@@ -32,45 +32,48 @@ namespace Data_Logger_1._3.Commands.LogCacheCommands
             }
         }
 
-        public override async void Execute(object parameter)
+        protected override async Task ExecuteAsync(object parameter)
         {
             try
             {
                 var logViewModel = parameter as LOGViewModel;
 
+                if (logViewModel == null)
+                    throw new NullReferenceException("logViewModel is null.");
+
                 switch (logViewModel.LOGViewModelContext)
                 {
                     case CacheContext.Qt:
-                        HandleQtCacheItem((QtLOGViewModel)logViewModel);
+                        await HandleQtCacheItem((QtLOGViewModel)logViewModel);
                         break;
                     case CacheContext.AndroidStudio:
-                        HandleAndroidCacheItem((AndroidLOGViewModel)logViewModel);
+                        await HandleAndroidCacheItem((AndroidLOGViewModel)logViewModel);
                         break;
                     case CacheContext.Coding:
-                        HandleCodingCacheItem((CodeLOGViewModel)logViewModel);
+                        await HandleCodingCacheItem((CodeLOGViewModel)logViewModel);
                         break;
                     case CacheContext.Graphics:
-                        HandleGraphicsCacheItem((GraphicsLOGViewModel)logViewModel);
+                        await HandleGraphicsCacheItem((GraphicsLOGViewModel)logViewModel);
                         break;
                     case CacheContext.Film:
-                        HandleFilmCacheItem((FilmLOGViewModel)logViewModel);
+                        await HandleFilmCacheItem((FilmLOGViewModel)logViewModel);
                         break;
                     case CacheContext.Flexi:
-                        HandleFlexiCacheItem((FlexiLOGViewModel)logViewModel);
+                        await HandleFlexiCacheItem((FlexiLOGViewModel)logViewModel);
                         break;
                 }
             }
             catch (InvalidCastException castx)
             {
-                _dataService.CreateFeedback(castx, "Execute() DeleteCacheItemCommand", "InvalidCastException");
+                await _dataService.CreateFeedback(castx, "Execute() DeleteCacheItemCommand", "InvalidCastException");
             }
             catch (Exception e)
             {
-                _dataService.CreateFeedback(e, "Execute() DeleteCacheItemCommand");
+                await _dataService.CreateFeedback(e, "Execute() DeleteCacheItemCommand");
             }
         }
 
-        private async void HandleQtCacheItem(QtLOGViewModel item)
+        private async Task HandleQtCacheItem(QtLOGViewModel item)
         {
             var tempQtDashBoardItems = ((CodingQtViewModel)_viewModel).CacheItems;
             bool isLogged = false;
@@ -89,13 +92,13 @@ namespace Data_Logger_1._3.Commands.LogCacheCommands
             else
             {
                 _dataService.DeleteCacheFile(item.StartAsID, item.LOGViewModelContext);
-                item._timer.Dispose();
+                await item._timer.DisposeAsync();
                 tempQtDashBoardItems.Remove(item);
                 ((CodingQtViewModel)_viewModel).CacheItems = tempQtDashBoardItems;
             }
         }
 
-        private async void HandleAndroidCacheItem(AndroidLOGViewModel item)
+        private async Task HandleAndroidCacheItem(AndroidLOGViewModel item)
         {
             var tempASDashboardItems = ((CodingAndroidViewModel)_viewModel).CacheItems;
             bool isLogged = false;
@@ -114,13 +117,13 @@ namespace Data_Logger_1._3.Commands.LogCacheCommands
             else
             {
                 _dataService.DeleteCacheFile(item.StartAsID, item.LOGViewModelContext);
-                item._timer.Dispose();
+                await item._timer.DisposeAsync();
                 tempASDashboardItems.Remove(item);
                 ((CodingAndroidViewModel)_viewModel).CacheItems = tempASDashboardItems;
             }
         }
 
-        private async void HandleCodingCacheItem(CodeLOGViewModel item)
+        private async Task HandleCodingCacheItem(CodeLOGViewModel item)
         {
             var tempCodingDashboardItems = ((CodingViewModel)_viewModel).CacheItems;
             bool isLogged = false;
@@ -139,13 +142,13 @@ namespace Data_Logger_1._3.Commands.LogCacheCommands
             else
             {
                 _dataService.DeleteCacheFile(item.StartAsID, item.LOGViewModelContext);
-                item._timer.Dispose();
+                await item._timer.DisposeAsync();
                 tempCodingDashboardItems.Remove(item);
                 ((CodingViewModel)_viewModel).CacheItems = tempCodingDashboardItems;
             }
         }
 
-        private async void HandleGraphicsCacheItem(GraphicsLOGViewModel item)
+        private async Task HandleGraphicsCacheItem(GraphicsLOGViewModel item)
         {
             var tempGraphicsDashboard = ((GraphicsViewModel)_viewModel).CacheItems;
             bool isLogged = false;
@@ -170,7 +173,7 @@ namespace Data_Logger_1._3.Commands.LogCacheCommands
             }
         }
 
-        private async void HandleFilmCacheItem(FilmLOGViewModel item)
+        private async Task HandleFilmCacheItem(FilmLOGViewModel item)
         {
             var tempFilmDashboardItems = ((FilmViewModel)_viewModel).CacheItems;
             bool isLogged = false;
@@ -195,7 +198,7 @@ namespace Data_Logger_1._3.Commands.LogCacheCommands
             }
         }
 
-        private async void HandleFlexiCacheItem(FlexiLOGViewModel item)
+        private async Task HandleFlexiCacheItem(FlexiLOGViewModel item)
         {
             var tempFlexiDashboardItems = ((FlexiViewModel)_viewModel).CacheItems;
             bool isLogged = false;
