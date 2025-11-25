@@ -56,15 +56,20 @@ namespace Data_Logger_1._3.Services
 
             _account = authService.Account;
 
-            _ = SignInUser();
-
         }
 
         public async Task SignInUser()
         {
-            if (_account is not null)
+            try
             {
-                await _writer.SetCurrentUser(_account);
+                if (_account is not null)
+                {
+                    await _writer.SetCurrentUser(_account);
+                }
+            }
+            catch (Exception e)
+            {
+                //
             }
         }
 
@@ -195,7 +200,7 @@ namespace Data_Logger_1._3.Services
         /// Retrieves applications from the database of a specified category.
         /// </summary>
         /// <param name="category">The type of application.</param>
-        public async Task InitialiseApplicationsLIST(LOG.CATEGORY category)
+        public async Task InitialiseApplicationsLISTAsync(LOG.CATEGORY category)
         {
             try
             {
