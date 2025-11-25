@@ -1,4 +1,6 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Data_Logger_1._3.ViewModels.Dialogs;
+using Data_Logger_1._3.Views.Dialogs;
+using Microsoft.Extensions.DependencyInjection;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
@@ -37,12 +39,28 @@ namespace Data_Logger_1._3.Services
             where TPage : Page, new()
             where TViewModel : class
         {
-            var page = new TPage();
+            var page = _serviceProvider.GetRequiredService<TPage>();
             var viewModel = _serviceProvider.GetService<TViewModel>();
 
             page.DataContext = viewModel;
 
             return page;
         }
+
+        public TPage CreatePage<TPage>(PostItViewModel postItViewModel)
+            where TPage : Page, new()
+        {
+            var page = _serviceProvider.GetRequiredService<TPage>();
+            page.DataContext = postItViewModel;
+
+            return page;
+        }
+
+        public PostItPage CreatePostItPage(PostItViewModel postItViewModel)
+        {
+            var page = new PostItPage(postItViewModel);
+            return page;
+        }
+
     }
 }

@@ -41,14 +41,19 @@ namespace Data_Logger_1._3.Services
             );
         }
 
-        public PostItViewModel CreatePostItViewModel(LoggerCreateViewModel loggerCreateViewModel, LOG.CATEGORY category)
+        public async Task<PostItViewModel> CreatePostItViewModel(LoggerCreateViewModel loggerCreateViewModel, LOG.CATEGORY category)
         {
-            return new PostItViewModel(
+            var postItVM = new PostItViewModel(
                 _serviceProvider.GetRequiredService<NavigationService>(),
                 _serviceProvider.GetRequiredService<DataService>(),
                 loggerCreateViewModel,
                 category
                 );
+
+            postItVM.LoadSubjectsAsync(category);
+
+
+            return postItVM;
         }
     }
 
