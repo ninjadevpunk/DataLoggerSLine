@@ -14,6 +14,7 @@ namespace Data_Logger_1._3.Services
         #region SERVICES
 
 
+        private readonly IServiceProvider _serviceProvider;
         private readonly AuthService _authService;
         private readonly DataService _dataService;
 
@@ -29,9 +30,15 @@ namespace Data_Logger_1._3.Services
         #region Loggers
 
 
-        
 
-        private readonly IServiceProvider _serviceProvider;
+        private readonly codeCreateViewModel _qtLogger;
+        private readonly AScodeCreateViewModel _asLogger;
+        private readonly codeCreateViewModel _codingLogger;
+        private readonly graphicCreateViewModel _graphicsLogger;
+        private readonly filmCreateViewModel _filmLogger;
+        private readonly flexiCreateViewModel _flexiLogger;
+
+
 
 
         #endregion
@@ -130,7 +137,12 @@ namespace Data_Logger_1._3.Services
 
             var viewModelFactory = serviceProvider.GetRequiredService<ViewModelFactory>();
 
-            
+            _qtLogger = viewModelFactory.CreateQtCodeCreateViewModel();
+            _asLogger = serviceProvider.GetRequiredService<AScodeCreateViewModel>();
+            _codingLogger = viewModelFactory.CreateCodeCreateViewModel();
+            _graphicsLogger = serviceProvider.GetRequiredService<graphicCreateViewModel>();
+            _filmLogger = serviceProvider.GetRequiredService<filmCreateViewModel>();
+            _flexiLogger = serviceProvider.GetRequiredService<flexiCreateViewModel>();
 
             _mainWindowViewModel = serviceProvider.GetRequiredService<MainWindowViewModel>();
         }
