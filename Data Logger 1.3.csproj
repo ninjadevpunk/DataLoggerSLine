@@ -7,7 +7,7 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <UseWPF>true</UseWPF>
-    <ApplicationIcon>Data Logger 1.3 logo icon.ico</ApplicationIcon>
+    <ApplicationIcon>DLS icon.ico</ApplicationIcon>
   </PropertyGroup>
 
   <ItemGroup>
@@ -21,7 +21,6 @@
     <None Remove="Assets\Data Logger 1.3 logo icon.ico" />
     <None Remove="Assets\login\alexandru-acea--WBYxmW4yuw-unsplash.jpg" />
     <None Remove="Assets\login\ayo-ogunseinde-sibVwORYqs0-unsplash.jpg" />
-    <None Remove="Assets\login\national-cancer-institute-uVnRa6mOLOM-unsplash.jpg" />
     <None Remove="Assets\login\user.png" />
     <None Remove="Assets\viewer_wallpaper.png" />
     <None Remove="Components\SplashScreen1.png" />
@@ -37,7 +36,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="Data Logger 1.3 logo icon.ico" />
+    <Content Include="DLS icon.ico" />
   </ItemGroup>
 
   <ItemGroup>
@@ -77,9 +76,6 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
     <Resource Include="Assets\login\ayo-ogunseinde-sibVwORYqs0-unsplash.jpg">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Assets\login\national-cancer-institute-uVnRa6mOLOM-unsplash.jpg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
     <Resource Include="Assets\login\user.png" />
