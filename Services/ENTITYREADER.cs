@@ -106,6 +106,27 @@ namespace Data_Logger_1._3.Services
                 .ToListAsync();
         }
 
+        /// <summary>
+        /// Find the account ID of the user who's online.
+        /// </summary>
+        /// <returns>Returns a single account ID</returns>
+        public async Task<int?> GetOnlineAccountIDAsync()
+        {
+            try
+            {
+                var onlineAccount = await _master.Accounts
+                    .SingleAsync(a => a.IsOnline);
+
+                return onlineAccount?.accountID;
+            }
+            catch (Exception ex)
+            {
+                await _master.HandleExceptionAsync(ex, "GetOnlineAccountIDAsync");
+            }
+
+            return null;
+        }
+
 
         public async Task<ACCOUNT> FindAccountByID(int id)
         {
@@ -150,6 +171,45 @@ namespace Data_Logger_1._3.Services
             }
         }
 
+        public async Task<ApplicationClass?> FindApplication(string name)
+        {
+            try
+            {
+                var application = await _master.Applications
+                    .FirstOrDefaultAsync(app => app.Name == name);
+
+                return application;
+            }
+            catch (Exception ex)
+            {
+                await _master.HandleExceptionAsync(ex, "FindApplication(name)");
+            }
+
+            return null;
+        }
+
+        public async Task<ApplicationClass?> FindApplication(int? ID, string name)
+        {
+            try
+            {
+                if(ID == null)
+                    throw new ArgumentNullException("ID is needed to find application's from Data Logger or user!");
+
+                var application = await _master.Applications
+                    .Where(app => app.accountID == ID || app.accountID == 1)
+                    .FirstOrDefaultAsync(app => app.Name == name);
+
+                return application;
+            }
+            catch (Exception ex)
+            {
+                await _master.HandleExceptionAsync(ex, "FindApplication(name)");
+            }
+
+            return null;
+        }
+
+
         public async Task<ApplicationClass?> FindApplicationByID(int appID)
         {
             try
@@ -166,6 +226,30 @@ namespace Data_Logger_1._3.Services
 
             return null;
         }
+
+        public async Task<ProjectClass?> FindProject(int? userID, string projectName, int appID)
+        {
+            try
+            {
+                if (userID == null)
+                    throw new ArgumentNullException("userID is required to find a user's projects!");
+
+                var project = await _master.Projects
+                    .Where(p => (p.accountID == userID || p.accountID == 1)
+                                && p.Name == projectName
+                                && p.appID == appID)
+                    .FirstOrDefaultAsync();
+
+                return project;
+            }
+            catch (Exception ex)
+            {
+                await _master.HandleExceptionAsync(ex, "FindProject(projectName, appID)");
+            }
+
+            return null;
+        }
+
 
         public async Task<ProjectClass> FindProjectByID(int projectID)
         {
@@ -184,6 +268,22 @@ namespace Data_Logger_1._3.Services
             return null;
         }
 
+        public async Task<OutputClass?> FindOutput(string name)
+        {
+            try
+            {
+                return await _master.Outputs
+                    .Where(o => o.accountID == 1 && o.Name == name)
+                    .FirstOrDefaultAsync();
+            }
+            catch (Exception ex)
+            {
+                await _master.HandleExceptionAsync(ex, "FindOutput(name)");
+            }
+
+            return null;
+        }
+
         public async Task<OutputClass> FindOutputByID(int outputID)
         {
             try
@@ -196,6 +296,22 @@ namespace Data_Logger_1._3.Services
             catch (Exception ex)
             {
                 await _master.HandleExceptionAsync(ex, "FindOutputByID(outputID)");
+            }
+
+            return null;
+        }
+
+        public async Task<TypeClass?> FindType(string name)
+        {
+            try
+            {
+                return await _master.Types
+                    .Where(t => t.accountID == 1 && t.Name == name)
+                    .FirstOrDefaultAsync();
+            }
+            catch (Exception ex)
+            {
+                await _master.HandleExceptionAsync(ex, "FindType(name)");
             }
 
             return null;
