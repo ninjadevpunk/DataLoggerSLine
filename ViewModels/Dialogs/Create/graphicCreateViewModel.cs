@@ -33,7 +33,6 @@ namespace Data_Logger_1._3.ViewModels.Dialogs.Create
 
             _graphicsViewModel = (GraphicsViewModel)logCacheViewModel;
 
-            LoadProjectsAndApplications();
             InitializeFields();
 
             _mediums =
@@ -63,8 +62,20 @@ namespace Data_Logger_1._3.ViewModels.Dialogs.Create
             SaveCommand = new SaveCommand(this, _dataService);
             AnnotateCommand = new AnnotateCommand(Context, _navigationService, this, _graphicsViewModel, _dataService);
             ClearLoggerCommand = new ResetLoggerCommand(this, Category);
+        }
 
-            UpdateLogCount();
+
+
+
+
+
+
+
+        public async Task AutoStartAsync()
+        {
+            await LoadProjectsAndApplications();
+
+            await UpdateLogCount();
         }
 
         private void InitializeFields()
@@ -83,16 +94,16 @@ namespace Data_Logger_1._3.ViewModels.Dialogs.Create
 
         }
 
-        private void LoadProjectsAndApplications()
+        private async Task LoadProjectsAndApplications()
         {
-            _dataService.InitialiseProjectsLISTAsync(Category);
+            await _dataService.InitialiseProjectsLISTAsync(Category);
             var items = _dataService.SQLITE_PROJECTS;
             foreach (ProjectClass project in items)
             {
                 _projects.Add(project.Name);
             }
 
-            _dataService.InitialiseApplicationsLIST(Category);
+            await _dataService.InitialiseApplicationsLISTAsync(Category);
             var apps = _dataService.SQLITE_APPLICATIONS;
             foreach (ApplicationClass app in apps)
             {
@@ -278,11 +289,11 @@ namespace Data_Logger_1._3.ViewModels.Dialogs.Create
             }
         }
 
-        public void UpdateLogCount()
+        public async Task UpdateLogCount()
         {
             if (_graphicsViewModel != null)
             {
-                var count = _dataService.LogCount(Category);
+                var count = await _dataService.LogCount(Category);
                 LogCount = $"{_graphicsViewModel.CacheItems.Count} Logs Cached";
                 _graphicsViewModel.LogCount = $"{_graphicsViewModel.CacheItems.Count} graphics logs cached | {count} total logs";
             }

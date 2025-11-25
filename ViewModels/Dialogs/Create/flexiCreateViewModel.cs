@@ -33,7 +33,6 @@ namespace Data_Logger_1._3.ViewModels.Dialogs.Create
 
             _flexiViewModel = (FlexiViewModel)logCacheViewModel;
 
-            InitializeProjectsAndApplications(dataService);
             InitializeDefaults();
 
             _mediums = new ObservableCollection<string>
@@ -80,11 +79,16 @@ namespace Data_Logger_1._3.ViewModels.Dialogs.Create
 
 
 
-
-
-        private void InitializeProjectsAndApplications(DataService dataService)
+        public async Task AutoStartAsync()
         {
-            dataService.InitialiseProjectsLISTAsync(Category);
+            await InitializeProjectsAndApplications(_dataService);
+
+            await UpdateLogCount();
+        }
+
+        private async Task InitializeProjectsAndApplications(DataService dataService)
+        {
+            await dataService.InitialiseProjectsLISTAsync(Category);
             var items = dataService.SQLITE_PROJECTS;
             var apps = dataService.SQLITE_APPLICATIONS;
 
@@ -93,11 +97,13 @@ namespace Data_Logger_1._3.ViewModels.Dialogs.Create
                 _projects.Add(project.Name);
             }
 
-            dataService.InitialiseApplicationsLIST(Category);
+            await dataService.InitialiseApplicationsLISTAsync(Category);
+
             foreach (ApplicationClass app in apps)
             {
                 _applications.Add(app.Name);
             }
+
         }
 
         private void InitializeDefaults()
@@ -237,11 +243,11 @@ namespace Data_Logger_1._3.ViewModels.Dialogs.Create
 
         #region Member Functions
 
-        public void UpdateLogCount()
+        public async Task UpdateLogCount()
         {
             if (_flexiViewModel is not null)
             {
-                var count = _dataService.LogCount(Category);
+                var count = await _dataService.LogCount(Category);
                 LogCount = $"{_flexiViewModel.CacheItems.Count} Logs Cached";
                 _flexiViewModel.LogCount = $"{_flexiViewModel.CacheItems.Count} flexible logs cached | {count} total logs";
             }

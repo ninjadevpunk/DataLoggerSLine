@@ -1,5 +1,6 @@
 ﻿using Data_Logger_1._3.Commands.LoggerCommands;
 using Data_Logger_1._3.Models;
+using Data_Logger_1._3.Models.App_Models;
 using Data_Logger_1._3.Services;
 using Data_Logger_1._3.ViewModels.Dashboard;
 using System.Windows;
@@ -22,16 +23,20 @@ namespace Data_Logger_1._3.ViewModels.Dialogs.Create
 
             _ASviewModel = (CodingAndroidViewModel)_viewModel;
 
-            InitializeProjects();
-            InitializeOutputTypes();
-            InitializeLogTypes();
-
-            _ = UpdateLogCount();
+            
 
             SaveCommand = new SaveCommand(this, _dataService);
             AnnotateCommand = new AnnotateCommand(Context, _navigationService, this, _ASviewModel, _dataService);
         }
 
+        public override async Task AutoStartAsync()
+        {
+            await InitializeProjects();
+            await InitializeOutputTypes();
+            await InitializeLogTypes();
+
+            await UpdateLogCount();
+        }
 
 
 
@@ -89,15 +94,27 @@ namespace Data_Logger_1._3.ViewModels.Dialogs.Create
 
 
 
-        private void InitializeProjects()
+        private async Task InitializeProjects()
         {
-            _projects.Clear();
-            _dataService.InitialiseProjectsLISTAsync(LOG.CATEGORY.CODING);
+            await _dataService.InitialiseProjectsLISTAsync(LOG.CATEGORY.CODING);
+            LoadProjects();
 
             _applications.Clear();
         }
 
-        private async void InitializeOutputTypes()
+        private void LoadProjects()
+        {
+            var items = _dataService.SQLITE_PROJECTS;
+            _projects.Clear();
+
+            foreach (ProjectClass project in items)
+            {
+                if (project.Application.Name == AndroidStudio)
+                    _projects.Add(project.Name);
+            }
+        }
+
+        private async Task InitializeOutputTypes()
         {
             Output = "APK (*.apk)";
             _outputs.Clear();
@@ -108,7 +125,7 @@ namespace Data_Logger_1._3.ViewModels.Dialogs.Create
             }
         }
 
-        private async void InitializeLogTypes()
+        private async Task InitializeLogTypes()
         {
             Type = "Sync";
             _types.Clear();

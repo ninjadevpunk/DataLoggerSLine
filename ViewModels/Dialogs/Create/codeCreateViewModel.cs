@@ -25,7 +25,7 @@ namespace Data_Logger_1._3.ViewModels.Dialogs.Create
 
         public codeCreateViewModel()
         {
-            
+
         }
 
         public codeCreateViewModel(NavigationService navigationService, LogCacheViewModel logCacheViewModel, DataService dataService)
@@ -33,9 +33,7 @@ namespace Data_Logger_1._3.ViewModels.Dialogs.Create
         {
             _viewModel = (CodingViewModel)logCacheViewModel;
             InitializeCommonFields(logCacheViewModel);
-            LoadProjectsAndApplications();
-            _ = LoadDefaultOutputs();
-            _ = LoadDefaultTypes();
+
 
             BugsFound = 0;
             ApplicationOpened = false;
@@ -43,35 +41,69 @@ namespace Data_Logger_1._3.ViewModels.Dialogs.Create
             SaveCommand = new SaveCommand(this, _dataService);
             AnnotateCommand = new AnnotateCommand(Context, _navigationService, this, _viewModel, _dataService);
             ClearLoggerCommand = new ResetLoggerCommand(this, Category);
-
-            _ = UpdateLogCount();
         }
+
+
 
         public codeCreateViewModel(NavigationService navigationService, LogCacheViewModel logCacheViewModel, string application, DataService dataService)
             : base(navigationService, logCacheViewModel, dataService)
         {
-            _dataService.InitialiseProjectsLISTAsync(Category);
 
             if (application is Qt || application is "Qt")
             {
                 _QtviewModel = (CodingQtViewModel)logCacheViewModel;
-                InitializeQtFields(logCacheViewModel);
             }
             else
             {
                 _viewModel = (CodingViewModel)logCacheViewModel;
-                LoadProjectsAndApplications();
                 InitializeCommonFields(logCacheViewModel);
-                _ = LoadDefaultOutputs();
-                _ = LoadDefaultTypes();
 
                 AnnotateCommand = new AnnotateCommand(Context, _navigationService, this, _viewModel, _dataService);
             }
 
             SaveCommand = new SaveCommand(this, _dataService);
             ClearLoggerCommand = new ResetLoggerCommand(this, Category);
+        }
 
-            _ = UpdateLogCount();
+
+
+
+
+
+
+
+
+
+
+        public virtual async Task AutoStartAsync()
+        {
+            await _dataService.InitialiseProjectsLISTAsync(Category);
+            await _dataService.InitialiseApplicationsLISTAsync(Category);
+            LoadProjectsAndApplications();
+
+            await LoadDefaultOutputs();
+            await LoadDefaultTypes();
+
+            await UpdateLogCount();
+        }
+
+        public virtual async Task AutoStartAsync(bool qtOnly)
+        {
+            await _dataService.InitialiseProjectsLISTAsync(Category);
+
+            if (qtOnly && _QtviewModel != null)
+            {
+                await InitializeQtFields(_QtviewModel);
+            }
+            else
+            {
+                LoadProjectsAndApplications();
+
+                await LoadDefaultOutputs();
+                await LoadDefaultTypes();
+            }
+
+            await UpdateLogCount();
         }
 
         private void InitializeCommonFields(LogCacheViewModel logCacheViewModel)
@@ -98,6 +130,8 @@ namespace Data_Logger_1._3.ViewModels.Dialogs.Create
         {
             var items = _dataService.SQLITE_PROJECTS;
             var apps = _dataService.SQLITE_APPLICATIONS;
+            _projects.Clear();
+            _applications.Clear();
 
             foreach (ProjectClass project in items)
             {
@@ -124,19 +158,19 @@ namespace Data_Logger_1._3.ViewModels.Dialogs.Create
         private async Task LoadDefaultOutputs()
         {
             Output = "C# Application (*.exe)";
-            
-            foreach(var output in await _dataService.ListOutputs(Category))
+
+            foreach (var output in await _dataService.ListOutputs(Category))
             {
                 _outputs.Add(output.Name);
             }
-            
+
         }
 
         private async Task LoadQtOutputs()
         {
             Output = "Widgets Application";
 
-            foreach(var output in await _dataService.ListQtOutputs())
+            foreach (var output in await _dataService.ListQtOutputs())
             {
                 _outputs.Add(output.Name);
             }
@@ -145,8 +179,8 @@ namespace Data_Logger_1._3.ViewModels.Dialogs.Create
         private async Task LoadDefaultTypes()
         {
             Type = "Exception";
-            
-            foreach(var type in await _dataService.ListTypes(Category))
+
+            foreach (var type in await _dataService.ListTypes(Category))
             {
                 _types.Add(type.Name);
             }
@@ -156,8 +190,8 @@ namespace Data_Logger_1._3.ViewModels.Dialogs.Create
         private async Task LoadQtTypes()
         {
             Type = "Build";
-            
-            foreach(var type in await _dataService.ListQtTypes())
+
+            foreach (var type in await _dataService.ListQtTypes())
             {
                 _types.Add(type.Name);
             }
@@ -166,8 +200,8 @@ namespace Data_Logger_1._3.ViewModels.Dialogs.Create
         public string ApplicationToolTip { get; set; } = "The application's name.";
         public string TimeStartToolTip { get; set; } = "Updates the current start time AND end time. Does not update automatically!";
         public string TimeEndToolTip { get; set; } = "Updates the END TIME ONLY. Does not update automatically.";
-        public string OutputToolTip { get; set; } = "Please select from this list. Checklist cannot be modified.";
-        public string TypeToolTip { get; set; } = "Please select from this list. Checklist cannot be modified.";
+        public string OutputToolTip { get; set; } = "Please select from this list. Options cannot be modified.";
+        public string TypeToolTip { get; set; } = "Please select from this list. Options cannot be modified.";
 
 
 

@@ -80,8 +80,8 @@ namespace Data_Logger_1._3.ViewModels.Dialogs.Create
 
         protected readonly ObservableCollection<string> _projects;
         protected readonly ObservableCollection<string> _applications;
-        protected readonly ObservableCollection<string> _outputs;
-        protected readonly ObservableCollection<string> _types;
+        protected readonly HashSet<string> _outputs;
+        protected readonly HashSet<string> _types;
 
         public IEnumerable<string> Projects => _projects;
 

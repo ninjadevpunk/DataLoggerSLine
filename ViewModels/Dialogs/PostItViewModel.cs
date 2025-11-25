@@ -39,13 +39,6 @@ namespace Data_Logger_1._3.ViewModels.Dialogs
 
             Subjects = new();
 
-            _ = _dataService.InitialiseSubjectsLIST(category);
-
-            foreach (SubjectClass subject in _dataService.SQLITE_SUBJECTS)
-            {
-                Subjects.Add(subject.Subject);
-            }
-
             ErrorVisible = Visibility.Collapsed;
             SolutionVisible = Visibility.Collapsed;
             SuggestionVisible = Visibility.Collapsed;
@@ -753,6 +746,24 @@ namespace Data_Logger_1._3.ViewModels.Dialogs
                 // TODO
 
                 return string.Empty;
+            }
+        }
+
+        public async void LoadSubjectsAsync(LOG.CATEGORY category)
+        {
+            try
+            {
+                await _dataService.InitialiseSubjectsLIST(category);
+
+                Subjects.Clear();
+                foreach (SubjectClass subject in _dataService.SQLITE_SUBJECTS)
+                {
+                    Subjects.Add(subject.Subject);
+                }
+            }
+            catch (Exception e)
+            {
+                //
             }
         }
 

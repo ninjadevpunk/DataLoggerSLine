@@ -23,7 +23,6 @@ namespace Data_Logger_1._3.ViewModels.Dialogs.Create
 
             _filmViewModel = (FilmViewModel)logCacheViewModel;
 
-            InitializeProjectsAndApplications();
             InitializeDefaults();
 
             BrowseCommand = new BrowseCommand(Context, this);
@@ -32,9 +31,16 @@ namespace Data_Logger_1._3.ViewModels.Dialogs.Create
             ClearLoggerCommand = new ResetLoggerCommand(this, Category);
         }
 
-        private void InitializeProjectsAndApplications()
+        public async Task AutoStartAsync()
         {
-            _dataService.InitialiseProjectsLISTAsync(Category);
+            await InitializeProjectsAndApplications();
+
+            await UpdateLogCount();
+        }
+
+        private async Task InitializeProjectsAndApplications()
+        {
+            await _dataService.InitialiseProjectsLISTAsync(Category);
             var items = _dataService.SQLITE_PROJECTS;
 
             var apps = _dataService.SQLITE_APPLICATIONS;
@@ -44,7 +50,7 @@ namespace Data_Logger_1._3.ViewModels.Dialogs.Create
                 _projects.Add(project.Name);
             }
 
-            _dataService.InitialiseApplicationsLIST(Category);
+            await _dataService.InitialiseApplicationsLISTAsync(Category);
             foreach (ApplicationClass app in apps)
             {
                 _applications.Add(app.Name);
@@ -172,11 +178,11 @@ namespace Data_Logger_1._3.ViewModels.Dialogs.Create
 
 
 
-        public void UpdateLogCount()
+        public async Task UpdateLogCount()
         {
             if (_filmViewModel is not null)
             {
-                var count = _dataService.LogCount(Category);
+                var count = await _dataService.LogCount(Category);
                 LogCount = $"{_filmViewModel.CacheItems.Count} Logs Cached";
                 _filmViewModel.LogCount = $"{_filmViewModel.CacheItems.Count} film logs cached | {count} total logs";
             }
