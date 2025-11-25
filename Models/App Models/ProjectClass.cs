@@ -19,7 +19,7 @@ namespace Data_Logger_1._3.Models.App_Models
         public ACCOUNT User { get; set; }
 
 
-        public string Name { get; set; } = "Unknown";
+        public string Name { get; set; }
 
 
         public int appID { get; set; }
@@ -97,14 +97,19 @@ namespace Data_Logger_1._3.Models.App_Models
             return HashCode.Combine(projectID, User, Name, Application, Category, IsDefault);
         }
 
-        public static bool operator ==(ProjectClass left, ProjectClass right)
+        public static bool operator ==(ProjectClass? left, ProjectClass? right)
         {
+            if (ReferenceEquals(left, right)) return true;
+            if (left is null || right is null) return false;
             return left.Equals(right);
         }
 
-        public static bool operator !=(ProjectClass left, ProjectClass right)
+        public static bool operator !=(ProjectClass? left, ProjectClass? right)
         {
+            if (ReferenceEquals(left, right)) return false;
+            if (left is null || right is null) return true;
             return !left.Equals(right);
         }
+
     }
 }
