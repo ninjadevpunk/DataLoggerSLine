@@ -27,9 +27,9 @@ namespace Data_Logger_1._3.Commands.LoggerCommands
         private readonly LogCacheViewModel _dashboard;
 
         private const string Qt = "Qt Creator";
-        private ApplicationClass QtCreator;
+        private ApplicationClass? QtCreator;
         private const string Android = "Android Studio Meerkat 2024.3.1";
-        private ApplicationClass AndroidStudio;
+        private ApplicationClass? AndroidStudio;
 
         // Edit Only
         private readonly ViewModelBase _viewModelBase;
@@ -51,7 +51,7 @@ namespace Data_Logger_1._3.Commands.LoggerCommands
                 _dataService = dataService ?? throw new ArgumentNullException(nameof(dataService));
                 ActionType = ActionType.Add;
 
-                
+
             }
             catch (Exception e)
             {
@@ -103,7 +103,7 @@ namespace Data_Logger_1._3.Commands.LoggerCommands
             catch (Exception e)
             {
                 Debug.WriteLine($"Exception found in third AnnotateCommand constructor: {e.Message}");
-                
+
                 // TODO
             }
 
@@ -124,29 +124,34 @@ namespace Data_Logger_1._3.Commands.LoggerCommands
 
 
                 List<PostIt> posts = new();
+
+                // Manage Application name if it is empty.
+                if (string.IsNullOrEmpty(_viewModel.ApplicationName) ||
+                    _viewModel.ApplicationName.Equals("Unknown", StringComparison.OrdinalIgnoreCase) ||
+                    _viewModel.ApplicationName.Equals("Unknown Application", StringComparison.OrdinalIgnoreCase))
+                {
+                    _viewModel.ApplicationName = "Unknown";
+                }
+
+                // Add: Create a new application using the form's application name.
+                // Edit: Don't create a new appliccation. The application is handled later on in the switch statement.
                 ApplicationClass? application = ActionType == ActionType.Add ? new(account,
-                    _viewModel.ApplicationName, _viewModel.Category, false) : null;
+                        _viewModel.ApplicationName, _viewModel.Category, false) : null;
 
-                if (ActionType == ActionType.Add)
+                // Manage Project name if it is empty.
+                if (string.IsNullOrEmpty(_viewModel.ProjectName) ||
+                    _viewModel.ProjectName.Equals("Unnamed Project", StringComparison.OrdinalIgnoreCase) ||
+                    _viewModel.ProjectName.Equals("Unknown", StringComparison.OrdinalIgnoreCase) ||
+                    _viewModel.ProjectName.Equals("Unknown Project", StringComparison.OrdinalIgnoreCase))
                 {
-                    if(application.Name == "Visual Studio Community 2022")
-                        application.IsDefault = true;
+                    _viewModel.ProjectName = "Unnamed Project";
                 }
 
-                ProjectClass? project = ActionType == ActionType.Add ? new(account,
-                    _viewModel.ProjectName, application, _viewModel.Category, false) :
-                    new(1, account, _viewModel.ProjectName, application, _viewModel.Category, false);
-
-                if (ActionType == ActionType.Add)
-                {
-                    if (project.Name == "Unknown" || project.Name == string.Empty)
-                        project.IsDefault = true;
-                }
+                // Add:
+                ProjectClass? project = new(account, _viewModel.ProjectName, application, _viewModel.Category, false);
 
                 OutputClass? output = new(account, _viewModel.Output, application, _viewModel.Category);
                 TypeClass? type = new(account, _viewModel.Type, application, _viewModel.Category);
-                
-                SubjectClass subject;
 
                 PostIt postIt;
 
@@ -161,12 +166,12 @@ namespace Data_Logger_1._3.Commands.LoggerCommands
                     postIt = new();
 
 
-                    subject = new(
-                                    _viewModel.Category,
-                                    account,
-                                    item.Subject,
-                                    project,
-                                    application);
+                    SubjectClass subject = new(
+                        _viewModel.Category,
+                        account,
+                        item.Subject,
+                        project,
+                        application);
 
                     postIt.Author = account;
                     postIt.Subject = subject;
@@ -334,7 +339,6 @@ namespace Data_Logger_1._3.Commands.LoggerCommands
                                 if (DateIsWrong)
                                 {
                                     list.Add(new CodeLOGViewModel(new CodingLOG(
-                                        -1,
                                         account,
                                         project,
                                         application,
@@ -351,7 +355,6 @@ namespace Data_Logger_1._3.Commands.LoggerCommands
                                 else
                                 {
                                     list.Add(new CodeLOGViewModel(new CodingLOG(
-                                        -1,
                                         account,
                                         project,
                                         application,
@@ -368,7 +371,7 @@ namespace Data_Logger_1._3.Commands.LoggerCommands
 
                                 genvm.CacheItems = list;
 
-                                _navigationService.NavigateToLogCachePage<CodingViewModel>(CacheContext.Coding);
+                                await _navigationService.NavigateToLogCachePage<CodingViewModel>(CacheContext.Coding);
 
                                 break;
                             }
@@ -755,25 +758,20 @@ namespace Data_Logger_1._3.Commands.LoggerCommands
 
                                 bool IsNewApp = _GENviewModel.ApplicationName == oldApp.Name;
 
-                                if(_GENviewModel.ApplicationName == Qt || _GENviewModel.ApplicationName == Android)
+                                if (_GENviewModel.ApplicationName == Qt || _GENviewModel.ApplicationName == Android)
                                 {
                                     application = _GENviewModel.ApplicationName == Qt ? QtCreator : AndroidStudio;
                                 }
-                                else if(IsNewApp)
+                                else if (IsNewApp)
                                 {
-                                    application = new(-1, account,
+                                    application = new(account,
                                         _viewModel.ApplicationName, _GENviewModel.Category, false);
-
-                                    if (application.Name == "Visual Studio Community 2022")
-                                        application.IsDefault = true;
                                 }
                                 else
                                 {
                                     application = oldApp;
                                 }
 
-                                if (_GENviewModel.ProjectName == "Unknown")
-                                    project.IsDefault = true;
                                 project.Application = application;
 
                                 output.Application = application;
@@ -854,7 +852,7 @@ namespace Data_Logger_1._3.Commands.LoggerCommands
                                 if (_GRAviewModel.ApplicationName == "Krita" || _GRAviewModel.ApplicationName == "Inkscape" ||
                                     _GRAviewModel.ApplicationName == "Canva" || _GRAviewModel.ApplicationName == "Adobe Illustrator")
                                 {
-                                    switch(_GRAviewModel.ApplicationName)
+                                    switch (_GRAviewModel.ApplicationName)
                                     {
                                         case "Krita":
                                             application = new(5, account, _viewModel.ApplicationName, _GRAviewModel.Category, true);
@@ -1091,8 +1089,8 @@ namespace Data_Logger_1._3.Commands.LoggerCommands
 
                                 if (_FLEXIviewModel.ApplicationName == "Unity" || _FLEXIviewModel.ApplicationName == "Steam" ||
                                     _FLEXIviewModel.ApplicationName == "Data Logger NOTES" || _FLEXIviewModel.ApplicationName == "Data Logger Checklist" ||
-                                    _FLEXIviewModel.ApplicationName == "Microsoft Word" || _FLEXIviewModel.ApplicationName == "REAPER" || 
-                                    _FLEXIviewModel.ApplicationName == "Notepad" || _FLEXIviewModel.ApplicationName == "Microsoft Excel" || 
+                                    _FLEXIviewModel.ApplicationName == "Microsoft Word" || _FLEXIviewModel.ApplicationName == "REAPER" ||
+                                    _FLEXIviewModel.ApplicationName == "Notepad" || _FLEXIviewModel.ApplicationName == "Microsoft Excel" ||
                                     _FLEXIviewModel.ApplicationName == "Microsoft Access")
                                 {
                                     switch (_FLEXIviewModel.ApplicationName)
@@ -1237,12 +1235,12 @@ namespace Data_Logger_1._3.Commands.LoggerCommands
             catch (InvalidCastException castx)
             {
                 Debug.WriteLine($"Invalid cast canceled exception found in AnnotateCommand.Execute(): {castx.Message}");
-                _navigationService.NavigateToLogCachePage(Type);
+                _navigationService.GoBack(false);
             }
             catch (TaskCanceledException taskx)
             {
                 Debug.WriteLine($"Task canceled exception found in AnnotateCommand.Execute(): {taskx.Message}");
-                _navigationService.NavigateToLogCachePage(Type);
+                _navigationService.GoBack(false);
             }
             catch (ArgumentNullException nullx)
             {
@@ -1251,20 +1249,20 @@ namespace Data_Logger_1._3.Commands.LoggerCommands
 
                 Debug.WriteLine($"Argument null exception found in AnnotateCommand.Execute(): {nullx.Message}");
 
-                _navigationService.NavigateToLogCachePage(Type);
+                _navigationService.GoBack(false);
             }
-            catch(IndexOutOfRangeException index)
+            catch (IndexOutOfRangeException index)
             {
                 MessageBox.Show("A problem occurred on our end. We apologise for any inconvenience caused. Feedback will automatically be sent to us.",
                     "Error", MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK);
 
                 Debug.WriteLine($"Index out of range exception found in AnnotateCommand.Execute(): {index.Message}");
 
-                _navigationService.NavigateToLogCachePage(Type);
+                _navigationService.GoBack(false);
             }
             catch (FormatException formx)
             {
-                if(formx.Message.Equals("The input string '' was not in a correct format."))
+                if (formx.Message.Equals("The input string '' was not in a correct format."))
                 {
                     MessageBox.Show($"An error occurred. Please ensure you entered numbers only in fields that require numeric values.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
@@ -1276,7 +1274,7 @@ namespace Data_Logger_1._3.Commands.LoggerCommands
 
                 Debug.WriteLine($"Format exception found in AnnotateCommand.Execute(): {formx.Message}");
 
-                _navigationService.NavigateToLogCachePage(Type);
+                _navigationService.GoBack(false);
             }
             catch (Exception e)
             {
@@ -1285,7 +1283,7 @@ namespace Data_Logger_1._3.Commands.LoggerCommands
 
                 Debug.WriteLine($"Exception found in AnnotateCommand.Execute(): {e.Message}");
 
-                _navigationService.NavigateToLogCachePage(Type);
+                _navigationService.GoBack(false);
             }
 
         }
