@@ -153,12 +153,12 @@
 
                 if (user != null)
                 {
-                    user.Online = true;
+                    user.IsOnline = true;
                     await SaveChangesAsync();
 
                     User = account;
 
-                    return user.Online;
+                    return user.IsOnline;
                 }
             }
             catch (Exception ex)
@@ -182,10 +182,10 @@
 
                 if (user != null)
                 {
-                    user.Online = false;
+                    user.IsOnline = false;
                     await SaveChangesAsync();
 
-                    return !user.Online;
+                    return !user.IsOnline;
                 }
             }
             catch (Exception ex)
@@ -217,7 +217,7 @@
                     CompanyName = "",
                     CompanyAddress = "",
                     CompanyLogo = "",
-                    Online = false
+                    IsOnline = false
                 }
             );
         }
