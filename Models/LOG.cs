@@ -2,7 +2,6 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.RegularExpressions;
-using static Data_Logger_1._3.Models.LOG;
 
 namespace Data_Logger_1._3.Models
 {
@@ -121,10 +120,35 @@ namespace Data_Logger_1._3.Models
             // Blank
         }
 
+        protected LOG(CATEGORY category, ACCOUNT author, ProjectClass projectName, ApplicationClass applicationName, DateTime startTime, DateTime endTime, OutputClass output, TypeClass type, List<PostIt> postItList)
+        {
+            Category = category;
+            Author = author;
+            Project = projectName;
+            Application = applicationName;
+            Start = startTime;
+            End = endTime;
+            Output = output;
+            Type = type;
+            PostItList = postItList;
+        }
+
         protected LOG(CATEGORY category, int id, ACCOUNT author, ProjectClass projectName, ApplicationClass applicationName, DateTime startTime, DateTime endTime, OutputClass output, TypeClass type, List<PostIt> postItList)
         {
             Category = category;
             ID = id;
+            Author = author;
+            Project = projectName;
+            Application = applicationName;
+            Start = startTime;
+            End = endTime;
+            Output = output;
+            Type = type;
+            PostItList = postItList;
+        }
+
+        protected LOG(ACCOUNT author, ProjectClass projectName, ApplicationClass applicationName, DateTime startTime, DateTime endTime, OutputClass output, TypeClass type, List<PostIt> postItList, string content)
+        {
             Author = author;
             Project = projectName;
             Application = applicationName;

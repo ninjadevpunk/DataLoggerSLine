@@ -20,7 +20,7 @@ namespace Data_Logger_1._3.Services
             _writer = writer;
             Account.accountID = 1;
             Account.Email = "support@datalogger.co.za";
-            Account.Online = true;
+            Account.IsOnline = true;
         }
 
 
@@ -70,7 +70,7 @@ namespace Data_Logger_1._3.Services
                     CompanyName = companyName,
                     CompanyAddress = companyAddress,
                     CompanyLogo = companyLogo,
-                    Online = true,
+                    IsOnline = true,
                 };
 
                 bool UserIsActive = await _writer.AddAccount(account);
@@ -111,7 +111,7 @@ namespace Data_Logger_1._3.Services
                     await _writer.UnsetCurrentUser(temporaryAccount);
 
                     Account = temporaryAccount;
-                    Account.Online = true;
+                    Account.IsOnline = true;
 
                     return await _writer.SetCurrentUser(Account);
                 }
@@ -133,7 +133,7 @@ namespace Data_Logger_1._3.Services
             try
             {
                 // TODO
-                Account.Online = false;
+                Account.IsOnline = false;
 
                 // Modify account status to show user is offline
                 var UserIsActive = await _writer.UnsetCurrentUser(Account);

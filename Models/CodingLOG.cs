@@ -46,6 +46,13 @@ namespace Data_Logger_1._3.Models
             Success = success;
         }
 
+        public CodingLOG(ACCOUNT author, ProjectClass projectName, ApplicationClass applicationName, DateTime startTime, DateTime endTime,
+            OutputClass output, TypeClass type, List<PostIt> postItList, int bugs, bool success) : base(LOG.CATEGORY.CODING, author, projectName, applicationName, startTime, endTime, output, type, postItList)
+        {
+            Bugs = bugs;
+            Success = success;
+        }
+
         public CodingLOG(int id, ACCOUNT author, ProjectClass projectName, ApplicationClass applicationName, DateTime startTime, DateTime endTime,
             OutputClass output, TypeClass type, List<PostIt> postItList, int bugs, bool success) : base(LOG.CATEGORY.CODING, id, author, projectName, applicationName, startTime, endTime, output, type, postItList)
         {

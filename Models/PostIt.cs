@@ -20,7 +20,7 @@ namespace Data_Logger_1._3.Models
         /// </summary>
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int postItID { get; set; } = -1;
+        public int postItID { get; set; }
 
 
 

@@ -47,7 +47,7 @@ namespace Data_Logger_1._3.Models
         public string? CompanyLogo { get; set; } = "";
 
 
-        public bool Online { get; set; } = false;
+        public bool IsOnline { get; set; } = false;
 
 
         /* ---CONSTRUCTORS--- */
@@ -70,7 +70,7 @@ namespace Data_Logger_1._3.Models
             CompanyName = companyName;
             CompanyAddress = companyAddress;
             CompanyLogo = companyLogo;
-            Online = status;
+            IsOnline = status;
         }
 
         public ACCOUNT(int id, string firstName, string lastName, string email, string password, bool isEmplyee, string companyName, string companyAddress)
@@ -95,7 +95,7 @@ namespace Data_Logger_1._3.Models
             CompanyName = companyName;
             CompanyAddress = companyAddress;
             CompanyLogo = companyLogo;
-            Online = status;
+            IsOnline = status;
         }
 
         public ACCOUNT(int id, string firstName, string lastName, string email, string password, bool isEmplyee, string companyName, string companyAddress, string companyLogo, bool status)
@@ -109,7 +109,7 @@ namespace Data_Logger_1._3.Models
             CompanyName = companyName;
             CompanyAddress = companyAddress;
             CompanyLogo = companyLogo;
-            Online = status;
+            IsOnline = status;
         }
 
         public ACCOUNT(int id, string firstName, string lastName, string password, bool status)
@@ -118,7 +118,7 @@ namespace Data_Logger_1._3.Models
             FirstName = firstName;
             LastName = lastName;
             Password = password;
-            Online = status;
+            IsOnline = status;
         }
 
 
@@ -139,7 +139,7 @@ namespace Data_Logger_1._3.Models
                    CompanyName == aCCOUNT.CompanyName &&
                    CompanyAddress == aCCOUNT.CompanyAddress &&
                    CompanyLogo == aCCOUNT.CompanyLogo &&
-                   Online == aCCOUNT.Online;
+                   IsOnline == aCCOUNT.IsOnline;
         }
 
         public override int GetHashCode()
@@ -155,7 +155,7 @@ namespace Data_Logger_1._3.Models
             hash.Add(CompanyName);
             hash.Add(CompanyAddress);
             hash.Add(CompanyLogo);
-            hash.Add(Online);
+            hash.Add(IsOnline);
             return hash.ToHashCode();
         }
 

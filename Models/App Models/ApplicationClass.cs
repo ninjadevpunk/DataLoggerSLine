@@ -11,7 +11,7 @@ namespace Data_Logger_1._3.Models.App_Models
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int appID { get; set; } = 3;
+        public int appID { get; set; }
 
 
         public int accountID { get; set; }
@@ -19,7 +19,7 @@ namespace Data_Logger_1._3.Models.App_Models
 
 
 
-        public string Name { get; set; } = "Unknown";
+        public string Name { get; set; }
 
         public LOG.CATEGORY Category { get; set; } = LOG.CATEGORY.CODING;
 
@@ -95,14 +95,19 @@ namespace Data_Logger_1._3.Models.App_Models
             return HashCode.Combine(appID, User, Name, Category, IsDefault);
         }
 
-        public static bool operator ==(ApplicationClass left, ApplicationClass right)
+        public static bool operator ==(ApplicationClass? left, ApplicationClass? right)
         {
+            if (ReferenceEquals(left, right)) return true;
+            if (left is null || right is null) return false;
             return left.Equals(right);
         }
 
         public static bool operator !=(ApplicationClass? left, ApplicationClass? right)
         {
+            if (ReferenceEquals(left, right)) return false;
+            if (left is null || right is null) return true;
             return !left.Equals(right);
         }
+
     }
 }
