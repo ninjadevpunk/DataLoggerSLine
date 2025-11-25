@@ -81,7 +81,7 @@
                 CornerRadius="0 3 3 0"
                 >
             <Border.Background>
-                <ImageBrush ImageSource="/Assets/login/national-cancer-institute-uVnRa6mOLOM-unsplash.jpg" Stretch="UniformToFill"/>
+                <ImageBrush ImageSource="/Assets/login/nubelson-fernandes-UcYBL5V0xWQ-unsplash.jpg" Stretch="UniformToFill"/>
             </Border.Background>
         </Border>
 
@@ -406,7 +406,7 @@
         <TextBlock Margin="10" Grid.Column="0" Grid.Row="2"
            HorizontalAlignment="Right"
            VerticalAlignment="Top"
-           Text="alpha 1.3" Style="{DynamicResource text_VERSION}"
+           Text="alpha 1.4" Style="{DynamicResource text_VERSION}"
            />
 
     </Grid>
