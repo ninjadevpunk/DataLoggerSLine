@@ -44,47 +44,86 @@
         <Border x:Name="customTITLEBar_MAINWINDOW" Grid.Column="1" Grid.Row="0" Grid.ColumnSpan="2"
                 Background="{DynamicResource WHITE}"
                 d:Background="Yellow"
-                Margin="150 0 0 0"
+                Margin="30 0 0 0"
                 HorizontalAlignment="Stretch"
                 CornerRadius="0 3 0 0"
                 MouseLeftButtonDown="on_customTitleBar_pressed"
                 >
-            
-            
-            <StackPanel Orientation="Horizontal"
-                        HorizontalAlignment="Right"
-                        VerticalAlignment="Center"
-                        Margin="10 5">
 
-                <!-- MINIMISE -->
-                <Button x:Name="button_MINIMISE" Style="{DynamicResource button_TITLE_bar}"
-                        Margin="0 5 10 5"
-                        Click="on_MINIMISE_clicked">
-                    
-                    <Path Style="{DynamicResource path_MINIMISE}" />
-                </Button>
+            <Grid HorizontalAlignment="Stretch">
 
-                <!-- MAX -->
-                <Button x:Name="button_MAXIMISE" Style="{DynamicResource button_TITLE_bar}"
-                        Margin="0 5 10 5"
-                        Click="on_MAXIMISE_clicked">
-                    
-                    <Grid>
-                        <Path Style="{DynamicResource path_MAXIMISE1}" />
-                        <Path Style="{DynamicResource path_MAXIMISE2}" />
-                    </Grid>
-
-                </Button>
-
-                <!-- CLOSE -->
-                <Button x:Name="button_CLOSE" Style="{DynamicResource button_TITLE_bar}"
-                        Click="on_CLOSE_clicked">
-                    
-                    <Path Style="{DynamicResource path_CLOSE}" />
-                </Button>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="auto" />
+                </Grid.ColumnDefinitions>
 
 
-            </StackPanel>
+
+                <!-- NAVIGATION ARROWS -->
+                <StackPanel Orientation="Horizontal" Grid.Column="0"
+                            HorizontalAlignment="Left"
+                            Margin="30 0"
+                >
+                    <Button x:Name="button_BACK" Style="{DynamicResource button_TITLE_bar}"
+                            IsEnabled="{Binding BackEnabled}"
+                            Command="{Binding GoBackCommand}"
+                    >
+                        <Path x:Name="icon_BACK" Style="{DynamicResource path_ARROW_BACK}"
+                              Fill="{Binding IconBackFill}"
+                        />
+
+                    </Button>
+
+                    <Rectangle Width="30" Height="1"></Rectangle>
+
+                    <Button x:Name="button_FORWARD" Style="{DynamicResource button_TITLE_bar}"
+                            IsEnabled="{Binding ForwardEnabled}">
+
+
+                        <Path x:Name="icon_FORWARD"  Style="{DynamicResource path_ARROW_FORWARD}"
+                              Fill="{Binding IconForwardFill}"
+                        />
+
+
+                    </Button>
+                </StackPanel>
+
+
+                <StackPanel Orientation="Horizontal" Grid.Column="1"
+                            HorizontalAlignment="Right"
+                            VerticalAlignment="Center"
+                            Margin="10 5">
+
+                    <!-- MINIMISE -->
+                    <Button x:Name="button_MINIMISE" Style="{DynamicResource button_TITLE_bar}"
+                            Margin="0 5 10 5"
+                            Click="on_MINIMISE_clicked">
+
+                        <Path Style="{DynamicResource path_MINIMISE}" />
+                    </Button>
+
+                    <!-- MAX -->
+                    <Button x:Name="button_MAXIMISE" Style="{DynamicResource button_TITLE_bar}"
+                            Margin="0 5 10 5"
+                            Click="on_MAXIMISE_clicked">
+
+                        <Grid>
+                            <Path Style="{DynamicResource path_MAXIMISE1}" />
+                            <Path Style="{DynamicResource path_MAXIMISE2}" />
+                        </Grid>
+
+                    </Button>
+
+                    <!-- CLOSE -->
+                    <Button x:Name="button_CLOSE" Style="{DynamicResource button_TITLE_bar}"
+                            Click="on_CLOSE_clicked">
+
+                        <Path Style="{DynamicResource path_CLOSE}" />
+                    </Button>
+
+
+                </StackPanel>
+            </Grid>
         </Border>
 
 
