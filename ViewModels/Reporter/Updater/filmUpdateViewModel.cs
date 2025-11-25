@@ -46,7 +46,7 @@ namespace Data_Logger_1._3.ViewModels.Reporter.Updater
                 _projects.Add(project.Name);
             }
 
-            _dataService.InitialiseApplicationsLIST(Category);
+            _dataService.InitialiseApplicationsLISTAsync(Category);
             foreach (ApplicationClass app in apps)
             {
                 _applications.Add(app.Name);
