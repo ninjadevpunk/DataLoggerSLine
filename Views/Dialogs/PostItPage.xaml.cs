@@ -40,17 +40,29 @@ namespace Data_Logger_1._3.Views.Dialogs
             
         }
 
-        private void OnTextChanged(object sender, TextChangedEventArgs e, RichTextBox inputText, Action<string> setDisplayProperty)
+        public static string RtfStringToPlainText(string rtfString)
+        {
+            Xceed.Wpf.Toolkit.RichTextBox tempRtBox = new Xceed.Wpf.Toolkit.RichTextBox(new FlowDocument());
+
+            
+            tempRtBox.TextFormatter = new Xceed.Wpf.Toolkit.RtfFormatter();
+            tempRtBox.Text = rtfString;
+
+            tempRtBox.TextFormatter = new Xceed.Wpf.Toolkit.PlainTextFormatter();
+            return tempRtBox.Text;
+        }
+
+        private void OnTextChanged(object sender, EventArgs e, Xceed.Wpf.Toolkit.RichTextBox inputText, Action<string> setDisplayProperty)
         {
             try
             {
-                var doc = inputText.Document;
-                var range = new TextRange(doc.ContentStart, doc.ContentEnd);
-                setDisplayProperty(range.Text);
+                var plainText = RtfStringToPlainText(inputText.Text);
+
+                setDisplayProperty(plainText);
             }
             catch (Exception)
             {
-                // Handle exceptions appropriately
+                // 
             }
         }
 
