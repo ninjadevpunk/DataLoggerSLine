@@ -18,9 +18,9 @@ namespace Data_Logger_1._3.ViewModels.Reporter.Desk
             ReturnToDashboard = new DashboardCommand(_navigationService, Context);
         }
 
-        public override Task UpdateLogs(string project)
+        public override async Task UpdateLogs(string project)
         {
-            
+            //
         }
     }
 }
