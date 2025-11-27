@@ -136,7 +136,10 @@ namespace Data_Logger_1._3.ViewModels
                     {
                         // Navigate to the Coding page
                         _navigationService.NavigateToLogCachePage();
-                        CodingQtChecked = true;
+
+                        if (!CodingQtChecked)
+                            CodingQtChecked = true;
+
                         UncheckButtons();
                     }
                 }
@@ -157,11 +160,6 @@ namespace Data_Logger_1._3.ViewModels
                 {
                     codingQtChecked = value;
                     OnPropertyChanged(nameof(CodingQtChecked));
-
-                    if (codingQtChecked)
-                    {
-                        _ = _navigationService.NavigateToLogCachePage(CacheContext.Qt);
-                    }
                 }
 
             }
@@ -181,12 +179,6 @@ namespace Data_Logger_1._3.ViewModels
                 {
                     codingAndroidChecked = value;
                     OnPropertyChanged(nameof(CodingAndroidChecked));
-
-                    if (codingAndroidChecked)
-                    {
-                        _ = _navigationService.NavigateToLogCachePage(CacheContext.AndroidStudio);
-
-                    }
                 }
             }
         }
@@ -205,12 +197,6 @@ namespace Data_Logger_1._3.ViewModels
                 {
                     codingGenericChecked = value;
                     OnPropertyChanged(nameof(CodingGenericChecked));
-
-                    if (codingGenericChecked)
-                    {
-                        _ = _navigationService.NavigateToLogCachePage(CacheContext.Coding);
-
-                    }
                 }
             }
         }
@@ -232,7 +218,7 @@ namespace Data_Logger_1._3.ViewModels
 
                     if (graphicsChecked)
                     {
-                        _ = _navigationService.NavigateToLogCachePage(CacheContext.Graphics);
+                        _navigationService.NavigateToLogCachePage(CacheContext.Graphics);
                         UncheckButtons();
 
                     }
@@ -257,7 +243,7 @@ namespace Data_Logger_1._3.ViewModels
 
                     if (filmChecked)
                     {
-                        _ = _navigationService.NavigateToLogCachePage(CacheContext.Film);
+                        _navigationService.NavigateToLogCachePage(CacheContext.Film);
                         UncheckButtons();
 
                     }
@@ -280,24 +266,7 @@ namespace Data_Logger_1._3.ViewModels
                     notesChecked = value;
                     OnPropertyChanged(nameof(NotesChecked));
 
-                    if (notesChecked)
-                    {
-                        _ = NavigateToNotesAsync();
-                    }
                 }
-            }
-        }
-
-        private async Task NavigateToNotesAsync()
-        {
-            try
-            {
-                await _navigationService.NavigateToNOTESDashboard();
-                UncheckButtons();
-            }
-            catch (Exception ex)
-            {
-                //
             }
         }
 
@@ -315,11 +284,6 @@ namespace Data_Logger_1._3.ViewModels
                 {
                     genericNotesChecked = value;
                     OnPropertyChanged(nameof(GenericNotesChecked));
-
-                    if (genericNotesChecked)
-                    {
-                        _ = _navigationService.NavigateToCreateNotesPage();
-                    }
                 }
             }
         }
