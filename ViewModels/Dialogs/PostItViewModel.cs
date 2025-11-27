@@ -100,13 +100,6 @@ namespace Data_Logger_1._3.ViewModels.Dialogs
             _navigationService = navigationService;
             _loggerCreateViewModel = loggerCreateViewModel;
             _dataService = dataService;
-            _ = _dataService.InitialiseSubjectsLIST(project);
-
-            Subjects = new();
-            foreach (SubjectClass item in _dataService.SQLITE_SUBJECTS)
-            {
-                Subjects.Add(item.Subject);
-            }
 
 
             Subject = subject;
@@ -749,12 +742,13 @@ namespace Data_Logger_1._3.ViewModels.Dialogs
             }
         }
 
-        public async void LoadSubjectsAsync(LOG.CATEGORY category)
+        public async Task LoadSubjectsAsync(LOG.CATEGORY category)
         {
             try
             {
                 await _dataService.InitialiseSubjectsLIST(category);
 
+                Subjects = new();
                 Subjects.Clear();
                 foreach (SubjectClass subject in _dataService.SQLITE_SUBJECTS)
                 {
