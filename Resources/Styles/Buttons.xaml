@@ -729,6 +729,7 @@
                             <Setter Property="Background" TargetName="border" Value="Transparent"/>
                             <Setter Property="BorderBrush" TargetName="border" Value="Transparent"/>
                             <Setter Property="TextElement.Foreground" TargetName="contentPresenter" Value="{StaticResource Button.Disabled.Foreground}"/>
+                            <Setter Property="Opacity" TargetName="border" Value=".2"/>
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
@@ -897,7 +898,7 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type Button}">
-                    <Grid Height="{TemplateBinding Height}" Width="{TemplateBinding Width}">
+                    <Grid Height="{TemplateBinding Height}" Width="{TemplateBinding Width}" Background="Transparent">
                         <Path x:Name="icon_TOOLBUTTON" Style="{DynamicResource path_TOOLBUTTON_delete}"/>
                     </Grid>
                     <ControlTemplate.Triggers>
@@ -918,7 +919,8 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type Button}">
-                    <Grid Height="{TemplateBinding Height}" Width="{TemplateBinding Width}">
+                    <Grid Height="{TemplateBinding Height}" Width="{TemplateBinding Width}"
+                          Background="Transparent">
                         <Path x:Name="icon_TOOLBUTTON" Style="{DynamicResource path_TOOLBUTTON_reset}"/>
                     </Grid>
                     <ControlTemplate.Triggers>
