@@ -5,7 +5,7 @@ using MVVMEssentials.Commands;
 
 namespace Data_Logger_1._3.Commands.PostItCommands
 {
-    public class EditPostItCommand : CommandBase
+    public class EditPostItCommand : AsyncCommandBase
     {
         private readonly NavigationService _navigationService;
         private readonly LoggerCreateViewModel _loggerCreateViewModel;
@@ -32,11 +32,11 @@ namespace Data_Logger_1._3.Commands.PostItCommands
             }
         }
 
-        public override void Execute(object parameter)
+        protected override async Task ExecuteAsync(object parameter)
         {
             try
             {
-                //_navigationService.NavigateToPostItEditor(_loggerCreateViewModel, parameter as CreatePostItViewModel);
+                await _navigationService.NavigateToPostItCreator(_loggerCreateViewModel, parameter as PostItViewModel);
             }
             catch (ArgumentNullException nullex)
             {

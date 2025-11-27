@@ -86,7 +86,7 @@ namespace Data_Logger_1._3.Commands.NotesCommands
 
                 _notesViewModel.NoteItems = list;
 
-                _navigationService.NavigateToNOTESDashboard();
+                await _navigationService.NavigateToNotesDashboard();
                 _navigationService.SetChecklistNotesChecked(false);
             }
             catch (Exception)

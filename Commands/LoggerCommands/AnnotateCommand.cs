@@ -324,7 +324,7 @@ namespace Data_Logger_1._3.Commands.LoggerCommands
 
                                 cavm.CacheItems = list;
 
-                                _navigationService.NavigateToLogCachePage(CacheContext.AndroidStudio);
+                                await _navigationService.NavigateToLogCachePage(CacheContext.AndroidStudio);
 
 
                                 break;
@@ -438,7 +438,7 @@ namespace Data_Logger_1._3.Commands.LoggerCommands
 
                                 gvm.CacheItems = list;
 
-                                _navigationService.NavigateToLogCachePage(CacheContext.Graphics);
+                                await _navigationService.NavigateToLogCachePage(CacheContext.Graphics);
 
                                 break;
                             }
@@ -492,7 +492,7 @@ namespace Data_Logger_1._3.Commands.LoggerCommands
 
                                 fvm.CacheItems = list;
 
-                                _navigationService.NavigateToLogCachePage(CacheContext.Film);
+                                await _navigationService.NavigateToLogCachePage(CacheContext.Film);
 
                                 break;
                             }
@@ -567,7 +567,7 @@ namespace Data_Logger_1._3.Commands.LoggerCommands
 
                                 flexvm.CacheItems = list;
 
-                                _navigationService.NavigateToLogCachePage(CacheContext.Flexi);
+                                await _navigationService.NavigateToLogCachePage(CacheContext.Flexi);
 
                                 break;
                             }
@@ -652,7 +652,7 @@ namespace Data_Logger_1._3.Commands.LoggerCommands
                                 }
 
 
-                                _navigationService.NavigateToLogCachePage(CacheContext.Qt);
+                                await _navigationService.NavigateToLogCachePage(CacheContext.Qt);
 
                                 break;
                             }
@@ -745,7 +745,7 @@ namespace Data_Logger_1._3.Commands.LoggerCommands
                                 }
 
 
-                                _navigationService.NavigateToLogCachePage(CacheContext.AndroidStudio);
+                                await _navigationService.NavigateToLogCachePage(CacheContext.AndroidStudio);
 
                                 break;
                             }
@@ -837,7 +837,7 @@ namespace Data_Logger_1._3.Commands.LoggerCommands
                                     await genvm.UpdateLogCount();
                                 }
 
-                                _navigationService.NavigateToLogCachePage(CacheContext.Coding);
+                                await _navigationService.NavigateToLogCachePage(CacheContext.Coding);
 
                                 break;
                             }
@@ -962,7 +962,7 @@ namespace Data_Logger_1._3.Commands.LoggerCommands
                                     gvm.CacheItems = list;
                                 }
 
-                                _navigationService.NavigateToLogCachePage(CacheContext.Graphics);
+                                await _navigationService.NavigateToLogCachePage(CacheContext.Graphics);
 
                                 break;
                             }
@@ -1074,7 +1074,7 @@ namespace Data_Logger_1._3.Commands.LoggerCommands
                                     fvm.CacheItems = list;
                                 }
 
-                                _navigationService.NavigateToLogCachePage(CacheContext.Film);
+                                await _navigationService.NavigateToLogCachePage(CacheContext.Film);
 
                                 break;
                             }
@@ -1227,7 +1227,7 @@ namespace Data_Logger_1._3.Commands.LoggerCommands
                                 }
 
 
-                                _navigationService.NavigateToLogCachePage(CacheContext.Flexi);
+                                await _navigationService.NavigateToLogCachePage(CacheContext.Flexi);
 
                                 break;
                             }

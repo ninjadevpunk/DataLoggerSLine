@@ -4,7 +4,7 @@ using static Data_Logger_1._3.Services.Cachemaster;
 
 namespace Data_Logger_1._3.Commands.LogCacheCommands
 {
-    public class ViewerOKCommand : CommandBase
+    public class ViewerOKCommand : AsyncCommandBase
     {
         private readonly NavigationService _navigationService;
         private readonly CacheContext _cacheContext;
@@ -22,9 +22,9 @@ namespace Data_Logger_1._3.Commands.LogCacheCommands
             }
         }
 
-        public override void Execute(object parameter)
+        protected override async Task ExecuteAsync(object parameter)
         {
-            _navigationService.NavigateToLogCachePage(_cacheContext);
+            await _navigationService.NavigateToLogCachePage(_cacheContext);
         }
     }
 }
