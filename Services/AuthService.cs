@@ -7,7 +7,7 @@ namespace Data_Logger_1._3.Services
     {
         private readonly ENTITYWRITER _writer;
 
-        public ACCOUNT Account { get; set; } = new();
+        public ACCOUNT? Account { get; set; } = new();
 
         public AuthService()
         {
@@ -18,9 +18,6 @@ namespace Data_Logger_1._3.Services
         public AuthService(ENTITYWRITER writer)
         {
             _writer = writer;
-            Account.accountID = 1;
-            Account.Email = "support@datalogger.co.za";
-            Account.IsOnline = true;
         }
 
 
@@ -57,7 +54,7 @@ namespace Data_Logger_1._3.Services
 
             try
             {
-                await _writer.UnsetCurrentUser(Account);
+                await _writer.UnsetCurrentUser();
 
                 var account = new ACCOUNT
                 {
@@ -104,17 +101,16 @@ namespace Data_Logger_1._3.Services
             try
             {
                 var temporaryAccount = await _writer.FindAccountByEmail(email, password);
+                if (temporaryAccount is null)
+                    return false;
 
-                if (temporaryAccount is not null)
-                {
-                    await _writer.UnsetCurrentUser(Account);
-                    await _writer.UnsetCurrentUser(temporaryAccount);
+                temporaryAccount.IsOnline = true;
+                var ok = await _writer.SetCurrentUser(temporaryAccount);
 
+                if (ok)
                     Account = temporaryAccount;
-                    Account.IsOnline = true;
 
-                    return await _writer.SetCurrentUser(Account);
-                }
+                return ok;
             }
             catch (Exception)
             {
@@ -127,31 +123,14 @@ namespace Data_Logger_1._3.Services
 
         }
 
-        public async Task<bool> SignOut()
-        {
-
-            try
-            {
-                // TODO
-                Account.IsOnline = false;
-
-                // Modify account status to show user is offline
-                var UserIsActive = await _writer.UnsetCurrentUser(Account);
-
-                if (!UserIsActive)
-                    return true;
-            }
-            catch (Exception)
-            {
-                // TODO
-            }
-
-            return false;
-        }
-
         public void ForgotPasswordRequest()
         {
             //
+        }
+
+        public void SignOut()
+        {
+            Account = null;
         }
     }
 }
