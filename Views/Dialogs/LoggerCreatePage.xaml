@@ -80,7 +80,7 @@
                                     HorizontalAlignment="Left" />
 
                                 <Path x:Name="path_DEFAULT_DP" Style="{DynamicResource path_AUTHOR}"
-                                  Visibility="{Binding DisplayPicVisibility, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
+                                  Visibility="{Binding DisplayPicVisibility}" />
 
                                 <TextBlock x:Name="text_AUTHOR" Grid.Column="1" Style="{DynamicResource text_Placeholder}"
                                        Text="{Binding Author, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
