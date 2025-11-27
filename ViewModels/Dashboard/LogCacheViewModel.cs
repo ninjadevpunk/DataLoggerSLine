@@ -49,6 +49,9 @@ namespace Data_Logger_1._3.ViewModels.Dashboard
             }
         }
 
+
+        public bool CreateLogButtonEnabled { get; set; } = false;
+
         public ICommand CreateLogCommand { get; set; }
         public ICommand ReportLogCommand { get; set; }
 

@@ -20,7 +20,6 @@ namespace Data_Logger_1._3.ViewModels.Dashboard
                 cacheItems = value;
 
                 NoLogsMessageVisibility = CacheItems.Count == 0 ? Visibility.Visible : Visibility.Hidden;
-                UpdateLogCount();
 
                 OnPropertyChanged(nameof(CacheItems));
             }
@@ -39,7 +38,18 @@ namespace Data_Logger_1._3.ViewModels.Dashboard
             LogCount = logCount;
         }
 
-        public virtual async void UpdateLogCount()
+        public async Task AutoStartAsync()
+        {
+            await UpdateLogCount();
+        }
+
+        public void OnLogOut()
+        {
+            CacheItems.Clear();
+            LogCount = "";
+        }
+
+        public virtual async Task UpdateLogCount()
         {
             var count = await _dataService.LogCount(LOG.CATEGORY.CODING);
             LogCount = $"{CacheItems.Count} coding logs cached | {count} total logs";

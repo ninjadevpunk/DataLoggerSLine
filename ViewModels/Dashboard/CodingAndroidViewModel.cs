@@ -35,14 +35,19 @@ namespace Data_Logger_1._3.ViewModels.Dashboard
                 cacheItems = value;
 
                 NoLogsMessageVisibility = CacheItems.Count == 0 ? Visibility.Visible : Visibility.Hidden;
-                if (CacheItems is not null)
-                    UpdateLogCount();
+                
 
                 OnPropertyChanged(nameof(CacheItems));
             }
         }
 
-        public override async void UpdateLogCount()
+        public async Task AutoStart()
+        {
+            if (CacheItems is not null)
+                await UpdateLogCount();
+        }
+
+        public override async Task UpdateLogCount()
         {
             if (CacheItems is not null)
             {

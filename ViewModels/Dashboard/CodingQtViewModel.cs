@@ -33,13 +33,17 @@ namespace Data_Logger_1._3.ViewModels.Dashboard
                 cacheItems = value;
 
                 NoLogsMessageVisibility = CacheItems.Count == 0 ? Visibility.Visible : Visibility.Hidden;
-                UpdateLogCount();
 
                 OnPropertyChanged(nameof(CacheItems));
             }
         }
 
-        public async void UpdateLogCount()
+        public async Task AutoStartAsync()
+        {
+            await UpdateLogCount();
+        }
+
+        public async Task UpdateLogCount()
         {
             var count = await _dataService.QtLogCount();
             LogCount = $"{CacheItems.Count} qt logs cached | {count} total logs";

@@ -66,20 +66,6 @@ namespace Data_Logger_1._3.ViewModels.Dashboard
         }
 
 
-        private NoteItemType itemType;
-        public NoteItemType ItemType
-        {
-            get
-            {
-                return itemType;
-            }
-            set
-            {
-                itemType = value;
-                OnPropertyChanged(nameof(ItemType));
-            }
-        }
-
         public ICommand NewNoteCommand { get; set; }
 
 
@@ -93,6 +79,12 @@ namespace Data_Logger_1._3.ViewModels.Dashboard
         public void StartUpVisibilitySet(bool hasNotes = false)
         {
             NoNotesMessageVisibility = !hasNotes ? Visibility.Visible : Visibility.Hidden;
+        }
+
+        public void OnLogOut()
+        {
+            NoteItems.Clear();
+            NoNotesMessageVisibility = Visibility.Visible;
         }
 
 
