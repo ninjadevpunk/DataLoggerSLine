@@ -39,7 +39,7 @@ namespace Data_Logger_1._3.Models.App_Models
 
         public TypeClass(int typeID, ACCOUNT user, string name, ApplicationClass application, LOG.CATEGORY category)
         {
-            typeID = typeID;
+            this.typeID = typeID;
             User = user;
             Name = name;
             Application = application;

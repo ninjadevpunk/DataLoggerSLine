@@ -40,7 +40,7 @@ namespace Data_Logger_1._3.Models.App_Models
 
         public OutputClass(int outputID, ACCOUNT user, string name, ApplicationClass application, LOG.CATEGORY category)
         {
-            outputID = outputID;
+            this.outputID = outputID;
             User = user;
             Name = name;
             Application = application;
