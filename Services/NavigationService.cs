@@ -1,16 +1,20 @@
-﻿using System.Windows;
-using Data_Logger_1._3.Components.Subcontrols;
+﻿using Data_Logger_1._3.Components.Subcontrols;
+using Data_Logger_1._3.Components.Subcontrols_View;
 using Data_Logger_1._3.ViewModels;
 using Data_Logger_1._3.ViewModels.Dashboard;
+using Data_Logger_1._3.ViewModels.Dialogs;
 using Data_Logger_1._3.ViewModels.Dialogs.Create;
+using Data_Logger_1._3.ViewModels.LogViewModels;
+using Data_Logger_1._3.ViewModels.ViewerViewModels;
 using Data_Logger_1._3.Views;
 using Data_Logger_1._3.Views.Dialogs;
 using Data_Logger_1._3.Views.LogPages;
 using Microsoft.Extensions.DependencyInjection;
 using MVVMEssentials.ViewModels;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Markup;
-using Data_Logger_1._3.ViewModels.Dialogs;
+using Data_Logger_1._3.Commands.PostItCommands;
 using static Data_Logger_1._3.Services.Cachemaster;
 
 namespace Data_Logger_1._3.Services
@@ -26,6 +30,7 @@ namespace Data_Logger_1._3.Services
         public enum NavContext
         {
             DASHBOARD, LOGGER, POSTIT,
+            NOTES, CREATENOTE,
             VIEWER,
             EDITOR, EDITOR_POSTIT,
             REPORTER_DASHBOARD, UPDATER, UPDATER_POSTIT
@@ -77,11 +82,13 @@ namespace Data_Logger_1._3.Services
         /// <param name="isPost"></param>
         public void GoBack(bool isPost)
         {
+            var mainWindowViewModel = _serviceProvider.GetRequiredService<MainWindowViewModel>();
+
             if (_mainwindowFrame != null && _mainwindowFrame.CanGoBack)
             {
                 if (!isPost)
                 {
-                    if (NavigationContext == NavContext.POSTIT)
+                    if (NavigationContext == NavContext.POSTIT || NavigationContext == NavContext.EDITOR_POSTIT)
                     {
                         var result = MessageBox.Show(
                             "Your post it content will not be saved. Are you sure you would like to go back to the logger?",
@@ -90,7 +97,19 @@ namespace Data_Logger_1._3.Services
                         if (result == MessageBoxResult.No)
                             return;
                     }
-                    else if (NavigationContext == NavContext.LOGGER)
+                    else if (NavigationContext == NavContext.CREATENOTE)
+                    {
+                        var result = MessageBox.Show(
+                            "Your note will not be saved. Are you sure you would like to go back to the notes dashboard?",
+                            "Your Note Is Empty", MessageBoxButton.YesNo, MessageBoxImage.Warning, MessageBoxResult.No);
+
+                        if (result == MessageBoxResult.No)
+                            return;
+
+                        mainWindowViewModel.GenericNotesChecked = false;
+                        NavigationContext = NavContext.NOTES;
+                    }
+                    else if (NavigationContext == NavContext.LOGGER || NavigationContext == NavContext.EDITOR)
                     {
                         var result = MessageBox.Show(
                             "Your log will not be saved. Are you sure you would like to go back to the dashboard?",
@@ -112,18 +131,19 @@ namespace Data_Logger_1._3.Services
                 _ => NavigationContext
             };
 
-            var mainWindowViewModel = _serviceProvider.GetRequiredService<MainWindowViewModel>();
+
             CheckBackNavigationButton(mainWindowViewModel);
         }
 
         public void CheckBackNavigationButton(MainWindowViewModel window)
         {
+
             if (window != null && _mainwindowFrame != null)
             {
                 window.BackEnabled = _mainwindowFrame.CanGoBack;
             }
 
-            if (NavigationContext == NavContext.DASHBOARD)
+            if (NavigationContext == NavContext.DASHBOARD || NavigationContext == NavContext.NOTES)
                 window.BackEnabled = false;
         }
 
@@ -168,6 +188,7 @@ namespace Data_Logger_1._3.Services
             {
                 var dataService = _serviceProvider.GetRequiredService<DataService>();
                 await dataService.SignOutUser();
+                ClearSessionState();
 
                 var loginViewModel = _serviceProvider.GetRequiredService<LoginViewModel>();
                 loginViewModel.Username = "";
@@ -210,6 +231,7 @@ namespace Data_Logger_1._3.Services
                 // Store the main frame reference
                 SetMainFrame(mainWindow.frame_MAINWINDOW);
 
+
                 var dataService = _serviceProvider.GetRequiredService<DataService>();
                 await dataService.SignInUser();
 
@@ -218,11 +240,18 @@ namespace Data_Logger_1._3.Services
                 var mainWindowViewModel = _serviceProvider.GetRequiredService<MainWindowViewModel>();
 
                 mainWindow.DataContext = mainWindowViewModel;
+                mainWindowViewModel.CodingChecked = true;
+                mainWindowViewModel.CodingQtChecked = true;
+
                 mainWindow.Show();
+                await NavigateToLogCachePage(CacheContext.Qt);
 
                 _mainWindow = mainWindow;
+
                 CheckBackNavigationButton(mainWindowViewModel);
 
+                MessageBox.Show($"Click on \"Generic\" option in the menu panel please. In this alpha you will only be able to create coding logs.",
+                    "Data Logger Alpha Version", MessageBoxButton.OK, MessageBoxImage.Information);
 
                 SetDashboardContext();
             }
@@ -277,6 +306,8 @@ namespace Data_Logger_1._3.Services
 
                 var viewModel = _serviceProvider.GetRequiredService<TViewModel>();
 
+
+
                 const string displayPic = "/Assets/login/user.png";
                 var userProfilePic = _serviceProvider.GetRequiredService<AuthService>().Account.ProfilePic;
 
@@ -329,6 +360,9 @@ namespace Data_Logger_1._3.Services
                 }
 
                 _mainwindowFrame.Navigate(page);
+
+                var window = _serviceProvider.GetRequiredService<MainWindowViewModel>();
+                CheckBackNavigationButton(window);
             }
             catch (InvalidOperationException invex)
             {
@@ -353,7 +387,7 @@ namespace Data_Logger_1._3.Services
                 if (_mainwindowFrame is null)
                     throw new InvalidOperationException("Main frame not set!");
 
-                if (NavigationContext == NavContext.LOGGER)
+                if (NavigationContext == NavContext.LOGGER || NavigationContext == NavContext.EDITOR)
                 {
                     if (_loggerFrame is null)
                         throw new InvalidOperationException("Logger frame not set!");
@@ -448,14 +482,23 @@ namespace Data_Logger_1._3.Services
 
         public void NavigateToLogCachePage()
         {
-            var uiFactory = _serviceProvider.GetRequiredService<UIFactory>();
+            try
+            {
+                var uiFactory = _serviceProvider.GetRequiredService<UIFactory>();
 
-            var logCachePage = uiFactory.CreatePage<LogCachePage>();
-            logCachePage.DataContext = _serviceProvider.GetRequiredService<CodingQtViewModel>();
+                var logCachePage = uiFactory.CreatePage<LogCachePage>();
+                logCachePage.DataContext = _serviceProvider.GetRequiredService<CodingQtViewModel>();
 
-            _mainwindowFrame.Navigate(logCachePage);
 
-            SetDashboardContext();
+                if (_mainwindowFrame != null)
+                    _mainwindowFrame.Navigate(logCachePage);
+
+                SetDashboardContext();
+            }
+            catch (Exception ex)
+            {
+                CloseApp();
+            }
         }
 
         public async Task NavigateToLogCachePage(CacheContext cacheContext)
@@ -472,14 +515,14 @@ namespace Data_Logger_1._3.Services
                 case CacheContext.Qt:
                     {
                         await NavigateToPage<CodingQtViewModel>(logCachePage);
-                        _serviceProvider.GetRequiredService<CodingQtViewModel>().UpdateLogCount();
+                        await _serviceProvider.GetRequiredService<CodingQtViewModel>().AutoStartAsync();
 
                         break;
                     }
                 case CacheContext.AndroidStudio:
                     {
                         await NavigateToPage<CodingAndroidViewModel>(logCachePage);
-                        _serviceProvider.GetRequiredService<CodingAndroidViewModel>().UpdateLogCount();
+                        await _serviceProvider.GetRequiredService<CodingAndroidViewModel>().AutoStartAsync();
 
                         break;
                     }
@@ -507,14 +550,15 @@ namespace Data_Logger_1._3.Services
                 default:
                     {
                         await NavigateToPage<CodingViewModel>(logCachePage);
-                        _serviceProvider.GetRequiredService<CodingViewModel>().UpdateLogCount();
+                        await _serviceProvider.GetRequiredService<CodingViewModel>().AutoStartAsync();
+                        _serviceProvider.GetRequiredService<CodingViewModel>().CreateLogButtonEnabled = true;
 
                         break;
                     }
             }
 
-            //var mainWindowViewModel = _serviceProvider.GetRequiredService<MainWindowViewModel>();
-            //CheckBackNavigationButton(mainWindowViewModel);
+            var mainWindowViewModel = _serviceProvider.GetRequiredService<MainWindowViewModel>();
+            CheckBackNavigationButton(mainWindowViewModel);
 
         }
 
@@ -620,8 +664,8 @@ namespace Data_Logger_1._3.Services
                         }
                 }
 
-                var mainWindowViewModel = _serviceProvider.GetRequiredService<MainWindowViewModel>();
-                CheckBackNavigationButton(mainWindowViewModel);
+                var window = _serviceProvider.GetRequiredService<MainWindowViewModel>();
+                CheckBackNavigationButton(window);
             }
             catch (XamlParseException xamlx)
             {
@@ -634,7 +678,172 @@ namespace Data_Logger_1._3.Services
 
         }
 
+        public async Task NavigateToLoggerEditor(ViewModelBase viewModelBase)
+        {
+            using var scope = _serviceProvider.CreateScope();
+            var master = scope.ServiceProvider.GetRequiredService<ENTITYMASTER>();
 
+            try
+            {
+                NavigationContext = NavContext.EDITOR;
+
+                var uiFactory = _serviceProvider.GetRequiredService<UIFactory>();
+                var viewModelFactory = _serviceProvider.GetRequiredService<ViewModelFactory>();
+                var loggerEditPage = uiFactory.CreatePage<LoggerEditPage>();
+                const string displayPic = "/Assets/login/user.png";
+                var userProfilePic = _serviceProvider.GetRequiredService<AuthService>().Account.ProfilePic;
+
+                SetLoggerFrame(loggerEditPage.frame_VARIATIONS);
+
+                if (CacheContext == CacheContext.AndroidStudio)
+                    SetAndroidStudioFrame(loggerEditPage.frame_ANDROIDSTUDIO);
+                else
+                    SetAndroidStudioFrame(null);
+
+                switch (CacheContext)
+                {
+                    default:
+                        {
+                            var codingLOGViewModel = viewModelBase as CodeLOGViewModel;
+
+                            var codingEditor = viewModelFactory.CreateCodeEditViewModel(codingLOGViewModel);
+
+                            await codingEditor.AutoStartAsync();
+                            codingEditor.SignUpImage = userProfilePic;
+
+                            if (codingEditor.SignUpImage == displayPic)
+                                codingEditor.SignUpImage = string.Empty;
+
+                            var log = codingLOGViewModel._CodeLOG;
+
+                            codingEditor.ProjectName = log.Project.Name;
+                            codingEditor.ApplicationName = log.Application.Name;
+                            codingEditor.StartHours = log.Start.Hour;
+                            codingEditor.StartMinutes = log.Start.Minute;
+                            codingEditor.StartSeconds = log.Start.Second;
+                            codingEditor.StartMilliseconds = log.Start.Millisecond;
+
+                            codingEditor.EndHours = log.End.Hour;
+                            codingEditor.EndMinutes = log.End.Minute;
+                            codingEditor.EndSeconds = log.End.Second;
+                            codingEditor.EndMilliseconds = log.End.Millisecond;
+
+                            codingEditor.Output = log.Output.Name;
+                            codingEditor.Type = log.Type.Name;
+
+                            var dataService = _serviceProvider.GetRequiredService<DataService>();
+
+                            foreach (var postIt in log.PostItList)
+                            {
+                                codingEditor.PostIts.Add(new EditPostItViewModel(this, dataService, codingEditor, log.Project,
+                                    new(this, dataService, codingEditor, postIt.Subject.Project,
+                                        postIt.Subject.Subject, postIt.Error, postIt.ERCaptureTime, postIt.Solution,
+                                        postIt.SOCaptureTime, postIt.Suggestion, postIt.Comment)));
+                            }
+
+                            codingEditor.BugsFound = log.Bugs;
+                            codingEditor.ApplicationOpened = log.Success;
+
+
+                            await NavigateToPage(loggerEditPage, codingEditor, new coding_UserControl());
+
+                            break;
+                        }
+                }
+
+                //var window = _serviceProvider.GetRequiredService<MainWindowViewModel>();
+                //CheckBackNavigationButton(window);
+            }
+            catch (Exception ex)
+            {
+                await master.HandleExceptionAsync(ex, "NavigateToLoggerEditor()");
+            }
+        }
+
+        public async Task NavigateToViewer(ViewModelBase viewModelBase)
+        {
+            using var scope = _serviceProvider.CreateScope();
+            var master = scope.ServiceProvider.GetRequiredService<ENTITYMASTER>();
+
+            try
+            {
+                NavigationContext = NavContext.EDITOR;
+
+                var uiFactory = _serviceProvider.GetRequiredService<UIFactory>();
+                var viewModelFactory = _serviceProvider.GetRequiredService<ViewModelFactory>();
+                var loggerViewPage = uiFactory.CreatePage<LoggerViewPage>();
+                const string displayPic = "/Assets/login/user.png";
+                var userProfilePic = _serviceProvider.GetRequiredService<AuthService>().Account.ProfilePic;
+
+                SetLoggerFrame(loggerViewPage.frame_VARIATIONS);
+
+                if (CacheContext == CacheContext.AndroidStudio)
+                    SetAndroidStudioFrame(loggerViewPage.frame_ANDROIDSTUDIO);
+                else
+                    SetAndroidStudioFrame(null);
+
+                switch (CacheContext)
+                {
+                    default:
+                        {
+                            var codingLOGViewModel = viewModelBase as CodeLOGViewModel;
+
+                            var codeViewerViewModel = _serviceProvider.GetRequiredService<codeViewerViewModel>();
+
+                            codeViewerViewModel.SignUpImage = userProfilePic;
+
+                            if (codeViewerViewModel.SignUpImage == displayPic)
+                                codeViewerViewModel.SignUpImage = string.Empty;
+
+                            var log = codingLOGViewModel._CodeLOG;
+
+                            codeViewerViewModel.ProjectName = log.Project.Name;
+                            codeViewerViewModel.ApplicationName = log.Application.Name;
+                            codeViewerViewModel.Date = log.Start.ToString("d MMMM yyyy HH:ss");
+
+                            codeViewerViewModel.Output = log.Output.Name;
+                            codeViewerViewModel.Type = log.Type.Name;
+
+                            var dataService = _serviceProvider.GetRequiredService<DataService>();
+
+                            foreach (var postIt in log.PostItList)
+                            {
+                                codeViewerViewModel.AddPostIt(new PostItViewModel(this,
+                                        postIt.Subject.Project, postIt.Subject.Subject, postIt.Error,
+                                        postIt.Solution, postIt.Suggestion, postIt.Comment));
+                            }
+
+                            codeViewerViewModel.BugsFound = log.Bugs == 1 ? $"{log.Bugs.ToString()} Bug Found" : $"{log.Bugs.ToString()} Bugs Found";
+                            codeViewerViewModel.ApplicationOpened = log.Success ? "Launch Successful" : "Unsuccessful Launch";
+
+
+                            await NavigateToPage(loggerViewPage, codeViewerViewModel, new coding_UserControl_View());
+
+                            break;
+                        }
+                }
+
+                //var window = _serviceProvider.GetRequiredService<MainWindowViewModel>();
+                //CheckBackNavigationButton(window);
+            }
+            catch (Exception ex)
+            {
+                await master.HandleExceptionAsync(ex, "NavigateToLoggerEditor()");
+            }
+        }
+
+        private string FormatLogTime(int seconds)
+        {
+            if (seconds < 60)
+            {
+                string unit = seconds == 1 ? "second" : "seconds";
+                return $"This log will be stored in {seconds} {unit}.";
+            }
+
+            int minutes = (int)Math.Round(seconds / 60.0);
+            string unitMin = minutes == 1 ? "minute" : "minutes";
+            return $"This log will be stored in {minutes} {unitMin}.";
+        }
 
 
 
@@ -650,27 +859,76 @@ namespace Data_Logger_1._3.Services
 
         public async Task NavigateToPostItCreator(LoggerCreateViewModel logger)
         {
-            NavigationContext = NavContext.POSTIT;
+            if (NavigationContext == NavContext.EDITOR)
+                NavigationContext = NavContext.EDITOR_POSTIT;
+            else
+                NavigationContext = NavContext.POSTIT;
+
             var uiFactory = _serviceProvider.GetRequiredService<UIFactory>();
             var viewModelFactory = _serviceProvider.GetRequiredService<ViewModelFactory>();
             var postItPageViewModel = await viewModelFactory.CreatePostItViewModel(logger, logger.Category);
             var postItPage = uiFactory.CreatePostItPage(postItPageViewModel);
 
             await NavigateToPage(postItPage);
+
+            var window = _serviceProvider.GetRequiredService<MainWindowViewModel>();
+            CheckBackNavigationButton(window);
         }
 
-        public async Task NavigateToNOTESDashboard()
+        public async Task NavigateToPostItCreator(LoggerCreateViewModel logger, PostItViewModel postItViewModel)
+        {
+            var subject = postItViewModel.Subject;
+            await postItViewModel.LoadSubjectsAsync(logger.Category);
+
+            if (NavigationContext == NavContext.EDITOR)
+            {
+                NavigationContext = NavContext.EDITOR_POSTIT;
+            }
+            else
+            {
+                NavigationContext = NavContext.POSTIT;
+
+                var context = PostCommand.PostItContext.POSTIT;
+                postItViewModel.PostCommand = new PostCommand(PostCommand.ActionType.Edit, context, this, logger, postItViewModel);
+            }
+
+            var uiFactory = _serviceProvider.GetRequiredService<UIFactory>();
+
+            postItViewModel.Subject = subject;
+            if(postItViewModel.Subject != "")
+                postItViewModel.PlaceholderText = "";
+
+            var postItPage = uiFactory.CreatePostItPage(postItViewModel);
+
+            await NavigateToPage(postItPage);
+
+            //var window = _serviceProvider.GetRequiredService<MainWindowViewModel>();
+            //CheckBackNavigationButton(window);
+        }
+
+        public async Task NavigateToNotesDashboard()
         {
             await NavigateToPage<NOTESPage, NOTESViewModel>();
-            SetDashboardContext();
+            var notesDashboard = _serviceProvider.GetRequiredService<NOTESViewModel>();
+            notesDashboard.StartUpVisibilitySet(notesDashboard.NoteItems.Count > 0);
+
+            NavigationContext = NavContext.NOTES;
+
+            var window = _serviceProvider.GetRequiredService<MainWindowViewModel>();
+            CheckBackNavigationButton(window);
         }
 
         public async Task NavigateToCreateNotesPage()
         {
-            SetDashboardContext();
+            NavigationContext = NavContext.CREATENOTE;
             CacheContext = CacheContext.NOTES;
 
             await NavigateToPage<CreateNotePage, CreateNoteViewModel>();
+
+            var window = _serviceProvider.GetRequiredService<MainWindowViewModel>();
+            window.GenericNotesChecked = true;
+
+            CheckBackNavigationButton(window);
         }
 
 
@@ -697,6 +955,16 @@ namespace Data_Logger_1._3.Services
         {
             var mainwindowViewModel = _serviceProvider.GetRequiredService<MainWindowViewModel>();
             mainwindowViewModel.SetChecklistNotesChecked(isChecked);
+        }
+
+        /// <summary>
+        /// Clears singleton states for log out.
+        /// </summary>
+        public void ClearSessionState()
+        {
+            _serviceProvider.GetRequiredService<CodingViewModel>().OnLogOut();
+            _serviceProvider.GetRequiredService<NOTESViewModel>().OnLogOut();
+            _serviceProvider.GetRequiredService<AuthService>().SignOut();
         }
     }
 
