@@ -151,7 +151,7 @@ namespace Data_Logger_1._3.Services
             try
             {
                 var account = await _master.Accounts
-                    .FirstOrDefaultAsync(a => a.Email == emailAddress);
+                    .SingleAsync(a => a.Email == emailAddress);
 
                 if (account is not null && VerifyPassword(account, password))
                 {
@@ -192,7 +192,7 @@ namespace Data_Logger_1._3.Services
         {
             try
             {
-                if(ID == null)
+                if (ID == null)
                     throw new ArgumentNullException("ID is needed to find application's from Data Logger or user!");
 
                 var application = await _master.Applications
@@ -563,11 +563,13 @@ namespace Data_Logger_1._3.Services
         /// Counts all logs in the database regardless of category.
         /// </summary>
         /// <returns>Returns the log count.</returns>
-        public async Task<int> LogCount(CATEGORY category)
+        public async Task<int?> LogCount(CATEGORY category)
         {
             try
             {
+                var onlineUserID = await GetOnlineAccountIDAsync();
                 return await _master.Logs
+                    .Where(l => l.accountID == onlineUserID)
                     .Where(l => l.Category == category)
                     .CountAsync();
             }
@@ -578,8 +580,9 @@ namespace Data_Logger_1._3.Services
                 await _master.CreateFeedback(1, description, false, true, FeedbackType.Exception);
                 Debug.WriteLine(description);
 
-                return -1;
             }
+
+            return null;
         }
 
 
@@ -646,8 +649,10 @@ namespace Data_Logger_1._3.Services
         {
             try
             {
+                var id = await GetOnlineAccountIDAsync();
+
                 var codingLogs = _master.Logs
-                    .Where(l => l.accountID == _master.User.accountID)
+                    .Where(l => l.accountID == id)
                     .Where(l => l.Category == LOG.CATEGORY.CODING)
                     .Where(l => l.appID > 2);
 
