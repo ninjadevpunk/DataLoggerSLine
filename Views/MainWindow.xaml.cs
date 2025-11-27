@@ -3,16 +3,20 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media.Animation;
+using Data_Logger_1._3.Services;
+using Data_Logger_1._3.ViewModels;
 
 namespace Data_Logger_1._3
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class MainWindow : DLSWindow
     {
+        private readonly NavigationService _navigationService;
+        private readonly MainWindowViewModel _mainWindowViewModel;
 
-        public MainWindow()
+        public MainWindow(MainWindowViewModel mainWindowViewModel, NavigationService navigationService)
         {
             InitializeComponent();
 
@@ -38,6 +42,10 @@ namespace Data_Logger_1._3
             HeightAnimationEnd(endAnimate, this.STACK_CODING.Name, this.radio_CODING, this.STACK_CODING);
             HeightAnimationStart(n1animation, this.STACK_NOTES.Name, this.radio_NOTES, this.STACK_NOTES);
             HeightAnimationEnd(n2animation, this.STACK_NOTES.Name, this.radio_NOTES, this.STACK_NOTES);
+
+            DataContext = mainWindowViewModel;
+            _navigationService = navigationService;
+            _mainWindowViewModel = mainWindowViewModel;
         }
 
         # region Animations
@@ -142,5 +150,34 @@ namespace Data_Logger_1._3
             DragMove();
         }
 
+        private async void on_Qt_checked(object sender, RoutedEventArgs e)
+        {
+            if (_mainWindowViewModel.CodingQtChecked)
+                await _navigationService.NavigateToLogCachePage(Cachemaster.CacheContext.Qt);
+        }
+
+        private async void on_AndroidStudio_checked(object sender, RoutedEventArgs e)
+        {
+            if (_mainWindowViewModel.CodingAndroidChecked)
+                await _navigationService.NavigateToLogCachePage(Cachemaster.CacheContext.AndroidStudio);
+        }
+
+        private async void on_GenericCoding_checked(object sender, RoutedEventArgs e)
+        {
+            if (_mainWindowViewModel.CodingGenericChecked)
+                await _navigationService.NavigateToLogCachePage(Cachemaster.CacheContext.Coding);
+        }
+
+        private async void on_NOTES_checked(object sender, RoutedEventArgs e)
+        {
+            if(_mainWindowViewModel.NotesChecked)
+                await _navigationService.NavigateToNotesDashboard();
+        }
+
+        private async void on_GenericNotes_checked(object sender, RoutedEventArgs e)
+        {
+            if(_mainWindowViewModel.GenericNotesChecked)
+                await _navigationService.NavigateToCreateNotesPage();
+        }
     }
 }

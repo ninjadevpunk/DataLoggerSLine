@@ -6,7 +6,7 @@ namespace Data_Logger_1._3.Views
     /// <summary>
     /// Interaction logic for Login.xaml
     /// </summary>
-    public partial class Login : Window
+    public partial class Login : DLSWindow
     {
         private readonly Brush? enabledColor = TryParseBrush("iconCOLOURAccent02");
         private readonly Brush? disabledColor = TryParseBrush("AccentColour");

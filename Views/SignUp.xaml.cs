@@ -7,7 +7,7 @@ namespace Data_Logger_1._3.Views
     /// <summary>
     /// Interaction logic for SignUp.xaml
     /// </summary>
-    public partial class SignUp : Window
+    public partial class SignUp : DLSWindow
     {
         public SignUp()
         {

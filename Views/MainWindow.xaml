@@ -1,17 +1,17 @@
-﻿<Window x:Class="Data_Logger_1._3.MainWindow"
-        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:Data_Logger_1._3" xmlns:components="clr-namespace:Data_Logger_1._3.Components"
-        mc:Ignorable="d"
-        AllowsTransparency="True"
-        Background="Transparent"
-        WindowStyle="None"
-        Title="Data Logger 1.3" Height="899" Width="1394"
-        Loaded="on_MainWindow_Loaded" >
+﻿<local:DLSWindow x:Class="Data_Logger_1._3.MainWindow"
+                 xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                 xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                 xmlns:local="clr-namespace:Data_Logger_1._3" xmlns:components="clr-namespace:Data_Logger_1._3.Components"
+                 mc:Ignorable="d"
+                 AllowsTransparency="True"
+                 Background="Transparent"
+                 WindowStyle="None"
+                 Title="Data Logger 1.3" Height="899" Width="1394"
+                 Loaded="on_MainWindow_Loaded" >
 
-    <Window.Template>
+    <local:DLSWindow.Template>
         <ControlTemplate TargetType="Window">
             <Border Background="{DynamicResource WHITE}"
                     CornerRadius="3"
@@ -21,7 +21,7 @@
                 <ContentPresenter HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
             </Border>
         </ControlTemplate>
-    </Window.Template>
+    </local:DLSWindow.Template>
 
     <Grid>
         <Grid.ColumnDefinitions>
@@ -229,8 +229,32 @@
                                                    SubCategory="Qt"
                                                    SubChecked="{Binding CodingQtChecked, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
                                                    SubCrew="CODING_SubMenu"
-                                                   IsEnabled="{Binding MenuActivated, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                                                   IsEnabled="False"
+                                                   SubRadioCheck="on_Qt_checked"
                                                    />
+
+                    <!-- Qt
+                    
+                    <components:SubMENURadioButton x:Name="radio_Qt"
+                                                   SubMENUIcon="{DynamicResource path_Qt}"
+                                                   SubCategory="Qt"
+                                                   SubChecked="{Binding CodingQtChecked, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                                                   SubCrew="CODING_SubMenu"
+                                                   IsEnabled="{Binding MenuActivated, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                    />
+                    
+                    
+                    <components:SubMENURadioButton x:Name="radio_Android"
+                               SubMENUIcon="{DynamicResource path_AS}"
+                               SubCategory="Android Studio"
+                               SubChecked="{Binding CodingAndroidChecked, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                               SubCrew="CODING_SubMenu"
+                               IsEnabled="{Binding MenuActivated, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                               />
+
+
+                    -->
+
 
                     <!-- Android Studio -->
                     <components:SubMENURadioButton x:Name="radio_Android"
@@ -238,7 +262,8 @@
                                                    SubCategory="Android Studio"
                                                    SubChecked="{Binding CodingAndroidChecked, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
                                                    SubCrew="CODING_SubMenu"
-                                                   IsEnabled="{Binding MenuActivated, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                                                   IsEnabled="False"
+                                                   SubRadioCheck="on_AndroidStudio_checked"
                                                    />
 
                     <!-- Generic CODE Logs -->
@@ -248,6 +273,7 @@
                                                    SubChecked="{Binding CodingGenericChecked, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
                                                    SubCrew="CODING_SubMenu"
                                                    IsEnabled="{Binding MenuActivated, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                                                   SubRadioCheck="on_GenericCoding_checked"
                                                    />
 
                 </StackPanel>
@@ -266,7 +292,7 @@
                                             Category="GRAPHICS"
                                             Checked="{Binding GraphicsChecked, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
                                             Crew="Menu"
-                                            IsEnabled="{Binding MenuActivated, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                                            IsEnabled="False"
                             />
 
                 <!-- FILM -->
@@ -275,8 +301,26 @@
                                             Category="FILM"
                                             Checked="{Binding FilmChecked, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
                                             Crew="Menu"
-                                            IsEnabled="{Binding MenuActivated, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                                            IsEnabled="False"
                     />
+
+                <!-- 
+                <components:MENURadioButton Grid.Row="4" x:Name="radio_GRAPHICS"
+                                            MENUIcon="{DynamicResource path_GRAPHICS}"
+                                            Category="GRAPHICS"
+                                            Checked="{Binding GraphicsChecked, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                                            Crew="Menu"
+                                            IsEnabled="{Binding MenuActivated, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                />
+
+                <components:MENURadioButton Grid.Row="5" x:Name="radio_FILM"
+                                            MENUIcon="{DynamicResource path_FILM}"
+                                            Category="FILM"
+                                            Checked="{Binding FilmChecked, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                                            Crew="Menu"
+                                            IsEnabled="{Binding MenuActivated, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                />
+                -->
 
                 <!-- NOTES -->
                 <components:MENURadioButton Grid.Row="6" x:Name="radio_NOTES"
@@ -285,6 +329,7 @@
                                             Checked="{Binding NotesChecked, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
                                             Crew="Menu"
                                             IsEnabled="{Binding MenuActivated, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                                            RadioCheck="on_NOTES_checked"
                     />
 
 
@@ -300,6 +345,7 @@
                                                    SubChecked="{Binding GenericNotesChecked, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
                                                    SubCrew="NOTES_SubMenu"
                                                    IsEnabled="{Binding MenuActivated, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                                                   SubRadioCheck="on_GenericNotes_checked"
                                    />
 
                     <!-- CHECKLIST -->
@@ -308,7 +354,7 @@
                                                    SubCategory="Create Checklist"
                                                    SubChecked="{Binding ChecklistNotesChecked, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
                                                    SubCrew="NOTES_SubMenu"
-                                                   IsEnabled="{Binding MenuActivated, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                                                   IsEnabled="False"
                                     />
 
                     <!-- OTHER -->
@@ -317,7 +363,7 @@
                                                    SubCategory="Other"
                                                    SubChecked="{Binding FlexiChecked, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
                                                    SubCrew="NOTES_SubMenu"
-                                                   IsEnabled="{Binding MenuActivated, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                                                   IsEnabled="False"
                                     />
 
                 </StackPanel>
@@ -382,12 +428,12 @@
                         <Button Grid.Column="0" x:Name="button_HELP" Style="{DynamicResource button_SUPPORT}"
                                 IsEnabled="False">
                             <Path Style="{DynamicResource path_HELP}"
-                                  Fill="{DynamicResource iconCOLOURAccent01}"
                                   />
                         </Button>
 
                         <!-- FEEDBACK -->
                         <Button Grid.Column="0" x:Name="button_FEEDBACK" Style="{DynamicResource button_SUPPORT}"
+                                IsEnabled="False"
                                 >
                             <Path Style="{DynamicResource path_FEEDBACK}"
                                 />
@@ -395,6 +441,7 @@
 
                         <!-- SETTINGS -->
                         <Button Grid.Column="0" x:Name="button_SETTINGS" Style="{DynamicResource button_SUPPORT}"
+                                IsEnabled="False"
                                 >
                             <Path Style="{DynamicResource path_SETTINGS}"
                                 />
@@ -428,4 +475,4 @@
        
 
     </Grid>
-</Window>
+</local:DLSWindow>
