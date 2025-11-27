@@ -42,6 +42,7 @@ namespace Data_Logger_1._3.ViewModels.Dialogs
             CreationDate = DateTime.Now.ToString("dd MMMM yyyy HH:mm");
             StartandEndDate();
             NoteSubject = "No Subject";
+            NoteContent = "";
         }
 
         private string noteSubject;

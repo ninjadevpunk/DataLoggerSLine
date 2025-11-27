@@ -26,7 +26,7 @@ namespace Data_Logger_1._3.ViewModels.Dialogs
             Display_Suggestion = createPostItViewModel.Display_Suggestion;
             Display_Comment = createPostItViewModel.Display_Comment;
 
-            PostCommand = new PostCommand(ActionType.Edit, _navigationService, _loggerCreateViewModel, this, createPostItViewModel);
+            PostCommand = new PostCommand(ActionType.Edit, PostItContext.EDITPOSTIT, _navigationService, _loggerCreateViewModel, this, createPostItViewModel);
         }
 
         public EditPostItViewModel(NavigationService navigationService, DataService dataService, LoggerCreateViewModel loggerCreateViewModel, ProjectClass project,
@@ -46,7 +46,7 @@ namespace Data_Logger_1._3.ViewModels.Dialogs
             Display_Suggestion = createPostItViewModel.Display_Suggestion;
             Display_Comment = createPostItViewModel.Display_Comment;
 
-            PostCommand = new PostCommand(ActionType.Edit, _navigationService, _loggerCreateViewModel, this, createPostItViewModel);
+            PostCommand = new PostCommand(ActionType.Edit, PostItContext.EDITPOSTIT, _navigationService, _loggerCreateViewModel, this, createPostItViewModel);
         }
     }
 }
