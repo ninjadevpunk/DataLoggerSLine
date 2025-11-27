@@ -382,9 +382,9 @@ namespace Data_Logger_1._3.Services
             return await _reader.FindAccountByEmail(email, password);
         }
 
-        public async Task<bool> UnsetCurrentUser(ACCOUNT account)
+        public async Task<bool> UnsetCurrentUser()
         {
-            return await _master.UnsetCurrentUser(account);
+            return await _master.UnsetCurrentUser();
         }
 
         public async Task<bool> SetCurrentUser(ACCOUNT account)
