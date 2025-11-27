@@ -7,7 +7,7 @@ using static Data_Logger_1._3.Services.Cachemaster;
 
 namespace Data_Logger_1._3.Commands.LogCacheCommands
 {
-    public class EditCommand : CommandBase
+    public class EditCommand : AsyncCommandBase
     {
         private readonly NavigationService _navigationService;
         private readonly LogCacheViewModel _dashboard;
@@ -33,7 +33,7 @@ namespace Data_Logger_1._3.Commands.LogCacheCommands
             }
         }
 
-        public override void Execute(object parameter)
+        protected override async Task ExecuteAsync(object parameter)
         {
             try
             {
@@ -55,6 +55,8 @@ namespace Data_Logger_1._3.Commands.LogCacheCommands
                     case CacheContext.Coding:
                         {
                             var log = parameter as CodeLOGViewModel;
+
+                            await _navigationService.NavigateToLoggerEditor(log);
 
                             break;
                         }

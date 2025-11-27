@@ -57,7 +57,7 @@ namespace Data_Logger_1._3.Commands.LogCacheCommands
 
         public override void Execute(object parameter)
         {
-            /*try
+            try
             {
                 switch (viewType)
                 {
@@ -68,42 +68,42 @@ namespace Data_Logger_1._3.Commands.LogCacheCommands
                                 case CacheContext.Qt:
                                     {
                                         var log = parameter as QtLOGViewModel;
-                                        _navigationService.NavigateToViewer(log, _cacheContext);
+                                        _navigationService.NavigateToViewer(log);
 
                                         break;
                                     }
                                 case CacheContext.AndroidStudio:
                                     {
                                         var log = parameter as AndroidLOGViewModel;
-                                        _navigationService.NavigateToViewer(log, _cacheContext);
+                                        _navigationService.NavigateToViewer(log);
 
                                         break;
                                     }
                                 case CacheContext.Coding:
                                     {
                                         var log = parameter as CodeLOGViewModel;
-                                        _navigationService.NavigateToViewer(log, _cacheContext);
+                                        _navigationService.NavigateToViewer(log);
 
                                         break;
                                     }
                                 case CacheContext.Graphics:
                                     {
                                         var log = parameter as GraphicsLOGViewModel;
-                                        _navigationService.NavigateToViewer(log, _cacheContext);
+                                        _navigationService.NavigateToViewer(log);
 
                                         break;
                                     }
                                 case CacheContext.Film:
                                     {
                                         var log = parameter as FilmLOGViewModel;
-                                        _navigationService.NavigateToViewer(log, _cacheContext);
+                                        _navigationService.NavigateToViewer(log);
 
                                         break;
                                     }
                                 case CacheContext.Flexi:
                                     {
                                         var log = parameter as FlexiLOGViewModel;
-                                        _navigationService.NavigateToViewer(log, _cacheContext);
+                                        _navigationService.NavigateToViewer(log);
 
                                         break;
                                     }
@@ -120,7 +120,7 @@ namespace Data_Logger_1._3.Commands.LogCacheCommands
             catch (Exception e)
             {
                 Debug.WriteLine($"Exception: {e.Message}");
-            }*/
+            }
         }
     }
 }

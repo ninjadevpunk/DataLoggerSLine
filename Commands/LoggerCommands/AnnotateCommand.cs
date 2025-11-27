@@ -370,6 +370,7 @@ namespace Data_Logger_1._3.Commands.LoggerCommands
                                 }
 
                                 genvm.CacheItems = list;
+                                await genvm.UpdateLogCount();
 
                                 await _navigationService.NavigateToLogCachePage<CodingViewModel>(CacheContext.Coding);
 
@@ -833,6 +834,7 @@ namespace Data_Logger_1._3.Commands.LoggerCommands
                                     list[index] = newLOG;
 
                                     genvm.CacheItems = list;
+                                    await genvm.UpdateLogCount();
                                 }
 
                                 _navigationService.NavigateToLogCachePage(CacheContext.Coding);

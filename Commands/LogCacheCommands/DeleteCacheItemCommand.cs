@@ -137,6 +137,8 @@ namespace Data_Logger_1._3.Commands.LogCacheCommands
                 {
                     tempCodingDashboardItems.Remove(item);
                     ((CodingViewModel)_viewModel).CacheItems = tempCodingDashboardItems;
+                    await ((CodingViewModel)_viewModel).UpdateLogCount();
+
                 }
             }
             else
