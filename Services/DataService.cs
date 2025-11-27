@@ -32,7 +32,7 @@ namespace Data_Logger_1._3.Services
         private readonly ENTITYHANDLER _handler;
         private readonly Cachemaster _cachemaster;
 
-        private readonly ACCOUNT _account;
+        private readonly AuthService _authService;
         private const string Qt = "Qt Creator";
         private const string Android = "Android Studio Meerkat 2024.3.1";
 
@@ -54,7 +54,7 @@ namespace Data_Logger_1._3.Services
             _handler = handler;
             _cachemaster = cachemaster;
 
-            _account = authService.Account;
+            _authService = authService;
 
         }
 
@@ -62,10 +62,10 @@ namespace Data_Logger_1._3.Services
         {
             try
             {
-                if (_account is not null)
-                {
-                    await _writer.SetCurrentUser(_account);
-                }
+                var account = _authService?.Account;
+
+                if (account is not null)
+                    await _writer.SetCurrentUser(account);
             }
             catch (Exception e)
             {
@@ -75,8 +75,10 @@ namespace Data_Logger_1._3.Services
 
         public async Task SignOutUser()
         {
-            if (_account is not null)
-                await _writer.UnsetCurrentUser(_account);
+            var account = _authService?.Account;
+
+            if (account is not null)
+                await _writer.UnsetCurrentUser();
         }
 
         public static bool IsValidEmail(string email)
@@ -95,12 +97,12 @@ namespace Data_Logger_1._3.Services
 
         public ACCOUNT GetUser()
         {
-            return _account;
+            return _authService.Account;
         }
 
         public string GetAuthorName()
         {
-            return _account.FirstName + " " + _account.LastName;
+            return _authService.Account.FirstName + " " + _authService.Account.LastName;
         }
 
         public Cachemaster GetCachemaster()
@@ -110,7 +112,7 @@ namespace Data_Logger_1._3.Services
 
         public string GetDisplayPic()
         {
-            return _account.ProfilePic;
+            return _authService.Account.ProfilePic;
         }
 
 
@@ -390,7 +392,7 @@ namespace Data_Logger_1._3.Services
             return await _reader.LogCount();
         }
 
-        public async Task<int> LogCount(LOG.CATEGORY category)
+        public async Task<int?> LogCount(LOG.CATEGORY category)
         {
             return await _reader.LogCount(category);
         }
@@ -414,7 +416,7 @@ namespace Data_Logger_1._3.Services
 
 
 
-        
+
 
 
 
@@ -508,7 +510,7 @@ namespace Data_Logger_1._3.Services
 
 
         #endregion
-        
+
 
 
 
@@ -525,7 +527,7 @@ namespace Data_Logger_1._3.Services
         /// <returns>An observable collection of QtLOGViewModels</returns>
         public ObservableCollection<QtLOGViewModel> RetrieveQtCache(LogCacheViewModel logCacheViewModel, DataService dataService)
         {
-            return _cachemaster.LoadQtViewModels(logCacheViewModel, dataService, _account) ?? new();
+            return _cachemaster.LoadQtViewModels(logCacheViewModel, dataService, _authService.Account) ?? new();
         }
 
         /// <summary>
@@ -535,7 +537,7 @@ namespace Data_Logger_1._3.Services
         /// <returns>An observable collection of AndroidLOGViewModels</returns>
         public ObservableCollection<AndroidLOGViewModel> RetrieveASCache(LogCacheViewModel logCacheViewModel)
         {
-            return _cachemaster.LoadASViewModels(logCacheViewModel, this, _account) ?? new();
+            return _cachemaster.LoadASViewModels(logCacheViewModel, this, _authService.Account) ?? new();
         }
 
         /// <summary>
@@ -545,7 +547,7 @@ namespace Data_Logger_1._3.Services
         /// <returns>An observable collection of CodeLOGViewModels</returns>
         public ObservableCollection<CodeLOGViewModel> RetrieveCodeCache(LogCacheViewModel logCacheViewModel)
         {
-            return _cachemaster.LoadCodeViewModels(logCacheViewModel, this, _account) ?? new();
+            return _cachemaster.LoadCodeViewModels(logCacheViewModel, this, _authService.Account) ?? new();
         }
 
         /// <summary>
@@ -555,7 +557,7 @@ namespace Data_Logger_1._3.Services
         /// <returns>An observable collection of GraphicsLOGViewModels</returns>
         public ObservableCollection<GraphicsLOGViewModel> RetrieveGraphicsCache(LogCacheViewModel logCacheViewModel)
         {
-            return _cachemaster.LoadGraphicsViewModels(logCacheViewModel, this, _account) ?? new();
+            return _cachemaster.LoadGraphicsViewModels(logCacheViewModel, this, _authService.Account) ?? new();
         }
 
         /// <summary>
@@ -565,7 +567,7 @@ namespace Data_Logger_1._3.Services
         /// <returns>An observable collection of FilmLOGViewModels</returns>
         public ObservableCollection<FilmLOGViewModel> RetrieveFilmCache(LogCacheViewModel logCacheViewModel)
         {
-            return _cachemaster.LoadFilmViewModels(logCacheViewModel, this, _account) ?? new();
+            return _cachemaster.LoadFilmViewModels(logCacheViewModel, this, _authService.Account) ?? new();
         }
 
         /// <summary>
@@ -575,7 +577,7 @@ namespace Data_Logger_1._3.Services
         /// <returns>An observable collection of FlexiLOGViewModels</returns>
         public ObservableCollection<FlexiLOGViewModel> RetrieveFlexibleCache(LogCacheViewModel logCacheViewModel)
         {
-            return _cachemaster.LoadFlexiViewModels(logCacheViewModel, this, _account) ?? new();
+            return _cachemaster.LoadFlexiViewModels(logCacheViewModel, this, _authService.Account) ?? new();
         }
 
         #endregion
