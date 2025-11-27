@@ -75,6 +75,7 @@
                     VerticalAlignment="Top"
                     HorizontalAlignment="Center"
                     Margin="0 70 0 0"
+                    IsEnabled="{Binding CreateLogButtonEnabled}"
                     Command="{Binding CreateLogCommand}">
                 
                 <TextBlock Style="{DynamicResource text_button01}"
