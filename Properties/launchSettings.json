@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "Data Logger 1.3": {
+      "commandName": "Project",
+      "environmentVariables": {
+        "DOTNET_ENVIRONMENT": "DevMode"
+      }
+    }
+  }
+}
