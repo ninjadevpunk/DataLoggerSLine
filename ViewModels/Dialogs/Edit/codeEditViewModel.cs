@@ -13,11 +13,29 @@ namespace Data_Logger_1._3.ViewModels.Dialogs.Edit
         private readonly QtLOGViewModel _qtLOGViewModel;
         private readonly CodeLOGViewModel _codeLOGViewModel;
 
+        public codeEditViewModel()
+        {
+
+        }
+
         public codeEditViewModel(NavigationService navigationService, LogCacheViewModel logCacheViewModel, DataService dataService, ViewModelBase viewModelBase)
             : base(navigationService, logCacheViewModel, dataService)
         {
 
             _codeLOGViewModel = (CodeLOGViewModel)viewModelBase;
+
+            StartDate = _codeLOGViewModel._CodeLOG.Start;
+            StartHours = _codeLOGViewModel._CodeLOG.Start.Hour;
+            StartMinutes = _codeLOGViewModel._CodeLOG.Start.Minute;
+            StartSeconds = _codeLOGViewModel._CodeLOG.Start.Second;
+            StartMilliseconds = _codeLOGViewModel._CodeLOG.Start.Millisecond;
+
+            EndDate = _codeLOGViewModel._CodeLOG.End;
+            EndHours = _codeLOGViewModel._CodeLOG.End.Hour;
+            EndMinutes = _codeLOGViewModel._CodeLOG.End.Minute;
+            EndSeconds = _codeLOGViewModel._CodeLOG.End.Second;
+            EndMilliseconds = _codeLOGViewModel._CodeLOG.End.Millisecond;
+
 
             AnnotateCommand = null;
             EditCommand = new AnnotateCommand(ActionType.Edit, Context, _navigationService, this, _logCacheViewModel, _dataService, _codeLOGViewModel);
