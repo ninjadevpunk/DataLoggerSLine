@@ -7,7 +7,7 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <UseWPF>true</UseWPF>
-    <ApplicationIcon>DLS icon.ico</ApplicationIcon>
+    <ApplicationIcon>AlphaBetaIcon.ico</ApplicationIcon>
   </PropertyGroup>
 
   <ItemGroup>
@@ -18,8 +18,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="AlphaBetaIcon.ico" />
     <None Remove="Assets\Data Logger 1.3 logo icon.ico" />
-    <None Remove="Assets\login\alexandru-acea--WBYxmW4yuw-unsplash.jpg" />
     <None Remove="Assets\login\altumcode-PNbDkQ2DDgM-unsplash.jpg" />
     <None Remove="Assets\login\ayo-ogunseinde-sibVwORYqs0-unsplash.jpg" />
     <None Remove="Assets\login\nubelson-fernandes-UcYBL5V0xWQ-unsplash.jpg" />
@@ -30,6 +30,7 @@
     <None Remove="Fonts\Zekton Bold Italic.ttf" />
     <None Remove="Fonts\Zekton Italic.ttf" />
     <None Remove="Fonts\Zekton Light.ttf" />
+    <None Remove="ReleaseIcon.ico" />
   </ItemGroup>
 
   <ItemGroup>
@@ -38,10 +39,21 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="DLS icon.ico" />
+    <Content Include="AlphaBetaIcon.ico">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 
   <ItemGroup>
+    <Resource Include="DevIcon.ico">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="AlphaBetaIcon.ico">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
     <Resource Include="Assets\login\altumcode-PNbDkQ2DDgM-unsplash.jpg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
@@ -54,19 +66,25 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Extended.Wpf.Toolkit" Version="4.7.25104.5739" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite.Core" Version="9.0.4" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite.Design" Version="1.1.6" />
-    <PackageReference Include="Microsoft.Extensions.Hosting" Version="9.0.4" />
+    <PackageReference Include="Extended.Wpf.Toolkit" Version="5.0.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.22" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.22">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="8.0.22" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.22">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="8.0.1" />
     <PackageReference Include="MVVMEssentials.WPF" Version="1.0.3" />
-    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
-    <PackageReference Include="SQLitePCLRaw.bundle_e_sqlite3" Version="2.1.11" />
-    <PackageReference Include="Svg.Skia" Version="3.0.2" />
-    <PackageReference Include="Syncfusion.Licensing" Version="29.1.41" />
-    <PackageReference Include="Syncfusion.Pdf.Wpf" Version="29.1.41" />
-    <PackageReference Include="System.Data.SqlClient" Version="4.9.0" />
-    <PackageReference Include="System.Data.SQLite" Version="1.0.119" />
-    <PackageReference Include="System.Drawing.Common" Version="9.0.4" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
+    <PackageReference Include="SQLitePCLRaw.bundle_e_sqlite3" Version="3.0.2" />
+    <PackageReference Include="Svg.Skia" Version="3.2.1" />
+    <PackageReference Include="Syncfusion.Licensing" Version="31.2.15" />
+    <PackageReference Include="Syncfusion.Pdf.Wpf" Version="31.2.15" />
+    <PackageReference Include="System.Drawing.Common" Version="8.0.22" />
     <PackageReference Include="System.Net.Http" Version="4.3.4" />
     <PackageReference Include="System.Text.RegularExpressions" Version="4.3.1" />
     <PackageReference Include="WPFTransitionals" Version="1.1.0" />
@@ -78,9 +96,6 @@
 
   <ItemGroup>
     <Resource Include="Assets\Data Logger 1.3 logo icon.ico">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Assets\login\alexandru-acea--WBYxmW4yuw-unsplash.jpg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
     <Resource Include="Assets\login\ayo-ogunseinde-sibVwORYqs0-unsplash.jpg">
@@ -108,21 +123,21 @@
     <Resource Include="Fonts\Zekton.ttf">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
+    <Resource Include="ReleaseIcon.ico">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
     <Resource Include="Resources\Brushes\Colours.xaml" />
     <Resource Include="Resources\Styles\Buttons.xaml" />
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="appsettings.DevMode.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="appsettings.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="Assets\login\attribution\Ayo Ogunseinde.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="Assets\login\attribution\National Cancer Institute.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="Assets\login\attribution\Photo by a href=httpsunsplash.com%40a.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="Fonts\PDF\Red Hat Display Bold Italic.ttf">

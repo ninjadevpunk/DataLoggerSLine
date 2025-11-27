@@ -3,17 +3,22 @@ using Data_Logger_1._3.ViewModels;
 using Data_Logger_1._3.ViewModels.Dashboard;
 using Data_Logger_1._3.ViewModels.Dialogs;
 using Data_Logger_1._3.ViewModels.Dialogs.Create;
+using Data_Logger_1._3.ViewModels.Dialogs.Edit;
+using Data_Logger_1._3.ViewModels.ViewerViewModels;
 using Data_Logger_1._3.Views;
 using Data_Logger_1._3.Views.Dialogs;
 using Data_Logger_1._3.Views.LogPages;
 using Data_Logger_1._3.Views.ReportPages;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using System.IO;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media.Animation;
+using System.Windows.Media.Imaging;
 
 namespace Data_Logger_1._3
 {
@@ -24,10 +29,20 @@ namespace Data_Logger_1._3
     {
 
         private readonly IServiceProvider _serviceProvider;
+        public static IConfiguration Configuration { get; private set; }
 
         public App()
         {
             var host = Host.CreateDefaultBuilder()
+                .ConfigureAppConfiguration((hostingContext, config) =>
+                {
+                    config.AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
+
+                    var env = hostingContext.HostingEnvironment.EnvironmentName;
+
+                    if (env == "DevMode")
+                        config.AddJsonFile($"appsettings.{env}.json", optional: true);
+                })
                 .ConfigureServices((context, service) =>
                 {
                     service.AddSingleton<UIFactory>(services => new UIFactory(services));
@@ -38,13 +53,17 @@ namespace Data_Logger_1._3
 
 
 
-                    service.AddSingleton<Cachemaster>();
                     service.AddDbContext<ENTITYMASTER>(options =>
                     {
-                        options.UseSqlite(ENTITYMASTER.CONNECTION_STRING)
-                        .EnableSensitiveDataLogging()
+                        options.UseSqlite(context.Configuration.GetConnectionString("DefaultConnection"))
                         .LogTo(Console.WriteLine, LogLevel.Information);
+
+                        var env = context.HostingEnvironment.EnvironmentName;
+
+                        if (env == "DevMode")
+                            options.EnableSensitiveDataLogging();
                     });
+                    service.AddSingleton<Cachemaster>();
                     service.AddScoped((services) => new ENTITYREADER(services.GetRequiredService<ENTITYMASTER>()));
                     service.AddScoped((services) => new ENTITYWRITER(services.GetRequiredService<ENTITYREADER>(), services.GetRequiredService<ENTITYMASTER>()));
                     service.AddScoped<ENTITYHANDLER>();
@@ -86,7 +105,7 @@ namespace Data_Logger_1._3
                     service.AddSingleton((services) => new FlexiViewModel(services.GetRequiredService<NavigationService>(), services.GetRequiredService<DataService>()));
                     service.AddSingleton((services) => new NOTESViewModel(services.GetRequiredService<NavigationService>(), services.GetRequiredService<DataService>()));
 
-                    service.AddTransient((services) => new codeCreateViewModel());
+                    service.AddTransient<codeCreateViewModel>();
                     service.AddTransient((services) => new AScodeCreateViewModel(services.GetRequiredService<NavigationService>(), services.GetRequiredService<CodingAndroidViewModel>(), 
                         services.GetRequiredService<DataService>()));
                     service.AddTransient((services) => new graphicCreateViewModel(services.GetRequiredService<NavigationService>(), services.GetRequiredService<GraphicsViewModel>(),
@@ -95,7 +114,11 @@ namespace Data_Logger_1._3
                         services.GetRequiredService<DataService>()));
                     service.AddTransient((services) => new flexiCreateViewModel(services.GetRequiredService<NavigationService>(), services.GetRequiredService<FlexiViewModel>(),
                         services.GetRequiredService<DataService>()));
-                    service.AddTransient((services) => new PostItViewModel());
+
+                    service.AddTransient<codeEditViewModel>();
+                    service.AddTransient((services) => new codeViewerViewModel(services.GetRequiredService<NavigationService>()));
+
+                    service.AddTransient<PostItViewModel>();
                     service.AddTransient((services) => new CreateNoteViewModel(services.GetRequiredService<NavigationService>(), services.GetRequiredService<DataService>(),
                         services.GetRequiredService<NOTESViewModel>()));
                     service.AddTransient((services) => new CreateCheckListViewModel(services.GetRequiredService<NavigationService>(), services.GetRequiredService<DataService>(),
@@ -106,7 +129,7 @@ namespace Data_Logger_1._3
                     service.AddTransient((services) => new loginPage01(services.GetRequiredService<LoginViewModel>()));
                     service.AddTransient<loginPage02>();
                     service.AddTransient((services) => new SignUp(services.GetRequiredService<NavigationService>(), services.GetRequiredService<SignUpViewModel>()));
-                    service.AddTransient<MainWindow>();
+                    service.AddTransient((services) => new MainWindow(services.GetRequiredService<MainWindowViewModel>(), services.GetRequiredService<NavigationService>()));
                 })
                 .Build();
 
@@ -115,9 +138,26 @@ namespace Data_Logger_1._3
 
         protected override async void OnStartup(StartupEventArgs e)
         {
+            Configuration = _serviceProvider.GetRequiredService<IConfiguration>();
+
             var cachemaster = _serviceProvider.GetRequiredService<Cachemaster>();
 
+
+
+
             var splash = _serviceProvider.GetRequiredService<Splashscreen>();
+            var env = Environment.GetEnvironmentVariable("DOTNET_ENVIRONMENT") ?? "Release";
+
+            switch (env)
+            {
+                case "AlphaBeta":
+                    DeleteDevIcon();
+                    break;
+                case "Release":
+                    DeleteDevIcon();
+                    break;
+            }
+
             splash.Show();
 
 
@@ -133,7 +173,7 @@ namespace Data_Logger_1._3
                 await AnimateProgressBar(splash.progressBar_splashscreen, 75, splash.text_progress);
                 var master = scope.ServiceProvider.GetRequiredService<ENTITYMASTER>();
                 await AnimateProgressBar(splash.progressBar_splashscreen, 80, splash.text_progress);
-                master.Database.EnsureCreated();
+                await master.Database.EnsureCreatedAsync();
             }
 
 
@@ -146,11 +186,18 @@ namespace Data_Logger_1._3
 
 
 
-
-
-
             base.OnStartup(e);
         }
+
+
+
+
+
+
+
+
+
+
 
         private async Task AnimateProgressBar(ProgressBar progressBar, double targetValue, TextBlock textBlock)
         {
@@ -175,6 +222,34 @@ namespace Data_Logger_1._3
             await tcs.Task;
         }
 
+        private void DeleteDevIcon()
+        {
+            string exeFolder = AppDomain.CurrentDomain.BaseDirectory;
+            string devIconPath = Path.Combine(exeFolder, "DevIcon.ico");
+
+            if (File.Exists(devIconPath))
+            {
+                try
+                {
+                    File.Delete(devIconPath);
+                    Console.WriteLine("DevIcon.ico deleted.");
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Failed to delete DevIcon.ico: {ex.Message}");
+                }
+            }
+        }
+
+
+
+
+
+
+
+
+
+
         protected override async void OnExit(ExitEventArgs e)
         {
             var dataService = _serviceProvider.GetRequiredService<DataService>();
@@ -182,6 +257,8 @@ namespace Data_Logger_1._3
 
             base.OnExit(e);
         }
+
+        
     }
 
 }
