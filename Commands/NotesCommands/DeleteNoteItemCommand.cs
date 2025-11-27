@@ -39,6 +39,7 @@ namespace Data_Logger_1._3.Commands.NotesCommands
                     if(noteDeleted)
                         _notesViewModel.NoteItems.Remove(noteToDelete);
 
+                    _notesViewModel.StartUpVisibilitySet(_notesViewModel.NoteItems.Count > 0);
                 }
             }
             catch (Exception ex)
