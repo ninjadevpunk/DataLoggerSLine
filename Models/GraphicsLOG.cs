@@ -11,7 +11,6 @@ namespace Data_Logger_1._3.Models
     [Table("GraphicsLOG")]
     public class GraphicsLOG : LOG
     {
-        public override CATEGORY Category { get; protected set; } = CATEGORY.GRAPHICS;
 
         /* MEMBER VARIABLES */
 
@@ -61,6 +60,7 @@ namespace Data_Logger_1._3.Models
 
         public GraphicsLOG(MediumClass medium, FormatClass format, string brush, double height, double width, MeasuringUnitClass unit, string size, double dPI, string depth, bool isCompleted, string source)
         {
+            Category = CATEGORY.GRAPHICS;
             Medium = medium;
             Format = format;
             Brush = brush;
@@ -80,6 +80,7 @@ namespace Data_Logger_1._3.Models
             MeasuringUnitClass unit, string size, double dPI, string depth, bool isCompleted, string source) : base(LOG.CATEGORY.GRAPHICS, id, author, projectName, applicationName,
                                                                                                             startTime, endTime, output, type, postItList)
         {
+            Category = CATEGORY.GRAPHICS;
             Medium = medium;
             Format = format;
             Brush = brush;

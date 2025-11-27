@@ -98,11 +98,13 @@ namespace Data_Logger_1._3.Models
 
         public FlexiNotesLOG()
         {
+            Category = CATEGORY.NOTES;
         }
 
         public FlexiNotesLOG(FLEXINOTEType flexinotetype, GAMINGContext gamingcontext, MediumClass medium, FormatClass format, int bitRate,
             string length, bool isCompleted, string source)
         {
+            Category = CATEGORY.NOTES;
             this.flexinotetype = flexinotetype;
             this.gamingcontext = gamingcontext;
             Medium = medium;
@@ -118,6 +120,7 @@ namespace Data_Logger_1._3.Models
             FLEXINOTEType flexinotetype, GAMINGContext gamingcontext, MediumClass medium, FormatClass format, int bitRate,
             string length, bool isCompleted, string source) : base(id, author, projectName, applicationName, startTime, endTime, output, type, postItList)
         {
+            Category = CATEGORY.NOTES;
             this.flexinotetype = flexinotetype;
             this.gamingcontext = gamingcontext;
             Medium = medium;

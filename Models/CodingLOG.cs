@@ -14,8 +14,6 @@ namespace Data_Logger_1._3.Models
     [Table("CodingLOG")]
     public class CodingLOG : LOG
     {
-        public override CATEGORY Category { get; protected set; } = CATEGORY.CODING;
-
 
         /* MEMBER VARIABLES */
 
@@ -42,6 +40,7 @@ namespace Data_Logger_1._3.Models
 
         public CodingLOG(int bugs, bool success)
         {
+            Category = CATEGORY.CODING;
             Bugs = bugs;
             Success = success;
         }
@@ -49,6 +48,7 @@ namespace Data_Logger_1._3.Models
         public CodingLOG(ACCOUNT author, ProjectClass projectName, ApplicationClass applicationName, DateTime startTime, DateTime endTime,
             OutputClass output, TypeClass type, List<PostIt> postItList, int bugs, bool success) : base(LOG.CATEGORY.CODING, author, projectName, applicationName, startTime, endTime, output, type, postItList)
         {
+            Category = CATEGORY.CODING;
             Bugs = bugs;
             Success = success;
         }
@@ -56,6 +56,7 @@ namespace Data_Logger_1._3.Models
         public CodingLOG(int id, ACCOUNT author, ProjectClass projectName, ApplicationClass applicationName, DateTime startTime, DateTime endTime,
             OutputClass output, TypeClass type, List<PostIt> postItList, int bugs, bool success) : base(LOG.CATEGORY.CODING, id, author, projectName, applicationName, startTime, endTime, output, type, postItList)
         {
+            Category = CATEGORY.CODING;
             Bugs = bugs;
             Success = success;
         }

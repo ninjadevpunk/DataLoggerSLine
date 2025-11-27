@@ -32,7 +32,7 @@ namespace Data_Logger_1._3.Models
 
 
 
-        public virtual CATEGORY Category { get; protected set; }
+        public CATEGORY Category { get; protected set; }
 
         /// <summary>
         /// The log's identifier. Important for database and caching operations.

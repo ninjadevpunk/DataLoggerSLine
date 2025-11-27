@@ -11,7 +11,6 @@ namespace Data_Logger_1._3.Models
     [Table("FilmLOG")]
     public class FilmLOG : LOG
     {
-        public override CATEGORY Category { get; protected set; } = CATEGORY.FILM;
 
 
         /* MEMBER VARIABLES */
@@ -55,10 +54,12 @@ namespace Data_Logger_1._3.Models
 
         public FilmLOG()
         {
+            Category = CATEGORY.FILM;
         }
 
         public FilmLOG(double height, double width, string length, bool isCompleted, string source)
         {
+            Category = CATEGORY.FILM;
             Height = height;
             Width = width;
             Length = length;
@@ -71,6 +72,7 @@ namespace Data_Logger_1._3.Models
             double height, double width, string length, bool isCompleted, string source) : base(LOG.CATEGORY.FILM, id, author, projectName, applicationName,
                                                                                                             startTime, endTime, output, type, postItList)
         {
+            Category = CATEGORY.FILM;
             Height = height;
             Width = width;
             Length = length;

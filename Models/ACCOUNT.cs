@@ -159,15 +159,20 @@ namespace Data_Logger_1._3.Models
             return hash.ToHashCode();
         }
 
-        public static bool operator ==(ACCOUNT left, ACCOUNT right)
+        public static bool operator ==(ACCOUNT? left, ACCOUNT? right)
         {
-            return left.Equals(right);
+            if (ReferenceEquals(left, right)) return true;   // both null or same reference
+            if (left is null || right is null) return false; // one null, the other not
+            return left.Equals(right);                       // defer to Equals
         }
 
-        public static bool operator !=(ACCOUNT left, ACCOUNT right)
+        public static bool operator !=(ACCOUNT? left, ACCOUNT? right)
         {
-            return !left.Equals(right);
+            if (ReferenceEquals(left, right)) return false;  // both null or same reference
+            if (left is null || right is null) return true;  // one null, the other not
+            return !left.Equals(right);                      // defer to Equals
         }
+
 
 
 

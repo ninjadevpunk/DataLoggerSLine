@@ -22,7 +22,6 @@ namespace Data_Logger_1._3.Models
         // Generic Note or Flexi Note
         public enum NOTELOGType { GENERIC, FLEXI }
 
-        public override CATEGORY Category { get; protected set; } = CATEGORY.NOTES;
 
 
         /* PROPERTIES */
@@ -40,13 +39,14 @@ namespace Data_Logger_1._3.Models
 
         public NotesLOG()
         {
-
+            Category = CATEGORY.NOTES;
         }
 
 
         public NotesLOG(int id, ACCOUNT author, ProjectClass projectName, ApplicationClass applicationName, DateTime startTime, DateTime endTime,
             OutputClass output, TypeClass type, List<PostIt> postItList) : base(LOG.CATEGORY.NOTES, id, author, projectName, applicationName, startTime, endTime, output, type, postItList)
         {
+            Category = CATEGORY.NOTES;
         }
 
         public override bool Equals(object? obj)
