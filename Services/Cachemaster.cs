@@ -10,6 +10,7 @@ using System.Security.AccessControl;
 using System.Security.Principal;
 
 
+
 namespace Data_Logger_1._3.Services
 {
     /// <summary>
@@ -29,15 +30,8 @@ namespace Data_Logger_1._3.Services
             Flexi
         }
 
-        const string MAIN_FOLDER = @"C:\Data Logger Central";
-        const string DEPOSITORY_PATH = $@"{MAIN_FOLDER}\Depository";
-
-
-        const string RESOURCE_DIRECTORY = $@"{DEPOSITORY_PATH}\res";
-        const string IDENTIFIERS_PATH = $@"{RESOURCE_DIRECTORY}\_identifiers.index";
-        const string SUBJECT_IDS_PATH = $@"{RESOURCE_DIRECTORY}\subject.index";
-        const string POSTIT_IDS_PATH = $@"{RESOURCE_DIRECTORY}\postit.index";
-
+        
+        
         public List<string>? Identifiers { get; set; } = new();
         public StreamWriter Writer { get; set; }
 
@@ -46,8 +40,27 @@ namespace Data_Logger_1._3.Services
             ReferenceLoopHandling = ReferenceLoopHandling.Ignore
         };
 
+        public readonly string MainFolder;
+        public readonly string DepositoryPath;
+
+        public readonly string ResourceDirectory;
+        public readonly string IdentifiersPath;
+        public readonly string SubjectIdsPath;
+        public readonly string PostitIdsPath;
+
         public Cachemaster()
         {
+
+            MainFolder = App.Configuration["Paths:Root"];
+
+            DepositoryPath = Path.Combine(MainFolder, "Depository");
+
+            ResourceDirectory = Path.Combine(DepositoryPath, "res");
+
+            IdentifiersPath = Path.Combine(ResourceDirectory, "_identifiers.index");
+            SubjectIdsPath = Path.Combine(ResourceDirectory, "subject.index");
+            PostitIdsPath = Path.Combine(ResourceDirectory, "postit.index");
+
             if (ResourcesCreated())
             {
                 IdentifiersChecked();
@@ -67,35 +80,35 @@ namespace Data_Logger_1._3.Services
             {
 
                 // Base Folder
-                if (!Directory.Exists(MAIN_FOLDER))
+                if (!Directory.Exists(MainFolder))
                 {
-                    Directory.CreateDirectory(MAIN_FOLDER);
-                    GrantFolderPermissions(MAIN_FOLDER);
+                    Directory.CreateDirectory(MainFolder);
+                    GrantFolderPermissions(MainFolder);
                 }
 
                 // Depository
-                if (!Directory.Exists(DEPOSITORY_PATH))
+                if (!Directory.Exists(DepositoryPath))
                 {
-                    Directory.CreateDirectory(DEPOSITORY_PATH);
+                    Directory.CreateDirectory(DepositoryPath);
 
                     // Hide Depository
-                    DirectoryInfo depositoryInfo = new DirectoryInfo(DEPOSITORY_PATH);
+                    DirectoryInfo depositoryInfo = new DirectoryInfo(DepositoryPath);
                     depositoryInfo.Attributes |= FileAttributes.Hidden;
                 }
 
                 // Respurces Folder
-                if (!Directory.Exists(RESOURCE_DIRECTORY))
+                if (!Directory.Exists(ResourceDirectory))
                 {
-                    Directory.CreateDirectory(RESOURCE_DIRECTORY);
+                    Directory.CreateDirectory(ResourceDirectory);
 
                     // Main Index File
-                    using (var fileStream = new FileStream(IDENTIFIERS_PATH, FileMode.CreateNew)) { }
+                    using (var fileStream = new FileStream(IdentifiersPath, FileMode.CreateNew)) { }
 
                     // Subject ID Index
-                    using (var fileStream = new FileStream(SUBJECT_IDS_PATH, FileMode.CreateNew)) { }
+                    using (var fileStream = new FileStream(SubjectIdsPath, FileMode.CreateNew)) { }
 
                     // PostIt ID Index
-                    using (var fileStream = new FileStream(POSTIT_IDS_PATH, FileMode.CreateNew)) { }
+                    using (var fileStream = new FileStream(PostitIdsPath, FileMode.CreateNew)) { }
                 }
             }
             catch (UnauthorizedAccessException unex)
@@ -173,16 +186,16 @@ namespace Data_Logger_1._3.Services
 
             try
             {
-                if (!File.Exists(IDENTIFIERS_PATH))
+                if (!File.Exists(IdentifiersPath))
                 {
-                    var f = new FileStream(IDENTIFIERS_PATH, FileMode.CreateNew);
+                    var f = new FileStream(IdentifiersPath, FileMode.CreateNew);
                     f.Close();
 
                 }
                 else
                 {
 
-                    foreach (string s in File.ReadLines(IDENTIFIERS_PATH))
+                    foreach (string s in File.ReadLines(IdentifiersPath))
                     {
                         Identifiers.Add(s);
                     }
@@ -221,7 +234,7 @@ namespace Data_Logger_1._3.Services
                     {
                         Identifiers.Add(id);
 
-                        Writer = new StreamWriter(IDENTIFIERS_PATH);
+                        Writer = new StreamWriter(IdentifiersPath);
                         foreach (string t in Identifiers.Order())
                         {
                             Writer.WriteLine(t);
@@ -255,7 +268,7 @@ namespace Data_Logger_1._3.Services
                     {
                         Identifiers.Add(id);
 
-                        Writer = new StreamWriter(IDENTIFIERS_PATH);
+                        Writer = new StreamWriter(IdentifiersPath);
                         foreach (string t in Identifiers.Order())
                         {
                             Writer.WriteLine(t);
@@ -284,9 +297,9 @@ namespace Data_Logger_1._3.Services
         {
             try
             {
-                if (!File.Exists(SUBJECT_IDS_PATH))
+                if (!File.Exists(SubjectIdsPath))
                 {
-                    var f = new FileStream(SUBJECT_IDS_PATH, FileMode.CreateNew);
+                    var f = new FileStream(SubjectIdsPath, FileMode.CreateNew);
                     f.Close();
 
                 }
@@ -294,7 +307,7 @@ namespace Data_Logger_1._3.Services
                 {
                     List<int>? oldSubjectIDs = new();
 
-                    foreach (string s in File.ReadLines(SUBJECT_IDS_PATH))
+                    foreach (string s in File.ReadLines(SubjectIdsPath))
                     {
                         oldSubjectIDs.Add(int.Parse(s));
                     }
@@ -324,11 +337,11 @@ namespace Data_Logger_1._3.Services
             {
                 if (idsToCache is not null)
                 {
-                    File.Delete(SUBJECT_IDS_PATH);
-                    var fileStream = new FileStream(SUBJECT_IDS_PATH, FileMode.CreateNew);
+                    File.Delete(SubjectIdsPath);
+                    var fileStream = new FileStream(SubjectIdsPath, FileMode.CreateNew);
                     fileStream.Close();
 
-                    Writer = new StreamWriter(SUBJECT_IDS_PATH);
+                    Writer = new StreamWriter(SubjectIdsPath);
 
                     foreach (int id in idsToCache.Order())
                     {
@@ -355,9 +368,9 @@ namespace Data_Logger_1._3.Services
         {
             try
             {
-                if (!File.Exists(POSTIT_IDS_PATH))
+                if (!File.Exists(PostitIdsPath))
                 {
-                    var f = new FileStream(POSTIT_IDS_PATH, FileMode.CreateNew);
+                    var f = new FileStream(PostitIdsPath, FileMode.CreateNew);
                     f.Close();
 
                 }
@@ -365,7 +378,7 @@ namespace Data_Logger_1._3.Services
                 {
                     List<int>? oldSubjectIDs = new();
 
-                    foreach (string s in File.ReadLines(POSTIT_IDS_PATH))
+                    foreach (string s in File.ReadLines(PostitIdsPath))
                     {
                         oldSubjectIDs.Add(int.Parse(s));
                     }
@@ -393,11 +406,11 @@ namespace Data_Logger_1._3.Services
             {
                 if (idsToCache is not null)
                 {
-                    File.Delete(POSTIT_IDS_PATH);
-                    var fileStream = new FileStream(POSTIT_IDS_PATH, FileMode.CreateNew);
+                    File.Delete(PostitIdsPath);
+                    var fileStream = new FileStream(PostitIdsPath, FileMode.CreateNew);
                     fileStream.Close();
 
-                    Writer = new StreamWriter(POSTIT_IDS_PATH);
+                    Writer = new StreamWriter(PostitIdsPath);
 
                     foreach (int id in idsToCache.Order())
                     {
@@ -534,7 +547,7 @@ namespace Data_Logger_1._3.Services
         {
             try
             {
-                string filePath = $@"{RESOURCE_DIRECTORY}\{logID}.{LogExtension(cacheContext)}";
+                string filePath = $@"{ResourceDirectory}\{logID}.{LogExtension(cacheContext)}";
 
                 File.WriteAllText(filePath, json);
             }
@@ -559,7 +572,7 @@ namespace Data_Logger_1._3.Services
 
             try
             {
-                var filePath = $@"{RESOURCE_DIRECTORY}\{logID}.{LogExtension(cacheContext)}";
+                var filePath = $@"{ResourceDirectory}\{logID}.{LogExtension(cacheContext)}";
 
                 if (File.Exists(filePath))
                     File.Delete(filePath);
@@ -567,15 +580,15 @@ namespace Data_Logger_1._3.Services
                 // Remove logID from IDENTIFIERS
                 Identifiers.Remove(logID);
 
-                if (File.Exists(IDENTIFIERS_PATH))
-                    File.Delete(IDENTIFIERS_PATH);
+                if (File.Exists(IdentifiersPath))
+                    File.Delete(IdentifiersPath);
 
                 // Create new IDENTIFIERS file with updated list
-                using var fileStream = new FileStream(IDENTIFIERS_PATH, FileMode.Create);
+                using var fileStream = new FileStream(IdentifiersPath, FileMode.Create);
                 fileStream.Close();
 
                 // Write IDENTIFIERS to new file
-                using var writer = new StreamWriter(IDENTIFIERS_PATH);
+                using var writer = new StreamWriter(IdentifiersPath);
                 foreach (string id in Identifiers.Order())
                 {
                     writer.WriteLine(id);
@@ -637,7 +650,7 @@ namespace Data_Logger_1._3.Services
                 try
                 {
                     const string extenstion = "qtcache";
-                    string root = $@"{RESOURCE_DIRECTORY}\";
+                    string root = $@"{ResourceDirectory}\";
                     ObservableCollection<QtLOGViewModel>? list = null;
 
                     if (Identifiers.Count > 0)
@@ -726,7 +739,7 @@ namespace Data_Logger_1._3.Services
                 try
                 {
                     const string extenstion = "ascache";
-                    string root = $@"{RESOURCE_DIRECTORY}\";
+                    string root = $@"{ResourceDirectory}\";
                     ObservableCollection<AndroidLOGViewModel>? list = null;
 
                     if (Identifiers.Count > 0)
@@ -811,7 +824,7 @@ namespace Data_Logger_1._3.Services
                 try
                 {
                     const string extenstion = "cdecache";
-                    string root = $@"{RESOURCE_DIRECTORY}\";
+                    string root = $@"{ResourceDirectory}\";
                     ObservableCollection<CodeLOGViewModel>? list = null;
 
                     if (Identifiers.Count > 0)
@@ -898,7 +911,7 @@ namespace Data_Logger_1._3.Services
                 try
                 {
                     const string extenstion = "gpscache";
-                    string root = $@"{RESOURCE_DIRECTORY}\";
+                    string root = $@"{ResourceDirectory}\";
                     ObservableCollection<GraphicsLOGViewModel>? list = null;
 
                     if (Identifiers.Count > 0)
@@ -976,7 +989,7 @@ namespace Data_Logger_1._3.Services
                 try
                 {
                     const string extenstion = "flmcache";
-                    string root = $@"{RESOURCE_DIRECTORY}\";
+                    string root = $@"{ResourceDirectory}\";
                     ObservableCollection<FilmLOGViewModel>? list = null;
 
                     if (Identifiers.Count > 0)
@@ -1053,7 +1066,7 @@ namespace Data_Logger_1._3.Services
                 try
                 {
                     const string extenstion = "flxcache";
-                    string root = $@"{RESOURCE_DIRECTORY}\";
+                    string root = $@"{ResourceDirectory}\";
                     ObservableCollection<FlexiLOGViewModel>? list = null;
 
                     if (Identifiers.Count > 0)
