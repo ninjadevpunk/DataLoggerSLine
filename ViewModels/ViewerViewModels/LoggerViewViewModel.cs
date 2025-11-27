@@ -3,11 +3,12 @@ using Data_Logger_1._3.Services;
 using Data_Logger_1._3.ViewModels.Dialogs;
 using System.Windows.Input;
 using System.Windows;
+using MVVMEssentials.ViewModels;
 using static Data_Logger_1._3.Services.Cachemaster;
 
 namespace Data_Logger_1._3.ViewModels.ViewerViewModels
 {
-    public abstract class LoggerViewViewModel
+    public abstract class LoggerViewViewModel : ViewModelBase
     {
         protected readonly NavigationService _navigationService;
         private readonly List<PostItViewModel> _postIts;
@@ -20,6 +21,7 @@ namespace Data_Logger_1._3.ViewModels.ViewerViewModels
         {
             _navigationService = navigationService;
             _postIts = new List<PostItViewModel>();
+            DisplayPicVisibility = SignUpImage != "" ? Visibility.Collapsed : Visibility.Visible;
         }
 
         public void AddPostIt(PostItViewModel postIt)
