@@ -2,7 +2,9 @@
 using Data_Logger_1._3.ViewModels.Dashboard;
 using Data_Logger_1._3.ViewModels.Dialogs;
 using Data_Logger_1._3.ViewModels.Dialogs.Create;
+using Data_Logger_1._3.ViewModels.Dialogs.Edit;
 using Microsoft.Extensions.DependencyInjection;
+using MVVMEssentials.ViewModels;
 
 namespace Data_Logger_1._3.Services
 {
@@ -41,6 +43,16 @@ namespace Data_Logger_1._3.Services
             );
         }
 
+        public codeEditViewModel CreateCodeEditViewModel(ViewModelBase viewModelBase)
+        {
+            return new codeEditViewModel(
+                _serviceProvider.GetRequiredService<NavigationService>(),
+                _serviceProvider.GetRequiredService<CodingViewModel>(),
+                _serviceProvider.GetRequiredService<DataService>(),
+                viewModelBase
+            );
+        }
+
         public async Task<PostItViewModel> CreatePostItViewModel(LoggerCreateViewModel loggerCreateViewModel, LOG.CATEGORY category)
         {
             var postItVM = new PostItViewModel(
@@ -50,7 +62,7 @@ namespace Data_Logger_1._3.Services
                 category
                 );
 
-            postItVM.LoadSubjectsAsync(category);
+            await postItVM.LoadSubjectsAsync(category);
 
 
             return postItVM;
