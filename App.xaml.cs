@@ -4,6 +4,7 @@ using Data_Logger_1._3.ViewModels.Dashboard;
 using Data_Logger_1._3.ViewModels.Dialogs;
 using Data_Logger_1._3.ViewModels.Dialogs.Create;
 using Data_Logger_1._3.ViewModels.Dialogs.Edit;
+using Data_Logger_1._3.ViewModels.Reporter.Desk;
 using Data_Logger_1._3.ViewModels.ViewerViewModels;
 using Data_Logger_1._3.Views;
 using Data_Logger_1._3.Views.Dialogs;
@@ -18,18 +19,17 @@ using System.IO;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media.Animation;
-using System.Windows.Media.Imaging;
 
 namespace Data_Logger_1._3
 {
     /// <summary>
     /// Interaction logic for App.xaml
     /// </summary>
-    public partial class App : Application
+    public partial class App
     {
 
         private readonly IServiceProvider _serviceProvider;
-        public static IConfiguration Configuration { get; private set; }
+        public static IConfiguration? Configuration { get; private set; }
 
         public App()
         {
@@ -87,7 +87,8 @@ namespace Data_Logger_1._3
                     service.AddTransient<CreateCheckListPage>();
                     service.AddTransient<LoggerEditPage>();
                     service.AddTransient<LoggerViewPage>();
-                    service.AddTransient<ReporterDashboard>();
+
+
                     service.AddTransient<ReporterEditPage>();
 
                     service.AddSingleton((services) => new LoginViewModel(services.GetRequiredService<AuthService>(), services.GetRequiredService<NavigationService>(),
@@ -104,6 +105,37 @@ namespace Data_Logger_1._3
                     service.AddSingleton((services) => new FilmViewModel(services.GetRequiredService<NavigationService>(), services.GetRequiredService<DataService>()));
                     service.AddSingleton((services) => new FlexiViewModel(services.GetRequiredService<NavigationService>(), services.GetRequiredService<DataService>()));
                     service.AddSingleton((services) => new NOTESViewModel(services.GetRequiredService<NavigationService>(), services.GetRequiredService<DataService>()));
+
+                    service.AddSingleton((services) => new QtReportDeskViewModel(services.GetRequiredService<NavigationService>(), services.GetRequiredService<DataService>(),
+                        services.GetRequiredService<PDFService>()));
+                    service.AddSingleton((services) => new ASReportDeskViewModel(services.GetRequiredService<NavigationService>(), services.GetRequiredService<DataService>(),
+                        services.GetRequiredService<PDFService>()));
+                    service.AddSingleton((services) => new CodeReportDeskViewModel(services.GetRequiredService<NavigationService>(), services.GetRequiredService<DataService>(),
+                        services.GetRequiredService<PDFService>()));
+                    service.AddSingleton((services) => new GraphicsReportDeskViewModel(services.GetRequiredService<NavigationService>(), services.GetRequiredService<DataService>(),
+                        services.GetRequiredService<PDFService>()));
+                    service.AddSingleton((services) => new FilmReportDeskViewModel(services.GetRequiredService<NavigationService>(), services.GetRequiredService<DataService>(),
+                        services.GetRequiredService<PDFService>()));
+                    service.AddSingleton((services) => new FlexiReportDeskViewModel(services.GetRequiredService<NavigationService>(), services.GetRequiredService<DataService>(),
+                        services.GetRequiredService<PDFService>()));
+
+                    // register a factory that returns ReporterDashboard given a key
+                    service.AddTransient<Func<string, ReporterDashboard>>(sp => key =>
+                    {
+                        ReportDeskViewModel vm = key switch
+                        {
+                            "Code" => sp.GetRequiredService<CodeReportDeskViewModel>(),
+                            "Android" => sp.GetRequiredService<ASReportDeskViewModel>(),
+                            "Qt" => sp.GetRequiredService<QtReportDeskViewModel>(),
+                            "Graphics" => sp.GetRequiredService<GraphicsReportDeskViewModel>(),
+                            "Film" => sp.GetRequiredService<FilmReportDeskViewModel>(),
+                            "Flexi" => sp.GetRequiredService<FlexiReportDeskViewModel>(),
+                            _ => throw new ArgumentException($"Unknown report type '{key}'")
+                        };
+
+                        return new ReporterDashboard(vm);
+                    });
+
 
                     service.AddTransient<codeCreateViewModel>();
                     service.AddTransient((services) => new AScodeCreateViewModel(services.GetRequiredService<NavigationService>(), services.GetRequiredService<CodingAndroidViewModel>(), 
