@@ -4,7 +4,7 @@ using System.Diagnostics;
 
 namespace Data_Logger_1._3.Commands.LogCacheCommands
 {
-    public class ReportCommand : CommandBase
+    public class ReportCommand : AsyncCommandBase
     {
         private readonly NavigationService _navigationService;
 
@@ -24,18 +24,15 @@ namespace Data_Logger_1._3.Commands.LogCacheCommands
             }
         }
 
-        public override void Execute(object parameter)
+        protected override async Task ExecuteAsync(object parameter)
         {
 			try
 			{
-                //_navigationService.NavigateToReporter();
+                await _navigationService.NavigateToReporter();
 			}
 			catch (Exception ex)
 			{
-                Debug.WriteLine($"Exception found near ReportCommand: {ex.Message}");
-
-                // TODO
-                // _dataService.LogException("Exception found near ReportCommand", ex.Message);
+                //
             }
         }
     }
