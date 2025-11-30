@@ -59,11 +59,11 @@ namespace Data_Logger_1._3.ViewModels.Reporter.Desk
             Applications.Add("Qt Creator");
 
 
-            Search = new SearchCommand(this, _dataService, _navigationService, Context);
-            Export = new ExportCommand();
+            SearchCommand = new SearchCommand(this, _dataService, _navigationService, Context);
+            ExportCommand = new ExportCommand();
             ReturnToDashboard = new DashboardCommand(_navigationService, Context);
 
-            _ = UpdateLogs();
+            _ = UpdateLogsAsync();
 
             AwaitCall = false;
         }
@@ -112,11 +112,11 @@ namespace Data_Logger_1._3.ViewModels.Reporter.Desk
             Applications.Add("Qt Creator");
 
 
-            Search = new SearchCommand(this, _dataService, _navigationService, Context);
-            Export = new ExportCommand();
+            SearchCommand = new SearchCommand(this, _dataService, _navigationService, Context);
+            ExportCommand = new ExportCommand();
             ReturnToDashboard = new DashboardCommand(_navigationService, Context);
 
-            _ = UpdateLogs();
+            _ = UpdateLogsAsync();
 
             AwaitCall = false;
         }
@@ -125,7 +125,7 @@ namespace Data_Logger_1._3.ViewModels.Reporter.Desk
         /// Updates logs in the Qt Report Desk.
         /// </summary>
         /// <param name="project">The Qt project you want logs from.</param>
-        public override async Task UpdateLogs(string project)
+        public override async Task UpdateLogsAsync()
         {
             Logs.Clear();
             ObservableCollection<REPORTViewModel> list = new ObservableCollection<REPORTViewModel>();
@@ -134,7 +134,7 @@ namespace Data_Logger_1._3.ViewModels.Reporter.Desk
             await _dataService.InitialiseProjectsLISTAsync(LOG.CATEGORY.CODING);
             foreach(ProjectClass item in _dataService.SQLITE_PROJECTS)
             {
-                if(item.Name == project)
+                if(item.Name == Project)
                     projectID = item.projectID;
             }
 
@@ -147,17 +147,14 @@ namespace Data_Logger_1._3.ViewModels.Reporter.Desk
             Logs = list;
         }
 
-        public async Task UpdateLogs()
+        public override async Task InitialiseAppsAsync()
         {
-            ObservableCollection<REPORTViewModel> list = new ObservableCollection<REPORTViewModel>();
+            throw new NotImplementedException();
+        }
 
-            foreach (LOG log in await _dataService.RetrieveLogs(CacheContext.Qt))
-            {
-                if(Project == log.Project.Name)
-                    list.Add(new qtREPORTViewModel((CodingLOG)log, this, _navigationService, _dataService, _pdfService));
-            }
-
-            Logs = list;
+        public override async Task InitialiseProjectsAsync()
+        {
+            throw new NotImplementedException();
         }
     }
 }

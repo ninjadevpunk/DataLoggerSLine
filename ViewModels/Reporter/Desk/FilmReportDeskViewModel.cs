@@ -15,9 +15,19 @@ namespace Data_Logger_1._3.ViewModels.Reporter.Desk
         {
         }
 
-        public override async Task UpdateLogs(string project)
+        public override async Task UpdateLogsAsync()
         {
             
+        }
+
+        public override async Task InitialiseAppsAsync()
+        {
+            throw new NotImplementedException();
+        }
+
+        public override async Task InitialiseProjectsAsync()
+        {
+            throw new NotImplementedException();
         }
     }
 }
