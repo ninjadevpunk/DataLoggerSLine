@@ -3,7 +3,6 @@ using Data_Logger_1._3.Commands.ReporterCommands;
 using Data_Logger_1._3.Models;
 using Data_Logger_1._3.Services;
 using Data_Logger_1._3.ViewModels.Reporter.Desk;
-using System.Diagnostics;
 using System.Windows;
 using static Data_Logger_1._3.Services.Cachemaster;
 
@@ -20,7 +19,7 @@ namespace Data_Logger_1._3.ViewModels.Reporter
             var style = TryParsePath("path_Qt_icon");
             IconStyle = style == null ? new Style() : style;
 
-            View = new ViewCommand(reportDeskViewModel._navigationService, SearchResultContext, ViewType.Log);
+            View = new ViewCommand(navigationService, SearchResultContext, ViewType.Log);
             Edit = new EditLogCommand();
             Delete = new DeleteLogCommand();
         }
@@ -42,23 +41,7 @@ namespace Data_Logger_1._3.ViewModels.Reporter
         public CodingLOG GetCodingLog => _QtCodingLOG;
 
 
-        private static Style? TryParsePath(string value)
-        {
-            try
-            {
-                return (Style)Application.Current.FindResource(value);
-            }
-            catch (ResourceReferenceKeyNotFoundException rex)
-            {
-                Debug.WriteLine($"ResourceReferenceKeyNotFoundException found near qt_SearchResultViewModel.TryParseBrush(): {rex.Message}");
-                return null;
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine($"Exception found near qt_SearchResultViewModel.TryParseBrush(): {ex.Message}");
-                return null;
-            }
-        }
+        
 
 
 
