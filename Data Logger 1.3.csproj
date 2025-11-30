@@ -12,9 +12,13 @@
 
   <ItemGroup>
     <Compile Remove="Converters\**" />
+    <Compile Remove="Resources\Converters\**" />
     <EmbeddedResource Remove="Converters\**" />
+    <EmbeddedResource Remove="Resources\Converters\**" />
     <None Remove="Converters\**" />
+    <None Remove="Resources\Converters\**" />
     <Page Remove="Converters\**" />
+    <Page Remove="Resources\Converters\**" />
   </ItemGroup>
 
   <ItemGroup>
