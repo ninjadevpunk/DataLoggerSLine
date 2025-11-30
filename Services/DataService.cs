@@ -421,10 +421,35 @@ namespace Data_Logger_1._3.Services
 
 
 
-
-        public List<CodingLOG> SearchForQtRecords(string searchBarText, int projectID)
+        // Qt
+        public async Task<List<CodingLOG>?> SearchQtLogs(string searchBarText)
         {
-            return _reader.SearchQtLogs(searchBarText, projectID);
+            return await _reader.SearchQtLogs(searchBarText);
+        }
+        public async Task<List<CodingLOG>?> SearchQtLogs(string searchBarText, int projectID)
+        {
+            return await _reader.SearchQtLogs(searchBarText, projectID);
+        }
+
+        public async Task<List<CodingLOG>?> SearchQtLogs(string searchBarText, int projectID, int appID)
+        {
+            return await _reader.SearchQtLogs(searchBarText, projectID, appID);
+        }
+
+
+        // CODING
+        public async Task<List<CodingLOG>?> SearchCodingLogs(string searchBarText)
+        {
+            return await _reader.SearchCodingLogs(searchBarText);
+        }
+        public async Task<List<CodingLOG>?> SearchCodingLogs(string searchBarText, int projectID)
+        {
+            return await _reader.SearchCodingLogs(searchBarText, projectID);
+        }
+
+        public async Task<List<CodingLOG>?> SearchCodingLogs(string searchBarText, int projectID, int appID)
+        {
+            return await _reader.SearchCodingLogs(searchBarText, projectID, appID);
         }
 
 
