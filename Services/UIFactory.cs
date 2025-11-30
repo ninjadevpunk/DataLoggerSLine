@@ -1,5 +1,6 @@
 ﻿using Data_Logger_1._3.ViewModels.Dialogs;
 using Data_Logger_1._3.Views.Dialogs;
+using Data_Logger_1._3.Views.ReportPages;
 using Microsoft.Extensions.DependencyInjection;
 using System.Windows;
 using System.Windows.Controls;
@@ -35,16 +36,10 @@ namespace Data_Logger_1._3.Services
             return _serviceProvider.GetRequiredService<T>();
         }
 
-        public TPage CreatePage<TPage, TViewModel>()
-            where TPage : Page, new()
-            where TViewModel : class
+        public ReporterDashboard CreateReporterPage(string vmKey)
         {
-            var page = _serviceProvider.GetRequiredService<TPage>();
-            var viewModel = _serviceProvider.GetService<TViewModel>();
-
-            page.DataContext = viewModel;
-
-            return page;
+            var factory = _serviceProvider.GetRequiredService<Func<string, ReporterDashboard>>();
+            return factory(vmKey);
         }
 
         public TPage CreatePage<TPage>(PostItViewModel postItViewModel)
