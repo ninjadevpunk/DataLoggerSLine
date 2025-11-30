@@ -25,7 +25,6 @@ namespace Data_Logger_1._3.ViewModels.Reporter.Desk
         {
             _navigationService = navigationService;
             _dataService = dataService;
-
         }
 
         public ReportDeskViewModel(NavigationService navigationService, DataService dataService, PDFService pdfService)
@@ -98,6 +97,21 @@ namespace Data_Logger_1._3.ViewModels.Reporter.Desk
 
 
 
+
+        private bool deskSet = false;
+        public bool DeskSet
+        {
+            get
+            {
+                return deskSet;
+            }
+            set
+            {
+                deskSet = value;
+                OnPropertyChanged(nameof(DeskSet));
+            }
+        }
+
         private string query = string.Empty;
         public string Query
         {
@@ -126,10 +140,6 @@ namespace Data_Logger_1._3.ViewModels.Reporter.Desk
             set
             {
                 project = value;
-
-                if(!AwaitCall)
-                    UpdateLogs(Project);
-
                 OnPropertyChanged(nameof(Project));
             }
         }
@@ -190,9 +200,9 @@ namespace Data_Logger_1._3.ViewModels.Reporter.Desk
 
 
 
-        public ICommand Search { get; set; }
+        public ICommand SearchCommand { get; set; }
 
-        public ICommand Export { get; set; }
+        public ICommand ExportCommand { get; set; }
 
         public ICommand ReturnToDashboard { get; set; }
 
@@ -208,7 +218,9 @@ namespace Data_Logger_1._3.ViewModels.Reporter.Desk
 
 
 
-        public abstract Task UpdateLogs(string project);
+        public abstract Task UpdateLogsAsync();
+        public abstract Task InitialiseAppsAsync();
+        public abstract Task InitialiseProjectsAsync();
 
 
 
