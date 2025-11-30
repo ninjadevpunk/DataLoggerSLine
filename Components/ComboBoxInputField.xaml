@@ -222,7 +222,6 @@
                 
                 <ToggleButton x:Name="toggleButton"
                               Grid.ColumnSpan="2"
-                              HorizontalAlignment="Stretch"
                               BorderBrush="{TemplateBinding BorderBrush}"
                               BorderThickness="{TemplateBinding BorderThickness}"
                               IsChecked="{Binding IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}"
