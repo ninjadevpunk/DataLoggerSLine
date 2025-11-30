@@ -223,6 +223,7 @@
 
     <Style x:Key="text_LABEL01" TargetType="TextBlock">
         <Setter Property="FontFamily" Value="{DynamicResource Red Hat Display}"/>
+        <Setter Property="Foreground" Value="{DynamicResource BLACK}"/>
         <Setter Property="FontSize" Value="13"/>
         <Setter Property="FontWeight" Value="SemiBold"/>
         <Setter Property="VerticalAlignment" Value="Center"/>
@@ -234,7 +235,6 @@
     </Style>
 
     <Style x:Key="text_LABEL03" TargetType="TextBlock" BasedOn="{StaticResource text_LABEL01}">
-        <Setter Property="VerticalAlignment" Value="Center"/>
         <Setter Property="HorizontalAlignment" Value="Stretch"/>
         <Setter Property="MaxWidth" Value="800"/>
         <Setter Property="FontWeight" Value="Regular"/>
@@ -329,11 +329,7 @@
         <Setter Property="TextAlignment" Value="Left" />
     </Style>
 
-    <Style x:Key="text_SUBMENU BOLD" TargetType="TextBlock" BasedOn="{StaticResource text_MENU}">
-        <Setter Property="Foreground" Value="{DynamicResource BLACK}"/>
-        <Setter Property="FontSize" Value="14"/>
-        <Setter Property="FontWeight" Value="Bold"/>
-    </Style>
+    <Style x:Key="text_SUBMENU BOLD" TargetType="TextBlock" BasedOn="{StaticResource text_MENU}" />
 
     <Style x:Key="text_SUBMENU" TargetType="TextBlock" BasedOn="{StaticResource text_SUBMENU BOLD}">
         <Setter Property="FontWeight" Value="SemiBold"/>
