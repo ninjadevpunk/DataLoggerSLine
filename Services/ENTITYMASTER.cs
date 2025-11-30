@@ -245,7 +245,8 @@ namespace Data_Logger_1._3.Services
 
                 new ApplicationClass { appID = 22, accountID = 1, Name = "IntelliJ", Category = LOG.CATEGORY.CODING, IsDefault = true },
                 new ApplicationClass { appID = 23, accountID = 1, Name = "PyCharm", Category = LOG.CATEGORY.CODING, IsDefault = true },
-                new ApplicationClass { appID = 24, accountID = 1, Name = "WebStorm", Category = LOG.CATEGORY.CODING, IsDefault = true }
+                new ApplicationClass { appID = 24, accountID = 1, Name = "WebStorm", Category = LOG.CATEGORY.CODING, IsDefault = true },
+                new ApplicationClass { appID = 25, accountID = 1, Name = "Visual Studio Code", Category = LOG.CATEGORY.CODING, IsDefault = true }
                 );
         }
 
