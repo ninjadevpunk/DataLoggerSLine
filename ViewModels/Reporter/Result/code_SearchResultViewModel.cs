@@ -25,13 +25,14 @@ namespace Data_Logger_1._3.ViewModels.Reporter.Result
             {
                 case "Visual Studio Community 2022":
                     IconStyle = TryParsePath("path_VS_SearchResult");
+                        IconPath = null;
                     break;
                 case "Visual Studio Code":
                     IconStyle = TryParsePath("path_VSC");
+                        IconPath = null;
                     break;
                 case "IntelliJ":
                     {
-                        // IntelliJ 30x30 icon (flat fills)
                         var iconGridIntelliJ = new Grid
                         {
                             Width = 30,
@@ -80,14 +81,13 @@ namespace Data_Logger_1._3.ViewModels.Reporter.Result
                             Fill = Brushes.White
                         });
 
-                        // Assign to IconContainer so your ContentControl shows it
                         IconContainer = iconGridIntelliJ;
+                        IconPath = null;
                         IconStyle = null;
                         break;
                     }
                 case "PyCharm":
                     {
-                        // PyCharm 30x30 icon (Grid with multiple Paths)
                         var iconGridPyCharm = new Grid
                         {
                             Width = 30,
@@ -210,7 +210,6 @@ namespace Data_Logger_1._3.ViewModels.Reporter.Result
                             Fill = Brushes.White
                         });
 
-                        // Assign to IconContainer property so your XAML ContentControl shows it
                         IconContainer = iconGridPyCharm;
                         IconPath = null;
                         IconStyle = null;
@@ -218,7 +217,6 @@ namespace Data_Logger_1._3.ViewModels.Reporter.Result
                         break;
                     }
                 case "WebStorm":
-                    // Create Path dynamically with gradient
                     IconPath = new Path
                     {
                         Width = 20,
@@ -235,7 +233,8 @@ namespace Data_Logger_1._3.ViewModels.Reporter.Result
                             }
                         }
                     };
-                    IconStyle = null; // Use Path instance instead
+                    IconStyle = null;
+
                     break;
 
 
