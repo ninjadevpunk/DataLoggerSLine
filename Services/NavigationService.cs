@@ -1,10 +1,12 @@
-﻿using Data_Logger_1._3.Components.Subcontrols;
+﻿using Data_Logger_1._3.Commands.PostItCommands;
+using Data_Logger_1._3.Components.Subcontrols;
 using Data_Logger_1._3.Components.Subcontrols_View;
 using Data_Logger_1._3.ViewModels;
 using Data_Logger_1._3.ViewModels.Dashboard;
 using Data_Logger_1._3.ViewModels.Dialogs;
 using Data_Logger_1._3.ViewModels.Dialogs.Create;
 using Data_Logger_1._3.ViewModels.LogViewModels;
+using Data_Logger_1._3.ViewModels.Reporter.Desk;
 using Data_Logger_1._3.ViewModels.ViewerViewModels;
 using Data_Logger_1._3.Views;
 using Data_Logger_1._3.Views.Dialogs;
@@ -14,7 +16,6 @@ using MVVMEssentials.ViewModels;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Markup;
-using Data_Logger_1._3.Commands.PostItCommands;
 using static Data_Logger_1._3.Services.Cachemaster;
 
 namespace Data_Logger_1._3.Services
@@ -175,6 +176,14 @@ namespace Data_Logger_1._3.Services
         public void SetDashboardContext()
         {
             NavigationContext = NavContext.DASHBOARD;
+        }
+
+        /// <summary>
+        /// Sets NavigationContext to REPORTER DASHBOARD specifically.
+        /// </summary>
+        public void SetReporterContext()
+        {
+            NavigationContext = NavContext.REPORTER_DASHBOARD;
         }
 
 
@@ -552,6 +561,7 @@ namespace Data_Logger_1._3.Services
                         await NavigateToPage<CodingViewModel>(logCachePage);
                         await _serviceProvider.GetRequiredService<CodingViewModel>().AutoStartAsync();
                         _serviceProvider.GetRequiredService<CodingViewModel>().CreateLogButtonEnabled = true;
+                        _serviceProvider.GetRequiredService<CodingViewModel>().ReportButtonEnabled = true;
 
                         break;
                     }
@@ -567,6 +577,9 @@ namespace Data_Logger_1._3.Services
             await NavigateToPage<LogCachePage, TViewModel>();
 
             SetDashboardContext();
+
+            var mainWindowViewModel = _serviceProvider.GetRequiredService<MainWindowViewModel>();
+            CheckBackNavigationButton(mainWindowViewModel);
         }
 
 
@@ -822,9 +835,6 @@ namespace Data_Logger_1._3.Services
                             break;
                         }
                 }
-
-                //var window = _serviceProvider.GetRequiredService<MainWindowViewModel>();
-                //CheckBackNavigationButton(window);
             }
             catch (Exception ex)
             {
@@ -895,16 +905,78 @@ namespace Data_Logger_1._3.Services
             var uiFactory = _serviceProvider.GetRequiredService<UIFactory>();
 
             postItViewModel.Subject = subject;
-            if(postItViewModel.Subject != "")
+
+            if (postItViewModel.Subject != "")
                 postItViewModel.PlaceholderText = "";
 
             var postItPage = uiFactory.CreatePostItPage(postItViewModel);
 
             await NavigateToPage(postItPage);
 
-            //var window = _serviceProvider.GetRequiredService<MainWindowViewModel>();
-            //CheckBackNavigationButton(window);
+            var window = _serviceProvider.GetRequiredService<MainWindowViewModel>();
+            CheckBackNavigationButton(window);
         }
+
+
+
+
+
+
+
+        #region Reporter
+
+
+
+
+        public async Task NavigateToReporter()
+        {
+            SetReporterContext();
+
+
+            var uiFactory = _serviceProvider.GetRequiredService<UIFactory>();
+
+
+            switch (CacheContext)
+            {
+                default:
+                    {
+                        var reporterDashboard = uiFactory.CreateReporterPage("Code");
+                        var reportDesk = _serviceProvider.GetRequiredService<CodeReportDeskViewModel>();
+
+                        if(!reportDesk.DeskSet)
+                        {
+                            await reportDesk.AutoStartAsync();
+                            reportDesk.DeskSet = true;
+                        }
+
+                        await NavigateToPage(reporterDashboard);
+
+                        break;
+                    }
+            }
+
+        }
+
+
+        #endregion
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
         public async Task NavigateToNotesDashboard()
         {
