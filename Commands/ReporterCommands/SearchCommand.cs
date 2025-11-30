@@ -5,6 +5,8 @@ using Data_Logger_1._3.ViewModels.Reporter.Desk;
 using MVVMEssentials.Commands;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
+using Data_Logger_1._3.Models;
+using Data_Logger_1._3.ViewModels.Reporter.Result;
 using static Data_Logger_1._3.Services.Cachemaster;
 
 namespace Data_Logger_1._3.Commands.ReporterCommands
@@ -13,7 +15,7 @@ namespace Data_Logger_1._3.Commands.ReporterCommands
     /// <summary>
     /// Searches for the query inside the database.
     /// </summary>
-    public class SearchCommand : CommandBase
+    public class SearchCommand : AsyncCommandBase
     {
         private readonly ReportDeskViewModel _reportDesk;
         private readonly DataService _dataService;
@@ -32,31 +34,60 @@ namespace Data_Logger_1._3.Commands.ReporterCommands
         {
         }
 
-        public override void Execute(object parameter)
+        protected override async Task ExecuteAsync(object parameter)
         {
             try
             {
                 ProjectClass projectFilter = null;
+                ApplicationClass appFilter = null;
 
-                _dataService.InitialiseProjectsLISTAsync();
-                foreach(ProjectClass project in _dataService.SQLITE_PROJECTS)
+                await _dataService.InitialiseProjectsLISTAsync();
+                if (_reportDesk.Project != "ANY" && _reportDesk.Application != "ANY")
                 {
-                    if(_reportDesk.Project == project.Name)
+                    foreach (ProjectClass project in _dataService.SQLITE_PROJECTS)
                     {
-                        projectFilter = project;
-                        break;
+                        if (_reportDesk.Project == project.Name && _reportDesk.Application == project.Application.Name)
+                        {
+                            projectFilter = project;
+                            appFilter = project.Application;
+
+                            break;
+                        }
+                    }
+                }
+                else if (_reportDesk.Application != "ANY")
+                {
+                    foreach (ApplicationClass app in _dataService.SQLITE_APPLICATIONS)
+                    {
+                        if (_reportDesk.Application == app.Name)
+                        {
+                            appFilter = app;
+                        }
                     }
                 }
 
-                switch(Context)
+                switch (Context)
                 {
                     case CacheContext.Qt:
                         {
-                            var list = projectFilter is null ? 
-                                throw new ArgumentNullException("Project not found.") : 
-                                _dataService.SearchForQtRecords(_reportDesk.Query, projectFilter.projectID);
+                            List<CodingLOG> list;
+
+                            if (_reportDesk.Project == "ANY" && !string.IsNullOrEmpty(_reportDesk.Query))
+                            {
+                                list = await _dataService.SearchQtLogs(_reportDesk.Query);
+                            }
+                            else
+                            {
+                                list = projectFilter is null || appFilter is null ?
+                                    throw new ArgumentNullException("Project not found.") :
+                                    await _dataService.SearchQtLogs(_reportDesk.Query, projectFilter.projectID, appFilter.appID);
+
+                            }
 
                             var items = new ObservableCollection<SearchResultViewModel>();
+
+                            if (list == null)
+                                return;
 
                             foreach (var record in list)
                             {
@@ -85,11 +116,51 @@ namespace Data_Logger_1._3.Commands.ReporterCommands
                         }
                     default:
                         {
+                            List<CodingLOG>? list = new();
+
+                            if(_reportDesk.Project == "NONE")
+                            {
+                                _reportDesk.SearchBarItems.Clear();
+                                return;
+                            }
+
+                            if (!string.IsNullOrEmpty(_reportDesk.Query))
+                            {
+                                if (_reportDesk.Project == "ANY" && _reportDesk.Application == "ANY")
+                                {
+                                    list = await _dataService.SearchCodingLogs(_reportDesk.Query);
+                                }
+                                else if (_reportDesk.Project == "ANY")
+                                {
+                                    list = await _dataService.SearchCodingLogs(_reportDesk.Query, appFilter.appID);
+                                }
+                                else
+                                {
+                                    list = projectFilter is null || appFilter is null
+                                        ? throw new ArgumentNullException("Project not found.")
+                                        : await _dataService.SearchCodingLogs(_reportDesk.Query,
+                                            projectFilter.projectID, appFilter.appID);
+                                }
+                            }
+
+
+                            var items = new ObservableCollection<SearchResultViewModel>();
+
+                            if (list == null)
+                                return;
+
+                            foreach (var record in list)
+                            {
+                                items.Add(new code_SearchResultViewModel(record, _reportDesk, _navigationService));
+                            }
+
+                            _reportDesk.SearchBarItems = items;
+
                             break;
                         }
 
                 }
-            
+
             }
             catch (ArgumentNullException nullex)
             {
