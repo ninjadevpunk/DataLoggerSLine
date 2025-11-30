@@ -35,7 +35,8 @@ namespace Data_Logger_1._3.Commands
                 var address = _signUpViewModel.CompanyAddress;
                 var logo = _signUpViewModel.CompanyLogo;
 
-                _authService.Account.ProfilePic = _signUpViewModel.SignUpImage;
+                if (_authService != null && _authService.Account != null)
+                    _authService.Account.ProfilePic = _signUpViewModel.SignUpImage;
 
                 // Call the SignUp method in AuthService to handle user registration
                 var isSignedUp = await _authService.SignUp(displayPic, email, password, displayName, surname, IsHired, company, address, logo);

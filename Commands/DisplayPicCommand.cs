@@ -9,7 +9,7 @@ namespace Data_Logger_1._3.Commands
     {
 
         private readonly SignUpViewModel _signUpViewModel;
-        private readonly AuthService _authService;
+        private readonly AuthService? _authService;
 
         public DisplayPicCommand(SignUpViewModel signUpViewModel)
         {
@@ -27,8 +27,8 @@ namespace Data_Logger_1._3.Commands
             try
             {
                 var dialog = new Microsoft.Win32.OpenFileDialog();
-                dialog.DefaultExt = ".png"; // Default file extension
-                dialog.Filter = "Portable Network Graphics (.png)|*.png|JPEG Images (.jpg)|*.jpg;"; // Filter files by extension
+                dialog.DefaultExt = ".png";
+                dialog.Filter = "Portable Network Graphics (.png)|*.png|JPEG Images (.jpg)|*.jpg;";
 
                 // Show open file dialog box
                 bool? result = dialog.ShowDialog();
@@ -36,10 +36,12 @@ namespace Data_Logger_1._3.Commands
                 // Process open file dialog box results
                 if (result == true)
                 {
-                    // Open document
+                    
                     _signUpViewModel.ShowDefault = Visibility.Collapsed;
                     _signUpViewModel.SignUpImage = dialog.FileName;
-                    _authService.Account.ProfilePic = dialog.FileName;
+
+                    if (_authService != null && _authService.Account != null)
+                        _authService.Account.ProfilePic = dialog.FileName;
                 }
 
 
@@ -48,7 +50,9 @@ namespace Data_Logger_1._3.Commands
             {
                 _signUpViewModel.ShowDefault = Visibility.Visible;
                 _signUpViewModel.SignUpImage = "";
-                _authService.Account.ProfilePic = "";
+                if (_authService != null)
+                    if (_authService.Account != null)
+                        _authService.Account.ProfilePic = "";
             }
 
         }
