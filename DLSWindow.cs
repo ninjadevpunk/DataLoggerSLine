@@ -5,6 +5,8 @@ namespace Data_Logger_1._3
 {
     public class DLSWindow : Window
     {
+        protected string AppVersion { get; } = "alpha 1.4";
+
         public DLSWindow()
         {
             Application.Current.MainWindow = this;
@@ -13,9 +15,9 @@ namespace Data_Logger_1._3
 
             #if DEBUG
                 env = "DevMode";
-#else
+            #else
                 env = "AlphaBeta";
-#endif
+            #endif
 
             env = Environment.GetEnvironmentVariable("DOTNET_ENVIRONMENT") ?? env;
 

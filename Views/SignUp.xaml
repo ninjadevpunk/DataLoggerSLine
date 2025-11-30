@@ -403,10 +403,10 @@
 
 
         <!-- VERSION -->
-        <TextBlock Margin="10" Grid.Column="0" Grid.Row="2"
+        <TextBlock x:Name="VersionText" Margin="10" Grid.Column="0" Grid.Row="2"
            HorizontalAlignment="Right"
            VerticalAlignment="Top"
-           Text="alpha 1.4" Style="{DynamicResource text_VERSION}"
+           Style="{DynamicResource text_VERSION}"
            />
 
     </Grid>

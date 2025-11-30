@@ -121,10 +121,10 @@
 
 
         <!-- VERSION -->
-        <TextBlock Margin="20,10,0,10" Grid.Column="3" Grid.Row="2"
+        <TextBlock x:Name="VersionText" Margin="20,10,0,10" Grid.Column="3" Grid.Row="2"
                    HorizontalAlignment="Left"
                    VerticalAlignment="Stretch"
-                   Text="alpha 1.4" Style="{DynamicResource text_VERSION}"
+                   Style="{DynamicResource text_VERSION}"
                    />
 
     </Grid>

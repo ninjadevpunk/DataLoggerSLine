@@ -10,6 +10,7 @@ namespace Data_Logger_1._3.Views
         public Splashscreen()
         {
             InitializeComponent();
+            VersionText.Text = AppVersion;
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
