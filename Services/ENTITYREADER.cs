@@ -2,6 +2,7 @@
 using Data_Logger_1._3.Models.App_Models;
 using Microsoft.EntityFrameworkCore;
 using System.Diagnostics;
+using Data_Logger_1._3.ViewModels.Dialogs;
 using static Data_Logger_1._3.Models.FeedbackMessage;
 using static Data_Logger_1._3.Models.LOG;
 
@@ -37,24 +38,30 @@ namespace Data_Logger_1._3.Services
 
         public async Task<List<LOG>> RetrieveLOGS()
         {
+            var accountID = await GetOnlineAccountIDAsync();
+
             return await _master.Logs
-                .Where(l => l.accountID == _master.User.accountID)
+                .Where(l => l.accountID == accountID)
                 .OrderBy(l => l.Start)
                 .ToListAsync();
         }
 
         public async Task<List<CodingLOG>> RetrieveCodingLogs()
         {
+            var accountID = await GetOnlineAccountIDAsync();
+
             return await _master.CodingLogs
-                .Where(c => c.accountID == _master.User.accountID)
+                .Where(c => c.accountID == accountID && !new[] { 1, 2 }.Contains(c.Application.appID))
                 .OrderBy(c => c.Start)
                 .ToListAsync();
         }
 
         public async Task<List<CodingLOG>> RetrieveQtCodingLogs()
         {
+            var accountID = await GetOnlineAccountIDAsync();
+
             return await _master.CodingLogs
-                .Where(qt => qt.accountID == _master.User.accountID && qt.Application.appID == 1)
+                .Where(qt => qt.accountID == accountID && qt.Application.appID == 1)
                 .OrderBy(qt => qt.Start)
                 .ToListAsync();
         }
@@ -649,10 +656,10 @@ namespace Data_Logger_1._3.Services
         {
             try
             {
-                var id = await GetOnlineAccountIDAsync();
+                var accountID = await GetOnlineAccountIDAsync();
 
                 var codingLogs = _master.Logs
-                    .Where(l => l.accountID == id)
+                    .Where(l => l.accountID == accountID)
                     .Where(l => l.Category == LOG.CATEGORY.CODING)
                     .Where(l => l.appID > 2);
 
@@ -762,7 +769,6 @@ namespace Data_Logger_1._3.Services
                 var description = $"Exception occurred near FlexiNotesLogCount: {ex.Message}";
 
                 await _master.CreateFeedback(1, description, false, true, FeedbackType.Exception);
-                Debug.WriteLine(description);
 
                 return -1;
             }
@@ -781,15 +787,18 @@ namespace Data_Logger_1._3.Services
         {
             try
             {
+                var accountID = await GetOnlineAccountIDAsync();
+
                 return await _master.Applications
-                    .Where(a => a.accountID == 1 || a.accountID == _master.User.accountID).ToListAsync();
+                    .Where(a => new[] { 1, accountID }.Contains(a.accountID))
+                    .Where(a => a.Name != "Unknown")
+                    .ToListAsync();
             }
             catch (Exception ex)
             {
                 var description = $"Exception occurred near ListApplications(category): {ex.Message}";
 
                 await _master.CreateFeedback(1, description, false, true, FeedbackType.Exception);
-                Debug.WriteLine(description);
             }
 
             return new();
@@ -806,20 +815,25 @@ namespace Data_Logger_1._3.Services
         {
             try
             {
+                var accountID = await GetOnlineAccountIDAsync();
+
                 return await _master.Applications
-                    .Where(a => a.accountID == 1 || a.accountID == _master.User.accountID)
-                    .Where(a => a.Category == category).ToListAsync();
+                    .Where(a => new[] { 1, accountID }.Contains(a.accountID))
+                    .Where(a => !new[] { 1, 2 }.Contains(a.appID))
+                    .Where(a => a.Category == category)
+                    .Where(a => a.Name != "Unknown")
+                    .ToListAsync();
             }
             catch (Exception ex)
             {
                 var description = $"Exception occurred near ListApplications(category): {ex.Message}";
 
                 await _master.CreateFeedback(1, description, false, true, FeedbackType.Exception);
-                Debug.WriteLine(description);
             }
 
             return new();
         }
+
 
 
         /// <summary>
@@ -830,8 +844,12 @@ namespace Data_Logger_1._3.Services
         {
             try
             {
+                var accountID = await GetOnlineAccountIDAsync();
+
                 return await _master.Projects
-                    .Where(p => p.accountID == 1 || p.accountID == _master.User.accountID).ToListAsync();
+                    .Where(p => new[] { 1, accountID }.Contains(p.accountID))
+                    .Where(a => a.Name != "Unnamed Project")
+                    .ToListAsync();
             }
             catch (Exception ex)
             {
@@ -854,9 +872,13 @@ namespace Data_Logger_1._3.Services
         {
             try
             {
+                var accountID = await GetOnlineAccountIDAsync();
+
                 return await _master.Projects
-                    .Where(p => p.accountID == 1 || p.accountID == _master.User.accountID)
-                    .Where(a => a.Category == category).ToListAsync();
+                    .Where(p => new[] { 1, accountID }.Contains(p.accountID))
+                    .Where(p => p.Category == category)
+                    .Where(p => p.Name != "Unnamed Project")
+                    .ToListAsync();
             }
             catch (Exception ex)
             {
@@ -870,13 +892,24 @@ namespace Data_Logger_1._3.Services
         }
 
 
+
+        /// <summary>
+        /// Retrieves projects from the database that belong to the currently online user for a specific application.
+        /// Excludes projects with the name "Unnamed Project".
+        /// </summary>
+        /// <param name="app">The application to filter projects by.</param>
+        /// <returns>A List of ProjectClass objects.</returns>
         public async Task<List<ProjectClass>> ListProjects(ApplicationClass app)
         {
             try
             {
+                var accountID = await GetOnlineAccountIDAsync();
+
                 return await _master.Projects
-                    .Where(p => p.accountID == 1 || p.accountID == _master.User.accountID)
-                    .Where(a => a.Application == app).ToListAsync();
+                    .Where(p => new[] { 1, accountID }.Contains(p.accountID))
+                    .Where(p => p.Application == app)
+                    .Where(p => p.Name != "Unnamed Project")
+                    .ToListAsync();
             }
             catch (Exception ex)
             {
@@ -885,6 +918,7 @@ namespace Data_Logger_1._3.Services
 
             return new();
         }
+
 
 
 
@@ -899,9 +933,12 @@ namespace Data_Logger_1._3.Services
         {
             try
             {
+                var accountID = await GetOnlineAccountIDAsync();
+
                 return await _master.Subjects
-                    .Where(s => s.accountID == _master.User.accountID || s.accountID == 1)
+                    .Where(s => new[] { 1, accountID }.Contains(s.accountID))
                     .Where(s => s.Category == category)
+                    .Where(s => s.Subject != "No Subject")
                     .ToListAsync();
             }
             catch (Exception ex)
@@ -924,11 +961,14 @@ namespace Data_Logger_1._3.Services
         {
             try
             {
+                var accountID = await GetOnlineAccountIDAsync();
+
                 return await _master.Subjects
-                    .Where(s => s.accountID == project.accountID || s.accountID == 1)
+                    .Where(s => new[] { 1, accountID }.Contains(s.accountID))
                     .Where(s => s.Category == project.Category)
                     .Where(s => s.appID == project.appID)
                     .Where(s => s.projectID == project.projectID)
+                    .Where(s => s.Subject != "No Subject")
                     .ToListAsync();
             }
             catch (Exception ex)
@@ -951,8 +991,9 @@ namespace Data_Logger_1._3.Services
         {
             try
             {
+                var accountID = await GetOnlineAccountIDAsync();
+
                 return await _master.Outputs
-                    .Where(o => o.accountID == 1 || o.accountID == _master.User.accountID)
                     .Where(o => o.appID == 1)
                     .ToListAsync();
             }
@@ -976,7 +1017,6 @@ namespace Data_Logger_1._3.Services
             try
             {
                 return await _master.Outputs
-                    .Where(o => o.accountID == 1 || o.accountID == 1)
                     .Where(o => o.appID == 2)
                     .ToListAsync();
             }
@@ -1001,9 +1041,8 @@ namespace Data_Logger_1._3.Services
             try
             {
                 return await _master.Outputs
-                    .Where(o => o.accountID == _master.User.accountID || o.accountID == 1)
                     .Where(o => o.Category == category)
-                    .Where(o => o.appID != 1 && o.appID != 2)
+                    .Where(o => !new[] { 1, 2 }.Contains(o.appID))
                     .ToListAsync();
             }
             catch (Exception ex)
@@ -1032,7 +1071,6 @@ namespace Data_Logger_1._3.Services
             try
             {
                 return await _master.Types
-                    .Where(t => t.accountID == 1 || t.accountID == _master.User.accountID)
                     .Where(t => t.appID == 1)
                     .ToListAsync();
             }
@@ -1056,7 +1094,6 @@ namespace Data_Logger_1._3.Services
             try
             {
                 return await _master.Types
-                    .Where(t => t.accountID == 1 || t.accountID == _master.User.accountID)
                     .Where(t => t.appID == 2)
                     .ToListAsync();
             }
@@ -1081,9 +1118,8 @@ namespace Data_Logger_1._3.Services
             try
             {
                 return await _master.Types
-                    .Where(t => t.accountID == _master.User.accountID || t.accountID == 1)
                     .Where(t => t.Category == category)
-                    .Where(t => t.appID != 1 && t.appID != 2)
+                    .Where(t => !new[] { 1, 2 }.Contains(t.appID))
                     .ToListAsync();
             }
             catch (Exception ex)
@@ -1099,10 +1135,209 @@ namespace Data_Logger_1._3.Services
 
 
 
-        internal List<CodingLOG> SearchQtLogs(string searchBarText, int projectID)
+        public async Task<List<CodingLOG>?> SearchQtLogs(string searchBarText)
         {
-            throw new NotImplementedException();
+            return null;
         }
+        public async Task<List<CodingLOG>?> SearchQtLogs(string searchBarText, int projectID)
+        {
+            return null;
+        }
+
+        public async Task<List<CodingLOG>?> SearchQtLogs(string searchBarText, int projectID, int appID)
+        {
+            return null;
+        }
+
+        /// <summary>
+        /// Searches for logs that match the text provided. All fields are checked to see if they contain the text. Use this method if the PROJECT and APP is not specified.
+        /// </summary>
+        /// <param name="searchBarText">The query for the database.</param>
+        /// <returns>Returns a list of logs that match the search bar text.</returns>
+        public async Task<List<CodingLOG>?> SearchCodingLogs(string searchBarText)
+        {
+            try
+            {
+                searchBarText = searchBarText.Trim();
+                var accountID = await GetOnlineAccountIDAsync();
+
+                var logs = await _master.CodingLogs
+                    .Where(l => l.accountID == accountID)
+                    .Include(l => l.Project)
+                    .Include(l => l.Application)
+                    .Include(l => l.Output)
+                    .Include(l => l.Type)
+                    .Include(l => l.PostItList)
+                    .ThenInclude(postIt => postIt.Subject)
+                    .OrderBy(l => l.Start)
+                    .ToListAsync();
+
+                var result = logs.Where(l =>
+                    l.Project.Name.Contains(searchBarText, StringComparison.OrdinalIgnoreCase)
+                    || l.Application.Name.Contains(searchBarText, StringComparison.OrdinalIgnoreCase)
+                    || l.Start.ToLongDateString().Contains(searchBarText, StringComparison.OrdinalIgnoreCase)
+                    || l.End.ToLongDateString().Contains(searchBarText, StringComparison.OrdinalIgnoreCase)
+                    || l.Output.Name.Contains(searchBarText, StringComparison.OrdinalIgnoreCase)
+                    || l.Type.Name.Contains(searchBarText, StringComparison.OrdinalIgnoreCase)
+                    || (l.PostItList != null && l.PostItList.Any(p =>
+                        (!string.IsNullOrEmpty(p.Error) && PostItViewModel.ConvertRtfToPlainText(p.Error).Contains(searchBarText, StringComparison.OrdinalIgnoreCase))
+                        || (!string.IsNullOrEmpty(p.Solution) && PostItViewModel.ConvertRtfToPlainText(p.Solution).Contains(searchBarText, StringComparison.OrdinalIgnoreCase))
+                        || (!string.IsNullOrEmpty(p.Suggestion) && PostItViewModel.ConvertRtfToPlainText(p.Suggestion).Contains(searchBarText, StringComparison.OrdinalIgnoreCase))
+                        || (!string.IsNullOrEmpty(p.Comment) && PostItViewModel.ConvertRtfToPlainText(p.Comment).Contains(searchBarText, StringComparison.OrdinalIgnoreCase))
+                        || (p.Subject != null && !string.IsNullOrEmpty(p.Subject.Subject) && p.Subject.Subject.Contains(searchBarText, StringComparison.OrdinalIgnoreCase))
+                    ))
+                    || (l.Success && searchBarText.Contains("True", StringComparison.OrdinalIgnoreCase))
+                    || (searchBarText.Equals("apps opened", StringComparison.OrdinalIgnoreCase) && l.Success)
+                    || (searchBarText.Equals("apps that launched", StringComparison.OrdinalIgnoreCase) && l.Success)
+                    || (searchBarText.Equals("launch successful", StringComparison.OrdinalIgnoreCase) && l.Success)
+                    || (searchBarText.Equals("launch succesful", StringComparison.OrdinalIgnoreCase) && l.Success)
+                    || (searchBarText.Equals("apps that didnt crash", StringComparison.OrdinalIgnoreCase) && l.Success)
+                    || (searchBarText.Equals("apps that didn't crash", StringComparison.OrdinalIgnoreCase) && l.Success)
+                ).ToList();
+
+                return result;
+            }
+            catch (Exception ex)
+            {
+                var description = $"Exception occurred near SearchCodingLogs(searchBarText): {ex.Message}";
+                await _master.CreateFeedback(1, description, false, true, FeedbackType.Exception);
+            }
+
+            return null;
+        }
+
+
+
+        /// <summary>
+        /// Searches for logs that match the text provided. All fields are checked to see if they contain the text. Use this method if the PROJECT is not specified.
+        /// </summary>
+        /// <param name="searchBarText">The query for the database.</param>
+        /// <param name="appID">The application that logs use.</param>
+        /// <returns>A list of logs that match the search bar text that were created with the provided app filter.</returns>
+        public async Task<List<CodingLOG>?> SearchCodingLogs(string searchBarText, int appID)
+        {
+            try
+            {
+                searchBarText = searchBarText.Trim();
+                var accountID = await GetOnlineAccountIDAsync();
+
+                // Fetch only logs for current user first
+                var logs = await _master.CodingLogs
+                    .Where(l => l.accountID == accountID)
+                    .Include(l => l.Project)
+                    .Include(l => l.Application)
+                    .Include(l => l.Output)
+                    .Include(l => l.Type)
+                    .Include(l => l.PostItList)
+                    .ThenInclude(postIt => postIt.Subject)
+                    .OrderBy(l => l.Start)
+                    .ToListAsync();
+
+                // In-memory filtering for search + IDs
+                var result = logs.Where(l =>
+                    l.Application.appID == appID
+                    && (
+                           l.Project.Name.Contains(searchBarText, StringComparison.OrdinalIgnoreCase)
+                        || l.Application.Name.Contains(searchBarText, StringComparison.OrdinalIgnoreCase)
+                        || l.Start.ToLongDateString().Contains(searchBarText, StringComparison.OrdinalIgnoreCase)
+                        || l.End.ToLongDateString().Contains(searchBarText, StringComparison.OrdinalIgnoreCase)
+                        || l.Output.Name.Contains(searchBarText, StringComparison.OrdinalIgnoreCase)
+                        || l.Type.Name.Contains(searchBarText, StringComparison.OrdinalIgnoreCase)
+                        || (l.PostItList != null && l.PostItList.Any(p =>
+                            (!string.IsNullOrEmpty(p.Error) && PostItViewModel.ConvertRtfToPlainText(p.Error).Contains(searchBarText, StringComparison.OrdinalIgnoreCase))
+                            || (!string.IsNullOrEmpty(p.Solution) && PostItViewModel.ConvertRtfToPlainText(p.Solution).Contains(searchBarText, StringComparison.OrdinalIgnoreCase))
+                            || (!string.IsNullOrEmpty(p.Suggestion) && PostItViewModel.ConvertRtfToPlainText(p.Suggestion).Contains(searchBarText, StringComparison.OrdinalIgnoreCase))
+                            || (!string.IsNullOrEmpty(p.Comment) && PostItViewModel.ConvertRtfToPlainText(p.Comment).Contains(searchBarText, StringComparison.OrdinalIgnoreCase))
+                            || (p.Subject != null && !string.IsNullOrEmpty(p.Subject.Subject) && p.Subject.Subject.Contains(searchBarText, StringComparison.OrdinalIgnoreCase))
+                        ))
+                        || (l.Success && searchBarText.Contains("True", StringComparison.OrdinalIgnoreCase))
+                        || (searchBarText.Equals("apps opened", StringComparison.OrdinalIgnoreCase) && l.Success)
+                        || (searchBarText.Equals("apps that launched", StringComparison.OrdinalIgnoreCase) && l.Success)
+                        || (searchBarText.Equals("launch successful", StringComparison.OrdinalIgnoreCase) && l.Success)
+                        || (searchBarText.Equals("launch succesful", StringComparison.OrdinalIgnoreCase) && l.Success)
+                        || (searchBarText.Equals("apps that didnt crash", StringComparison.OrdinalIgnoreCase) && l.Success)
+                        || (searchBarText.Equals("apps that didn't crash", StringComparison.OrdinalIgnoreCase) && l.Success)
+                       )
+                ).ToList();
+
+                return result;
+            }
+            catch (Exception ex)
+            {
+                var description = $"Exception occurred near SearchCodingLogs(searchBarText,projectID,appID): {ex.Message}";
+                await _master.CreateFeedback(1, description, false, true, FeedbackType.Exception);
+            }
+
+            return null;
+        }
+
+
+
+        /// <summary>
+        /// Searches for logs that match the text provided. All fields are checked to see if they contain the text.
+        /// </summary>
+        /// <param name="searchBarText">The query for the database.</param>
+        /// <param name="projectID">The project that the log was created for.</param>
+        /// <param name="appID">The application that logs use.</param>
+        /// <returns>A list of logs that match the search bar text that were created with the provided app and project filter.</returns>
+        public async Task<List<CodingLOG>?> SearchCodingLogs(string searchBarText, int projectID, int appID)
+        {
+            try
+            {
+                searchBarText = searchBarText.Trim();
+                var accountID = await GetOnlineAccountIDAsync();
+
+                // Fetch only logs for current user first
+                var logs = await _master.CodingLogs
+                    .Where(l => l.accountID == accountID)
+                    .Include(l => l.Project)
+                    .Include(l => l.Application)
+                    .Include(l => l.Output)
+                    .Include(l => l.Type)
+                    .Include(l => l.PostItList)
+                    .ThenInclude(postIt => postIt.Subject)
+                    .OrderBy(l => l.Start)
+                    .ToListAsync();
+
+                // In-memory filtering for search + IDs
+                var result = logs.Where(l =>
+                       l.Project.projectID == projectID
+                    && l.Application.appID == appID
+                    && (
+                           l.Project.Name.Contains(searchBarText, StringComparison.OrdinalIgnoreCase)
+                        || l.Application.Name.Contains(searchBarText, StringComparison.OrdinalIgnoreCase)
+                        || l.Start.ToLongDateString().Contains(searchBarText, StringComparison.OrdinalIgnoreCase)
+                        || l.End.ToLongDateString().Contains(searchBarText, StringComparison.OrdinalIgnoreCase)
+                        || l.Output.Name.Contains(searchBarText, StringComparison.OrdinalIgnoreCase)
+                        || l.Type.Name.Contains(searchBarText, StringComparison.OrdinalIgnoreCase)
+                        || (l.PostItList != null && l.PostItList.Any(p =>
+                            (!string.IsNullOrEmpty(p.Error) && PostItViewModel.ConvertRtfToPlainText(p.Error).Contains(searchBarText, StringComparison.OrdinalIgnoreCase))
+                            || (!string.IsNullOrEmpty(p.Solution) && PostItViewModel.ConvertRtfToPlainText(p.Solution).Contains(searchBarText, StringComparison.OrdinalIgnoreCase))
+                            || (!string.IsNullOrEmpty(p.Suggestion) && PostItViewModel.ConvertRtfToPlainText(p.Suggestion).Contains(searchBarText, StringComparison.OrdinalIgnoreCase))
+                            || (!string.IsNullOrEmpty(p.Comment) && PostItViewModel.ConvertRtfToPlainText(p.Comment).Contains(searchBarText, StringComparison.OrdinalIgnoreCase))
+                            || (p.Subject != null && !string.IsNullOrEmpty(p.Subject.Subject) && p.Subject.Subject.Contains(searchBarText, StringComparison.OrdinalIgnoreCase))
+                        ))
+                        || (l.Success && searchBarText.Contains("True", StringComparison.OrdinalIgnoreCase))
+                        || (searchBarText.Equals("apps opened", StringComparison.OrdinalIgnoreCase) && l.Success)
+                        || (searchBarText.Equals("apps that launched", StringComparison.OrdinalIgnoreCase) && l.Success)
+                        || (searchBarText.Equals("launch successful", StringComparison.OrdinalIgnoreCase) && l.Success)
+                        || (searchBarText.Equals("launch succesful", StringComparison.OrdinalIgnoreCase) && l.Success)
+                        || (searchBarText.Equals("apps that didnt crash", StringComparison.OrdinalIgnoreCase) && l.Success)
+                        || (searchBarText.Equals("apps that didn't crash", StringComparison.OrdinalIgnoreCase) && l.Success)
+                       )
+                ).ToList();
+
+                return result;
+            }
+            catch (Exception ex)
+            {
+                var description = $"Exception occurred near SearchCodingLogs(searchBarText,projectID,appID): {ex.Message}";
+                await _master.CreateFeedback(1, description, false, true, FeedbackType.Exception);
+            }
+
+            return null;
+        }
+
 
 
 
