@@ -1,4 +1,5 @@
-﻿using System.Windows.Controls;
+﻿using Data_Logger_1._3.ViewModels.Reporter.Desk;
+using System.Windows.Controls;
 
 namespace Data_Logger_1._3.Views.ReportPages
 {
@@ -7,9 +8,30 @@ namespace Data_Logger_1._3.Views.ReportPages
     /// </summary>
     public partial class ReporterDashboard : Page
     {
+        private readonly ReportDeskViewModel _reportDeskViewModel;
+
         public ReporterDashboard()
         {
             InitializeComponent();
+        }
+
+        public ReporterDashboard(ReportDeskViewModel reportDeskViewModel)
+        {
+            InitializeComponent();
+
+            DataContext = reportDeskViewModel;
+            _reportDeskViewModel = reportDeskViewModel;
+        }
+
+        private async void on_Application_Changed(object sender, System.Windows.RoutedEventArgs e)
+        {
+            await _reportDeskViewModel.InitialiseProjectsAsync();
+            await _reportDeskViewModel.UpdateLogsAsync();
+        }
+
+        private async void on_Project_Changed(object sender, System.Windows.RoutedEventArgs e)
+        {
+            await _reportDeskViewModel.UpdateLogsAsync();
         }
     }
 }

@@ -1,9 +1,9 @@
 ﻿<Page x:Class="Data_Logger_1._3.Views.ReportPages.ReporterDashboard"
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-      xmlns:local="clr-namespace:Data_Logger_1._3.Views.ReportPages" xmlns:components="clr-namespace:Data_Logger_1._3.Components"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+      xmlns:components="clr-namespace:Data_Logger_1._3.Components"
       mc:Ignorable="d" 
       MinHeight="899"
       d:Width="1100"
@@ -11,7 +11,7 @@
       HorizontalAlignment="Stretch"
       VerticalAlignment="Top"
       d:Background="White"
-      Title="Reporter 1.3">
+      Title="Reporter">
 
     <Grid Margin="0 50">
         <Grid.ColumnDefinitions>
@@ -32,21 +32,26 @@
         </Grid.RowDefinitions>
 
 
-        <components:SearchInputField x:Name="inputText_SEARCH" Grid.Column="0" Grid.Row="0"
+
+
+        <components:SearchBarControl x:Name="inputText_SEARCH" Grid.Column="0"
                                      UserTextBoxStyle="{DynamicResource inputText}"
                                      UserTextBlockStyle="{DynamicResource text_Placeholder}"
                                      PlaceholderText="Search"
                                      DynamicPlaceholderText="Search"
-                                     EnterInternalCommand="{Binding Search}"
                                      UserComboInput="{Binding Query, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
-                                     SearchResults="{Binding SearchBarItems, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"/>
+                                     SearchResults="{Binding SearchBarItems, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                                     EnterInternalCommand="{Binding SearchCommand}"
+
+            />
 
         <components:ComboBoxField x:Name="inputText_PROJECT" Grid.Column="0" Grid.Row="2"
                                        Enabled="True"
                                        UserTextBoxStyle="{DynamicResource inputText}"
                                        UserTextBlockStyle="{DynamicResource text_Placeholder}"
                                        UserSelection="{Binding Project, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
-                                       Items="{Binding Projects, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"/>
+                                       Items="{Binding Projects, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                                       ComboBoxSelectionChanged="on_Project_Changed"/>
 
         <components:ComboBoxField x:Name="inputText_APP" Grid.Column="0" Grid.Row="4"
                                        Enabled="{Binding ApplicationEnabled}"
@@ -54,7 +59,9 @@
                                        UserTextBlockStyle="{DynamicResource text_Placeholder}"
                                        UserSelection="{Binding Application, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
                                        Items="{Binding Applications, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
-                                       ToolTip="{Binding ApplicationToolTip}" />
+                                       ToolTip="{Binding ApplicationToolTip}"
+                                       ComboBoxSelectionChanged="on_Application_Changed"
+                                       />
 
 
 
@@ -96,7 +103,7 @@
                     HorizontalAlignment="Left"
                     Margin="10 0"
                     ToolTip="Export the project as a PDF"
-                    Command="{Binding Export}">
+                    Command="{Binding ExportCommand}">
 
                 <TextBlock Style="{DynamicResource text_button01}"
                    Text="Export"
