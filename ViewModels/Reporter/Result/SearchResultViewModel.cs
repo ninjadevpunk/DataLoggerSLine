@@ -10,6 +10,7 @@ using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Input;
 using static Data_Logger_1._3.Services.Cachemaster;
+using Path = System.Windows.Shapes.Path;
 
 namespace Data_Logger_1._3.ViewModels.Reporter
 {
@@ -40,9 +41,15 @@ namespace Data_Logger_1._3.ViewModels.Reporter
 
         public Style IconStyle { get; set; }
 
+        // For JetBrains (gradient)
+        public Path IconPath { get; set; }
+
+        public UIElement IconContainer { get; set; }
+
         public string Date => _LOG.Start.ToString("d MMMM yyyy");
 
-        public string Project => _LOG.Project.Name;
+        public string Project => _LOG?.Project?.Name ?? "Unknown Project";
+
 
         public string Subject => CreateSubject();
 
@@ -158,6 +165,24 @@ namespace Data_Logger_1._3.ViewModels.Reporter
             }
 
             return "Nothing to Display";
+        }
+
+        protected static Style? TryParsePath(string value)
+        {
+            try
+            {
+                return (Style)Application.Current.FindResource(value);
+            }
+            catch (ResourceReferenceKeyNotFoundException rex)
+            {
+                Debug.WriteLine($"ResourceReferenceKeyNotFoundException found near qt_SearchResultViewModel.TryParseBrush(): {rex.Message}");
+                return null;
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"Exception found near qt_SearchResultViewModel.TryParseBrush(): {ex.Message}");
+                return null;
+            }
         }
 
 
