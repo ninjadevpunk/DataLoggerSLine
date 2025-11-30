@@ -229,8 +229,7 @@ namespace Data_Logger_1._3.ViewModels.Reporter.Desk
             }
             catch (InvalidOperationException invex)
             {
-                Debug.WriteLine(
-                    $"InvalidOperationException near InitialiseProjectsAsync: {invex.Message}");
+                Debug.WriteLine($"InvalidOperationException near InitialiseProjectsAsync: {invex.Message}");
             }
             catch (Exception ex)
             {
