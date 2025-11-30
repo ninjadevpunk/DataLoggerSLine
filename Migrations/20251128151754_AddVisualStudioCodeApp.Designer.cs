@@ -3,6 +3,7 @@ using System;
 using Data_Logger_1._3.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Data_Logger_1._3.Migrations
 {
     [DbContext(typeof(ENTITYMASTER))]
-    partial class ENTITYMASTERModelSnapshot : ModelSnapshot
+    [Migration("20251128151754_AddVisualStudioCodeApp")]
+    partial class AddVisualStudioCodeApp
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "8.0.22");
