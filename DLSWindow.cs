@@ -7,13 +7,15 @@ namespace Data_Logger_1._3
     {
         public DLSWindow()
         {
+            Application.Current.MainWindow = this;
+
             string env;
 
             #if DEBUG
+                env = "DevMode";
+#else
                 env = "AlphaBeta";
-            #else
-                env = "Release";
-            #endif
+#endif
 
             env = Environment.GetEnvironmentVariable("DOTNET_ENVIRONMENT") ?? env;
 
