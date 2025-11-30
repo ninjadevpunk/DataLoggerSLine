@@ -88,7 +88,7 @@
                     VerticalAlignment="Top"
                     HorizontalAlignment="Center"
                     Margin="0 20"
-                    Visibility="Hidden"
+                    IsEnabled="{Binding ReportButtonEnabled}"
                     Command="{Binding ReportLogCommand}">
                 
                 <TextBlock Style="{DynamicResource text_button01}"
