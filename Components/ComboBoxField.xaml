@@ -147,7 +147,6 @@
 
                     <ToggleButton x:Name="toggleButton"
                                   Grid.ColumnSpan="2"
-                                  HorizontalAlignment="Stretch"
                                   BorderBrush="{TemplateBinding BorderBrush}"
                                   BorderThickness="{TemplateBinding BorderThickness}"
                                   IsChecked="{Binding IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}"
@@ -386,7 +385,8 @@
                   ItemContainerStyle="{DynamicResource comboBox_ITEM_template}" 
                   ItemsSource="{Binding Items, ElementName=control_COMBOBOX}"
                   IsEnabled="{Binding Enabled, ElementName=control_COMBOBOX}"
-                  IsEditable="false" />
+                  IsEditable="false"
+                  SelectionChanged="on_ComboBox_Selection_Changed"/>
 
     </Grid>
 

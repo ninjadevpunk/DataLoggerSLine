@@ -117,6 +117,13 @@ namespace Data_Logger_1._3.Components
 
 
 
+        private void on_ComboBox_Selection_Changed(object sender, SelectionChangedEventArgs e)
+        {
+            var ev = new RoutedEventArgs(ComboBoxSelectionChangedEvent, this); 
+            RaiseEvent(ev);
+        }
+
+
 
         #endregion
 
@@ -127,6 +134,22 @@ namespace Data_Logger_1._3.Components
 
         #region Routed Events
 
+
+
+
+
+
+        public event RoutedEventHandler ComboBoxSelectionChanged
+        {
+            add { AddHandler(ComboBoxSelectionChangedEvent, value); }
+            remove { RemoveHandler(ComboBoxSelectionChangedEvent, value); }
+        }
+
+        public static readonly RoutedEvent ComboBoxSelectionChangedEvent = EventManager.RegisterRoutedEvent(
+            "ComboBoxSelectionChanged",
+            RoutingStrategy.Bubble,
+            typeof(RoutedEventHandler),
+            typeof(ComboBoxField));
 
 
 
