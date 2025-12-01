@@ -36,7 +36,24 @@ namespace Data_Logger_1._3.Services
 
         }
 
-        public async Task<List<LOG>> RetrieveLOGS()
+
+
+        /// <summary>
+        /// Retrieves a single log from the database.
+        /// </summary>
+        /// <param name="id">The ID of the log.</param>
+        /// <returns>Returns only 1 log with the specified ID.</returns>
+        public async Task<LOG?> RetrieveLog(int id)
+        {
+            var accountID = await GetOnlineAccountIDAsync();
+
+            return await _master.Logs
+                .Where(l => l.accountID == accountID && l.ID == id)
+                .SingleOrDefaultAsync();
+        }
+
+
+        public async Task<List<LOG>> RetrieveLogs()
         {
             var accountID = await GetOnlineAccountIDAsync();
 
