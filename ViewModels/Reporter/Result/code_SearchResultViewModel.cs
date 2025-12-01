@@ -18,7 +18,9 @@ namespace Data_Logger_1._3.ViewModels.Reporter.Result
         public code_SearchResultViewModel(CodingLOG log, ReportDeskViewModel reportDeskViewModel, NavigationService navigationService)
     : base(log, reportDeskViewModel, navigationService)
         {
-            // Default: use Style
+            ID = log.ID;
+
+            // Default
             IconStyle = TryParsePath("path_DefaultApp");
 
             switch (log.Application.Name)
@@ -244,6 +246,8 @@ namespace Data_Logger_1._3.ViewModels.Reporter.Result
             Edit = new EditLogCommand();
             Delete = new DeleteLogCommand();
         }
+
+        public int ID { get; set; }
 
     }
 }
