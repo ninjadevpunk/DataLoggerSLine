@@ -357,7 +357,7 @@ namespace Data_Logger_1._3.Services
         public async Task<List<LOG>> RetrieveLogs()
         {
 
-            return await _reader.RetrieveLOGS();
+            return await _reader.RetrieveLogs();
         }
 
         public async Task<IEnumerable<LOG>> RetrieveLogs(CacheContext context)
