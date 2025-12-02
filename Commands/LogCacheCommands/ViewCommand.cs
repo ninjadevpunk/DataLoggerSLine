@@ -3,6 +3,7 @@ using Data_Logger_1._3.ViewModels.Dashboard;
 using Data_Logger_1._3.ViewModels.LogViewModels;
 using MVVMEssentials.Commands;
 using System.Diagnostics;
+using Data_Logger_1._3.Models;
 using static Data_Logger_1._3.Services.Cachemaster;
 
 namespace Data_Logger_1._3.Commands.LogCacheCommands
@@ -16,8 +17,8 @@ namespace Data_Logger_1._3.Commands.LogCacheCommands
     public class ViewCommand : CommandBase
     {
         private readonly NavigationService _navigationService;
-        private readonly CacheContext _cacheContext;
-        private ViewType viewType;
+        private readonly CacheContext _cacheContext = CacheContext.Coding;
+        private ViewType viewType = ViewType.Cache;
 
         public ViewCommand(NavigationService navigationService, LogCacheViewModel logCacheViewModel, CacheContext cacheContext)
         {
@@ -38,6 +39,24 @@ namespace Data_Logger_1._3.Commands.LogCacheCommands
         }
 
         public ViewCommand(NavigationService navigationService, CacheContext cacheContext, ViewType viewType)
+        {
+            try
+            {
+                _navigationService = navigationService ?? throw new ArgumentNullException(nameof(navigationService));
+                _cacheContext = cacheContext;
+                this.viewType = viewType;
+            }
+            catch (ArgumentNullException nullx)
+            {
+                Debug.WriteLine($"Argument null exception: {nullx.Message}");
+            }
+            catch (Exception e)
+            {
+                Debug.WriteLine($"Exception: {e.Message}");
+            }
+        }
+
+        public ViewCommand(LOG log, NavigationService navigationService, CacheContext cacheContext, ViewType viewType)
         {
             try
             {

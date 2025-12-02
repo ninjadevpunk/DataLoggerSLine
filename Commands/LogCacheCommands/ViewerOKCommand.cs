@@ -7,7 +7,11 @@ namespace Data_Logger_1._3.Commands.LogCacheCommands
     public class ViewerOKCommand : AsyncCommandBase
     {
         private readonly NavigationService _navigationService;
-        private readonly CacheContext _cacheContext;
+        private readonly CacheContext _cacheContext = CacheContext.Coding;
+        private ViewType _viewType = ViewType.Cache;
+
+
+
 
         public ViewerOKCommand(NavigationService navigationService, CacheContext cacheContext)
         {
@@ -22,9 +26,29 @@ namespace Data_Logger_1._3.Commands.LogCacheCommands
             }
         }
 
+
+        public ViewerOKCommand(NavigationService navigationService, CacheContext cacheContext, ViewType viewType)
+        {
+            try
+            {
+                _navigationService = navigationService ?? throw new ArgumentNullException(nameof(navigationService));
+                _cacheContext = cacheContext;
+                _viewType = viewType;
+            }
+            catch (Exception)
+            {
+                // TODO
+            }
+        }
+
         protected override async Task ExecuteAsync(object parameter)
         {
-            await _navigationService.NavigateToLogCachePage(_cacheContext);
+            if(_viewType == ViewType.Cache)
+                await _navigationService.NavigateToLogCachePage(_cacheContext);
+            else
+            {
+                await _navigationService.NavigateToReporter();
+            }
         }
     }
 }
