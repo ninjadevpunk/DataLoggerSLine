@@ -1,7 +1,5 @@
 ﻿using Data_Logger_1._3.Models;
 using Data_Logger_1._3.ViewModels.Dialogs;
-using Data_Logger_1._3.ViewModels.Reporter;
-using Data_Logger_1._3.ViewModels.Reporter.Logs;
 using SkiaSharp;
 using Svg.Skia;
 using Syncfusion.Pdf;
@@ -950,11 +948,10 @@ namespace Data_Logger_1._3.Services
 
 
 
-        public async Task ExportQtLogToPDF(REPORTViewModel viewModel)
+        public async Task ExportQtLogToPDF(LOG log)
         {
-            var qtReport = (qtREPORTViewModel)viewModel;
 
-            await ExportLogToPDF((CodingLOG)qtReport.GetQtCodingLog, CacheContext.Qt);
+            await ExportLogToPDF((CodingLOG)log, CacheContext.Qt);
         }
 
 
@@ -962,11 +959,9 @@ namespace Data_Logger_1._3.Services
 
 
 
-        public async Task ExportASLogToPDF(REPORTViewModel viewModel)
+        public async Task ExportASLogToPDF(LOG log)
         {
-            var asReport = (asREPORTViewModel)viewModel;
-
-            await ExportLogToPDF((AndroidCodingLOG)asReport.GetAndroidCodingLog, CacheContext.AndroidStudio);
+            await ExportLogToPDF((AndroidCodingLOG)log, CacheContext.AndroidStudio);
         }
 
 
@@ -974,11 +969,9 @@ namespace Data_Logger_1._3.Services
 
 
 
-        public async Task ExportCodingLogToPDF(REPORTViewModel viewModel)
+        public async Task ExportCodingLogToPDF(LOG log)
         {
-            var report = (codeREPORTViewModel)viewModel;
-
-            await ExportLogToPDF((CodingLOG)report.GetCodingLog, CacheContext.Coding);
+            await ExportLogToPDF((CodingLOG)log, CacheContext.Coding);
 
         }
 
@@ -987,11 +980,9 @@ namespace Data_Logger_1._3.Services
 
 
 
-        public async Task ExportGraphicsLogToPDF(REPORTViewModel viewModel)
+        public async Task ExportGraphicsLogToPDF(LOG log)
         {
-            var graphicsReport = (graphicsREPORTViewModel)viewModel;
-
-            await ExportLogToPDF((GraphicsLOG)graphicsReport.GetGraphicsLog, CacheContext.Graphics);
+            await ExportLogToPDF((GraphicsLOG)log, CacheContext.Graphics);
         }
 
 
@@ -999,11 +990,9 @@ namespace Data_Logger_1._3.Services
 
 
 
-        public async Task ExportFilmLogToPDF(REPORTViewModel viewModel)
+        public async Task ExportFilmLogToPDF(LOG log)
         {
-            var filmReport = (filmREPORTViewModel)viewModel;
-
-            await ExportLogToPDF((FilmLOG)filmReport.GetFilmLog, CacheContext.Film);
+            await ExportLogToPDF((FilmLOG)log, CacheContext.Film);
         }
 
 
@@ -1011,11 +1000,9 @@ namespace Data_Logger_1._3.Services
 
 
 
-        public async Task ExportFlexiLogToPDF(REPORTViewModel viewModel)
+        public async Task ExportFlexiLogToPDF(LOG log)
         {
-            var flexibleReport = (flexiREPORTViewModel)viewModel;
-
-            await ExportLogToPDF((FlexiNotesLOG)flexibleReport.GetFlexiLog, CacheContext.Flexi);
+            await ExportLogToPDF((FlexiNotesLOG)log, CacheContext.Flexi);
         }
     }
 }
