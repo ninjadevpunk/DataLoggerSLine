@@ -1,6 +1,7 @@
 ﻿using Data_Logger_1._3.Commands.ReporterCommands;
 using Data_Logger_1._3.Models;
 using Data_Logger_1._3.Services;
+using Data_Logger_1._3.ViewModels.Reporter.Desk;
 using static Data_Logger_1._3.Services.Cachemaster;
 
 namespace Data_Logger_1._3.ViewModels.Reporter.Logs
@@ -11,10 +12,11 @@ namespace Data_Logger_1._3.ViewModels.Reporter.Logs
         public override CacheContext Context => CacheContext.Coding;
 
 
-        public codeREPORTViewModel(CodingLOG codingLOG, NavigationService navigationService, DataService dataService, PDFService pdfService) : base(codingLOG, navigationService, dataService)
+        public codeREPORTViewModel(CodingLOG codingLOG, CodeReportDeskViewModel codeReportDeskViewModel, NavigationService navigationService, DataService dataService, PDFService pdfService) : base(codingLOG, navigationService, dataService)
         {
             _CodingLOG = codingLOG;
-            SingleExport = new SingleExportCommand(Context, pdfService);
+            SingleExport = new SingleExportCommand(codingLOG, Context, pdfService);
+            EditLogCommand = new EditLogCommand(codingLOG, codeReportDeskViewModel, navigationService);
         }
 
 

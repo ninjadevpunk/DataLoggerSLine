@@ -15,7 +15,7 @@ namespace Data_Logger_1._3.ViewModels.Reporter.Logs
         {
             _QtcodingLOG = codingLOG;
             SingleExport = new SingleExportCommand(Context, pdfService);
-            Edit = new EditLogCommand(this, reportDeskViewModel, navigationService);
+            EditLogCommand = new EditLogCommand(codingLOG, reportDeskViewModel, navigationService);
         }
 
 
