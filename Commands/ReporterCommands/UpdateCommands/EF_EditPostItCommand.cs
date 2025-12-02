@@ -4,12 +4,12 @@ using MVVMEssentials.Commands;
 
 namespace Data_Logger_1._3.Commands.ReporterCommands.UpdateCommands
 {
-    public class EditPostItCommand : CommandBase
+    public class EF_EditPostItCommand : AsyncCommandBase
     {
         private readonly NavigationService _navigationService;
         private readonly ReporterUpdaterViewModel _viewModel;
 
-        public EditPostItCommand(NavigationService navigationService, ReporterUpdaterViewModel reporterEditorViewModel)
+        public EF_EditPostItCommand(NavigationService navigationService, ReporterUpdaterViewModel reporterEditorViewModel)
         {
 
 
@@ -28,11 +28,11 @@ namespace Data_Logger_1._3.Commands.ReporterCommands.UpdateCommands
 
 
 
-        public override void Execute(object parameter)
+        protected override async Task ExecuteAsync(object parameter)
         {
             try
             {
-                //_navigationService.NavigateToReporterPostItEditor(_viewModel, parameter as CreateReporterPostItViewModel);
+                await _navigationService.NavigateToPostItCreator(_viewModel, parameter as EF_EditPostItViewModel);
             }
             catch (ArgumentNullException nullex)
             {

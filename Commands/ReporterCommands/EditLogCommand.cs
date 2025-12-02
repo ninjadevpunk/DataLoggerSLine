@@ -3,6 +3,7 @@ using Data_Logger_1._3.ViewModels.Reporter;
 using Data_Logger_1._3.ViewModels.Reporter.Desk;
 using MVVMEssentials.Commands;
 using System.Diagnostics;
+using Data_Logger_1._3.Models;
 
 namespace Data_Logger_1._3.Commands.ReporterCommands
 {
@@ -15,6 +16,7 @@ namespace Data_Logger_1._3.Commands.ReporterCommands
         private readonly REPORTViewModel _viewModel;
         private readonly ReportDeskViewModel _reportDeskViewModel;
         private readonly NavigationService _navigationService;
+        private readonly LOG _log;
 
         public EditLogCommand()
         {
@@ -23,16 +25,22 @@ namespace Data_Logger_1._3.Commands.ReporterCommands
 
         public EditLogCommand(REPORTViewModel reportViewModel, ReportDeskViewModel reportDeskViewModel, NavigationService navigationService)
         {
+            _reportDeskViewModel = reportDeskViewModel;
+            _navigationService = navigationService;
+        }
 
+        public EditLogCommand(LOG log, ReportDeskViewModel reportDeskViewModel, NavigationService navigationService)
+        {
+            _log = log;
+            _reportDeskViewModel = reportDeskViewModel;
+            _navigationService = navigationService;
         }
 
         public override void Execute(object parameter)
         {
             try
             {
-                //_navigationService.NavigateToReporterUpdater(_viewModel, _reportDeskViewModel);
-
-
+                _navigationService.NavigateToUpdater(_log, _reportDeskViewModel);
             }
             catch (Exception e)
             {

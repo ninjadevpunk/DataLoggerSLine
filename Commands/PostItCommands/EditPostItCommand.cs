@@ -10,6 +10,7 @@ namespace Data_Logger_1._3.Commands.PostItCommands
         private readonly NavigationService _navigationService;
         private readonly LoggerCreateViewModel _loggerCreateViewModel;
 
+
         public EditPostItCommand()
         {
 

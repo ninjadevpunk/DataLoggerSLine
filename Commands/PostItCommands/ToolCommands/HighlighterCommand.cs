@@ -38,12 +38,12 @@ namespace Data_Logger_1._3.Commands.PostItCommands.ToolCommands
                     {
                         case PostItField.Error:
                             {
-                                editor.Selection.ApplyPropertyValue(TextElement.BackgroundProperty, Brushes.Orange);
+                                editor.Selection.ApplyPropertyValue(TextElement.BackgroundProperty, Brushes.Salmon);
                                 break;
                             }
                         case PostItField.Solution:
                             {
-                                editor.Selection.ApplyPropertyValue(TextElement.BackgroundProperty, Brushes.Lime);
+                                editor.Selection.ApplyPropertyValue(TextElement.BackgroundProperty, Brushes.LightGreen);
                                 break;
                             }
                         case PostItField.Suggestion:
@@ -53,7 +53,7 @@ namespace Data_Logger_1._3.Commands.PostItCommands.ToolCommands
                             }
                         case PostItField.Comment:
                             {
-                                editor.Selection.ApplyPropertyValue(TextElement.BackgroundProperty, Brushes.Yellow);
+                                editor.Selection.ApplyPropertyValue(TextElement.BackgroundProperty, Brushes.PaleGoldenrod);
                                 break;
                             }
                     }

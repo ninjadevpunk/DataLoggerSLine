@@ -1,19 +1,19 @@
 ﻿using Data_Logger_1._3.ViewModels.Reporter.Updater;
 using MVVMEssentials.Commands;
 using System.Diagnostics;
-using static Data_Logger_1._3.ViewModels.Reporter.Updater.CreateReporterPostItViewModel;
+using static Data_Logger_1._3.ViewModels.Reporter.Updater.EF_PostItViewModel;
 
 namespace Data_Logger_1._3.Commands.ReporterCommands.UpdateCommands.ToolCommands
 {
-    public class EraserCommand : CommandBase
+    public class EF_EraserCommand : CommandBase
     {
-        private readonly CreateReporterPostItViewModel _postItViewModel;
+        private readonly EF_PostItViewModel _postItViewModel;
 
-        public EraserCommand(CreateReporterPostItViewModel createReporterPostItViewModel)
+        public EF_EraserCommand(EF_PostItViewModel efPostItViewModel)
         {
             try
             {
-                _postItViewModel = createReporterPostItViewModel ?? throw new ArgumentNullException(nameof(createReporterPostItViewModel));
+                _postItViewModel = efPostItViewModel ?? throw new ArgumentNullException(nameof(efPostItViewModel));
             }
             catch (ArgumentNullException nullx)
             {

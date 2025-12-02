@@ -4,19 +4,19 @@ using System.Diagnostics;
 using System.Windows;
 using System.Windows.Documents;
 using System.Windows.Media;
-using static Data_Logger_1._3.ViewModels.Reporter.Updater.CreateReporterPostItViewModel;
+using static Data_Logger_1._3.ViewModels.Reporter.Updater.EF_PostItViewModel;
 
 namespace Data_Logger_1._3.Commands.ReporterCommands.UpdateCommands.ToolCommands
 {
-    public class HighlighterCommand : CommandBase
+    public class EF_HighlighterCommand : CommandBase
     {
-        private readonly CreateReporterPostItViewModel _postItViewModel;
+        private readonly EF_PostItViewModel _postItViewModel;
 
-        public HighlighterCommand(CreateReporterPostItViewModel createReporterPostItViewModel)
+        public EF_HighlighterCommand(EF_PostItViewModel efPostItViewModel)
         {
             try
             {
-                _postItViewModel = createReporterPostItViewModel ?? throw new ArgumentNullException(nameof(createReporterPostItViewModel));
+                _postItViewModel = efPostItViewModel ?? throw new ArgumentNullException(nameof(efPostItViewModel));
             }
             catch (ArgumentNullException nullx)
             {
@@ -39,12 +39,12 @@ namespace Data_Logger_1._3.Commands.ReporterCommands.UpdateCommands.ToolCommands
                     {
                         case PostItField.Error:
                             {
-                                editor.Selection.ApplyPropertyValue(TextElement.BackgroundProperty, Brushes.Orange);
+                                editor.Selection.ApplyPropertyValue(TextElement.BackgroundProperty, Brushes.Salmon);
                                 break;
                             }
                         case PostItField.Solution:
                             {
-                                editor.Selection.ApplyPropertyValue(TextElement.BackgroundProperty, Brushes.Lime);
+                                editor.Selection.ApplyPropertyValue(TextElement.BackgroundProperty, Brushes.LightGreen);
                                 break;
                             }
                         case PostItField.Suggestion:
@@ -54,7 +54,7 @@ namespace Data_Logger_1._3.Commands.ReporterCommands.UpdateCommands.ToolCommands
                             }
                         case PostItField.Comment:
                             {
-                                editor.Selection.ApplyPropertyValue(TextElement.BackgroundProperty, Brushes.Yellow);
+                                editor.Selection.ApplyPropertyValue(TextElement.BackgroundProperty, Brushes.PaleGoldenrod);
                                 break;
                             }
                     }

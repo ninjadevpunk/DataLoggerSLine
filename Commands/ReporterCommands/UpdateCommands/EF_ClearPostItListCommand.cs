@@ -1,15 +1,14 @@
-﻿using Data_Logger_1._3.ViewModels.Dialogs.Create;
-using Data_Logger_1._3.ViewModels.Reporter.Updater;
+﻿using Data_Logger_1._3.ViewModels.Reporter.Updater;
 using MVVMEssentials.Commands;
 using System.Diagnostics;
 
 namespace Data_Logger_1._3.Commands.ReporterCommands.UpdateCommands
 {
-    public class ClearPostItListCommand : CommandBase
+    public class EF_ClearPostItListCommand : CommandBase
     {
         private readonly ReporterUpdaterViewModel _viewModel;
 
-        public ClearPostItListCommand(ReporterUpdaterViewModel viewModel)
+        public EF_ClearPostItListCommand(ReporterUpdaterViewModel viewModel)
         {
             try
             {
@@ -17,11 +16,11 @@ namespace Data_Logger_1._3.Commands.ReporterCommands.UpdateCommands
             }
             catch (Exception ex)
             {
-                Debug.WriteLine($"An exception occurred at ClearPostItListCommand(viewModel): {ex.Message}");
+                Debug.WriteLine($"An exception occurred at EF_ClearPostItListCommand(viewModel): {ex.Message}");
             }
         }
 
-        public ClearPostItListCommand()
+        public EF_ClearPostItListCommand()
         {
 
         }
@@ -34,7 +33,7 @@ namespace Data_Logger_1._3.Commands.ReporterCommands.UpdateCommands
             }
             catch (Exception ex)
             {
-                Debug.WriteLine($"An exception occurred at ClearPostItListCommand.Execute(): {ex.Message}");
+                Debug.WriteLine($"An exception occurred at EF_ClearPostItListCommand.Execute(): {ex.Message}");
             }
         }
     }

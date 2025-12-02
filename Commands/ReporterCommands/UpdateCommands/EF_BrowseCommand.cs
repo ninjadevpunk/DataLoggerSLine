@@ -5,12 +5,12 @@ using static Data_Logger_1._3.Services.Cachemaster;
 
 namespace Data_Logger_1._3.Commands.ReporterCommands.UpdateCommands
 {
-    public class BrowseCommand : CommandBase
+    public class EF_BrowseCommand : CommandBase
     {
         private readonly CacheContext _cacheContext;
         private readonly ReporterUpdaterViewModel _reporterUpdaterViewModel;
 
-        public BrowseCommand(CacheContext cacheContext, ReporterUpdaterViewModel reporterUpdaterViewModel)
+        public EF_BrowseCommand(CacheContext cacheContext, ReporterUpdaterViewModel reporterUpdaterViewModel)
         {
             try
             {
@@ -19,7 +19,7 @@ namespace Data_Logger_1._3.Commands.ReporterCommands.UpdateCommands
             }
             catch (Exception ex)
             {
-                Debug.WriteLine($"An exception occurred near BrowseCommand(cacheContext,loggerCreateViewModel) constructor: {ex.Message}");
+                Debug.WriteLine($"An exception occurred near EF_BrowseCommand(cacheContext,loggerCreateViewModel) constructor: {ex.Message}");
             }
         }
 
@@ -79,7 +79,7 @@ namespace Data_Logger_1._3.Commands.ReporterCommands.UpdateCommands
             }
             catch (Exception ex)
             {
-                Debug.WriteLine($"An exception occurred near BrowseCommand.Execute: {ex.Message}");
+                Debug.WriteLine($"An exception occurred near EF_BrowseCommand.Execute: {ex.Message}");
             }
         }
     }

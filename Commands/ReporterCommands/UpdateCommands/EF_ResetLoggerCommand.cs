@@ -1,12 +1,11 @@
 ﻿using Data_Logger_1._3.Models;
-using Data_Logger_1._3.ViewModels.Dialogs.Create;
 using Data_Logger_1._3.ViewModels.Reporter.Updater;
 using MVVMEssentials.Commands;
 using System.Diagnostics;
 
 namespace Data_Logger_1._3.Commands.ReporterCommands.UpdateCommands
 {
-    public class ResetLoggerCommand : CommandBase
+    public class EF_ResetLoggerCommand : CommandBase
     {
         private readonly ReporterUpdaterViewModel _viewModel;
         private const string Qt = "Qt Creator";
@@ -15,7 +14,7 @@ namespace Data_Logger_1._3.Commands.ReporterCommands.UpdateCommands
 
         public LOG.CATEGORY Category { get; set; } = LOG.CATEGORY.CODING;
 
-        public ResetLoggerCommand(ReporterUpdaterViewModel viewModel, LOG.CATEGORY category)
+        public EF_ResetLoggerCommand(ReporterUpdaterViewModel viewModel, LOG.CATEGORY category)
         {
             try
             {
@@ -24,11 +23,11 @@ namespace Data_Logger_1._3.Commands.ReporterCommands.UpdateCommands
             }
             catch (Exception ex)
             {
-                Debug.WriteLine($"An exception occurred near ResetLoggerCommand(viewModel, category) constructor: {ex.Message}");
+                Debug.WriteLine($"An exception occurred near EF_ResetLoggerCommand(viewModel, category) constructor: {ex.Message}");
             }
         }
 
-        public ResetLoggerCommand()
+        public EF_ResetLoggerCommand()
         {
 
         }
@@ -161,7 +160,7 @@ namespace Data_Logger_1._3.Commands.ReporterCommands.UpdateCommands
             }
             catch (Exception e)
             {
-                Debug.WriteLine($"Exception found near ResetLoggerCommand: {e.Message}");
+                Debug.WriteLine($"Exception found near EF_ResetLoggerCommand: {e.Message}");
                 // TODO
             }
         }

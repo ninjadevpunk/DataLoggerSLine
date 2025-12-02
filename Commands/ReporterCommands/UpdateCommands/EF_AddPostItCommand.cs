@@ -4,12 +4,12 @@ using MVVMEssentials.Commands;
 
 namespace Data_Logger_1._3.Commands.ReporterCommands.UpdateCommands
 {
-    public class AddPostItCommand : CommandBase
+    public class EF_AddPostItCommand : CommandBase
     {
         private readonly NavigationService _navigationService;
         private readonly ReporterUpdaterViewModel _reporterUpdaterViewModel;
 
-        public AddPostItCommand(NavigationService navigationService, ReporterUpdaterViewModel reporterUpdaterViewModel)
+        public EF_AddPostItCommand(NavigationService navigationService, ReporterUpdaterViewModel reporterUpdaterViewModel)
         {
 
 

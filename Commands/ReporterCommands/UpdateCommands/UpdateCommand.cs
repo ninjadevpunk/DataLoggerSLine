@@ -1,13 +1,17 @@
-﻿using Data_Logger_1._3.Models.App_Models;
-using Data_Logger_1._3.Models;
+﻿using Data_Logger_1._3.Models;
+using Data_Logger_1._3.Models.App_Models;
 using Data_Logger_1._3.Services;
+using Data_Logger_1._3.ViewModels.Dialogs;
+using Data_Logger_1._3.ViewModels.LogViewModels;
+using Data_Logger_1._3.ViewModels.Reporter;
 using Data_Logger_1._3.ViewModels.Reporter.Desk;
+using Data_Logger_1._3.ViewModels.Reporter.Logs;
 using Data_Logger_1._3.ViewModels.Reporter.Updater;
 using MVVMEssentials.Commands;
+using System.Collections.ObjectModel;
 using System.Diagnostics;
+using System.Threading.Tasks;
 using System.Windows;
-using Data_Logger_1._3.ViewModels.Reporter.Logs;
-using Data_Logger_1._3.ViewModels.Reporter;
 using static Data_Logger_1._3.Services.Cachemaster;
 
 namespace Data_Logger_1._3.Commands.ReporterCommands.UpdateCommands
@@ -17,13 +21,12 @@ namespace Data_Logger_1._3.Commands.ReporterCommands.UpdateCommands
     /// </summary>
     public class UpdateCommand : AsyncCommandBase
     {
-        private readonly CacheContext _cacheContext;
-        private readonly ReporterUpdaterViewModel _editor;
-        private readonly ReportDeskViewModel _desk;
-        private readonly REPORTViewModel _report;
-        private readonly NavigationService _navigationService;
-        private readonly DataService _dataService;
-        private readonly PDFService _pdfService;
+        private readonly CacheContext? _cacheContext = CacheContext.Coding;
+        private readonly ReporterUpdaterViewModel? _editor;
+        private readonly ReportDeskViewModel? _desk;
+        private readonly LOG? _log;
+        private readonly NavigationService? _navigationService;
+        private readonly DataService? _dataService;
 
 
         public UpdateCommand()
@@ -31,7 +34,7 @@ namespace Data_Logger_1._3.Commands.ReporterCommands.UpdateCommands
 
         }
 
-        public UpdateCommand(CacheContext context, ReporterUpdaterViewModel reporterEditorViewModel, ReportDeskViewModel reportDeskViewModel, NavigationService navigationService, DataService dataService, REPORTViewModel reportViewModel, PDFService pdfService)
+        public UpdateCommand(CacheContext context, ReporterUpdaterViewModel reporterEditorViewModel, ReportDeskViewModel reportDeskViewModel, NavigationService navigationService, DataService dataService, LOG log)
         {
             try
             {
@@ -39,8 +42,7 @@ namespace Data_Logger_1._3.Commands.ReporterCommands.UpdateCommands
                 _editor = reporterEditorViewModel ?? throw new ArgumentNullException(nameof(reporterEditorViewModel));
                 _desk = reportDeskViewModel ?? throw new ArgumentNullException(nameof(reportDeskViewModel));
                 _dataService = dataService ?? throw new ArgumentNullException(nameof(dataService));
-                _report = reportViewModel ?? throw new ArgumentNullException(nameof(reportViewModel));
-                _pdfService = pdfService ?? throw new ArgumentNullException(nameof(pdfService));
+                _log = log ?? throw new ArgumentNullException(nameof(log));
             }
             catch (Exception ex)
             {
@@ -53,120 +55,101 @@ namespace Data_Logger_1._3.Commands.ReporterCommands.UpdateCommands
             try
             {
                 var account = _dataService.GetUser();
+                var userID = account.accountID;
 
 
-                List<PostIt> posts = new();
-                ApplicationClass? application = null;
 
-                ProjectClass? project = new(1, account, _editor.ProjectName, application, _editor.Category, false);
-
-
-                OutputClass? output = new(0, account, _editor.Output, application, _editor.Category);
-                TypeClass? type = new(0, account, _editor.Type, application, _editor.Category);
-                SubjectClass subject;
-
-                PostIt postIt;
-
-                bool DateIsWrong = _editor.StartDate.Equals(_editor.EndDate) || _editor.StartDate > _editor.EndDate;
-
-                foreach (var item in _editor.PostIts)
+                if (string.IsNullOrEmpty(_editor.ApplicationName))
                 {
-                    postIt = new();
-
-                    postIt.postItID = 0;
-
-                    subject = new(0, _editor.Category, account, item.Subject, project, application);
-
-                    postIt.Subject = subject;
-
-                    postIt.Error = item.Error;
-                    postIt.ERCaptureTime = item.DateFound;
-                    postIt.Solution = item.Solution;
-                    postIt.SOCaptureTime = item.DateSolved;
-                    postIt.Suggestion = item.Suggestion;
-                    postIt.Comment = item.Comment;
-
-                    posts.Add(postIt);
+                    _log.Application = await _dataService.FindApplication(userID, "Unknown") ?? new(1, "Unknown");
+                }
+                else if (_log.Project.Name != _editor.ProjectName)
+                {
+                    var app = await _dataService.FindApplication(userID, _editor.ApplicationName) ?? new(1, "Unknown");
+                    _log.Application = app;
                 }
 
+                if (string.IsNullOrEmpty(_editor.ProjectName))
+                {
+                    _log.Project = await _dataService.FindProject(userID, "Unnamed Project", 3) ?? new("Unnamed Project");
+                }
+                else if (_log.Project.Name != _editor.ProjectName)
+                {
+                    var project = await _dataService.FindProject(account.accountID, _editor.ProjectName, _log.Application.appID) ?? new("Unnamed Project");
+                    _log.Project = project;
+                }
+
+                if (_log.Output.Name != _editor.Output)
+                {
+                    _log.Output = await _dataService.FindOutput(_editor.Output) ?? new(41, "EXE (*.exe)");
+                }
+
+                if (_log.Type.Name != _editor.Type)
+                {
+                    _log.Type = await _dataService.FindType(_editor.Type) ?? new(39, "Note");
+                }
+
+                var postItCount = _log.PostItList.Count;
+                var postItList = _log.PostItList;
+                var editorPostItCount = _editor.PostIts.Count;
+                var editorPostIts = _editor.PostIts;
+
+                foreach (var editorPostIt in _editor.PostIts)
+                {
+                    var subject = await _dataService.FindSubject(editorPostIt.Subject, _log.Category) ??
+                                  new(
+                                      _log.Category,
+                                      account,
+                                      editorPostIt.Subject,
+                                      _log.Project,
+                                      _log.Application);
 
 
-                int index = -1;
+                    if (editorPostIt.ID == 0)
+                    {
 
+                        var newPostIt = new PostIt
+                        {
+                            Subject = subject,
+                            Error = editorPostIt.Error,
+                            ERCaptureTime = editorPostIt.DateFound,
+                            Solution = editorPostIt.Solution,
+                            SOCaptureTime = editorPostIt.DateSolved,
+                            Suggestion = editorPostIt.Suggestion,
+                            Comment = editorPostIt.Comment,
+                            Log = _log,
+                            accountID = _log.accountID
+                        };
+                        _log.PostItList.Add(newPostIt);
+                    }
+                    else
+                    {
+                        var existingPostIt = _log.PostItList.First(p => p.postItID == editorPostIt.ID);
+                        existingPostIt.Subject = subject;
+                        existingPostIt.Error = editorPostIt.Error;
+                        existingPostIt.ERCaptureTime = editorPostIt.DateFound;
+                        existingPostIt.Solution = editorPostIt.Solution;
+                        existingPostIt.SOCaptureTime = editorPostIt.DateSolved;
+                        existingPostIt.Suggestion = editorPostIt.Suggestion;
+                        existingPostIt.Comment = editorPostIt.Comment;
+                    }
+                }
+
+                // Remove PostIts deleted in the editor
+                var editorIds = _editor.PostIts.Select(p => p.ID).ToList();
+                var toRemove = _log.PostItList.Where(p => !editorIds.Contains(p.postItID)).ToList();
+
+                foreach (var removed in toRemove)
+                    _log.PostItList.Remove(removed);
+
+                var postIts = new ObservableCollection<EF_PostItViewModel>(_editor.PostIts);
+
+                _log.Content = REPORTViewModel.EF_PostItContent(postIts);
 
                 switch (_cacheContext)
                 {
                     case CacheContext.Qt:
                         {
-                            codeUpdateViewModel _QtviewModel = (codeUpdateViewModel)_editor;
-                            QtReportDeskViewModel qtDesk = (QtReportDeskViewModel)_desk;
-                            qtREPORTViewModel oldLOG = (qtREPORTViewModel)_report;
-
-                            var oldApp = oldLOG.GetQtCodingLog.Application;
-                            project.projectID = oldLOG.GetQtCodingLog.Project.projectID;
-                            project.Application = oldApp;
-                            application = oldApp;
-                            application.appID = 1;
-                            application.IsDefault = true;
-                            output.Application = oldApp;
-                            type.Application = oldApp;
-
-                            foreach (var item in posts)
-                            {
-
-                                item.Subject.Application = oldApp;
-                                item.Subject.Project = project;
-                            }
-
-                            index = qtDesk.Logs.IndexOf(oldLOG);
-
-                            if (index != -1)
-                            {
-                                var list = qtDesk.Logs;
-
-                                qtREPORTViewModel newLOG;
-
-                                if (DateIsWrong)
-                                {
-                                    newLOG = new(new CodingLOG(
-                                        oldLOG.GetQtCodingLog.ID,
-                                        account,
-                                        project,
-                                        application,
-                                        DateTime.Now,
-                                        DateTime.Now,
-                                        output,
-                                        type,
-                                        posts,
-                                        _QtviewModel.BugsFound,
-                                        _QtviewModel.ApplicationOpened
-                                        ), qtDesk, _navigationService, _dataService, _pdfService);
-                                }
-                                else
-                                {
-                                    newLOG = new(new CodingLOG(
-                                        oldLOG.GetQtCodingLog.ID,
-                                        account,
-                                        project,
-                                        application,
-                                        _QtviewModel.StartDate,
-                                        _QtviewModel.EndDate,
-                                        output,
-                                        type,
-                                        posts,
-                                        _QtviewModel.BugsFound,
-                                        _QtviewModel.ApplicationOpened
-                                       ), qtDesk, _navigationService, _dataService, _pdfService);
-                                }
-
-
-                                list[index] = newLOG;
-
-                                qtDesk.Logs = list;
-
-                                // Update database with the new log
-                                await _dataService.UpdateQtLog(newLOG.GetQtCodingLog);
-                            }
 
 
 
@@ -174,24 +157,43 @@ namespace Data_Logger_1._3.Commands.ReporterCommands.UpdateCommands
 
                             break;
                         }
+                    default:
+                        {
+                            var _codingLog = (CodingLOG)_log;
+                            var editor = (codeUpdateViewModel)_editor;
+
+                            _codingLog.Bugs = editor.BugsFound;
+                            _codingLog.Success = editor.ApplicationOpened;
+
+                            var desk = (CodeReportDeskViewModel)_desk;
+                            await desk.UpdateLogsAsync();
+
+                            break;
+                        }
                 }
+
+
+
+
+                await _dataService.SaveChangesAsync();
+
 
 
             }
             catch (InvalidCastException castx)
             {
-                Debug.WriteLine($"Invalid cast canceled exception found in UpdateCommand.Execute(): {castx.Message}");
+                await _dataService.CreateFeedback(castx, "ExecuteAsync(parameter)", "InvalidCastException");
             }
             catch (TaskCanceledException taskx)
             {
-                Debug.WriteLine($"Task canceled exception found in UpdateCommand.Execute(): {taskx.Message}");
+                await _dataService.CreateFeedback(taskx, "ExecuteAsync(parameter)", "TaskCanceledException");
             }
             catch (ArgumentNullException nullx)
             {
                 MessageBox.Show("A problem occurred on our end. We apologise for any inconvenience caused. Feedback will automatically be sent to us.",
                     "Error", MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK);
 
-                Debug.WriteLine($"Argument null exception found in UpdateCommand.Execute(): {nullx.Message}");
+                await _dataService.CreateFeedback(nullx, "ExecuteAsync(parameter)", "ArgumentNullException");
 
             }
             catch (IndexOutOfRangeException index)
@@ -199,7 +201,7 @@ namespace Data_Logger_1._3.Commands.ReporterCommands.UpdateCommands
                 MessageBox.Show("A problem occurred on our end. We apologise for any inconvenience caused. Feedback will automatically be sent to us.",
                     "Error", MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK);
 
-                Debug.WriteLine($"Index out of range exception found in UpdateCommand.Execute(): {index.Message}");
+                await _dataService.CreateFeedback(index, "ExecuteAsync(parameter)", "IndexOutOfRangeException");
 
             }
             catch (FormatException formx)
@@ -214,7 +216,7 @@ namespace Data_Logger_1._3.Commands.ReporterCommands.UpdateCommands
                     "Error", MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK);
                 }
 
-                Debug.WriteLine($"Format exception found in UpdateCommand.Execute(): {formx.Message}");
+                await _dataService.CreateFeedback(formx, "ExecuteAsync(parameter)", "FormatException");
 
             }
             catch (Exception ex)
@@ -222,7 +224,7 @@ namespace Data_Logger_1._3.Commands.ReporterCommands.UpdateCommands
                 MessageBox.Show("A problem occurred on our end. We apologise for any inconvenience caused. Feedback will automatically be sent to us.",
                     "Error", MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK);
 
-                Debug.WriteLine($"Exception found in UpdateCommand.Execute(): {ex.Message}");
+                await _dataService.CreateFeedback(ex, "ExecuteAsync(parameter)");
 
             }
         }

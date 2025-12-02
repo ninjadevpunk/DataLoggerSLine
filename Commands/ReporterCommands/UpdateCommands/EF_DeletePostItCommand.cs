@@ -1,16 +1,14 @@
-﻿using Data_Logger_1._3.ViewModels.Dialogs;
-using Data_Logger_1._3.ViewModels.Dialogs.Create;
-using Data_Logger_1._3.ViewModels.Reporter.Updater;
+﻿using Data_Logger_1._3.ViewModels.Reporter.Updater;
 using MVVMEssentials.Commands;
 using System.Windows;
 
 namespace Data_Logger_1._3.Commands.ReporterCommands.UpdateCommands
 {
-    public class DeletePostItCommand : CommandBase
+    public class EF_DeletePostItCommand : CommandBase
     {
         private readonly ReporterUpdaterViewModel _viewModel;
 
-        public DeletePostItCommand(ReporterUpdaterViewModel viewModel)
+        public EF_DeletePostItCommand(ReporterUpdaterViewModel viewModel)
         {
             try
             {
@@ -26,7 +24,7 @@ namespace Data_Logger_1._3.Commands.ReporterCommands.UpdateCommands
         {
             try
             {
-                var item = parameter as CreateReporterPostItViewModel;
+                var item = parameter as EF_EditPostItViewModel;
 
                 _viewModel.PostIts.Remove(item);
             }
