@@ -3,6 +3,8 @@ using Data_Logger_1._3.ViewModels.Dashboard;
 using Data_Logger_1._3.ViewModels.Dialogs;
 using Data_Logger_1._3.ViewModels.Dialogs.Create;
 using Data_Logger_1._3.ViewModels.Dialogs.Edit;
+using Data_Logger_1._3.ViewModels.Reporter.Desk;
+using Data_Logger_1._3.ViewModels.Reporter.Updater;
 using Microsoft.Extensions.DependencyInjection;
 using MVVMEssentials.ViewModels;
 
@@ -51,6 +53,15 @@ namespace Data_Logger_1._3.Services
                 _serviceProvider.GetRequiredService<DataService>(),
                 viewModelBase
             );
+        }
+
+        public codeUpdateViewModel CreateCodeUpdateViewModel(CodeReportDeskViewModel codeReportDeskViewModel, LOG log)
+        {
+            return new codeUpdateViewModel(_serviceProvider.GetRequiredService<NavigationService>(),
+                _serviceProvider.GetRequiredService<DataService>(),
+                codeReportDeskViewModel,
+                log
+                );
         }
 
         public async Task<PostItViewModel> CreatePostItViewModel(LoggerCreateViewModel loggerCreateViewModel, LOG.CATEGORY category)
