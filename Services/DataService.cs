@@ -267,7 +267,7 @@ namespace Data_Logger_1._3.Services
 
                 foreach (SubjectClass subject in collection)
                 {
-                    if (subject is not null && subject.Subject != "No Subject")
+                    if (subject is not null)
                         SQLITE_SUBJECTS.Add(subject);
                 }
             }
@@ -277,6 +277,9 @@ namespace Data_Logger_1._3.Services
             }
 
         }
+
+
+        public async Task SaveChangesAsync() => await _reader.SaveChangesAsync();
 
 
         /// <summary>
@@ -303,13 +306,29 @@ namespace Data_Logger_1._3.Services
         public async Task<List<TypeClass>> ListTypes(CATEGORY category) => await _reader.ListTypes(category);
 
 
+        public async Task<ApplicationClass?> FindApplication(int? ID, string name) =>
+            await _reader.FindApplication(ID, name);
+
         public async Task<ApplicationClass?> FindApplicationByID(int appID) => await _reader.FindApplicationByID(appID);
 
-        public async Task<ProjectClass> FindProjectByID(int projectID) => await _reader.FindProjectByID(projectID);
 
-        public async Task<OutputClass> FindOutputByID(int outputID) => await _reader.FindOutputByID(outputID);
+        public async Task<ProjectClass?> FindProject(int? userID, string projectName, int appID) =>
+            await _reader.FindProject(userID, projectName, appID);
 
-        public async Task<TypeClass> FindTypeByID(int typeID) => await _reader.FindTypeByID(typeID);
+        public async Task<ProjectClass?> FindProjectByID(int projectID) => await _reader.FindProjectByID(projectID);
+
+
+        public async Task<OutputClass?> FindOutput(string name) => await _reader.FindOutput(name);
+
+        public async Task<OutputClass?> FindOutputByID(int outputID) => await _reader.FindOutputByID(outputID);
+
+
+        public async Task<TypeClass?> FindType(string name) => await _reader.FindType(name);
+        public async Task<TypeClass?> FindTypeByID(int typeID) => await _reader.FindTypeByID(typeID);
+
+
+        public async Task<SubjectClass?> FindSubject(string subject, LOG.CATEGORY category) => await _reader.FindSubject(subject, category);
+        public async Task<int> FindSubjectID(SubjectClass subject) => await _reader.FindSubjectID(subject);
 
 
 
