@@ -52,8 +52,7 @@ namespace Data_Logger_1._3.ViewModels.LogViewModels
             TimeRemaining = 1200;
             StartCountdown();
 
-            // TODO 
-            // ViewCommand = ...
+            
             Setup(dataService);
 
             _cacheMaster = dataService.GetCachemaster();
@@ -70,8 +69,7 @@ namespace Data_Logger_1._3.ViewModels.LogViewModels
             TimeRemaining = 600;
             StartCountdown();
 
-            // TODO 
-            // ViewCommand = ...
+
             Setup(dataService);
 
             _cacheMaster = dataService.GetCachemaster();
