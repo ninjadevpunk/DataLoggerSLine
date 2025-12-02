@@ -1,5 +1,5 @@
-﻿using Data_Logger_1._3.Services;
-using Data_Logger_1._3.ViewModels.Reporter;
+﻿using Data_Logger_1._3.Models;
+using Data_Logger_1._3.Services;
 using MVVMEssentials.Commands;
 using System.Diagnostics;
 using static Data_Logger_1._3.Services.Cachemaster;
@@ -13,6 +13,7 @@ namespace Data_Logger_1._3.Commands.ReporterCommands
     public class SingleExportCommand : AsyncCommandBase
     {
         private readonly PDFService _pdfService;
+        private readonly LOG? _log = null;
 
         public CacheContext Context { get; set; }
 
@@ -34,37 +35,51 @@ namespace Data_Logger_1._3.Commands.ReporterCommands
             }
         }
 
+        public SingleExportCommand(LOG log, CacheContext context, PDFService pdfService)
+        {
+            try
+            {
+                _pdfService = pdfService ?? throw new ArgumentNullException(nameof(pdfService));
+                Context = context;
+                _log = log;
+            }
+            catch (Exception ex)
+            {
+
+            }
+        }
+
 
         protected override async Task ExecuteAsync(object parameter)
         {
             try
             {
-                if (parameter is REPORTViewModel report)
+                if (_log != null)
                 {
-                    switch (report.Context)
+                    switch (Context)
                     {
                         case CacheContext.Qt:
-                            await _pdfService.ExportQtLogToPDF(report);
+                            await _pdfService.ExportQtLogToPDF(_log);
 
                             break;
                         case CacheContext.AndroidStudio:
-                            await _pdfService.ExportASLogToPDF(report);
+                            await _pdfService.ExportASLogToPDF(_log);
 
                             break;
                         case CacheContext.Coding:
-                            await _pdfService.ExportCodingLogToPDF(report);
+                            await _pdfService.ExportCodingLogToPDF(_log);
 
                             break;
                         case CacheContext.Graphics:
-                            await _pdfService.ExportGraphicsLogToPDF(report);
+                            await _pdfService.ExportGraphicsLogToPDF(_log);
 
                             break;
                         case CacheContext.Film:
-                            await _pdfService.ExportFilmLogToPDF(report);
+                            await _pdfService.ExportFilmLogToPDF(_log);
 
                             break;
                         case CacheContext.Flexi:
-                            await _pdfService.ExportFlexiLogToPDF(report);
+                            await _pdfService.ExportFlexiLogToPDF(_log);
 
                             break;
                         default:
