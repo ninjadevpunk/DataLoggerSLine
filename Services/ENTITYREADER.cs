@@ -21,6 +21,8 @@ namespace Data_Logger_1._3.Services
             _master = entityMaster;
         }
 
+        public async Task SaveChangesAsync() => await _master.SaveChangesAsync();
+
 
         /// <summary>
         /// Retrieve a profile pic from on an account with the matching email address.

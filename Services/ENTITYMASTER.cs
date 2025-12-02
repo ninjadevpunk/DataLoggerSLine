@@ -45,6 +45,13 @@ namespace Data_Logger_1._3.Services
         }
 
 
+
+        public virtual async Task SaveChangesAsync()
+        {
+            await base.SaveChangesAsync();
+        }
+
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
