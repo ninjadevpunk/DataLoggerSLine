@@ -5,6 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
+using Data_Logger_1._3.ViewModels.Reporter.Updater;
 
 namespace Data_Logger_1._3.Services
 {
@@ -54,6 +55,12 @@ namespace Data_Logger_1._3.Services
         public PostItPage CreatePostItPage(PostItViewModel postItViewModel)
         {
             var page = new PostItPage(postItViewModel);
+            return page;
+        }
+
+        public PostItPage Create_EF_PostItPage(EF_EditPostItViewModel editPostItViewModel)
+        {
+            var page = new PostItPage(editPostItViewModel);
             return page;
         }
 
