@@ -51,18 +51,35 @@ namespace Data_Logger_1._3
                     service.AddTransient<ViewModelFactory>(services => new ViewModelFactory(services));
 
 
+                    var env = context.HostingEnvironment.EnvironmentName;
+                    //string key;
 
+                    //if (env == "DevMode")
+                    //{
+                    //    key = Environment.GetEnvironmentVariable("SQLITE_KEY");
+                    //}
+                    //else
+                    //{
+                    //    key = context.Configuration["Database:EncryptionKey"];
+                    //}
+
+                    //var connectionString = new SqliteConnectionStringBuilder
+                    //{
+                    //    DataSource = context.Configuration.GetConnectionString("DefaultConnection"),
+                    //    Mode = SqliteOpenMode.ReadWriteCreate,
+                    //    Password = key
+                    //}.ToString();
 
                     service.AddDbContext<ENTITYMASTER>(options =>
                     {
                         options.UseSqlite(context.Configuration.GetConnectionString("DefaultConnection"))
                         .LogTo(Console.WriteLine, LogLevel.Information);
 
-                        var env = context.HostingEnvironment.EnvironmentName;
 
                         if (env == "DevMode")
                             options.EnableSensitiveDataLogging();
                     });
+
                     service.AddSingleton<Cachemaster>();
                     service.AddScoped((services) => new ENTITYREADER(services.GetRequiredService<ENTITYMASTER>()));
                     service.AddScoped((services) => new ENTITYWRITER(services.GetRequiredService<ENTITYREADER>(), services.GetRequiredService<ENTITYMASTER>()));
@@ -119,7 +136,7 @@ namespace Data_Logger_1._3
                     service.AddSingleton((services) => new FlexiReportDeskViewModel(services.GetRequiredService<NavigationService>(), services.GetRequiredService<DataService>(),
                         services.GetRequiredService<PDFService>()));
 
-                    // register a factory that returns ReporterDashboard given a key
+                    // Register a factory that returns ReporterDashboard given a key
                     service.AddTransient<Func<string, ReporterDashboard>>(sp => key =>
                     {
                         ReportDeskViewModel vm = key switch
@@ -138,7 +155,7 @@ namespace Data_Logger_1._3
 
 
                     service.AddTransient<codeCreateViewModel>();
-                    service.AddTransient((services) => new AScodeCreateViewModel(services.GetRequiredService<NavigationService>(), services.GetRequiredService<CodingAndroidViewModel>(), 
+                    service.AddTransient((services) => new AScodeCreateViewModel(services.GetRequiredService<NavigationService>(), services.GetRequiredService<CodingAndroidViewModel>(),
                         services.GetRequiredService<DataService>()));
                     service.AddTransient((services) => new graphicCreateViewModel(services.GetRequiredService<NavigationService>(), services.GetRequiredService<GraphicsViewModel>(),
                         services.GetRequiredService<DataService>()));
@@ -149,6 +166,9 @@ namespace Data_Logger_1._3
 
                     service.AddTransient<codeEditViewModel>();
                     service.AddTransient((services) => new codeViewerViewModel(services.GetRequiredService<NavigationService>()));
+
+                    // REPORTER
+
 
                     service.AddTransient<PostItViewModel>();
                     service.AddTransient((services) => new CreateNoteViewModel(services.GetRequiredService<NavigationService>(), services.GetRequiredService<DataService>(),
@@ -200,7 +220,7 @@ namespace Data_Logger_1._3
 
             await AnimateProgressBar(splash.progressBar_splashscreen, 66, splash.text_progress);
 
-            using(var scope = _serviceProvider.CreateScope())
+            using (var scope = _serviceProvider.CreateScope())
             {
                 await AnimateProgressBar(splash.progressBar_splashscreen, 75, splash.text_progress);
                 var master = scope.ServiceProvider.GetRequiredService<ENTITYMASTER>();
@@ -290,7 +310,7 @@ namespace Data_Logger_1._3
             base.OnExit(e);
         }
 
-        
+
     }
 
 }
