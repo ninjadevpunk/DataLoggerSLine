@@ -14,7 +14,7 @@
         <Setter Property="Margin" Value="0"/>
         <Setter Property="Foreground" Value="{DynamicResource BLACK}"/>
         <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Disabled"/>
-        <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Auto"/>
+        <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Hidden"/>
         <Setter Property="ScrollViewer.CanContentScroll" Value="true"/>
         <Setter Property="ScrollViewer.PanningMode" Value="Both"/>
         <Setter Property="Stylus.IsFlicksEnabled" Value="False"/>
@@ -232,7 +232,7 @@
                             Padding="4 0"
                             SnapsToDevicePixels="true"
                             CornerRadius="5" >
-                        <ScrollViewer Focusable="false" Padding="{TemplateBinding Padding}">
+                        <ScrollViewer Focusable="false" Padding="{TemplateBinding Padding}" VerticalScrollBarVisibility="Hidden">
                             <!-- Grid makes the items in ListView behave. -->
                             <Grid>
                                 <ItemsPresenter SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"
@@ -375,11 +375,11 @@
                     <!-- Context Menu -->
                     <ControlTemplate.Resources>
                         <ContextMenu x:Key="ItemContextMenu">
-                            <MenuItem Header="Edit" Command="{Binding Edit}"
+                            <MenuItem Header="Edit" Command="{Binding EditLogCommand}"
                                       CommandParameter="{Binding}" />
-                            <MenuItem Header="View" Command="{Binding View}"
+                            <MenuItem Header="View" Command="{Binding ViewLogCommand}"
                                       CommandParameter="{Binding}" />
-                            <MenuItem Header="Delete" Command="{Binding Delete}"
+                            <MenuItem Header="Delete" Command="{Binding DeleteLogCommand}"
                                       CommandParameter="{Binding}" />
                         </ContextMenu>
                     </ControlTemplate.Resources>
@@ -659,8 +659,6 @@
         <Setter Property="BorderThickness" Value="0"/>
         <Setter Property="Margin" Value="0 0 5 7"/>
         <Setter Property="FocusVisualStyle" Value="{StaticResource FocusVisual}"/>
-        <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Disabled"/>
-        <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Auto"/>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type ListViewItem}">
@@ -829,12 +827,12 @@
         <Setter Property="Background" Value="Transparent"/>
         <Setter Property="BorderBrush" Value="{DynamicResource STROKE}"/>
         <Setter Property="Height" Value="auto"/>
-        <Setter Property="MinHeight" Value="465"/>
+        <Setter Property="MaxHeight" Value="465"/>
         <Setter Property="Margin" Value="5"/>
         <Setter Property="BorderThickness" Value="0.6"/>
         <Setter Property="Foreground" Value="{DynamicResource BLACK}"/>
         <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Disabled"/>
-        <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Auto"/>
+        <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Hidden"/>
         <Setter Property="ScrollViewer.CanContentScroll" Value="true"/>
         <Setter Property="ScrollViewer.PanningMode" Value="Both"/>
         <Setter Property="Stylus.IsFlicksEnabled" Value="False"/>
@@ -893,8 +891,6 @@
         <Setter Property="BorderThickness" Value="0"/>
         <Setter Property="Margin" Value="0 0 5 7"/>
         <Setter Property="FocusVisualStyle" Value="{StaticResource FocusVisual}"/>
-        <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Disabled"/>
-        <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Auto"/>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type ListViewItem}">
@@ -1042,7 +1038,7 @@
         <Setter Property="BorderThickness" Value="0"/>
         <Setter Property="Foreground" Value="{DynamicResource BLACK}"/>
         <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Disabled"/>
-        <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Auto"/>
+        <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Hidden"/>
         <Setter Property="ScrollViewer.CanContentScroll" Value="true"/>
         <Setter Property="ScrollViewer.PanningMode" Value="Both"/>
         <Setter Property="Stylus.IsFlicksEnabled" Value="False"/>
