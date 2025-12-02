@@ -472,24 +472,24 @@ namespace Data_Logger_1._3.ViewModels.Dialogs.Create
         public ICommand CurrentEndDateCommand { get; set; }
 
 
-
+        // For log saving (from the logger). Saves as .log file
         public ICommand SaveCommand { get; set; }
 
+        // Save log to log cache for 20 mins before database store
         public ICommand? AnnotateCommand { get; set; }
 
+        // Edit log through log cache
         public ICommand EditCommand { get; set; }
 
-        public ICommand OKCommand { get; set; }
 
-
-
+        // Clears the PostIt list
         public ICommand ClearPostItListCommand { get; set; }
-
+        // Clears all fields in the logger
         public ICommand ClearLoggerCommand { get; set; }
-
+        // Adds a PostIt to the PostIt list
         public ICommand AddPostItCommand { get; set; }
 
-
+        // For gfx, film and flexi logs only
         public ICommand BrowseCommand { get; set; }
 
 
