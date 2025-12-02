@@ -84,97 +84,6 @@ namespace Data_Logger_1._3.Services
 
 
 
-        /// <summary>
-        /// Adds an ApplicationClass provided as an argument to the database.
-        /// </summary>
-        /// <param name="app">The app that will be added to the database.</param>
-        protected async Task AddApplicationAsync(ApplicationClass app)
-        {
-            try
-            {
-                await _master.Applications.AddAsync(app);
-                await _master.SaveChangesAsync();
-
-            }
-            catch (OperationCanceledException opex)
-            {
-                await _master.HandleExceptionAsync(opex, "AddApplicationAsync(app)", "OperationCanceledException");
-            }
-            catch (Exception ex)
-            {
-                await _master.HandleExceptionAsync(ex, "AddApplicationAsync(app)");
-            }
-        }
-
-
-        /// <summary>
-        /// Adds a ProjectClass.
-        /// </summary>
-        /// <param name="project">The new project to be added</param>
-        private async Task AddProjectAsync(ProjectClass project)
-        {
-            try
-            {
-
-                var exists = await _master.Projects.AnyAsync(item =>
-                    item.Name == project.Name &&
-                    item.Application.appID == project.Application.appID &&
-                    item.Category == project.Category &&
-                    item.User.accountID == project.User.accountID
-                );
-
-                if (exists)
-                    return;
-
-                if (project.Application.appID != 3)
-                {
-                    await _master.Projects.AddAsync(project);
-                    await _master.SaveChangesAsync();
-                }
-            }
-            catch (OperationCanceledException opex)
-            {
-                await _master.HandleExceptionAsync(opex, "AddProjectAsync(project)", "OperationCanceledException");
-            }
-            catch (Exception ex)
-            {
-                await _master.HandleExceptionAsync(ex, "AddProjectAsync(project)");
-            }
-        }
-
-
-        /// <summary>
-        /// Adds a subject to the database if it doesn't exist already.
-        /// </summary>
-        /// <param name="subject">The subject object that will be added.</param>
-        public async Task AddSubjectAsync(SubjectClass subject)
-        {
-            try
-            {
-                var exists = await _master.Subjects.AnyAsync(s =>
-                    s.Subject == subject.Subject &&
-                    s.Application.appID == subject.Application.appID &&
-                    s.Category == subject.Category &&
-                    s.Project.projectID == subject.Project.projectID &&
-                    s.User.accountID == subject.User.accountID
-                );
-
-                if (exists)
-                    return;
-
-                await _master.Subjects.AddAsync(subject);
-                await _master.SaveChangesAsync();
-            }
-            catch (DbUpdateException dbex)
-            {
-                await _master.HandleExceptionAsync(dbex, "AddSubjectAsync(subject)", "DbUpdateException");
-            }
-            catch (Exception ex)
-            {
-                await _master.HandleExceptionAsync(ex, "AddSubjectAsync(subject)");
-            }
-        }
-
 
 
 
@@ -235,6 +144,7 @@ namespace Data_Logger_1._3.Services
             var onlineUser = await _reader.FindAccountByID((int)await _reader.GetOnlineAccountIDAsync());
             var userID = onlineUser.accountID;
 
+            log.Author = onlineUser;
             var app = log.Application;
             app.User = onlineUser;
 
@@ -258,6 +168,15 @@ namespace Data_Logger_1._3.Services
                 }
 
             }
+            else if (project.Name.Contains("Unnamed Project", StringComparison.OrdinalIgnoreCase))
+            {
+                var existingProject = await _reader.FindProject(userID, project.Name, app.appID);
+
+                if (existingProject != null)
+                {
+                    project = existingProject;
+                }
+            }
 
             log.Application = app;
             project.Application = app;
@@ -280,10 +199,18 @@ namespace Data_Logger_1._3.Services
 
                 if (postIt.Subject != null)
                 {
-                    postIt.Author = onlineUser;
                     postIt.Subject.User = onlineUser;
                     postIt.Subject.Application = log.Application;
                     postIt.Subject.Project = log.Project;
+
+                    var existingSubject = await _reader.FindSubject(postIt.Subject.Subject, log.Category);
+
+                    if (existingSubject != null)
+                    {
+                        postIt.Subject = existingSubject;
+                    }
+
+                    postIt.Author = onlineUser;
                 }
             }
         }
