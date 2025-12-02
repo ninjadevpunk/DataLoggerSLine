@@ -108,17 +108,17 @@
                             </Grid.RowDefinitions>
 
                             <Button x:Name="button_REPORT_VIEW" Style="{DynamicResource ACTIONSearchItem}"
-                            Command="{Binding View}" CommandParameter="{Binding}">
+                            Command="{Binding ViewLogCommand}" CommandParameter="{Binding}">
                                 <TextBlock Style="{DynamicResource text_button03}" Text="View" />
                             </Button>
 
                             <Button Grid.Row="2" x:Name="button_REPORT_EDIT" Style="{DynamicResource ACTIONSearchItem}"
-                            Command="{Binding Edit}" CommandParameter="{Binding}">
+                            Command="{Binding EditLogCommand}" CommandParameter="{Binding}">
                                 <TextBlock Style="{DynamicResource text_button03}" Text="Edit" />
                             </Button>
 
                             <Button Grid.Row="4" x:Name="button_REPORT_DELETE" Style="{DynamicResource ACTIONSearchItem}"
-                            Command="{Binding Delete}" CommandParameter="{Binding}">
+                            Command="{Binding DeleteLogCommand}" CommandParameter="{Binding}">
                                 <TextBlock Style="{DynamicResource text_button03}" Text="Delete" />
                             </Button>
                         </Grid>
