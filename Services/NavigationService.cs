@@ -1,12 +1,15 @@
 ﻿using Data_Logger_1._3.Commands.PostItCommands;
+using Data_Logger_1._3.Commands.ReporterCommands.UpdateCommands;
 using Data_Logger_1._3.Components.Subcontrols;
 using Data_Logger_1._3.Components.Subcontrols_View;
+using Data_Logger_1._3.Models;
 using Data_Logger_1._3.ViewModels;
 using Data_Logger_1._3.ViewModels.Dashboard;
 using Data_Logger_1._3.ViewModels.Dialogs;
 using Data_Logger_1._3.ViewModels.Dialogs.Create;
 using Data_Logger_1._3.ViewModels.LogViewModels;
 using Data_Logger_1._3.ViewModels.Reporter.Desk;
+using Data_Logger_1._3.ViewModels.Reporter.Updater;
 using Data_Logger_1._3.ViewModels.ViewerViewModels;
 using Data_Logger_1._3.Views;
 using Data_Logger_1._3.Views.Dialogs;
@@ -118,7 +121,6 @@ namespace Data_Logger_1._3.Services
 
                         if (result == MessageBoxResult.No)
                             return;
-
                     }
                 }
 
@@ -129,6 +131,14 @@ namespace Data_Logger_1._3.Services
             {
                 NavContext.POSTIT => NavContext.LOGGER,
                 NavContext.LOGGER => NavContext.DASHBOARD,
+                _ => NavigationContext
+            };
+
+            NavigationContext = NavigationContext switch
+            {
+                NavContext.EDITOR_POSTIT => NavContext.EDITOR,
+                NavContext.EDITOR => NavContext.REPORTER_DASHBOARD,
+                NavContext.REPORTER_DASHBOARD => NavContext.DASHBOARD,
                 _ => NavigationContext
             };
 
@@ -144,8 +154,11 @@ namespace Data_Logger_1._3.Services
                 window.BackEnabled = _mainwindowFrame.CanGoBack;
             }
 
-            if (NavigationContext == NavContext.DASHBOARD || NavigationContext == NavContext.NOTES)
+            if (NavigationContext == NavContext.DASHBOARD || NavigationContext == NavContext.NOTES ||
+                NavigationContext == NavContext.REPORTER_DASHBOARD)
                 window.BackEnabled = false;
+
+            //CheckForwardNavigationButton(window);
         }
 
         /// <summary>
@@ -154,7 +167,25 @@ namespace Data_Logger_1._3.Services
         public void GoForward()
         {
             if (_mainwindowFrame != null && _mainwindowFrame.CanGoForward)
-                _mainwindowFrame.GoForward();
+            {
+                if (NavigationContext == NavContext.LOGGER)
+                {
+                    _mainwindowFrame.GoForward();
+                }
+            }
+        }
+
+        public void CheckForwardNavigationButton(MainWindowViewModel window)
+        {
+
+            if (window != null && _mainwindowFrame != null)
+            {
+                window.ForwardEnabled = _mainwindowFrame.CanGoForward;
+            }
+
+            if (NavigationContext == NavContext.DASHBOARD || NavigationContext == NavContext.NOTES ||
+                NavigationContext == NavContext.REPORTER_DASHBOARD)
+                window.ForwardEnabled = false;
         }
 
 
@@ -731,11 +762,14 @@ namespace Data_Logger_1._3.Services
 
                             codingEditor.ProjectName = log.Project.Name;
                             codingEditor.ApplicationName = log.Application.Name;
+
+                            codingEditor.StartDate = log.Start;
                             codingEditor.StartHours = log.Start.Hour;
                             codingEditor.StartMinutes = log.Start.Minute;
                             codingEditor.StartSeconds = log.Start.Second;
                             codingEditor.StartMilliseconds = log.Start.Millisecond;
 
+                            codingEditor.EndDate = log.End;
                             codingEditor.EndHours = log.End.Hour;
                             codingEditor.EndMinutes = log.End.Minute;
                             codingEditor.EndSeconds = log.End.Second;
@@ -748,10 +782,15 @@ namespace Data_Logger_1._3.Services
 
                             foreach (var postIt in log.PostItList)
                             {
-                                codingEditor.PostIts.Add(new EditPostItViewModel(this, dataService, codingEditor, log.Project,
-                                    new(this, dataService, codingEditor, postIt.Subject.Project,
+                                var project = postIt.Subject.Project;
+
+                                var editPostIt = new EditPostItViewModel(this, dataService, codingEditor, log.Project,
+                                    new(this, dataService, codingEditor, project,
                                         postIt.Subject.Subject, postIt.Error, postIt.ERCaptureTime, postIt.Solution,
-                                        postIt.SOCaptureTime, postIt.Suggestion, postIt.Comment)));
+                                        postIt.SOCaptureTime, postIt.Suggestion, postIt.Comment));
+                                await editPostIt.AutoStartAsync(project);
+
+                                codingEditor.PostIts.Add(editPostIt);
                             }
 
                             codingEditor.BugsFound = log.Bugs;
@@ -764,8 +803,8 @@ namespace Data_Logger_1._3.Services
                         }
                 }
 
-                //var window = _serviceProvider.GetRequiredService<MainWindowViewModel>();
-                //CheckBackNavigationButton(window);
+                var window = _serviceProvider.GetRequiredService<MainWindowViewModel>();
+                CheckBackNavigationButton(window);
             }
             catch (Exception ex)
             {
@@ -783,7 +822,6 @@ namespace Data_Logger_1._3.Services
                 NavigationContext = NavContext.EDITOR;
 
                 var uiFactory = _serviceProvider.GetRequiredService<UIFactory>();
-                var viewModelFactory = _serviceProvider.GetRequiredService<ViewModelFactory>();
                 var loggerViewPage = uiFactory.CreatePage<LoggerViewPage>();
                 const string displayPic = "/Assets/login/user.png";
                 var userProfilePic = _serviceProvider.GetRequiredService<AuthService>().Account.ProfilePic;
@@ -817,8 +855,6 @@ namespace Data_Logger_1._3.Services
                             codeViewerViewModel.Output = log.Output.Name;
                             codeViewerViewModel.Type = log.Type.Name;
 
-                            var dataService = _serviceProvider.GetRequiredService<DataService>();
-
                             foreach (var postIt in log.PostItList)
                             {
                                 codeViewerViewModel.AddPostIt(new PostItViewModel(this,
@@ -841,6 +877,164 @@ namespace Data_Logger_1._3.Services
                 await master.HandleExceptionAsync(ex, "NavigateToLoggerEditor()");
             }
         }
+
+        public async Task NavigateToLogViewer(LOG log)
+        {
+            using var scope = _serviceProvider.CreateScope();
+            var master = scope.ServiceProvider.GetRequiredService<ENTITYMASTER>();
+
+            try
+            {
+                NavigationContext = NavContext.EDITOR;
+
+                var uiFactory = _serviceProvider.GetRequiredService<UIFactory>();
+                var loggerViewPage = uiFactory.CreatePage<LoggerViewPage>();
+                const string displayPic = "/Assets/login/user.png";
+                var userProfilePic = _serviceProvider.GetRequiredService<AuthService>().Account.ProfilePic;
+
+                SetLoggerFrame(loggerViewPage.frame_VARIATIONS);
+
+                if (CacheContext == CacheContext.AndroidStudio)
+                    SetAndroidStudioFrame(loggerViewPage.frame_ANDROIDSTUDIO);
+                else
+                    SetAndroidStudioFrame(null);
+
+                switch (CacheContext)
+                {
+                    default:
+                        {
+                            var codingLOG = (CodingLOG)log;
+
+                            var codeViewerViewModel = _serviceProvider.GetRequiredService<codeViewerViewModel>();
+
+                            codeViewerViewModel.SignUpImage = userProfilePic;
+
+                            if (codeViewerViewModel.SignUpImage == displayPic)
+                                codeViewerViewModel.SignUpImage = string.Empty;
+
+
+                            codeViewerViewModel.ProjectName = codingLOG.Project.Name;
+                            codeViewerViewModel.ApplicationName = codingLOG.Application.Name;
+                            codeViewerViewModel.Date = codingLOG.Start.ToString("d MMMM yyyy HH:ss");
+
+                            codeViewerViewModel.Output = codingLOG.Output.Name;
+                            codeViewerViewModel.Type = codingLOG.Type.Name;
+
+                            foreach (var postIt in codingLOG.PostItList)
+                            {
+                                codeViewerViewModel.AddPostIt(new PostItViewModel(this,
+                                        postIt.Subject.Project, postIt.Subject.Subject, postIt.Error,
+                                        postIt.Solution, postIt.Suggestion, postIt.Comment));
+                            }
+
+                            codeViewerViewModel.BugsFound = codingLOG.Bugs == 1 ? $"{codingLOG.Bugs.ToString()} Bug Found" : $"{codingLOG.Bugs.ToString()} Bugs Found";
+                            codeViewerViewModel.ApplicationOpened = codingLOG.Success ? "Launch Successful" : "Unsuccessful Launch";
+
+
+                            await NavigateToPage(loggerViewPage, codeViewerViewModel, new coding_UserControl_View());
+
+                            break;
+                        }
+                }
+            }
+            catch (Exception ex)
+            {
+                await master.HandleExceptionAsync(ex, "NavigateToLoggerEditor()");
+            }
+        }
+
+        public async Task NavigateToUpdater(LOG log, ReportDeskViewModel reportDeskViewModel)
+        {
+            using var scope = _serviceProvider.CreateScope();
+            var master = scope.ServiceProvider.GetRequiredService<ENTITYMASTER>();
+
+            try
+            {
+                NavigationContext = NavContext.EDITOR;
+
+                var uiFactory = _serviceProvider.GetRequiredService<UIFactory>();
+                var viewModelFactory = _serviceProvider.GetRequiredService<ViewModelFactory>();
+                var loggerEditPage = uiFactory.CreatePage<LoggerEditPage>();
+                const string displayPic = "/Assets/login/user.png";
+                var userProfilePic = _serviceProvider.GetRequiredService<AuthService>().Account.ProfilePic;
+
+                SetLoggerFrame(loggerEditPage.frame_VARIATIONS);
+
+                if (CacheContext == CacheContext.AndroidStudio)
+                    SetAndroidStudioFrame(loggerEditPage.frame_ANDROIDSTUDIO);
+                else
+                    SetAndroidStudioFrame(null);
+
+                switch (CacheContext)
+                {
+                    default:
+                        {
+
+                            var codingUpdater = viewModelFactory.CreateCodeUpdateViewModel(
+                                (CodeReportDeskViewModel)reportDeskViewModel,
+                                log);
+
+                            await codingUpdater.AutoStartAsync();
+                            codingUpdater.SignUpImage = userProfilePic;
+
+                            if (codingUpdater.SignUpImage == displayPic)
+                                codingUpdater.SignUpImage = string.Empty;
+
+
+                            codingUpdater.ProjectName = log.Project.Name;
+                            codingUpdater.ApplicationName = log.Application.Name;
+
+                            codingUpdater.StartDate = log.Start;
+                            codingUpdater.StartHours = log.Start.Hour;
+                            codingUpdater.StartMinutes = log.Start.Minute;
+                            codingUpdater.StartSeconds = log.Start.Second;
+                            codingUpdater.StartMilliseconds = log.Start.Millisecond;
+
+                            codingUpdater.EndDate = log.End;
+                            codingUpdater.EndHours = log.End.Hour;
+                            codingUpdater.EndMinutes = log.End.Minute;
+                            codingUpdater.EndSeconds = log.End.Second;
+                            codingUpdater.EndMilliseconds = log.End.Millisecond;
+
+                            codingUpdater.Output = log.Output.Name;
+                            codingUpdater.Type = log.Type.Name;
+
+                            var dataService = _serviceProvider.GetRequiredService<DataService>();
+
+                            foreach (var postIt in log.PostItList)
+                            {
+                                var project = log.Project;
+                                var editPostIt = new EF_EditPostItViewModel(postIt.postItID, this, dataService, codingUpdater,
+                                    project,
+                                    new(postIt.postItID, this, dataService, codingUpdater, project,
+                                        postIt.Subject.Subject, postIt.Error, postIt.ERCaptureTime, postIt.Solution,
+                                        postIt.SOCaptureTime, postIt.Suggestion, postIt.Comment));
+                                await editPostIt.AutoStartAsync(project);
+
+                                codingUpdater.PostIts.Add(editPostIt);
+                            }
+
+                            var codingLog = (CodingLOG)log;
+                            codingUpdater.BugsFound = codingLog.Bugs;
+                            codingUpdater.ApplicationOpened = codingLog.Success;
+
+
+                            await NavigateToPage(loggerEditPage, codingUpdater, new coding_UserControl());
+
+                            break;
+                        }
+                }
+
+                var window = _serviceProvider.GetRequiredService<MainWindowViewModel>();
+                CheckBackNavigationButton(window);
+
+            }
+            catch (Exception ex)
+            {
+
+            }
+        }
+
 
         private string FormatLogTime(int seconds)
         {
@@ -885,33 +1079,73 @@ namespace Data_Logger_1._3.Services
             CheckBackNavigationButton(window);
         }
 
-        public async Task NavigateToPostItCreator(LoggerCreateViewModel logger, PostItViewModel postItViewModel)
+        public async Task NavigateToPostItCreator(ViewModelBase createViewModel, ViewModelBase stickNotesViewModel)
         {
-            var subject = postItViewModel.Subject;
-            await postItViewModel.LoadSubjectsAsync(logger.Category);
-
-            if (NavigationContext == NavContext.EDITOR)
+            if (createViewModel is LoggerCreateViewModel)
             {
-                NavigationContext = NavContext.EDITOR_POSTIT;
+                var logger = createViewModel as LoggerCreateViewModel;
+                var postItViewModel = stickNotesViewModel as PostItViewModel;
+
+
+                var subject = postItViewModel.Subject;
+                await postItViewModel.LoadSubjectsAsync(logger.Category);
+
+                if (NavigationContext == NavContext.EDITOR)
+                {
+                    NavigationContext = NavContext.EDITOR_POSTIT;
+                }
+                else
+                {
+                    NavigationContext = NavContext.POSTIT;
+
+                    var context = PostCommand.PostItContext.POSTIT;
+                    postItViewModel.PostCommand = new PostCommand(PostCommand.ActionType.Edit, context, this, logger, postItViewModel);
+                }
+
+                var uiFactory = _serviceProvider.GetRequiredService<UIFactory>();
+
+                postItViewModel.Subject = subject;
+
+                if (postItViewModel.Subject != "")
+                    postItViewModel.PlaceholderText = "";
+
+                var postItPage = uiFactory.CreatePostItPage(postItViewModel);
+
+                await NavigateToPage(postItPage);
+
             }
             else
             {
-                NavigationContext = NavContext.POSTIT;
+                var updater = createViewModel as ReporterUpdaterViewModel;
+                var efPostItViewModel = stickNotesViewModel as EF_EditPostItViewModel;
 
-                var context = PostCommand.PostItContext.POSTIT;
-                postItViewModel.PostCommand = new PostCommand(PostCommand.ActionType.Edit, context, this, logger, postItViewModel);
+                var subject = efPostItViewModel.Subject;
+                await efPostItViewModel.LoadSubjectsAsync(updater.Category);
+
+                if (NavigationContext == NavContext.EDITOR)
+                {
+                    NavigationContext = NavContext.EDITOR_POSTIT;
+                }
+                else
+                {
+                    NavigationContext = NavContext.POSTIT;
+
+                    var context = PostCommand.PostItContext.POSTIT;
+                    efPostItViewModel.PostCommand = new EF_PostCommand(EF_PostCommand.ActionType.Edit, context, this, updater, efPostItViewModel);
+                }
+
+                var uiFactory = _serviceProvider.GetRequiredService<UIFactory>();
+
+                efPostItViewModel.Subject = subject;
+
+                if (efPostItViewModel.Subject != "")
+                    efPostItViewModel.PlaceholderText = "";
+
+                var postItPage = uiFactory.Create_EF_PostItPage(efPostItViewModel);
+
+                await NavigateToPage(postItPage);
             }
 
-            var uiFactory = _serviceProvider.GetRequiredService<UIFactory>();
-
-            postItViewModel.Subject = subject;
-
-            if (postItViewModel.Subject != "")
-                postItViewModel.PlaceholderText = "";
-
-            var postItPage = uiFactory.CreatePostItPage(postItViewModel);
-
-            await NavigateToPage(postItPage);
 
             var window = _serviceProvider.GetRequiredService<MainWindowViewModel>();
             CheckBackNavigationButton(window);
@@ -943,7 +1177,7 @@ namespace Data_Logger_1._3.Services
                         var reporterDashboard = uiFactory.CreateReporterPage("Code");
                         var reportDesk = _serviceProvider.GetRequiredService<CodeReportDeskViewModel>();
 
-                        if(!reportDesk.DeskSet)
+                        if (!reportDesk.DeskSet)
                         {
                             await reportDesk.AutoStartAsync();
                             reportDesk.DeskSet = true;
