@@ -15,15 +15,15 @@ namespace Data_Logger_1._3.ViewModels.Reporter.Result
     {
         public override CacheContext SearchResultContext => CacheContext.Coding;
 
-        public code_SearchResultViewModel(CodingLOG log, ReportDeskViewModel reportDeskViewModel, NavigationService navigationService)
-    : base(log, reportDeskViewModel, navigationService)
+        public code_SearchResultViewModel(CodingLOG codingLOG, CodeReportDeskViewModel reportDeskViewModel, NavigationService navigationService)
+    : base(codingLOG, reportDeskViewModel, navigationService)
         {
-            ID = log.ID;
+            ID = codingLOG.ID;
 
             // Default
             IconStyle = TryParsePath("path_DefaultApp");
 
-            switch (log.Application.Name)
+            switch (codingLOG.Application.Name)
             {
                 case "Visual Studio Community 2022":
                     IconStyle = TryParsePath("path_VS_SearchResult");
@@ -242,9 +242,9 @@ namespace Data_Logger_1._3.ViewModels.Reporter.Result
 
             }
 
-            View = new ViewCommand(navigationService, SearchResultContext, ViewType.Log);
-            Edit = new EditLogCommand();
-            Delete = new DeleteLogCommand();
+            ViewLogCommand = new ViewCommand(navigationService, SearchResultContext, ViewType.Log);
+            EditLogCommand = new EditLogCommand(codingLOG, reportDeskViewModel, navigationService);
+            DeleteLogCommand = new DeleteLogCommand();
         }
 
         public int ID { get; set; }
