@@ -65,12 +65,24 @@ namespace Data_Logger_1._3.Services
                 .ToListAsync();
         }
 
+        /// <summary>
+        /// Retrieves Coding logs.
+        /// </summary>
+        /// <returns>Returns a list of CodingLOG objects.</returns>
         public async Task<List<CodingLOG>> RetrieveCodingLogs()
         {
             var accountID = await GetOnlineAccountIDAsync();
 
             return await _master.CodingLogs
                 .Where(c => c.accountID == accountID && !new[] { 1, 2 }.Contains(c.Application.appID))
+                .Include(l => l.Project)
+                .Include(l => l.Application)
+                .Include(l => l.Output)
+                .Include(l => l.Type)
+                .Include(l => l.PostItList)
+                .ThenInclude(p => p.Subject)
+                .Include(l => l.PostItList)
+                .ThenInclude(p => p.Author)
                 .OrderBy(c => c.Start)
                 .ToListAsync();
         }
@@ -310,7 +322,7 @@ namespace Data_Logger_1._3.Services
             return null;
         }
 
-        public async Task<OutputClass> FindOutputByID(int outputID)
+        public async Task<OutputClass?> FindOutputByID(int outputID)
         {
             try
             {
@@ -343,7 +355,7 @@ namespace Data_Logger_1._3.Services
             return null;
         }
 
-        public async Task<TypeClass> FindTypeByID(int typeID)
+        public async Task<TypeClass?> FindTypeByID(int typeID)
         {
             try
             {
@@ -500,6 +512,7 @@ namespace Data_Logger_1._3.Services
 
             try
             {
+                var onlineUserID = await GetOnlineAccountIDAsync();
 
                 // Retrieve APPLICATION ID
                 int appID = await FindAppID(project.Application);
@@ -511,7 +524,7 @@ namespace Data_Logger_1._3.Services
                         .Where(p => p.Name == project.Name
                         && p.Category == project.Category
                         && p.Application.appID == project.Application.appID
-                        && (p.User.accountID == 1 || p.User.accountID == project.User.accountID))
+                        && (p.User.accountID == 1 || p.User.accountID == onlineUserID))
                         .Select(p => p.projectID)
                         .FirstOrDefaultAsync();
 
@@ -532,6 +545,28 @@ namespace Data_Logger_1._3.Services
             return 1;
         }
 
+
+
+        public async Task<SubjectClass?> FindSubject(string name, LOG.CATEGORY category)
+        {
+            try
+            {
+                var onlineUserID = await GetOnlineAccountIDAsync();
+
+                return await _master.Subjects
+                    .Where(s => new[]{1, onlineUserID}.Contains(s.accountID))
+                    .Where(s => s.Subject == name)
+                    .Where(s => s.Category == category)
+                    .FirstOrDefaultAsync();
+            }
+            catch (Exception ex)
+            {
+                await _master.HandleExceptionAsync(ex, "FindType(name)");
+            }
+
+            return null;
+        }
+
         /// <summary>
         /// Looks for a subject ID for the given SubjectClass.
         /// </summary>
@@ -543,9 +578,11 @@ namespace Data_Logger_1._3.Services
 
             try
             {
+                var onlineUserID = await GetOnlineAccountIDAsync();
+
                 subjectKey = await _master.Subjects
                     .Where(s => s.Subject == subject.Subject
-                        && (s.User.accountID == 1 || s.User.accountID == subject.User.accountID)
+                        && (s.accountID == 1 || s.accountID == onlineUserID)
                         && s.Category == subject.Category
                             && s.Application.appID == subject.Application.appID
                                 && s.Project.projectID == subject.Project.projectID)
@@ -594,6 +631,7 @@ namespace Data_Logger_1._3.Services
             try
             {
                 var onlineUserID = await GetOnlineAccountIDAsync();
+
                 return await _master.Logs
                     .Where(l => l.accountID == onlineUserID)
                     .Where(l => l.Category == category)
