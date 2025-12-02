@@ -63,6 +63,9 @@
     <SolidColorBrush x:Key="Black50">#80000000</SolidColorBrush>
     <SolidColorBrush x:Key="VIEWERDate">#818181</SolidColorBrush>
 
+    <SolidColorBrush x:Key="VisualStudio">#7D58A7</SolidColorBrush>
+    <SolidColorBrush x:Key="VisualStudioCode">#3F9BD9</SolidColorBrush>
+
     <!-- #region PRE-MADE -->
     <SolidColorBrush x:Key="ComboBox.Static.Background" Color="Transparent"/>
     <SolidColorBrush x:Key="ComboBox.Static.Border" Color="#FFACACAC"/>
