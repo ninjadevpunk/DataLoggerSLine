@@ -72,7 +72,7 @@ namespace Data_Logger_1._3.ViewModels.Reporter.Desk
             {
                 logs = value;
 
-                NoLogsMessageVisibility = Logs.Count == 0 ? Visibility.Visible : Visibility.Hidden;
+                SetNoLogsMessageVisibility();
                 OnPropertyChanged(nameof(Logs));
             }
         }
@@ -221,6 +221,11 @@ namespace Data_Logger_1._3.ViewModels.Reporter.Desk
         public abstract Task UpdateLogsAsync();
         public abstract Task InitialiseAppsAsync();
         public abstract Task InitialiseProjectsAsync();
+
+        protected void SetNoLogsMessageVisibility()
+        {
+            NoLogsMessageVisibility = Logs.Count > 0 ? Visibility.Collapsed : Visibility.Visible;
+        }
 
 
 
