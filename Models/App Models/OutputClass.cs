@@ -38,6 +38,12 @@ namespace Data_Logger_1._3.Models.App_Models
             Name = outputName;
         }
 
+        public OutputClass(int outputID, string outputName)
+        {
+            this.outputID = outputID;
+            Name = outputName;
+        }
+
         public OutputClass(int outputID, ACCOUNT user, string name, ApplicationClass application, LOG.CATEGORY category)
         {
             this.outputID = outputID;

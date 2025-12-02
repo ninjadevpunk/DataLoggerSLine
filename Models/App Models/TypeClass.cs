@@ -37,6 +37,12 @@ namespace Data_Logger_1._3.Models.App_Models
             Name = typeName;
         }
 
+        public TypeClass(int typeID, string typeName)
+        {
+            this.typeID = typeID;
+            Name = typeName;
+        }
+
         public TypeClass(int typeID, ACCOUNT user, string name, ApplicationClass application, LOG.CATEGORY category)
         {
             this.typeID = typeID;
