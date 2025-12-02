@@ -13,8 +13,8 @@ namespace Data_Logger_1._3.ViewModels.Reporter.Updater
         public override CacheContext Context => CacheContext.Coding;
         public override string LogType => "CODING LOG";
 
-        protected readonly CodeReportDeskViewModel _viewModel;
-        private readonly QtReportDeskViewModel? _QtviewModel;
+        protected readonly CodeReportDeskViewModel _reportDeskViewModel;
+        private readonly QtReportDeskViewModel? _qtReportDeskViewModel;
 
         private const string Qt = "Qt Creator";
         protected const string AndroidStudio = "Android Studio Meerkat 2024.3.1";
@@ -23,11 +23,11 @@ namespace Data_Logger_1._3.ViewModels.Reporter.Updater
         private bool QtOnly = false;
         protected bool ASOnly = false;
 
-        public codeUpdateViewModel(NavigationService navigationService, ReportDeskViewModel reportDeskViewModel, DataService dataService, REPORTViewModel reportViewModel, PDFService pdfService)
-            : base(navigationService, reportDeskViewModel, dataService)
+        public codeUpdateViewModel(NavigationService navigationService, DataService dataService, ReportDeskViewModel reportDeskViewModel, LOG log)
+            : base(navigationService, reportDeskViewModel, dataService, log)
         {
-            _viewModel = (CodeReportDeskViewModel)reportDeskViewModel;
-            InitializeCommonFields(reportViewModel, pdfService);
+            _reportDeskViewModel = (CodeReportDeskViewModel)reportDeskViewModel;
+            InitializeCommonFields(log);
             LoadProjectsAndApplications();
             LoadDefaultOutputs();
             LoadDefaultTypes();
@@ -35,43 +35,58 @@ namespace Data_Logger_1._3.ViewModels.Reporter.Updater
             BugsFound = 0;
             ApplicationOpened = false;
 
-            ClearLoggerCommand = new ResetLoggerCommand();
 
-            UpdateLogCount();
+            ClearLoggerCommand = new EF_ResetLoggerCommand();
         }
 
-        public codeUpdateViewModel(NavigationService navigationService, ReportDeskViewModel reportDeskViewModel, string application, DataService dataService, REPORTViewModel reportViewModel, PDFService pdfService)
-            : base(navigationService, reportDeskViewModel, dataService)
+        public codeUpdateViewModel(NavigationService navigationService, DataService dataService, ReportDeskViewModel reportDeskViewModel, string application, LOG log)
+            : base(navigationService, reportDeskViewModel, dataService, log)
         {
             if (application == Qt)
             {
-                _QtviewModel = (QtReportDeskViewModel)reportDeskViewModel;
-                InitializeQtFields(reportViewModel, pdfService);
+                _qtReportDeskViewModel = (QtReportDeskViewModel)reportDeskViewModel;
+                InitializeQtFields(log);
 
             }
             else
             {
-                _viewModel = (CodeReportDeskViewModel)reportDeskViewModel;
-                InitializeCommonFields(reportViewModel, pdfService);
+                _reportDeskViewModel = (CodeReportDeskViewModel)reportDeskViewModel;
+                InitializeCommonFields(log);
                 LoadProjectsAndApplications();
                 LoadDefaultOutputs();
                 LoadDefaultTypes();
 
             }
 
-            ClearLoggerCommand = new ResetLoggerCommand();
-            UpdateLogCount();
+            ClearLoggerCommand = new EF_ResetLoggerCommand();
         }
 
-        private void InitializeCommonFields(REPORTViewModel reportViewModel, PDFService pdfService)
+
+
+
+
+
+
+
+
+
+
+
+        public override async Task AutoStartAsync()
+        {
+            await UpdateLogCount();
+        }
+
+
+        private void InitializeCommonFields(LOG log)
         {
             AppFieldEnabled = true;
             ApplicationName = VisualStudio;
 
-            UpdateCommand = new UpdateCommand(Context, this, _viewModel, _navigationService, _dataService, reportViewModel, pdfService);
+            UpdateCommand = new UpdateCommand(Context, this, _reportDeskViewModel, _navigationService, _dataService, log);
         }
 
-        private void InitializeQtFields(REPORTViewModel reportViewModel, PDFService pdfService)
+        private void InitializeQtFields(LOG log)
         {
             AppFieldEnabled = false;
             ApplicationToolTip = "This field cannot be changed. Only Qt logs are allowed in this tab.";
@@ -82,7 +97,7 @@ namespace Data_Logger_1._3.ViewModels.Reporter.Updater
             LoadQtOutputs();
             LoadQtTypes();
 
-            UpdateCommand = new UpdateCommand(CacheContext.Qt, this, _QtviewModel, _navigationService, _dataService, reportViewModel, pdfService);
+            UpdateCommand = new UpdateCommand(CacheContext.Qt, this, _qtReportDeskViewModel, _navigationService, _dataService, log);
         }
 
         private void LoadProjectsAndApplications()
@@ -181,21 +196,38 @@ namespace Data_Logger_1._3.ViewModels.Reporter.Updater
             }
         }
 
+
+
+
+
+
+
+
+
+
+
+
+
+
         #region Member Functions
 
-        public virtual void UpdateLogCount()
+
+
+        public virtual async Task UpdateLogCount()
         {
-            if (QtOnly && _QtviewModel is not null)
+            if (QtOnly && _qtReportDeskViewModel is not null)
             {
-                var count = _dataService.QtLogCount();
-                LogCount = $"{_QtviewModel.Logs.Count} Logs";
+                var count = await _dataService.QtLogCount();
+                LogCount = $"{_qtReportDeskViewModel.Logs.Count} Logs";
             }
-            else if (_viewModel is not null)
+            else if (_reportDeskViewModel is not null)
             {
-                var count = _dataService.LogCount(Category);
-                LogCount = $"{_viewModel.Logs.Count} Logs";
+                var count = await _dataService.LogCount(Category);
+                LogCount = $"{_reportDeskViewModel.Logs.Count} Logs";
             }
         }
+
+
 
         #endregion
     }
