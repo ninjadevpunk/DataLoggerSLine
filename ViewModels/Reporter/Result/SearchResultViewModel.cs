@@ -60,11 +60,11 @@ namespace Data_Logger_1._3.ViewModels.Reporter
         #region Commands
 
 
-        public ICommand View { get; set; }
+        public ICommand ViewLogCommand { get; set; }
 
-        public ICommand Edit { get; set; }
+        public ICommand EditLogCommand { get; set; }
 
-        public ICommand Delete { get; set; }
+        public ICommand DeleteLogCommand { get; set; }
 
 
         #endregion

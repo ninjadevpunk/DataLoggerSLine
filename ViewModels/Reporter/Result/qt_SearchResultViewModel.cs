@@ -19,9 +19,9 @@ namespace Data_Logger_1._3.ViewModels.Reporter
             var style = TryParsePath("path_Qt_icon");
             IconStyle = style == null ? new Style() : style;
 
-            View = new ViewCommand(navigationService, SearchResultContext, ViewType.Log);
-            Edit = new EditLogCommand();
-            Delete = new DeleteLogCommand();
+            ViewLogCommand = new ViewCommand(navigationService, SearchResultContext, ViewType.Log);
+            EditLogCommand = new EditLogCommand();
+            DeleteLogCommand = new DeleteLogCommand();
         }
 
 
