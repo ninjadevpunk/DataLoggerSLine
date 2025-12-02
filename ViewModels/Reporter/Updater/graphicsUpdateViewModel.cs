@@ -26,8 +26,8 @@ namespace Data_Logger_1._3.ViewModels.Reporter.Updater
         public IEnumerable<string> Units => _units;
         public IEnumerable<string> Sizes => _sizes;
 
-        public graphicsUpdateViewModel(NavigationService navigationService, ReportDeskViewModel reportDeskViewModel, DataService dataService, REPORTViewModel reportViewModel, PDFService pdfService) : 
-            base(navigationService, reportDeskViewModel, dataService)
+        public graphicsUpdateViewModel(NavigationService navigationService, ReportDeskViewModel reportDeskViewModel, DataService dataService, LOG log) : 
+            base(navigationService, reportDeskViewModel, dataService, log)
         {
             AppFieldEnabled = true;
             ApplicationName = "Krita";
@@ -55,20 +55,26 @@ namespace Data_Logger_1._3.ViewModels.Reporter.Updater
                 "A4 (29,7 cm x 21 cm)", "A5 (21 cm x 14,8 cm)", "Letter (27,9 cm x 21,6 cm)"
             ];
 
-            LoadProjectsAndApplications();
             LoadDefaultOutputs();
             LoadDefaultTypes();
 
 
-            BrowseCommand = new BrowseCommand(Context, this);
-            UpdateCommand = new UpdateCommand(Context, this, _graphicsViewModel, _navigationService, _dataService, reportViewModel, pdfService);
-            ClearLoggerCommand = new ResetLoggerCommand(this, Category);
+            BrowseCommand = new EF_BrowseCommand(Context, this);
+            //UpdateCommand = new UpdateCommand(Context, this, _graphicsViewModel, _navigationService, _dataService, reportViewModel, pdfService);
+            ClearLoggerCommand = new EF_ResetLoggerCommand(this, Category);
         }
 
 
 
 
 
+
+
+        public override async Task AutoStartAsync()
+        {
+            await LoadProjectsAndApplications();
+            await UpdateLogCount();
+        }
 
         private void InitializeFields()
         {
@@ -86,16 +92,16 @@ namespace Data_Logger_1._3.ViewModels.Reporter.Updater
 
         }
 
-        private void LoadProjectsAndApplications()
+        private async Task LoadProjectsAndApplications()
         {
-            _dataService.InitialiseProjectsLISTAsync(Category);
+            await _dataService.InitialiseProjectsLISTAsync(Category);
             var items = _dataService.SQLITE_PROJECTS;
             foreach (ProjectClass project in items)
             {
                 _projects.Add(project.Name);
             }
 
-            _dataService.InitialiseApplicationsLISTAsync(Category);
+            await _dataService.InitialiseApplicationsLISTAsync(Category);
             var apps = _dataService.SQLITE_APPLICATIONS;
             foreach (ApplicationClass app in apps)
             {
@@ -299,11 +305,11 @@ namespace Data_Logger_1._3.ViewModels.Reporter.Updater
 
 
 
-        public void UpdateLogCount()
+        public async Task UpdateLogCount()
         {
             if (_graphicsViewModel != null)
             {
-                var count = _dataService.LogCount(Category);
+                var count = await _dataService.LogCount(Category);
                 LogCount = $"{_graphicsViewModel.Logs.Count} Logs";
             }
         }

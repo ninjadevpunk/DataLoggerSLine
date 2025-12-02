@@ -15,7 +15,7 @@ using Xceed.Wpf.Toolkit;
 
 namespace Data_Logger_1._3.ViewModels.Reporter.Updater
 {
-    public class CreateReporterPostItViewModel : ViewModelBase
+    public class EF_PostItViewModel : ViewModelBase
     {
         public enum PostItField { Error, Solution, Suggestion, Comment }
 
@@ -23,7 +23,7 @@ namespace Data_Logger_1._3.ViewModels.Reporter.Updater
         protected readonly DataService _dataService;
         protected readonly ReporterUpdaterViewModel _reporterUpdaterViewModel;
 
-        public CreateReporterPostItViewModel(NavigationService navigationService, DataService dataService, ReporterUpdaterViewModel reporterUpdaterViewModel, LOG.CATEGORY category)
+        public EF_PostItViewModel(NavigationService navigationService, DataService dataService, ReporterUpdaterViewModel reporterUpdaterViewModel)
         {
             _navigationService = navigationService;
             _dataService = dataService;
@@ -33,7 +33,6 @@ namespace Data_Logger_1._3.ViewModels.Reporter.Updater
 
             Subjects = new();
 
-            _dataService.InitialiseSubjectsLIST(category);
 
             foreach (SubjectClass subject in _dataService.SQLITE_SUBJECTS)
             {
@@ -53,22 +52,20 @@ namespace Data_Logger_1._3.ViewModels.Reporter.Updater
             Option1Check = true;
 
 
-            EditCommand = new EditPostItCommand(_navigationService, reporterUpdaterViewModel);
-            PostCommand = new PostCommand(_navigationService, _reporterUpdaterViewModel, this);
-            DeletePostItCommand = new DeletePostItCommand(_reporterUpdaterViewModel);
-            EraserCommand = new EraserCommand(this);
-            HighlighterCommand = new HighlighterCommand(this);
+            EditCommand = new EF_EditPostItCommand(_navigationService, reporterUpdaterViewModel);
+            PostCommand = new EF_PostCommand(_navigationService, _reporterUpdaterViewModel, this);
+            DeletePostItCommand = new EF_DeletePostItCommand(_reporterUpdaterViewModel);
+            EraserCommand = new EF_EraserCommand(this);
+            HighlighterCommand = new EF_HighlighterCommand(this);
         }
 
-        public CreateReporterPostItViewModel(NavigationService navigationService, DataService dataService, ReporterUpdaterViewModel reporterUpdaterViewModel, ProjectClass project)
+        public EF_PostItViewModel(NavigationService navigationService, DataService dataService, ReporterUpdaterViewModel reporterUpdaterViewModel, ProjectClass project)
         {
             _navigationService = navigationService;
             _dataService = dataService;
             _reporterUpdaterViewModel = reporterUpdaterViewModel;
 
             Subject = "";
-
-            _dataService.InitialiseSubjectsLIST(project);
 
             Subjects = new();
             foreach (SubjectClass subject in _dataService.SQLITE_SUBJECTS)
@@ -88,20 +85,22 @@ namespace Data_Logger_1._3.ViewModels.Reporter.Updater
 
             Option1Check = true;
 
-            EditCommand = new EditPostItCommand(_navigationService, reporterUpdaterViewModel);
-            PostCommand = new PostCommand(_navigationService, _reporterUpdaterViewModel, this);
-            DeletePostItCommand = new DeletePostItCommand(_reporterUpdaterViewModel);
-            EraserCommand = new EraserCommand(this);
-            HighlighterCommand = new HighlighterCommand(this);
+            EditCommand = new EF_EditPostItCommand(_navigationService, reporterUpdaterViewModel);
+            PostCommand = new EF_PostCommand(_navigationService, _reporterUpdaterViewModel, this);
+            DeletePostItCommand = new EF_DeletePostItCommand(_reporterUpdaterViewModel);
+            EraserCommand = new EF_EraserCommand(this);
+            HighlighterCommand = new EF_HighlighterCommand(this);
         }
 
-        public CreateReporterPostItViewModel(NavigationService navigationService, DataService dataService, ReporterUpdaterViewModel reporterUpdaterViewModel, ProjectClass project,
+        public EF_PostItViewModel(int ID, NavigationService navigationService, DataService dataService, ReporterUpdaterViewModel reporterUpdaterViewModel, ProjectClass project,
             string subject, string error, DateTime dateFound, string solution, DateTime dateSolved, string suggestion, string comment)
         {
             _navigationService = navigationService;
             _reporterUpdaterViewModel = reporterUpdaterViewModel;
             _dataService = dataService;
-            _dataService.InitialiseSubjectsLIST(project);
+
+
+            this.ID = ID;
 
             Subjects = new();
             foreach (SubjectClass item in _dataService.SQLITE_SUBJECTS)
@@ -132,42 +131,22 @@ namespace Data_Logger_1._3.ViewModels.Reporter.Updater
 
             Option1Check = true;
 
-            EditCommand = new EditPostItCommand(_navigationService, reporterUpdaterViewModel);
-            PostCommand = new PostCommand(_navigationService, _reporterUpdaterViewModel, this);
-            DeletePostItCommand = new DeletePostItCommand(_reporterUpdaterViewModel);
-            EraserCommand = new EraserCommand(this);
-            HighlighterCommand = new HighlighterCommand(this);
+            EditCommand = new EF_EditPostItCommand(_navigationService, reporterUpdaterViewModel);
+            PostCommand = new EF_PostCommand(_navigationService, _reporterUpdaterViewModel, this);
+            DeletePostItCommand = new EF_DeletePostItCommand(_reporterUpdaterViewModel);
+            EraserCommand = new EF_EraserCommand(this);
+            HighlighterCommand = new EF_HighlighterCommand(this);
         }
 
-        public CreateReporterPostItViewModel(NavigationService navigationService, ProjectClass project, string subject, string error,
-            string solution, string suggestion, string comment)
+
+
+
+
+
+
+        public async Task AutoStartAsync(ProjectClass project)
         {
-            _navigationService = navigationService;
-
-            Subject = subject;
-
-            Error = error;
-            Display_Error = ConvertRtfToPlainText(error);
-            ErrorTextBlockHeight = string.IsNullOrEmpty(Display_Error) || Display_Error.Length < 64 ? 24 : double.NaN;
-
-            Solution = solution;
-            Display_Solution = ConvertRtfToPlainText(solution);
-            SolutionTextBlockHeight = string.IsNullOrEmpty(Display_Solution) || Display_Solution.Length < 64 ? 24 : double.NaN;
-
-            Suggestion = suggestion;
-            Display_Suggestion = ConvertRtfToPlainText(suggestion);
-            SuggestionTextBlockHeight = string.IsNullOrEmpty(Display_Suggestion) || Display_Suggestion.Length < 64 ? 24 : double.NaN;
-
-            Comment = comment;
-            Display_Comment = ConvertRtfToPlainText(comment);
-            CommentTextBlockHeight = string.IsNullOrEmpty(Display_Comment) || Display_Comment.Length < 64 ? 24 : double.NaN;
-
-            ErrorVisible = Error.Equals(string.Empty) ? Visibility.Collapsed : Visibility.Visible;
-            SolutionVisible = Solution.Equals(string.Empty) ? Visibility.Collapsed : Visibility.Visible;
-            SuggestionVisible = Suggestion.Equals(string.Empty) ? Visibility.Collapsed : Visibility.Visible;
-            CommentVisible = Comment.Equals(string.Empty) ? Visibility.Collapsed : Visibility.Visible;
-
-            Option1Check = true;
+            await _dataService.InitialiseSubjectsLIST(project);
         }
 
 
@@ -262,6 +241,12 @@ namespace Data_Logger_1._3.ViewModels.Reporter.Updater
 
 
         #endregion
+
+
+
+
+        public int ID { get; set; }
+
 
         private string subject;
         public string Subject
@@ -710,6 +695,25 @@ namespace Data_Logger_1._3.ViewModels.Reporter.Updater
         #region Member Functions
 
 
+
+        public async Task LoadSubjectsAsync(LOG.CATEGORY category)
+        {
+            try
+            {
+                await _dataService.InitialiseSubjectsLIST(category);
+
+                Subjects = new();
+                Subjects.Clear();
+                foreach (SubjectClass subject in _dataService.SQLITE_SUBJECTS)
+                {
+                    Subjects.Add(subject.Subject);
+                }
+            }
+            catch (Exception e)
+            {
+                //
+            }
+        }
 
         public static string ConvertRtfToPlainText(string rtfContent)
         {

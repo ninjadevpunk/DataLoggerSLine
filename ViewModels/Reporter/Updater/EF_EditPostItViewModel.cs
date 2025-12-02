@@ -1,17 +1,15 @@
 ﻿using Data_Logger_1._3.Commands.ReporterCommands.UpdateCommands;
-using Data_Logger_1._3.Models;
 using Data_Logger_1._3.Models.App_Models;
 using Data_Logger_1._3.Services;
-using static Data_Logger_1._3.Commands.ReporterCommands.UpdateCommands.PostCommand;
-
 namespace Data_Logger_1._3.ViewModels.Reporter.Updater
 {
-    public class UpdatePostItViewModel : CreateReporterPostItViewModel
+    public class EF_EditPostItViewModel : EF_PostItViewModel
     {
-        public UpdatePostItViewModel(NavigationService navigationService, DataService dataService, ReporterUpdaterViewModel reporterUpdaterViewModel, LOG.CATEGORY category,
-            CreateReporterPostItViewModel postItViewModel) :
-            base(navigationService, dataService, reporterUpdaterViewModel, category)
+        public EF_EditPostItViewModel(int id, NavigationService navigationService, DataService dataService, ReporterUpdaterViewModel reporterUpdaterViewModel,
+            EF_PostItViewModel postItViewModel) :
+            base(navigationService, dataService, reporterUpdaterViewModel)
         {
+            ID = id;
             Subject = postItViewModel.Subject;
             PlaceholderText = string.IsNullOrEmpty(Subject) ? "Subject" : string.Empty;
 
@@ -25,14 +23,17 @@ namespace Data_Logger_1._3.ViewModels.Reporter.Updater
             Display_Suggestion = postItViewModel.Display_Suggestion;
             Display_Comment = postItViewModel.Display_Comment;
 
-            PostCommand = new PostCommand(ActionType.Edit, _navigationService, _reporterUpdaterViewModel, this, postItViewModel);
+            PostCommand = new EF_PostCommand(EF_PostCommand.ActionType.Edit, _navigationService, _reporterUpdaterViewModel, this, postItViewModel);
         }
 
-        public UpdatePostItViewModel(NavigationService navigationService, DataService dataService, ReporterUpdaterViewModel ReporterUpdaterViewModel, ProjectClass project,
-            CreateReporterPostItViewModel postItViewModel) :
+        public EF_EditPostItViewModel(int id, NavigationService navigationService, DataService dataService, ReporterUpdaterViewModel ReporterUpdaterViewModel, ProjectClass project,
+            EF_PostItViewModel postItViewModel) :
             base(navigationService, dataService, ReporterUpdaterViewModel, project)
         {
+            ID = id;
             Subject = postItViewModel.Subject;
+            PlaceholderText = string.IsNullOrEmpty(Subject) ? "Subject" : string.Empty;
+
             Subjects = postItViewModel.Subjects;
 
             Error = postItViewModel.Error;
@@ -45,7 +46,8 @@ namespace Data_Logger_1._3.ViewModels.Reporter.Updater
             Display_Suggestion = postItViewModel.Display_Suggestion;
             Display_Comment = postItViewModel.Display_Comment;
 
-            PostCommand = new PostCommand(ActionType.Edit, _navigationService, _reporterUpdaterViewModel, this, postItViewModel);
+            EditCommand = new EF_EditPostItCommand(_navigationService, _reporterUpdaterViewModel);
+            PostCommand = new EF_PostCommand(EF_PostCommand.ActionType.Edit, _navigationService, _reporterUpdaterViewModel, this, postItViewModel);
         }
     }
 }

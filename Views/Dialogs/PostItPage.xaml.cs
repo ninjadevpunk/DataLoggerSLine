@@ -10,8 +10,8 @@ namespace Data_Logger_1._3.Views.Dialogs
     /// </summary>
     public partial class PostItPage : Page
     {
-        private readonly PostItViewModel _postItViewModel;
-        private readonly CreateReporterPostItViewModel _createReporterPostItViewModel1;
+        private readonly PostItViewModel? _postItViewModel;
+        private readonly EF_PostItViewModel? _efPostItViewModel;
 
         public PostItPage(PostItViewModel createPostItViewModel)
         {
@@ -24,13 +24,13 @@ namespace Data_Logger_1._3.Views.Dialogs
 
         }
 
-        public PostItPage(CreateReporterPostItViewModel createReporterPostItViewModel)
+        public PostItPage(EF_PostItViewModel efPostItViewModel)
         {
             InitializeComponent();
 
-            _createReporterPostItViewModel1 = createReporterPostItViewModel;
-            DataContext = _postItViewModel;
-            _createReporterPostItViewModel1.ActiveEditor = this.inputText_ERROR;
+            _efPostItViewModel = efPostItViewModel;
+            DataContext = _efPostItViewModel;
+            _efPostItViewModel.ActiveEditor = this.inputText_ERROR;
 
 
         }
@@ -68,22 +68,46 @@ namespace Data_Logger_1._3.Views.Dialogs
 
         private void on_Error_Text_Changed(object sender, TextChangedEventArgs e)
         {
-            OnTextChanged(sender, e, inputText_ERROR, text => _postItViewModel.Display_Error = text);
+            OnTextChanged(sender, e, inputText_ERROR, text =>
+            {
+                if (_postItViewModel != null)
+                    _postItViewModel.Display_Error= text;
+                else if (_efPostItViewModel != null)
+                    _efPostItViewModel.Display_Error= text;
+            });
         }
 
         private void on_Solution_Text_Changed(object sender, TextChangedEventArgs e)
         {
-            OnTextChanged(sender, e, inputText_SOLUTION, text => _postItViewModel.Display_Solution = text);
+            OnTextChanged(sender, e, inputText_SOLUTION, text =>
+            {
+                if (_postItViewModel != null)
+                    _postItViewModel.Display_Solution= text;
+                else if (_efPostItViewModel != null)
+                    _efPostItViewModel.Display_Solution= text;
+            });
         }
 
         private void on_Suggestion_Text_Changed(object sender, TextChangedEventArgs e)
         {
-            OnTextChanged(sender, e, inputText_SUGGESTION, text => _postItViewModel.Display_Suggestion = text);
+            OnTextChanged(sender, e, inputText_SUGGESTION, text =>
+            {
+                if(_postItViewModel != null)
+                    _postItViewModel.Display_Suggestion = text;
+                else if(_efPostItViewModel != null)
+                    _efPostItViewModel.Display_Suggestion = text;
+            });
         }
 
         private void on_Comment_Text_Changed(object sender, TextChangedEventArgs e)
         {
-            OnTextChanged(sender, e, inputText_COMMENT, text => _postItViewModel.Display_Comment = text);
+            OnTextChanged(sender, e, inputText_COMMENT, text =>
+            {
+                if (_postItViewModel != null)
+                    _postItViewModel.Display_Comment= text;
+                else if (_efPostItViewModel != null)
+                    _efPostItViewModel.Display_Comment= text;
+            });
         }
 
         private void onSelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -92,22 +116,38 @@ namespace Data_Logger_1._3.Views.Dialogs
             {
                 case 0:
                     {
-                        _postItViewModel.ActiveEditor = this.inputText_ERROR;
+                        if(_postItViewModel != null)
+                            _postItViewModel.ActiveEditor = this.inputText_ERROR;
+                        else if(_efPostItViewModel != null)
+                            _efPostItViewModel.ActiveEditor = this.inputText_ERROR;
+
                         break;
                     }
                 case 1:
                     {
-                        _postItViewModel.ActiveEditor = this.inputText_SOLUTION;
+                        if (_postItViewModel != null)
+                            _postItViewModel.ActiveEditor = this.inputText_SOLUTION;
+                        else if (_efPostItViewModel != null)
+                            _efPostItViewModel.ActiveEditor = this.inputText_SOLUTION;
+
                         break;
                     }
                 case 2:
                     {
-                        _postItViewModel.ActiveEditor = this.inputText_SUGGESTION;
+                        if (_postItViewModel != null)
+                            _postItViewModel.ActiveEditor = this.inputText_SUGGESTION;
+                        else if (_efPostItViewModel != null)
+                            _efPostItViewModel.ActiveEditor = this.inputText_SUGGESTION;
+
                         break;
                     }
                 case 3:
                     {
-                        _postItViewModel.ActiveEditor = this.inputText_COMMENT;
+                        if (_postItViewModel != null)
+                            _postItViewModel.ActiveEditor = this.inputText_COMMENT;
+                        else if (_efPostItViewModel != null)
+                            _efPostItViewModel.ActiveEditor = this.inputText_COMMENT;
+
                         break;
                     }
             }

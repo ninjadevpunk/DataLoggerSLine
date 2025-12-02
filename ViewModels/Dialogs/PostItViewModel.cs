@@ -5,7 +5,6 @@ using Data_Logger_1._3.Models.App_Models;
 using Data_Logger_1._3.Services;
 using Data_Logger_1._3.ViewModels.Dialogs.Create;
 using MVVMEssentials.ViewModels;
-using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
 using System.Text;
@@ -20,9 +19,10 @@ namespace Data_Logger_1._3.ViewModels.Dialogs
     {
         public enum PostItField { Error, Solution, Suggestion, Comment }
 
-        protected readonly NavigationService _navigationService;
-        protected readonly DataService _dataService;
-        protected readonly LoggerCreateViewModel _loggerCreateViewModel;
+        protected readonly NavigationService? _navigationService;
+        protected readonly DataService? _dataService;
+        protected readonly LoggerCreateViewModel? _loggerCreateViewModel;
+        
 
         public PostItViewModel()
         {
@@ -66,8 +66,6 @@ namespace Data_Logger_1._3.ViewModels.Dialogs
             _loggerCreateViewModel = loggerCreateViewModel;
 
             Subject = "";
-
-            _ = _dataService.InitialiseSubjectsLIST(project);
 
             Subjects = new();
             foreach (SubjectClass subject in _dataService.SQLITE_SUBJECTS)
@@ -131,6 +129,8 @@ namespace Data_Logger_1._3.ViewModels.Dialogs
             HighlighterCommand = new HighlighterCommand(this);
         }
 
+        
+
         public PostItViewModel(NavigationService navigationService, ProjectClass project, string subject, string error,
             string solution, string suggestion, string comment)
         {
@@ -163,6 +163,17 @@ namespace Data_Logger_1._3.ViewModels.Dialogs
         }
 
 
+
+
+
+
+
+
+
+        public virtual async Task AutoStartAsync(ProjectClass project)
+        {
+            await _dataService.InitialiseSubjectsLIST(project ?? new("Unnamed Project"));
+        }
         public bool FoundDateCaptured { get; set; } = false;
         public bool SolvedDateCaptured { get; set; } = false;
 
@@ -270,8 +281,8 @@ namespace Data_Logger_1._3.ViewModels.Dialogs
         }
 
 
-        private ObservableCollection<string> subjects;
-        public ObservableCollection<string> Subjects
+        private HashSet<string> subjects;
+        public HashSet<string> Subjects
         {
             get
             {

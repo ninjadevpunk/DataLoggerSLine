@@ -1,12 +1,12 @@
-﻿using Data_Logger_1._3.Models;
+﻿using Data_Logger_1._3.Commands.ReporterCommands.UpdateCommands;
+using Data_Logger_1._3.Models;
 using Data_Logger_1._3.Services;
 using Data_Logger_1._3.ViewModels.Reporter.Desk;
-using System.Collections.ObjectModel;
 using MVVMEssentials.ViewModels;
+using System.Collections.ObjectModel;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
-using Data_Logger_1._3.Commands.ReporterCommands.UpdateCommands;
 using static Data_Logger_1._3.Services.Cachemaster;
 
 namespace Data_Logger_1._3.ViewModels.Reporter.Updater
@@ -21,7 +21,7 @@ namespace Data_Logger_1._3.ViewModels.Reporter.Updater
         public abstract CacheContext Context { get; }
         public abstract string LogType { get; }
 
-        protected ReporterUpdaterViewModel(NavigationService navigationService, ReportDeskViewModel reportDeskViewModel, DataService dataService)
+        protected ReporterUpdaterViewModel(NavigationService navigationService, ReportDeskViewModel reportDeskViewModel, DataService dataService, LOG log)
         {
             _navigationService = navigationService;
             _reportDesk = reportDeskViewModel;
@@ -39,33 +39,31 @@ namespace Data_Logger_1._3.ViewModels.Reporter.Updater
             ApplicationName = "";
             _applications = new();
 
-            StartHours = DateTime.Now.Hour;
-            StartMinutes = DateTime.Now.Minute;
-            StartSeconds = DateTime.Now.Second;
-            StartMilliseconds = DateTime.Now.Millisecond;
-
-            StartDate = DateTime.Now;
-
-            EndHours = DateTime.Now.Hour;
-            EndMinutes = DateTime.Now.Minute;
-            EndSeconds = DateTime.Now.Second;
-            EndMilliseconds = DateTime.Now.Millisecond;
-
-            EndDate = DateTime.Now;
-
             Output = "";
             _outputs = new();
             Type = "";
             _types = new();
 
 
-            PostIts = new ObservableCollection<CreateReporterPostItViewModel>();
+            PostIts = new ObservableCollection<EF_EditPostItViewModel>();
 
             CurrentStartDateCommand = new CurrentStartDateCommand(this);
             CurrentEndDateCommand = new CurrentEndDateCommand(this);
-            EditPostItCommand = new EditPostItCommand(_navigationService, this);
-            ClearPostItListCommand = new ClearPostItListCommand(this);
+            EditCommand = new UpdateCommand(Context, this, _reportDesk, _navigationService, _dataService, log);
+            AddPostItCommand = new EF_AddPostItCommand(_navigationService, this);
+            ClearPostItListCommand = new EF_ClearPostItListCommand(this);
         }
+
+
+
+
+
+
+
+
+
+
+        public abstract Task AutoStartAsync();
 
         protected readonly ObservableCollection<string> _projects;
         protected readonly ObservableCollection<string> _applications;
@@ -380,8 +378,8 @@ namespace Data_Logger_1._3.ViewModels.Reporter.Updater
         }
 
 
-        private ObservableCollection<CreateReporterPostItViewModel> postIts;
-        public ObservableCollection<CreateReporterPostItViewModel> PostIts
+        private ObservableCollection<EF_EditPostItViewModel> postIts;
+        public ObservableCollection<EF_EditPostItViewModel> PostIts
         {
             get
             {
@@ -471,14 +469,16 @@ namespace Data_Logger_1._3.ViewModels.Reporter.Updater
         public ICommand CurrentStartDateCommand { get; set; }
 
         public ICommand CurrentEndDateCommand { get; set; }
+        // Update the log in the database
+        public ICommand EditCommand { get; set; }
 
 
-
+        // Clears the PostIt list
         public ICommand ClearPostItListCommand { get; set; }
-
+        // Clears all fields in the logger
         public ICommand ClearLoggerCommand { get; set; }
-
-        public ICommand EditPostItCommand { get; set; }
+        // Adds a PostIt to the PostIt list
+        public ICommand AddPostItCommand { get; set; }
 
 
         public ICommand BrowseCommand { get; set; }

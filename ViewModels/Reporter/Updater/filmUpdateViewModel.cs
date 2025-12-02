@@ -15,8 +15,8 @@ namespace Data_Logger_1._3.ViewModels.Reporter.Updater
 
         private readonly FilmReportDeskViewModel _filmViewModel;
 
-        public filmUpdateViewModel(NavigationService navigationService, ReportDeskViewModel reportDeskViewModel, DataService dataService, REPORTViewModel reportViewModel, PDFService pdfService) : 
-            base(navigationService, reportDeskViewModel, dataService)
+        public filmUpdateViewModel(NavigationService navigationService, ReportDeskViewModel reportDeskViewModel, DataService dataService, LOG log) : 
+            base(navigationService, reportDeskViewModel, dataService, log)
         {
             AppFieldEnabled = true;
             ApplicationName = "Blender";
@@ -24,19 +24,30 @@ namespace Data_Logger_1._3.ViewModels.Reporter.Updater
             _filmViewModel = (FilmReportDeskViewModel)reportDeskViewModel;
 
 
-            InitializeProjectsAndApplications();
-            InitializeDefaults();
+            
 
-            BrowseCommand = new BrowseCommand(Context, this);
-            UpdateCommand = new UpdateCommand(Context, this, _filmViewModel, _navigationService, _dataService, reportViewModel, pdfService);
-            ClearLoggerCommand = new ResetLoggerCommand(this, Category);
+            BrowseCommand = new EF_BrowseCommand(Context, this);
+            //UpdateCommand = new UpdateCommand(Context, this, _filmViewModel, _navigationService, _dataService, reportViewModel, pdfService);
+            ClearLoggerCommand = new EF_ResetLoggerCommand(this, Category);
         }
 
 
 
-        private void InitializeProjectsAndApplications()
+
+
+
+
+
+
+        public override async Task AutoStartAsync()
         {
-            _dataService.InitialiseProjectsLISTAsync(Category);
+            await InitializeProjectsAndApplications();
+            await InitializeDefaults();
+        }
+
+        private async Task InitializeProjectsAndApplications()
+        {
+            await _dataService.InitialiseProjectsLISTAsync(Category);
             var items = _dataService.SQLITE_PROJECTS;
 
             var apps = _dataService.SQLITE_APPLICATIONS;
@@ -46,14 +57,14 @@ namespace Data_Logger_1._3.ViewModels.Reporter.Updater
                 _projects.Add(project.Name);
             }
 
-            _dataService.InitialiseApplicationsLISTAsync(Category);
+            await _dataService.InitialiseApplicationsLISTAsync(Category);
             foreach (ApplicationClass app in apps)
             {
                 _applications.Add(app.Name);
             }
         }
 
-        private void InitializeDefaults()
+        private async Task InitializeDefaults()
         {
             Output = "MP4";
             _outputs.Add("MP4");
@@ -174,11 +185,11 @@ namespace Data_Logger_1._3.ViewModels.Reporter.Updater
 
 
 
-        public void UpdateLogCount()
+        public async Task UpdateLogCount()
         {
             if (_filmViewModel is not null)
             {
-                var count = _dataService.LogCount(Category);
+                var count = await _dataService.LogCount(Category);
                 LogCount = $"{_filmViewModel.Logs.Count} Logs";
             }
         }

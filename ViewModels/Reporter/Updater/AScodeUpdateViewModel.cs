@@ -10,8 +10,8 @@ namespace Data_Logger_1._3.ViewModels.Reporter.Updater
     {
         private readonly ASReportDeskViewModel _ASviewModel;
 
-        public AScodeUpdateViewModel(NavigationService navigationService, ReportDeskViewModel reportDeskViewModel, DataService dataService, REPORTViewModel reportViewModel, PDFService pdfService) : 
-            base(navigationService, reportDeskViewModel, dataService, reportViewModel, pdfService)
+        public AScodeUpdateViewModel(NavigationService navigationService, DataService dataService, ReportDeskViewModel reportDeskViewModel, LOG log) : 
+            base(navigationService, dataService, reportDeskViewModel, log)
         {
             ApplicationName = AndroidStudio;
             ApplicationToolTip = "This field cannot be changed. Only Android Studio logs are allowed in this tab.";
@@ -26,14 +26,15 @@ namespace Data_Logger_1._3.ViewModels.Reporter.Updater
             InitializeOutputTypes();
             InitializeLogTypes();
 
-            UpdateLogCount();
-
-            UpdateCommand = new UpdateCommand(Context, this, _ASviewModel, _navigationService, _dataService, reportViewModel, pdfService);
-            ClearLoggerCommand = new ResetLoggerCommand();
+            //UpdateCommand = new UpdateCommand(Context, this, _ASviewModel, _navigationService, _dataService, reportViewModel, pdfService);
+            ClearLoggerCommand = new EF_ResetLoggerCommand();
         }
 
 
-
+        public override async Task AutoStartAsync()
+        {
+            await UpdateLogCount();
+        }
 
         #region Properties
 
@@ -128,11 +129,14 @@ namespace Data_Logger_1._3.ViewModels.Reporter.Updater
 
         #region Log Count
 
-        public override void UpdateLogCount()
+
+
+
+        public override async Task UpdateLogCount()
         {
             if (ASOnly && _ASviewModel is not null)
             {
-                var count = _dataService.ASLogCount();
+                var count = await _dataService.ASLogCount();
                 LogCount = $"{_ASviewModel.Logs.Count} Logs Cached";
             }
         }
