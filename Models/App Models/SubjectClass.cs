@@ -76,14 +76,19 @@ namespace Data_Logger_1._3.Models.App_Models
             return HashCode.Combine(subjectID, Category, User, Subject, Project, Application);
         }
 
-        public static bool operator ==(SubjectClass left, SubjectClass right)
+        public static bool operator ==(SubjectClass? left, SubjectClass? right)
         {
+            if (ReferenceEquals(left, right)) return true;
+            if (left is null || right is null) return false;
             return left.Equals(right);
         }
 
-        public static bool operator !=(SubjectClass left, SubjectClass right)
+        public static bool operator !=(SubjectClass? left, SubjectClass? right)
         {
+            if (ReferenceEquals(left, right)) return false;
+            if (left is null || right is null) return true;
             return !left.Equals(right);
         }
+
     }
 }
