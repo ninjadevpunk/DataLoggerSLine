@@ -72,15 +72,23 @@ namespace Data_Logger_1._3.Commands.ReporterCommands
                         {
                             List<CodingLOG> list;
 
-                            if (_reportDesk.Project == "ANY" && !string.IsNullOrEmpty(_reportDesk.Query))
+                            var qtReportDesk = (CodeReportDeskViewModel)_reportDesk;
+
+                            if (qtReportDesk.Project == "NONE")
                             {
-                                list = await _dataService.SearchQtLogs(_reportDesk.Query);
+                                qtReportDesk.SearchBarItems.Clear();
+                                return;
+                            }
+
+                            if (qtReportDesk.Project == "ANY" && !string.IsNullOrEmpty(qtReportDesk.Query))
+                            {
+                                list = await _dataService.SearchQtLogs(qtReportDesk.Query);
                             }
                             else
                             {
                                 list = projectFilter is null || appFilter is null ?
                                     throw new ArgumentNullException("Project not found.") :
-                                    await _dataService.SearchQtLogs(_reportDesk.Query, projectFilter.projectID, appFilter.appID);
+                                    await _dataService.SearchQtLogs(qtReportDesk.Query, projectFilter.projectID, appFilter.appID);
 
                             }
 
@@ -91,10 +99,10 @@ namespace Data_Logger_1._3.Commands.ReporterCommands
 
                             foreach (var record in list)
                             {
-                                items.Add(new qt_SearchResultViewModel(record, _reportDesk, _navigationService));
+                                items.Add(new qt_SearchResultViewModel(record, qtReportDesk, _navigationService));
                             }
 
-                            _reportDesk.SearchBarItems = items;
+                            qtReportDesk.SearchBarItems = items;
 
                             break;
                         }
@@ -118,27 +126,29 @@ namespace Data_Logger_1._3.Commands.ReporterCommands
                         {
                             List<CodingLOG>? list = new();
 
-                            if(_reportDesk.Project == "NONE")
+                            var codeReportDesk = (CodeReportDeskViewModel)_reportDesk;
+
+                            if(codeReportDesk.Project == "NONE")
                             {
-                                _reportDesk.SearchBarItems.Clear();
+                                codeReportDesk.SearchBarItems.Clear();
                                 return;
                             }
 
-                            if (!string.IsNullOrEmpty(_reportDesk.Query))
+                            if (!string.IsNullOrEmpty(codeReportDesk.Query))
                             {
-                                if (_reportDesk.Project == "ANY" && _reportDesk.Application == "ANY")
+                                if (codeReportDesk.Project == "ANY" && codeReportDesk.Application == "ANY")
                                 {
-                                    list = await _dataService.SearchCodingLogs(_reportDesk.Query);
+                                    list = await _dataService.SearchCodingLogs(codeReportDesk.Query);
                                 }
-                                else if (_reportDesk.Project == "ANY")
+                                else if (codeReportDesk.Project == "ANY")
                                 {
-                                    list = await _dataService.SearchCodingLogs(_reportDesk.Query, appFilter.appID);
+                                    list = await _dataService.SearchCodingLogs(codeReportDesk.Query, appFilter.appID);
                                 }
                                 else
                                 {
                                     list = projectFilter is null || appFilter is null
                                         ? throw new ArgumentNullException("Project not found.")
-                                        : await _dataService.SearchCodingLogs(_reportDesk.Query,
+                                        : await _dataService.SearchCodingLogs(codeReportDesk.Query,
                                             projectFilter.projectID, appFilter.appID);
                                 }
                             }
@@ -151,10 +161,10 @@ namespace Data_Logger_1._3.Commands.ReporterCommands
 
                             foreach (var record in list)
                             {
-                                items.Add(new code_SearchResultViewModel(record, _reportDesk, _navigationService));
+                                items.Add(new code_SearchResultViewModel(record, codeReportDesk, _navigationService));
                             }
 
-                            _reportDesk.SearchBarItems = items;
+                            codeReportDesk.SearchBarItems = items;
 
                             break;
                         }
