@@ -3,7 +3,6 @@ using Data_Logger_1._3.ViewModels.Reporter.Updater;
 using MVVMEssentials.Commands;
 using System.Diagnostics;
 using System.Windows;
-using Data_Logger_1._3.Commands.PostItCommands;
 
 namespace Data_Logger_1._3.Commands.ReporterCommands.UpdateCommands
 {
@@ -16,17 +15,14 @@ namespace Data_Logger_1._3.Commands.ReporterCommands.UpdateCommands
         private readonly EF_EditPostItViewModel _efEditPostItViewModel;
         private readonly EF_PostItViewModel _efPostItViewModel;
         private ActionType _actionType = ActionType.Create;
-        private PostCommand.PostItContext _postItContext = PostCommand.PostItContext.POSTIT;
 
-        public EF_PostCommand(NavigationService navigationService, ReporterUpdaterViewModel reporterUpdaterViewModel, EF_PostItViewModel efPostItViewModel)
+
+        public EF_PostCommand(NavigationService navigationService, ReporterUpdaterViewModel reporterUpdaterViewModel)
         {
             try
             {
-
                 _navigationService = navigationService ?? throw new ArgumentNullException(nameof(navigationService));
                 _reporterUpdaterViewModel = reporterUpdaterViewModel ?? throw new ArgumentNullException(nameof(reporterUpdaterViewModel));
-                _efPostItViewModel = efPostItViewModel ?? throw new ArgumentNullException(nameof(efPostItViewModel));
-
             }
             catch (ArgumentNullException nullx)
             {
@@ -38,12 +34,12 @@ namespace Data_Logger_1._3.Commands.ReporterCommands.UpdateCommands
 
             }
         }
+
 
         public EF_PostCommand(ActionType actionType, NavigationService navigationService, ReporterUpdaterViewModel reporterUpdaterViewModel, EF_EditPostItViewModel efEditPostItViewModel, EF_PostItViewModel efPostItViewModel)
         {
             try
             {
-
                 _navigationService = navigationService ?? throw new ArgumentNullException(nameof(navigationService));
                 _reporterUpdaterViewModel = reporterUpdaterViewModel ?? throw new ArgumentNullException(nameof(reporterUpdaterViewModel));
                 _efEditPostItViewModel = efEditPostItViewModel ?? throw new ArgumentNullException(nameof(efEditPostItViewModel));
@@ -60,7 +56,7 @@ namespace Data_Logger_1._3.Commands.ReporterCommands.UpdateCommands
             }
         }
 
-        public EF_PostCommand(ActionType actionType, PostCommand.PostItContext postItContext, NavigationService navigationService, ReporterUpdaterViewModel reporterUpdaterViewModel, EF_EditPostItViewModel efEditPostItViewModel)
+        public EF_PostCommand(NavigationService navigationService, ReporterUpdaterViewModel reporterUpdaterViewModel, EF_EditPostItViewModel efEditPostItViewModel)
         {
             try
             {
@@ -68,8 +64,6 @@ namespace Data_Logger_1._3.Commands.ReporterCommands.UpdateCommands
                 _navigationService = navigationService ?? throw new ArgumentNullException(nameof(navigationService));
                 _reporterUpdaterViewModel = reporterUpdaterViewModel ?? throw new ArgumentNullException(nameof(reporterUpdaterViewModel));
                 _efEditPostItViewModel = efEditPostItViewModel ?? throw new ArgumentNullException(nameof(efEditPostItViewModel));
-                _actionType = actionType;
-                _postItContext = postItContext;
             }
             catch (ArgumentNullException nullx)
             {
