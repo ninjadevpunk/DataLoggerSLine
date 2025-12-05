@@ -78,6 +78,20 @@ namespace Data_Logger_1._3.Services
 
             return postItVM;
         }
+
+        public async Task<EF_EditPostItViewModel> Create_EF_EditPostItViewModel(ReporterUpdaterViewModel reporterUpdaterViewModel, LOG.CATEGORY category)
+        {
+            var ef_editPostItViewModel = new EF_EditPostItViewModel(
+                _serviceProvider.GetRequiredService<NavigationService>(),
+                _serviceProvider.GetRequiredService<DataService>(),
+                reporterUpdaterViewModel
+            );
+
+            await ef_editPostItViewModel.LoadSubjectsAsync(category);
+
+
+            return ef_editPostItViewModel;
+        }
     }
 
 }
