@@ -4,7 +4,7 @@ using MVVMEssentials.Commands;
 
 namespace Data_Logger_1._3.Commands.ReporterCommands.UpdateCommands
 {
-    public class EF_AddPostItCommand : CommandBase
+    public class EF_AddPostItCommand : AsyncCommandBase
     {
         private readonly NavigationService _navigationService;
         private readonly ReporterUpdaterViewModel _reporterUpdaterViewModel;
@@ -26,9 +26,9 @@ namespace Data_Logger_1._3.Commands.ReporterCommands.UpdateCommands
 
         }
 
-        public override void Execute(object parameter)
+        protected override async Task ExecuteAsync(object parameter)
         {
-            //_navigationService.NavigateToReporterPostItCreator(_reporterUpdaterViewModel);
+            await _navigationService.NavigateToPostItCreator(_reporterUpdaterViewModel);
         }
     }
 }
