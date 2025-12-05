@@ -1,4 +1,5 @@
-﻿using Data_Logger_1._3.Commands.PostItCommands;
+﻿using Data_Logger_1._3.Commands.LogCacheCommands;
+using Data_Logger_1._3.Commands.PostItCommands;
 using Data_Logger_1._3.Commands.ReporterCommands.UpdateCommands;
 using Data_Logger_1._3.Components.Subcontrols;
 using Data_Logger_1._3.Components.Subcontrols_View;
@@ -822,7 +823,7 @@ namespace Data_Logger_1._3.Services
 
             try
             {
-                NavigationContext = NavContext.EDITOR;
+                NavigationContext = NavContext.DASHBOARD;
 
                 var uiFactory = _serviceProvider.GetRequiredService<UIFactory>();
                 var loggerViewPage = uiFactory.CreatePage<LoggerViewPage>();
@@ -874,6 +875,74 @@ namespace Data_Logger_1._3.Services
                             break;
                         }
                 }
+
+            }
+            catch (Exception ex)
+            {
+                await master.HandleExceptionAsync(ex, "NavigateToLoggerEditor()");
+            }
+        }
+
+        public async Task NavigateToViewer(LOG log)
+        {
+            using var scope = _serviceProvider.CreateScope();
+            var master = scope.ServiceProvider.GetRequiredService<ENTITYMASTER>();
+
+            try
+            {
+                NavigationContext = NavContext.DASHBOARD;
+
+                var uiFactory = _serviceProvider.GetRequiredService<UIFactory>();
+                var loggerViewPage = uiFactory.CreatePage<LoggerViewPage>();
+                const string displayPic = "/Assets/login/user.png";
+                var userProfilePic = _serviceProvider.GetRequiredService<AuthService>().Account.ProfilePic;
+
+                SetLoggerFrame(loggerViewPage.frame_VARIATIONS);
+
+                if (CacheContext == CacheContext.AndroidStudio)
+                    SetAndroidStudioFrame(loggerViewPage.frame_ANDROIDSTUDIO);
+                else
+                    SetAndroidStudioFrame(null);
+
+                switch (CacheContext)
+                {
+                    default:
+                        {
+
+                            var codeViewerViewModel = _serviceProvider.GetRequiredService<codeViewerViewModel>();
+                            codeViewerViewModel.OKCommand = new ViewerOKCommand(this, ViewType.Log);
+
+                            codeViewerViewModel.SignUpImage = userProfilePic;
+
+                            if (codeViewerViewModel.SignUpImage == displayPic)
+                                codeViewerViewModel.SignUpImage = string.Empty;
+
+                            var codingLOG = (CodingLOG)log;
+
+                            codeViewerViewModel.ProjectName = codingLOG.Project.Name;
+                            codeViewerViewModel.ApplicationName = codingLOG.Application.Name;
+                            codeViewerViewModel.Date = codingLOG.Start.ToString("d MMMM yyyy HH:ss");
+
+                            codeViewerViewModel.Output = codingLOG.Output.Name;
+                            codeViewerViewModel.Type = codingLOG.Type.Name;
+
+                            foreach (var postIt in codingLOG.PostItList)
+                            {
+                                codeViewerViewModel.AddPostIt(new PostItViewModel(this,
+                                        postIt.Subject.Project, postIt.Subject.Subject, postIt.Error,
+                                        postIt.Solution, postIt.Suggestion, postIt.Comment));
+                            }
+
+                            codeViewerViewModel.BugsFound = codingLOG.Bugs == 1 ? $"{codingLOG.Bugs.ToString()} Bug Found" : $"{codingLOG.Bugs.ToString()} Bugs Found";
+                            codeViewerViewModel.ApplicationOpened = codingLOG.Success ? "Launch Successful" : "Unsuccessful Launch";
+
+
+                            await NavigateToPage(loggerViewPage, codeViewerViewModel, new coding_UserControl_View());
+
+                            break;
+                        }
+                }
+
             }
             catch (Exception ex)
             {
