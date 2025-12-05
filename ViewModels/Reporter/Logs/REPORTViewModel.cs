@@ -31,7 +31,7 @@ namespace Data_Logger_1._3.ViewModels.Reporter
 
 
 
-        public int ViewModelID => _LOG.ID;
+        public int LogID => _LOG.ID;
 
         public string ProjectName => $"{_LOG.Project.Name} ({_LOG.Application.Name})";
 
