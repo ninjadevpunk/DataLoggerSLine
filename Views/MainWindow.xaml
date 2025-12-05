@@ -470,7 +470,8 @@
                NavigationUIVisibility="Hidden"
                Source="/Views/LogPages/LogCachePage.xaml"
                HorizontalAlignment="Stretch"
-               VerticalAlignment="Stretch" />
+               VerticalAlignment="Stretch"
+               JournalOwnership="OwnsJournal" />
 
        
 
