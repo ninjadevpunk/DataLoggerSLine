@@ -21,6 +21,7 @@ namespace Data_Logger_1._3.ViewModels.Reporter.Desk
         public CodeReportDeskViewModel(NavigationService navigationService, DataService dataService, PDFService pdfService) : 
             base(navigationService, dataService, pdfService)
         {
+
             SearchCommand = new SearchCommand(this, _dataService, _navigationService, Context);
             ExportCommand = new ExportCommand();
             ReturnToDashboard = new DashboardCommand(_navigationService, Context);
