@@ -53,7 +53,6 @@ namespace Data_Logger_1._3.ViewModels.Reporter.Updater
 
 
             EditCommand = new EF_EditPostItCommand(_navigationService, reporterUpdaterViewModel);
-            PostCommand = new EF_PostCommand(_navigationService, _reporterUpdaterViewModel, this);
             DeletePostItCommand = new EF_DeletePostItCommand(_reporterUpdaterViewModel);
             EraserCommand = new EF_EraserCommand(this);
             HighlighterCommand = new EF_HighlighterCommand(this);
@@ -86,7 +85,6 @@ namespace Data_Logger_1._3.ViewModels.Reporter.Updater
             Option1Check = true;
 
             EditCommand = new EF_EditPostItCommand(_navigationService, reporterUpdaterViewModel);
-            PostCommand = new EF_PostCommand(_navigationService, _reporterUpdaterViewModel, this);
             DeletePostItCommand = new EF_DeletePostItCommand(_reporterUpdaterViewModel);
             EraserCommand = new EF_EraserCommand(this);
             HighlighterCommand = new EF_HighlighterCommand(this);
@@ -132,7 +130,6 @@ namespace Data_Logger_1._3.ViewModels.Reporter.Updater
             Option1Check = true;
 
             EditCommand = new EF_EditPostItCommand(_navigationService, reporterUpdaterViewModel);
-            PostCommand = new EF_PostCommand(_navigationService, _reporterUpdaterViewModel, this);
             DeletePostItCommand = new EF_DeletePostItCommand(_reporterUpdaterViewModel);
             EraserCommand = new EF_EraserCommand(this);
             HighlighterCommand = new EF_HighlighterCommand(this);
