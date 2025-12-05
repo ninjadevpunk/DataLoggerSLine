@@ -75,14 +75,13 @@ namespace Data_Logger_1._3.Services
 
             return await _master.CodingLogs
                 .Where(c => c.accountID == accountID && !new[] { 1, 2 }.Contains(c.Application.appID))
+                .Include(l => l.Author)
                 .Include(l => l.Project)
                 .Include(l => l.Application)
                 .Include(l => l.Output)
                 .Include(l => l.Type)
                 .Include(l => l.PostItList)
                 .ThenInclude(p => p.Subject)
-                .Include(l => l.PostItList)
-                .ThenInclude(p => p.Author)
                 .OrderBy(c => c.Start)
                 .ToListAsync();
         }
