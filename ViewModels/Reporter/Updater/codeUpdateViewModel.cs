@@ -35,7 +35,7 @@ namespace Data_Logger_1._3.ViewModels.Reporter.Updater
             BugsFound = 0;
             ApplicationOpened = false;
 
-
+            EditCommand = new UpdateCommand(Context, this, _reportDeskViewModel, _navigationService, _dataService, log);
             ClearLoggerCommand = new EF_ResetLoggerCommand();
         }
 
@@ -58,6 +58,7 @@ namespace Data_Logger_1._3.ViewModels.Reporter.Updater
 
             }
 
+            EditCommand = new UpdateCommand(Context, this, _reportDesk, _navigationService, _dataService, log);
             ClearLoggerCommand = new EF_ResetLoggerCommand();
         }
 
