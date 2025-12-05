@@ -543,6 +543,8 @@ namespace Data_Logger_1._3.Services
 
         public async Task NavigateToLogCachePage(CacheContext cacheContext)
         {
+            _mainwindowFrame.RemoveBackEntry();
+
             SetDashboardContext();
             CacheContext = cacheContext;
 
@@ -601,6 +603,7 @@ namespace Data_Logger_1._3.Services
             var mainWindowViewModel = _serviceProvider.GetRequiredService<MainWindowViewModel>();
             CheckBackNavigationButton(mainWindowViewModel);
 
+            _mainwindowFrame.RemoveBackEntry();
         }
 
         public async Task NavigateToLogCachePage<TViewModel>(CacheContext cacheContext) where TViewModel : LogCacheViewModel
@@ -1079,12 +1082,27 @@ namespace Data_Logger_1._3.Services
             CheckBackNavigationButton(window);
         }
 
-        public async Task NavigateToPostItCreator(ViewModelBase createViewModel, ViewModelBase stickNotesViewModel)
+        public async Task NavigateToPostItCreator(ReporterUpdaterViewModel reporterUpdaterViewModel)
+        {
+            NavigationContext = NavContext.EDITOR_POSTIT;
+
+            var uiFactory = _serviceProvider.GetRequiredService<UIFactory>();
+            var viewModelFactory = _serviceProvider.GetRequiredService<ViewModelFactory>();
+            var efEditPostItViewModel = await viewModelFactory.Create_EF_EditPostItViewModel(reporterUpdaterViewModel, reporterUpdaterViewModel.Category);
+            var postItPage = uiFactory.Create_EF_PostItPage(efEditPostItViewModel);
+
+            await NavigateToPage(postItPage);
+
+            var window = _serviceProvider.GetRequiredService<MainWindowViewModel>();
+            CheckBackNavigationButton(window);
+        }
+
+        public async Task NavigateToPostItCreator(ViewModelBase createViewModel, ViewModelBase stickyNotesViewModel)
         {
             if (createViewModel is LoggerCreateViewModel)
             {
                 var logger = createViewModel as LoggerCreateViewModel;
-                var postItViewModel = stickNotesViewModel as PostItViewModel;
+                var postItViewModel = stickyNotesViewModel as PostItViewModel;
 
 
                 var subject = postItViewModel.Subject;
@@ -1117,7 +1135,7 @@ namespace Data_Logger_1._3.Services
             else
             {
                 var updater = createViewModel as ReporterUpdaterViewModel;
-                var efPostItViewModel = stickNotesViewModel as EF_EditPostItViewModel;
+                var efPostItViewModel = stickyNotesViewModel as EF_EditPostItViewModel;
 
                 var subject = efPostItViewModel.Subject;
                 await efPostItViewModel.LoadSubjectsAsync(updater.Category);
@@ -1130,8 +1148,7 @@ namespace Data_Logger_1._3.Services
                 {
                     NavigationContext = NavContext.POSTIT;
 
-                    var context = PostCommand.PostItContext.POSTIT;
-                    efPostItViewModel.PostCommand = new EF_PostCommand(EF_PostCommand.ActionType.Edit, context, this, updater, efPostItViewModel);
+                    efPostItViewModel.PostCommand = new EF_PostCommand(this, updater, efPostItViewModel);
                 }
 
                 var uiFactory = _serviceProvider.GetRequiredService<UIFactory>();
@@ -1164,6 +1181,8 @@ namespace Data_Logger_1._3.Services
 
         public async Task NavigateToReporter()
         {
+            _mainwindowFrame.RemoveBackEntry();
+
             SetReporterContext();
 
 
