@@ -9,11 +9,11 @@ namespace Data_Logger_1._3.Commands.ReporterCommands
     /// <summary>
     /// Returns the user to the log cache.
     /// </summary>
-    public class DashboardCommand : CommandBase
+    public class ReporterReturnCommand : AsyncCommandBase
     {
         private readonly NavigationService _navigationService;
         public CacheContext Context { get; set; } = CacheContext.Coding;
-        public DashboardCommand(NavigationService navigationService, CacheContext cacheContext)
+        public ReporterReturnCommand(NavigationService navigationService, CacheContext cacheContext)
         {
             try
             {
@@ -26,11 +26,11 @@ namespace Data_Logger_1._3.Commands.ReporterCommands
             }
         }
 
-        public override void Execute(object parameter)
+        protected override async Task ExecuteAsync(object parameter)
         {
             try
             {
-                _navigationService.NavigateToLogCachePage(Context);
+                await _navigationService.NavigateToLogCachePage(Context);
             }
             catch (Exception e)
             {

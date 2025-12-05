@@ -61,7 +61,7 @@ namespace Data_Logger_1._3.ViewModels.Reporter.Desk
 
             SearchCommand = new SearchCommand(this, _dataService, _navigationService, Context);
             ExportCommand = new ExportCommand();
-            ReturnToDashboard = new DashboardCommand(_navigationService, Context);
+            ReturnToDashboard = new ReporterReturnCommand(_navigationService, Context);
 
             _ = UpdateLogsAsync();
 
@@ -114,7 +114,7 @@ namespace Data_Logger_1._3.ViewModels.Reporter.Desk
 
             SearchCommand = new SearchCommand(this, _dataService, _navigationService, Context);
             ExportCommand = new ExportCommand();
-            ReturnToDashboard = new DashboardCommand(_navigationService, Context);
+            ReturnToDashboard = new ReporterReturnCommand(_navigationService, Context);
 
             _ = UpdateLogsAsync();
 

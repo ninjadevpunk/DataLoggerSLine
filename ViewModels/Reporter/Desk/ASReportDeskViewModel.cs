@@ -10,12 +10,12 @@ namespace Data_Logger_1._3.ViewModels.Reporter.Desk
 
         public ASReportDeskViewModel(NavigationService navigationService, DataService dataService) : base(navigationService, dataService)
         {
-            ReturnToDashboard = new DashboardCommand(_navigationService, Context);
+            ReturnToDashboard = new ReporterReturnCommand(_navigationService, Context);
         }
 
         public ASReportDeskViewModel(NavigationService navigationService, DataService dataService, PDFService pdfService) : base(navigationService, dataService, pdfService)
         {
-            ReturnToDashboard = new DashboardCommand(_navigationService, Context);
+            ReturnToDashboard = new ReporterReturnCommand(_navigationService, Context);
         }
 
         public override async Task UpdateLogsAsync()
