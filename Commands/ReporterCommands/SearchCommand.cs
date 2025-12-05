@@ -26,6 +26,7 @@ namespace Data_Logger_1._3.Commands.ReporterCommands
         public SearchCommand(ReportDeskViewModel reportDesk, DataService dataService, NavigationService navigationService, CacheContext cacheContext)
         {
             _reportDesk = reportDesk ?? throw new ArgumentNullException(nameof(reportDesk));
+            _navigationService = navigationService ?? throw new ArgumentNullException(nameof(navigationService));
             _dataService = dataService ?? throw new ArgumentNullException(nameof(dataService));
             Context = cacheContext;
         }
