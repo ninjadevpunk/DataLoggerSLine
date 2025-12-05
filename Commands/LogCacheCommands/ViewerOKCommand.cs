@@ -27,6 +27,19 @@ namespace Data_Logger_1._3.Commands.LogCacheCommands
         }
 
 
+        public ViewerOKCommand(NavigationService navigationService, ViewType viewType)
+        {
+            try
+            {
+                _navigationService = navigationService ?? throw new ArgumentNullException(nameof(navigationService));
+                _viewType = viewType;
+            }
+            catch (Exception)
+            {
+                // TODO
+            }
+        }
+
         public ViewerOKCommand(NavigationService navigationService, CacheContext cacheContext, ViewType viewType)
         {
             try
@@ -47,7 +60,7 @@ namespace Data_Logger_1._3.Commands.LogCacheCommands
                 await _navigationService.NavigateToLogCachePage(_cacheContext);
             else
             {
-                await _navigationService.NavigateToReporter();
+                _navigationService.GoBack(false);
             }
         }
     }
