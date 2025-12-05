@@ -49,7 +49,7 @@ namespace Data_Logger_1._3.ViewModels.Reporter.Updater
 
             CurrentStartDateCommand = new CurrentStartDateCommand(this);
             CurrentEndDateCommand = new CurrentEndDateCommand(this);
-            EditCommand = new UpdateCommand(Context, this, _reportDesk, _navigationService, _dataService, log);
+            
             AddPostItCommand = new EF_AddPostItCommand(_navigationService, this);
             ClearPostItListCommand = new EF_ClearPostItListCommand(this);
         }
