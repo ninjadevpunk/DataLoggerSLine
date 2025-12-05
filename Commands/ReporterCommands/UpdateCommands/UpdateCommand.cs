@@ -1,23 +1,18 @@
 ﻿using Data_Logger_1._3.Models;
-using Data_Logger_1._3.Models.App_Models;
 using Data_Logger_1._3.Services;
-using Data_Logger_1._3.ViewModels.Dialogs;
-using Data_Logger_1._3.ViewModels.LogViewModels;
 using Data_Logger_1._3.ViewModels.Reporter;
 using Data_Logger_1._3.ViewModels.Reporter.Desk;
-using Data_Logger_1._3.ViewModels.Reporter.Logs;
 using Data_Logger_1._3.ViewModels.Reporter.Updater;
 using MVVMEssentials.Commands;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
-using System.Threading.Tasks;
 using System.Windows;
 using static Data_Logger_1._3.Services.Cachemaster;
 
 namespace Data_Logger_1._3.Commands.ReporterCommands.UpdateCommands
 {
     /// <summary>
-    /// This class will ne used to update database logs from the log editor.
+    /// This class will be used to update database logs from the log editor.
     /// </summary>
     public class UpdateCommand : AsyncCommandBase
     {
@@ -39,9 +34,10 @@ namespace Data_Logger_1._3.Commands.ReporterCommands.UpdateCommands
             try
             {
                 _cacheContext = context;
+                _dataService = dataService ?? throw new ArgumentNullException(nameof(dataService));
+                _navigationService = navigationService ?? throw new ArgumentNullException(nameof(navigationService));
                 _editor = reporterEditorViewModel ?? throw new ArgumentNullException(nameof(reporterEditorViewModel));
                 _desk = reportDeskViewModel ?? throw new ArgumentNullException(nameof(reportDeskViewModel));
-                _dataService = dataService ?? throw new ArgumentNullException(nameof(dataService));
                 _log = log ?? throw new ArgumentNullException(nameof(log));
             }
             catch (Exception ex)
@@ -89,11 +85,6 @@ namespace Data_Logger_1._3.Commands.ReporterCommands.UpdateCommands
                     _log.Type = await _dataService.FindType(_editor.Type) ?? new(39, "Note");
                 }
 
-                var postItCount = _log.PostItList.Count;
-                var postItList = _log.PostItList;
-                var editorPostItCount = _editor.PostIts.Count;
-                var editorPostIts = _editor.PostIts;
-
                 foreach (var editorPostIt in _editor.PostIts)
                 {
                     var subject = await _dataService.FindSubject(editorPostIt.Subject, _log.Category) ??
@@ -120,6 +111,7 @@ namespace Data_Logger_1._3.Commands.ReporterCommands.UpdateCommands
                             Log = _log,
                             accountID = _log.accountID
                         };
+
                         _log.PostItList.Add(newPostIt);
                     }
                     else
@@ -176,6 +168,7 @@ namespace Data_Logger_1._3.Commands.ReporterCommands.UpdateCommands
 
 
                 await _dataService.SaveChangesAsync();
+                await _navigationService.NavigateToReporter();
 
 
 
