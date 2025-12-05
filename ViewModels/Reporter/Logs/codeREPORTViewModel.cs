@@ -1,4 +1,5 @@
-﻿using Data_Logger_1._3.Commands.ReporterCommands;
+﻿using Data_Logger_1._3.Commands.LogCacheCommands;
+using Data_Logger_1._3.Commands.ReporterCommands;
 using Data_Logger_1._3.Models;
 using Data_Logger_1._3.Services;
 using Data_Logger_1._3.ViewModels.Reporter.Desk;
@@ -17,6 +18,7 @@ namespace Data_Logger_1._3.ViewModels.Reporter.Logs
             _CodingLOG = codingLOG;
             SingleExport = new SingleExportCommand(codingLOG, Context, pdfService);
             EditLogCommand = new EditLogCommand(codingLOG, codeReportDeskViewModel, navigationService);
+            ViewLogCommand = new ViewCommand(navigationService, Context, ViewType.Log, codingLOG);
         }
 
 

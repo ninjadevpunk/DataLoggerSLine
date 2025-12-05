@@ -24,7 +24,7 @@ namespace Data_Logger_1._3.ViewModels.LogViewModels
         {
             _CodeLOG = codingLOG;
             EditCommand = new EditCommand(LOGViewModelContext, _vm._navigationService, _vm);
-            ViewCommand = new ViewCommand(_vm._navigationService, _vm, LOGViewModelContext);
+            ViewCommand = new ViewCommand(_vm._navigationService, LOGViewModelContext);
 
             _cacheMaster.SaveCodeViewModel(this, LOGViewModelContext);
         }
@@ -34,7 +34,7 @@ namespace Data_Logger_1._3.ViewModels.LogViewModels
         {
             _CodeLOG = codingLOG;
             EditCommand = new EditCommand(LOGViewModelContext, _vm._navigationService, _vm);
-            ViewCommand = new ViewCommand(_vm._navigationService, _vm, LOGViewModelContext);
+            ViewCommand = new ViewCommand(_vm._navigationService, LOGViewModelContext);
         }
 
 
