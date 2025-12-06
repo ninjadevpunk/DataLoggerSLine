@@ -83,7 +83,7 @@ namespace Data_Logger_1._3.Commands.LoggerCommands
                             if (result == true)
                             {
                                 var codingCreator = (codeCreateViewModel)_loggerCreateViewModel;
-                                _dataService.SaveLog(new CodingLOG(
+                                _dataService.SaveLOG(new CodingLOG(
                                         0,
                                         _dataService.GetUser(),
                                         project,
