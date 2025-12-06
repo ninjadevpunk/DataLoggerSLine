@@ -19,6 +19,7 @@ namespace Data_Logger_1._3.ViewModels.Reporter.Logs
             SingleExport = new SingleExportCommand(codingLOG, Context, pdfService);
             EditLogCommand = new EditLogCommand(codingLOG, codeReportDeskViewModel, navigationService);
             ViewLogCommand = new ViewCommand(navigationService, Context, ViewType.Log, codingLOG);
+            DeleteLogCommand = new DeleteLogCommand(dataService, codeReportDeskViewModel, Context, codingLOG);
         }
 
 
