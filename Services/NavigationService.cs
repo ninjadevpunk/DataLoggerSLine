@@ -261,7 +261,7 @@ namespace Data_Logger_1._3.Services
 
         public async Task NavigateToMainWindow()
         {
-            using var scope = _serviceProvider.CreateScope();
+            await using var scope = _serviceProvider.CreateAsyncScope();
             var master = scope.ServiceProvider.GetRequiredService<ENTITYMASTER>();
 
 
@@ -327,7 +327,7 @@ namespace Data_Logger_1._3.Services
         public async Task NavigateToPage<TViewModel>(Page page, UserControl subPage = null)
             where TViewModel : ViewModelBase
         {
-            using var scope = _serviceProvider.CreateScope();
+            await using var scope = _serviceProvider.CreateAsyncScope();
             var master = scope.ServiceProvider.GetRequiredService<ENTITYMASTER>();
 
 
@@ -419,7 +419,7 @@ namespace Data_Logger_1._3.Services
 
         public async Task NavigateToPage(Page page, ViewModelBase viewModel, UserControl subPage = null)
         {
-            using var scope = _serviceProvider.CreateScope();
+            await using var scope = _serviceProvider.CreateAsyncScope();
             var master = scope.ServiceProvider.GetRequiredService<ENTITYMASTER>();
 
 
@@ -460,7 +460,7 @@ namespace Data_Logger_1._3.Services
             where TPage : Page, new()
             where TViewModel : ViewModelBase
         {
-            using var scope = _serviceProvider.CreateScope();
+            await using var scope = _serviceProvider.CreateAsyncScope();
             var master = scope.ServiceProvider.GetRequiredService<ENTITYMASTER>();
 
 
@@ -487,7 +487,7 @@ namespace Data_Logger_1._3.Services
 
         public async Task NavigateToPage(Page page)
         {
-            using var scope = _serviceProvider.CreateScope();
+            await using var scope = _serviceProvider.CreateAsyncScope();
             var master = scope.ServiceProvider.GetRequiredService<ENTITYMASTER>();
 
             try
@@ -633,7 +633,7 @@ namespace Data_Logger_1._3.Services
 
         public async Task NavigateToLoggerCreator()
         {
-            using var scope = _serviceProvider.CreateScope();
+            await using var scope = _serviceProvider.CreateAsyncScope();
             var master = scope.ServiceProvider.GetRequiredService<ENTITYMASTER>();
 
             try
@@ -728,7 +728,7 @@ namespace Data_Logger_1._3.Services
 
         public async Task NavigateToLoggerEditor(ViewModelBase viewModelBase)
         {
-            using var scope = _serviceProvider.CreateScope();
+            await using var scope = _serviceProvider.CreateAsyncScope();
             var master = scope.ServiceProvider.GetRequiredService<ENTITYMASTER>();
 
             try
@@ -818,7 +818,7 @@ namespace Data_Logger_1._3.Services
 
         public async Task NavigateToViewer(ViewModelBase viewModelBase)
         {
-            using var scope = _serviceProvider.CreateScope();
+            await using var scope = _serviceProvider.CreateAsyncScope();
             var master = scope.ServiceProvider.GetRequiredService<ENTITYMASTER>();
 
             try
@@ -885,7 +885,7 @@ namespace Data_Logger_1._3.Services
 
         public async Task NavigateToViewer(LOG log)
         {
-            using var scope = _serviceProvider.CreateScope();
+            await using var scope = _serviceProvider.CreateAsyncScope();
             var master = scope.ServiceProvider.GetRequiredService<ENTITYMASTER>();
 
             try
@@ -952,7 +952,7 @@ namespace Data_Logger_1._3.Services
 
         public async Task NavigateToLogViewer(LOG log)
         {
-            using var scope = _serviceProvider.CreateScope();
+            await using var scope = _serviceProvider.CreateAsyncScope();
             var master = scope.ServiceProvider.GetRequiredService<ENTITYMASTER>();
 
             try
@@ -1017,7 +1017,7 @@ namespace Data_Logger_1._3.Services
 
         public async Task NavigateToUpdater(LOG log, ReportDeskViewModel reportDeskViewModel)
         {
-            using var scope = _serviceProvider.CreateScope();
+            await using var scope = _serviceProvider.CreateAsyncScope();
             var master = scope.ServiceProvider.GetRequiredService<ENTITYMASTER>();
 
             try
