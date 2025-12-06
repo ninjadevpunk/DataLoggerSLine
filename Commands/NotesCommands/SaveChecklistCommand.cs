@@ -79,7 +79,7 @@ namespace Data_Logger_1._3.Commands.NotesCommands
 
 
                 // Send to database
-                await _dataService.StoreLog(noteItem);
+                await _dataService.InsertLOG(noteItem);
 
                 var list = _notesViewModel.NoteItems;
                 list.Add(new NoteLOGViewModel(_dataService, _notesViewModel, noteItem));
