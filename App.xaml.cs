@@ -85,12 +85,13 @@ namespace Data_Logger_1._3
                     service.AddScoped((services) => new ENTITYWRITER(services.GetRequiredService<ENTITYREADER>(), services.GetRequiredService<ENTITYMASTER>()));
                     service.AddScoped<ENTITYHANDLER>();
 
-                    service.AddSingleton((services) => new AuthService(services.GetRequiredService<ENTITYWRITER>()));
+                    service.AddSingleton((services) => new AuthService(services));
 
                     service.AddSingleton((services) => new DataService(services.GetRequiredService<ENTITYWRITER>(), services.GetRequiredService<ENTITYREADER>(),
                         services.GetRequiredService<ENTITYHANDLER>(),
                         services.GetRequiredService<Cachemaster>(),
-                        services.GetRequiredService<AuthService>()));
+                        services.GetRequiredService<AuthService>(),
+                        services));
 
                     service.AddSingleton((services) => new NavigationService(services));
 
