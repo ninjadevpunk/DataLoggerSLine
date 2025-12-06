@@ -59,11 +59,31 @@ namespace Data_Logger_1._3.Services
 
 
 
-        public async Task<bool> DeleteLog(LOG log)
+        public async Task<bool> DeleteLOG(LOG log)
         {
-            bool isDeleted = false;
+            if(log == null)
+                return false;
 
-            return isDeleted;
+            _master.Remove(log);
+
+            await _master.SaveChangesAsync();
+
+            return true;
+        }
+
+        public async Task<bool> DeleteLOGByID(int ID)
+        {
+            var logDeletionCandidate = await _master.Logs
+                .FirstOrDefaultAsync(log => log.ID == ID);
+
+            if (logDeletionCandidate == null)
+                return false;
+
+            _master.Logs.Remove(logDeletionCandidate);
+
+            await _master.SaveChangesAsync();
+
+            return true;
         }
 
         public async Task<bool> DeleteNote(int ID)
