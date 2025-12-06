@@ -658,8 +658,10 @@ namespace Data_Logger_1._3.Services
 
             try
             {
+                var onlineUserID = await GetOnlineAccountIDAsync();
+
                 var qtLogs = _master.Logs
-                    .Where(l => l.accountID == _master.User.accountID)
+                    .Where(l => l.accountID == onlineUserID)
                     .Where(l => l.appID == 1)
                     .Where(l => l.Category == LOG.CATEGORY.CODING);
 
@@ -685,8 +687,10 @@ namespace Data_Logger_1._3.Services
 
             try
             {
+                var onlineUserID = await GetOnlineAccountIDAsync();
+
                 var androidLogs = _master.Logs
-                    .Where(l => l.accountID == _master.User.accountID)
+                    .Where(l => l.accountID == onlineUserID)
                     .Where(l => l.appID == 2)
                     .Where(l => l.Category == LOG.CATEGORY.CODING);
 
@@ -848,6 +852,7 @@ namespace Data_Logger_1._3.Services
                 return await _master.Applications
                     .Where(a => new[] { 1, accountID }.Contains(a.accountID))
                     .Where(a => a.Name != "Unknown")
+                    .Include(a => a.User)
                     .ToListAsync();
             }
             catch (Exception ex)
@@ -878,6 +883,7 @@ namespace Data_Logger_1._3.Services
                     .Where(a => !new[] { 1, 2 }.Contains(a.appID))
                     .Where(a => a.Category == category)
                     .Where(a => a.Name != "Unknown")
+                    .Include(a => a.User)
                     .ToListAsync();
             }
             catch (Exception ex)
@@ -904,7 +910,9 @@ namespace Data_Logger_1._3.Services
 
                 return await _master.Projects
                     .Where(p => new[] { 1, accountID }.Contains(p.accountID))
-                    .Where(a => a.Name != "Unnamed Project")
+                    .Where(p => p.Name != "Unnamed Project")
+                    .Include(p => p.User)
+                    .Include(p => p.Application)
                     .ToListAsync();
             }
             catch (Exception ex)
@@ -934,6 +942,8 @@ namespace Data_Logger_1._3.Services
                     .Where(p => new[] { 1, accountID }.Contains(p.accountID))
                     .Where(p => p.Category == category)
                     .Where(p => p.Name != "Unnamed Project")
+                    .Include(p => p.User)
+                    .Include(p => p.Application)
                     .ToListAsync();
             }
             catch (Exception ex)
@@ -965,6 +975,8 @@ namespace Data_Logger_1._3.Services
                     .Where(p => new[] { 1, accountID }.Contains(p.accountID))
                     .Where(p => p.Application == app)
                     .Where(p => p.Name != "Unnamed Project")
+                    .Include(p => p.User)
+                    .Include(p => p.Application)
                     .ToListAsync();
             }
             catch (Exception ex)
@@ -995,6 +1007,9 @@ namespace Data_Logger_1._3.Services
                     .Where(s => new[] { 1, accountID }.Contains(s.accountID))
                     .Where(s => s.Category == category)
                     .Where(s => s.Subject != "No Subject")
+                    .Include(s => s.User)
+                    .Include(s => s.Application)
+                    .Include(s => s.Project)
                     .ToListAsync();
             }
             catch (Exception ex)
@@ -1025,6 +1040,9 @@ namespace Data_Logger_1._3.Services
                     .Where(s => s.appID == project.appID)
                     .Where(s => s.projectID == project.projectID)
                     .Where(s => s.Subject != "No Subject")
+                    .Include(s => s.User)
+                    .Include(s => s.Application)
+                    .Include(s => s.Project)
                     .ToListAsync();
             }
             catch (Exception ex)
@@ -1051,6 +1069,7 @@ namespace Data_Logger_1._3.Services
 
                 return await _master.Outputs
                     .Where(o => o.appID == 1)
+                    .Include(o => o.Application)
                     .ToListAsync();
             }
             catch (Exception ex)
@@ -1074,6 +1093,7 @@ namespace Data_Logger_1._3.Services
             {
                 return await _master.Outputs
                     .Where(o => o.appID == 2)
+                    .Include(o => o.Application)
                     .ToListAsync();
             }
             catch (Exception ex)
@@ -1099,6 +1119,7 @@ namespace Data_Logger_1._3.Services
                 return await _master.Outputs
                     .Where(o => o.Category == category)
                     .Where(o => !new[] { 1, 2 }.Contains(o.appID))
+                    .Include(o => o.Application)
                     .ToListAsync();
             }
             catch (Exception ex)
@@ -1128,6 +1149,7 @@ namespace Data_Logger_1._3.Services
             {
                 return await _master.Types
                     .Where(t => t.appID == 1)
+                    .Include(t => t.Application)
                     .ToListAsync();
             }
             catch (Exception ex)
@@ -1151,6 +1173,7 @@ namespace Data_Logger_1._3.Services
             {
                 return await _master.Types
                     .Where(t => t.appID == 2)
+                    .Include(t => t.Application)
                     .ToListAsync();
             }
             catch (Exception ex)
@@ -1176,6 +1199,7 @@ namespace Data_Logger_1._3.Services
                 return await _master.Types
                     .Where(t => t.Category == category)
                     .Where(t => !new[] { 1, 2 }.Contains(t.appID))
+                    .Include(t => t.Application)
                     .ToListAsync();
             }
             catch (Exception ex)
