@@ -162,7 +162,7 @@ namespace Data_Logger_1._3.Commands.ReporterCommands
 
                             foreach (var record in list)
                             {
-                                items.Add(new code_SearchResultViewModel(record, codeReportDesk, _navigationService));
+                                items.Add(new code_SearchResultViewModel(_navigationService, _dataService, record, codeReportDesk));
                             }
 
                             codeReportDesk.SearchBarItems = items;
