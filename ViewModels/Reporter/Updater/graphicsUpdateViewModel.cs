@@ -26,7 +26,7 @@ namespace Data_Logger_1._3.ViewModels.Reporter.Updater
         public IEnumerable<string> Units => _units;
         public IEnumerable<string> Sizes => _sizes;
 
-        public graphicsUpdateViewModel(NavigationService navigationService, ReportDeskViewModel reportDeskViewModel, DataService dataService, LOG log) : 
+        public graphicsUpdateViewModel(NavigationService navigationService, ReportDeskViewModel reportDeskViewModel, IDataService dataService, LOG log) : 
             base(navigationService, reportDeskViewModel, dataService, log)
         {
             AppFieldEnabled = true;

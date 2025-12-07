@@ -15,7 +15,7 @@ namespace Data_Logger_1._3.ViewModels.Dialogs.Create
 
         private readonly FilmViewModel _filmViewModel;
 
-        public filmCreateViewModel(NavigationService navigationService, LogCacheViewModel logCacheViewModel, DataService dataService)
+        public filmCreateViewModel(NavigationService navigationService, LogCacheViewModel logCacheViewModel, IDataService dataService)
             : base(navigationService, logCacheViewModel, dataService)
         {
             AppFieldEnabled = true;

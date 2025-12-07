@@ -22,7 +22,7 @@ namespace Data_Logger_1._3.ViewModels.LogViewModels
         #region Constructors
 
 
-        public NoteLOGViewModel(DataService dataService, NOTESViewModel notesViewModel, NoteItem noteItem)
+        public NoteLOGViewModel(IDataService dataService, NOTESViewModel notesViewModel, NoteItem noteItem)
         {
             _NoteItem = noteItem;
 

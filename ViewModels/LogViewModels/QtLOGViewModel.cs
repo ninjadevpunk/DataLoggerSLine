@@ -23,7 +23,8 @@ namespace Data_Logger_1._3.ViewModels.LogViewModels
 
 
 
-        public QtLOGViewModel(CodingLOG QtcodingLOG, LogCacheViewModel logCacheViewModel, ObservableCollection<PostItViewModel> createPostItViewModels, DataService dataService) :
+        public QtLOGViewModel(CodingLOG QtcodingLOG, LogCacheViewModel logCacheViewModel, 
+            ObservableCollection<PostItViewModel> createPostItViewModels, IDataService dataService) :
             base(QtcodingLOG, logCacheViewModel, createPostItViewModels, dataService)
         {
             _QtcodingLOG = QtcodingLOG;
@@ -34,7 +35,7 @@ namespace Data_Logger_1._3.ViewModels.LogViewModels
 
         }
 
-        public QtLOGViewModel(CodingLOG QtcodingLOG, LogCacheViewModel logCacheViewModel, DataService dataService) :
+        public QtLOGViewModel(CodingLOG QtcodingLOG, LogCacheViewModel logCacheViewModel, IDataService dataService) :
             base(QtcodingLOG, logCacheViewModel, dataService)
         {
             _QtcodingLOG = QtcodingLOG;

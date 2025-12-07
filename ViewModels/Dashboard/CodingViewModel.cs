@@ -26,12 +26,12 @@ namespace Data_Logger_1._3.ViewModels.Dashboard
         }
 
 
-        public CodingViewModel(NavigationService navigationService, DataService _dataService) : base(navigationService, _dataService)
+        public CodingViewModel(NavigationService navigationService, IDataService _dataService) : base(navigationService, _dataService)
         {
             CacheItems = new ObservableCollection<CodeLOGViewModel>();
         }
 
-        public CodingViewModel(string logCount, NavigationService navigationService, DataService _dataService) : base(navigationService, _dataService)
+        public CodingViewModel(string logCount, NavigationService navigationService, IDataService _dataService) : base(navigationService, _dataService)
         {
             CacheItems = new ObservableCollection<CodeLOGViewModel>();
 

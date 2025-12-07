@@ -9,13 +9,13 @@ namespace Data_Logger_1._3.ViewModels.Dashboard
     public class CodingAndroidViewModel : CodingViewModel
     {
 
-        public CodingAndroidViewModel(NavigationService navigationService, DataService dataService) : base(navigationService, dataService)
+        public CodingAndroidViewModel(NavigationService navigationService, IDataService dataService) : base(navigationService, dataService)
         {
             CacheItems = new ObservableCollection<AndroidLOGViewModel>();
 
         }
 
-        public CodingAndroidViewModel(string logCount, NavigationService navigationService, DataService dataService) : base(navigationService, dataService)
+        public CodingAndroidViewModel(string logCount, NavigationService navigationService, IDataService dataService) : base(navigationService, dataService)
         {
             CacheItems = new ObservableCollection<AndroidLOGViewModel>();
 

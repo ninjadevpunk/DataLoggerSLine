@@ -16,7 +16,7 @@ namespace Data_Logger_1._3.Services
 
         private readonly IServiceProvider _serviceProvider;
         private readonly AuthService _authService;
-        private readonly DataService _dataService;
+        private readonly IDataService _dataService;
 
 
         #endregion
@@ -124,7 +124,8 @@ namespace Data_Logger_1._3.Services
             _serviceProvider = serviceProvider;
 
             _authService = serviceProvider.GetRequiredService<AuthService>();
-            _dataService = serviceProvider.GetRequiredService<DataService>();
+            _dataService = serviceProvider.GetRequiredService<IDataService>();
+
 
             _codingQtDashboard = serviceProvider.GetRequiredService<CodingQtViewModel>();
             _codingAndroidDashboard = serviceProvider.GetRequiredService<CodingAndroidViewModel>();

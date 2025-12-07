@@ -11,12 +11,14 @@ namespace Data_Logger_1._3.ViewModels.Dialogs.Edit
     {
         private readonly FlexiLOGViewModel _flexiLOGViewModel;
 
-        public flexiEditViewModel(NavigationService navigationService, LogCacheViewModel logCacheViewModel, DataService dataService, ViewModelBase viewModelBase) : base(navigationService, logCacheViewModel, dataService)
+        public flexiEditViewModel(NavigationService navigationService, LogCacheViewModel logCacheViewModel, IDataService dataService, 
+            ViewModelBase viewModelBase) : base(navigationService, logCacheViewModel, dataService)
         {
             _flexiLOGViewModel = (FlexiLOGViewModel)viewModelBase;
 
             AnnotateCommand = null;
-            EditCommand = new AnnotateCommand(ActionType.Edit, Context, _navigationService, this, _logCacheViewModel, _dataService, _flexiLOGViewModel);
+            EditCommand = new AnnotateCommand(ActionType.Edit, Context, _navigationService, this, _logCacheViewModel, _dataService, 
+                _flexiLOGViewModel);
         }
     }
 }

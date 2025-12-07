@@ -13,7 +13,8 @@ namespace Data_Logger_1._3.ViewModels.Reporter.Logs
         public override CacheContext Context => CacheContext.Coding;
 
 
-        public codeREPORTViewModel(CodingLOG codingLOG, CodeReportDeskViewModel codeReportDeskViewModel, NavigationService navigationService, DataService dataService, PDFService pdfService) : base(codingLOG, navigationService, dataService)
+        public codeREPORTViewModel(CodingLOG codingLOG, CodeReportDeskViewModel codeReportDeskViewModel, NavigationService navigationService, IDataService dataService, PDFService pdfService) : 
+            base(codingLOG, navigationService, dataService)
         {
             _CodingLOG = codingLOG;
             SingleExport = new SingleExportCommand(codingLOG, Context, pdfService);

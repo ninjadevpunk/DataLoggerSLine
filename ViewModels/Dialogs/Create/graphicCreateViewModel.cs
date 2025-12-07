@@ -25,7 +25,7 @@ namespace Data_Logger_1._3.ViewModels.Dialogs.Create
         public IEnumerable<string> Units => _units;
         public IEnumerable<string> Sizes => _sizes;
 
-        public graphicCreateViewModel(NavigationService navigationService, LogCacheViewModel logCacheViewModel, DataService dataService)
+        public graphicCreateViewModel(NavigationService navigationService, LogCacheViewModel logCacheViewModel, IDataService dataService)
             : base(navigationService, logCacheViewModel, dataService)
         {
             AppFieldEnabled = true;

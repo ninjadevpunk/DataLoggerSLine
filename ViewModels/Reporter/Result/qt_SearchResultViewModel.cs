@@ -13,7 +13,8 @@ namespace Data_Logger_1._3.ViewModels.Reporter
         private readonly CodingLOG _QtCodingLOG;
         public override CacheContext SearchResultContext => CacheContext.Qt;
 
-        public qt_SearchResultViewModel(CodingLOG codingLOG, ReportDeskViewModel reportDeskViewModel, NavigationService navigationService) : base(codingLOG, reportDeskViewModel, navigationService)
+        public qt_SearchResultViewModel(CodingLOG codingLOG, ReportDeskViewModel reportDeskViewModel, NavigationService navigationService) : 
+            base(codingLOG, reportDeskViewModel, navigationService)
         {
             _QtCodingLOG = codingLOG;
             var style = TryParsePath("path_Qt_icon");

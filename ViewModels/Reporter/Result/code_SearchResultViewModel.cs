@@ -15,7 +15,8 @@ namespace Data_Logger_1._3.ViewModels.Reporter.Result
     {
         public override CacheContext SearchResultContext => CacheContext.Coding;
 
-        public code_SearchResultViewModel(NavigationService navigationService, DataService dataService, CodingLOG codingLOG, CodeReportDeskViewModel codeReportDeskViewModel)
+        public code_SearchResultViewModel(NavigationService navigationService, IDataService dataService, CodingLOG codingLOG, 
+            CodeReportDeskViewModel codeReportDeskViewModel)
     : base(codingLOG, codeReportDeskViewModel, navigationService)
         {
             ID = codingLOG.ID;
@@ -241,8 +242,8 @@ namespace Data_Logger_1._3.ViewModels.Reporter.Result
 
             }
 
-            ViewLogCommand = new ViewCommand(navigationService, SearchResultContext, ViewType.Log, codingLOG);
-            EditLogCommand = new EditLogCommand(codingLOG, codeReportDeskViewModel, navigationService);
+            ViewLogCommand = new ViewCommand(_navigationService, SearchResultContext, ViewType.Log, codingLOG);
+            EditLogCommand = new EditLogCommand(codingLOG, codeReportDeskViewModel, _navigationService);
             DeleteLogCommand = new DeleteLogCommand(dataService, codeReportDeskViewModel, SearchResultContext, codingLOG);
         }
 

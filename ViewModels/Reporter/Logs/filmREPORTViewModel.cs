@@ -10,7 +10,7 @@ namespace Data_Logger_1._3.ViewModels.Reporter.Logs
         private readonly FilmLOG _FilmLOG;
         public override CacheContext Context => CacheContext.Film;
 
-        public filmREPORTViewModel(FilmLOG filmLOG, NavigationService navigationService, DataService dataService, PDFService pdfService) : base(filmLOG, navigationService, dataService)
+        public filmREPORTViewModel(FilmLOG filmLOG, NavigationService navigationService, IDataService dataService, PDFService pdfService) : base(filmLOG, navigationService, dataService)
         {
             _FilmLOG = filmLOG;
             SingleExport = new SingleExportCommand(Context, pdfService);

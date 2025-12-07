@@ -10,7 +10,7 @@ namespace Data_Logger_1._3.ViewModels.Dashboard
     {
 
 
-        public FlexiViewModel(NavigationService navigationService, DataService _dataService) : base(navigationService, _dataService)
+        public FlexiViewModel(NavigationService navigationService, IDataService _dataService) : base(navigationService, _dataService)
         {
             CacheItems = new ObservableCollection<FlexiLOGViewModel>();
 
@@ -18,7 +18,7 @@ namespace Data_Logger_1._3.ViewModels.Dashboard
         }
 
 
-        public FlexiViewModel(string logCount, NavigationService navigationService, DataService _dataService) : base(navigationService, _dataService)
+        public FlexiViewModel(string logCount, NavigationService navigationService, IDataService _dataService) : base(navigationService, _dataService)
         {
             CacheItems = new ObservableCollection<FlexiLOGViewModel>();
 

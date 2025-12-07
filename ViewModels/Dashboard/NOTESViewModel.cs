@@ -21,7 +21,7 @@ namespace Data_Logger_1._3.ViewModels.Dashboard
 
 
 
-        public NOTESViewModel(NavigationService navigationService, DataService dataService)
+        public NOTESViewModel(NavigationService navigationService)
         {
             _navigationService = navigationService;
 

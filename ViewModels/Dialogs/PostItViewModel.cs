@@ -20,7 +20,7 @@ namespace Data_Logger_1._3.ViewModels.Dialogs
         public enum PostItField { Error, Solution, Suggestion, Comment }
 
         protected readonly NavigationService? _navigationService;
-        protected readonly DataService? _dataService;
+        protected readonly IDataService? _dataService;
         protected readonly LoggerCreateViewModel? _loggerCreateViewModel;
         
 
@@ -29,7 +29,7 @@ namespace Data_Logger_1._3.ViewModels.Dialogs
             
         }
 
-        public PostItViewModel(NavigationService navigationService, DataService dataService, LoggerCreateViewModel loggerCreateViewModel, LOG.CATEGORY category)
+        public PostItViewModel(NavigationService navigationService, IDataService dataService, LoggerCreateViewModel loggerCreateViewModel, LOG.CATEGORY category)
         {
             _navigationService = navigationService;
             _dataService = dataService;
@@ -59,7 +59,7 @@ namespace Data_Logger_1._3.ViewModels.Dialogs
             HighlighterCommand = new HighlighterCommand(this);
         }
 
-        public PostItViewModel(NavigationService navigationService, DataService dataService, LoggerCreateViewModel loggerCreateViewModel, ProjectClass project)
+        public PostItViewModel(NavigationService navigationService, IDataService dataService, LoggerCreateViewModel loggerCreateViewModel, ProjectClass project)
         {
             _navigationService = navigationService;
             _dataService = dataService;
@@ -92,7 +92,7 @@ namespace Data_Logger_1._3.ViewModels.Dialogs
             HighlighterCommand = new HighlighterCommand(this);
         }
 
-        public PostItViewModel(NavigationService navigationService, DataService dataService, LoggerCreateViewModel loggerCreateViewModel, ProjectClass project, 
+        public PostItViewModel(NavigationService navigationService, IDataService dataService, LoggerCreateViewModel loggerCreateViewModel, ProjectClass project, 
             string subject, string error, DateTime dateFound, string solution, DateTime dateSolved, string suggestion, string comment)
         {
             _navigationService = navigationService;

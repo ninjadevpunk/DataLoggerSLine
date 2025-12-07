@@ -9,13 +9,13 @@ namespace Data_Logger_1._3.ViewModels.Dashboard
     {
 
 
-        public GraphicsViewModel(NavigationService navigationService, DataService _dataService) : base(navigationService, _dataService)
+        public GraphicsViewModel(NavigationService navigationService, IDataService _dataService) : base(navigationService, _dataService)
         {
             CacheItems = new ObservableCollection<GraphicsLOGViewModel>();
         }
 
 
-        public GraphicsViewModel(string logCount, NavigationService navigationService, DataService _dataService) : base(navigationService, _dataService)
+        public GraphicsViewModel(string logCount, NavigationService navigationService, IDataService _dataService) : base(navigationService, _dataService)
         {
             CacheItems = new ObservableCollection<GraphicsLOGViewModel>();
 

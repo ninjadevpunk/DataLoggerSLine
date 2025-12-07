@@ -11,7 +11,7 @@ namespace Data_Logger_1._3.Commands.NotesCommands
     public class SaveChecklistCommand : AsyncCommandBase
     {
         private readonly NavigationService _navigationService;
-        private readonly DataService _dataService;
+        private readonly IDataService _dataService;
         private readonly CreateCheckListViewModel _createCheckListViewModel;
         private readonly NOTESViewModel _notesViewModel;
 
@@ -29,7 +29,7 @@ namespace Data_Logger_1._3.Commands.NotesCommands
             }
         }
 
-        public SaveChecklistCommand(NavigationService navigationService, DataService dataService, CreateCheckListViewModel createCheckListViewModel, NOTESViewModel notesViewModel)
+        public SaveChecklistCommand(NavigationService navigationService, IDataService dataService, CreateCheckListViewModel createCheckListViewModel, NOTESViewModel notesViewModel)
         {
             try
             {
@@ -79,7 +79,7 @@ namespace Data_Logger_1._3.Commands.NotesCommands
 
 
                 // Send to database
-                await _dataService.InsertLOG(noteItem);
+                await _dataService.CreateLOG(noteItem);
 
                 var list = _notesViewModel.NoteItems;
                 list.Add(new NoteLOGViewModel(_dataService, _notesViewModel, noteItem));

@@ -81,17 +81,18 @@ namespace Data_Logger_1._3
                     });
 
                     service.AddSingleton<Cachemaster>();
-                    service.AddScoped((services) => new ENTITYREADER(services.GetRequiredService<ENTITYMASTER>()));
-                    service.AddScoped((services) => new ENTITYWRITER(services.GetRequiredService<ENTITYREADER>(), services.GetRequiredService<ENTITYMASTER>()));
-                    service.AddScoped<ENTITYHANDLER>();
+                    service.AddScoped((services) => new ENTITYREADER(services));
+                    service.AddScoped((services) => new ENTITYWRITER(services));
+                    service.AddScoped((services) => new ENTITYHANDLER(services));
 
                     service.AddSingleton((services) => new AuthService(services));
 
-                    service.AddSingleton((services) => new DataService(services.GetRequiredService<ENTITYWRITER>(), services.GetRequiredService<ENTITYREADER>(),
-                        services.GetRequiredService<ENTITYHANDLER>(),
+                    service.AddSingleton<IDataService>(services => new DataService(
                         services.GetRequiredService<Cachemaster>(),
                         services.GetRequiredService<AuthService>(),
-                        services));
+                        services
+                    ));
+
 
                     service.AddSingleton((services) => new NavigationService(services));
 
@@ -116,25 +117,25 @@ namespace Data_Logger_1._3
                         services.GetRequiredService<UIFactory>()));
                     service.AddSingleton((services) => new MainWindowViewModel(services.GetRequiredService<NavigationService>()));
 
-                    service.AddSingleton((services) => new CodingQtViewModel(services.GetRequiredService<NavigationService>(), services.GetRequiredService<DataService>()));
-                    service.AddSingleton((services) => new CodingAndroidViewModel(services.GetRequiredService<NavigationService>(), services.GetRequiredService<DataService>()));
-                    service.AddSingleton((services) => new CodingViewModel(services.GetRequiredService<NavigationService>(), services.GetRequiredService<DataService>()));
-                    service.AddSingleton((services) => new GraphicsViewModel(services.GetRequiredService<NavigationService>(), services.GetRequiredService<DataService>()));
-                    service.AddSingleton((services) => new FilmViewModel(services.GetRequiredService<NavigationService>(), services.GetRequiredService<DataService>()));
-                    service.AddSingleton((services) => new FlexiViewModel(services.GetRequiredService<NavigationService>(), services.GetRequiredService<DataService>()));
-                    service.AddSingleton((services) => new NOTESViewModel(services.GetRequiredService<NavigationService>(), services.GetRequiredService<DataService>()));
+                    service.AddSingleton((services) => new CodingQtViewModel(services.GetRequiredService<NavigationService>(), services.GetRequiredService<IDataService>()));
+                    service.AddSingleton((services) => new CodingAndroidViewModel(services.GetRequiredService<NavigationService>(), services.GetRequiredService<IDataService>()));
+                    service.AddSingleton((services) => new CodingViewModel(services.GetRequiredService<NavigationService>(), services.GetRequiredService<IDataService>()));
+                    service.AddSingleton((services) => new GraphicsViewModel(services.GetRequiredService<NavigationService>(), services.GetRequiredService<IDataService>()));
+                    service.AddSingleton((services) => new FilmViewModel(services.GetRequiredService<NavigationService>(), services.GetRequiredService<IDataService>()));
+                    service.AddSingleton((services) => new FlexiViewModel(services.GetRequiredService<NavigationService>(), services.GetRequiredService<IDataService>()));
+                    service.AddSingleton((services) => new NOTESViewModel(services.GetRequiredService<NavigationService>()));
 
-                    service.AddSingleton((services) => new QtReportDeskViewModel(services.GetRequiredService<NavigationService>(), services.GetRequiredService<DataService>(),
+                    service.AddSingleton((services) => new QtReportDeskViewModel(services.GetRequiredService<NavigationService>(), services.GetRequiredService<IDataService>(),
                         services.GetRequiredService<PDFService>()));
-                    service.AddSingleton((services) => new ASReportDeskViewModel(services.GetRequiredService<NavigationService>(), services.GetRequiredService<DataService>(),
+                    service.AddSingleton((services) => new ASReportDeskViewModel(services.GetRequiredService<NavigationService>(), services.GetRequiredService<IDataService>(),
                         services.GetRequiredService<PDFService>()));
-                    service.AddSingleton((services) => new CodeReportDeskViewModel(services.GetRequiredService<NavigationService>(), services.GetRequiredService<DataService>(),
+                    service.AddSingleton((services) => new CodeReportDeskViewModel(services.GetRequiredService<NavigationService>(), services.GetRequiredService<IDataService>(),
                         services.GetRequiredService<PDFService>()));
-                    service.AddSingleton((services) => new GraphicsReportDeskViewModel(services.GetRequiredService<NavigationService>(), services.GetRequiredService<DataService>(),
+                    service.AddSingleton((services) => new GraphicsReportDeskViewModel(services.GetRequiredService<NavigationService>(), services.GetRequiredService<IDataService>(),
                         services.GetRequiredService<PDFService>()));
-                    service.AddSingleton((services) => new FilmReportDeskViewModel(services.GetRequiredService<NavigationService>(), services.GetRequiredService<DataService>(),
+                    service.AddSingleton((services) => new FilmReportDeskViewModel(services.GetRequiredService<NavigationService>(), services.GetRequiredService<IDataService>(),
                         services.GetRequiredService<PDFService>()));
-                    service.AddSingleton((services) => new FlexiReportDeskViewModel(services.GetRequiredService<NavigationService>(), services.GetRequiredService<DataService>(),
+                    service.AddSingleton((services) => new FlexiReportDeskViewModel(services.GetRequiredService<NavigationService>(), services.GetRequiredService<IDataService>(),
                         services.GetRequiredService<PDFService>()));
 
                     // Register a factory that returns ReporterDashboard given a key
@@ -157,13 +158,13 @@ namespace Data_Logger_1._3
 
                     service.AddTransient<codeCreateViewModel>();
                     service.AddTransient((services) => new AScodeCreateViewModel(services.GetRequiredService<NavigationService>(), services.GetRequiredService<CodingAndroidViewModel>(),
-                        services.GetRequiredService<DataService>()));
+                        services.GetRequiredService<IDataService>()));
                     service.AddTransient((services) => new graphicCreateViewModel(services.GetRequiredService<NavigationService>(), services.GetRequiredService<GraphicsViewModel>(),
-                        services.GetRequiredService<DataService>()));
+                        services.GetRequiredService<IDataService>()));
                     service.AddTransient((services) => new filmCreateViewModel(services.GetRequiredService<NavigationService>(), services.GetRequiredService<FilmViewModel>(),
-                        services.GetRequiredService<DataService>()));
+                        services.GetRequiredService<IDataService>()));
                     service.AddTransient((services) => new flexiCreateViewModel(services.GetRequiredService<NavigationService>(), services.GetRequiredService<FlexiViewModel>(),
-                        services.GetRequiredService<DataService>()));
+                        services.GetRequiredService<IDataService>()));
 
                     service.AddTransient<codeEditViewModel>();
                     service.AddTransient((services) => new codeViewerViewModel(services.GetRequiredService<NavigationService>()));
@@ -172,9 +173,9 @@ namespace Data_Logger_1._3
 
 
                     service.AddTransient<PostItViewModel>();
-                    service.AddTransient((services) => new CreateNoteViewModel(services.GetRequiredService<NavigationService>(), services.GetRequiredService<DataService>(),
+                    service.AddTransient((services) => new CreateNoteViewModel(services.GetRequiredService<NavigationService>(), services.GetRequiredService<IDataService>(),
                         services.GetRequiredService<NOTESViewModel>()));
-                    service.AddTransient((services) => new CreateCheckListViewModel(services.GetRequiredService<NavigationService>(), services.GetRequiredService<DataService>(),
+                    service.AddTransient((services) => new CreateCheckListViewModel(services.GetRequiredService<NavigationService>(), services.GetRequiredService<IDataService>(),
                         services.GetRequiredService<NOTESViewModel>(), services.GetRequiredService<ViewModelFactory>()));
                     service.AddSingleton<CreateChecklistItemViewModel>();
 
@@ -305,7 +306,7 @@ namespace Data_Logger_1._3
 
         protected override async void OnExit(ExitEventArgs e)
         {
-            var dataService = _serviceProvider.GetRequiredService<DataService>();
+            var dataService = _serviceProvider.GetRequiredService<IDataService>();
             await dataService.SignOutUser();
 
             base.OnExit(e);

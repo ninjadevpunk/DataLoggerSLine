@@ -288,148 +288,6 @@ namespace Data_Logger_1._3.Services
 
         }
 
-        /// <summary>
-        /// Retrieves the subjectIDs that were stored by SaveSubjectIndex. To be used on application startup by the DataService for the IDWatcher's 
-        /// AvailableSubjectIDs.
-        /// </summary>
-        /// <returns>An integer list of stored subjectIDs.</returns>
-        public List<int>? RetrieveSubjectIndex()
-        {
-            try
-            {
-                if (!File.Exists(SubjectIdsPath))
-                {
-                    var f = new FileStream(SubjectIdsPath, FileMode.CreateNew);
-                    f.Close();
-
-                }
-                else
-                {
-                    List<int>? oldSubjectIDs = new();
-
-                    foreach (string s in File.ReadLines(SubjectIdsPath))
-                    {
-                        oldSubjectIDs.Add(int.Parse(s));
-                    }
-
-                    return oldSubjectIDs;
-
-                }
-
-
-            }
-            catch (Exception)
-            {
-                // TODO
-            }
-
-            return null;
-
-        }
-
-        /// <summary>
-        /// Saves unused subjectIDs. To be used by IDWatcher's AvailableSubjectIDs when the app closes and after a log has been stored.
-        /// </summary>
-        /// <param name="idsToCache">A list of subjectIDs that aren't used which can be given to new subjects. This method will store them.</param>
-        public void SaveSubjectIndex(List<int>? idsToCache)
-        {
-            try
-            {
-                if (idsToCache is not null)
-                {
-                    File.Delete(SubjectIdsPath);
-                    var fileStream = new FileStream(SubjectIdsPath, FileMode.CreateNew);
-                    fileStream.Close();
-
-                    Writer = new StreamWriter(SubjectIdsPath);
-
-                    foreach (int id in idsToCache.Order())
-                    {
-                        Writer.WriteLine(id);
-                    }
-
-                    Writer.Close();
-
-                }
-            }
-            catch (Exception)
-            {
-
-                throw;
-            }
-        }
-
-        /// <summary>
-        /// Retrieves the PostItIDs that were stored by SavePostItIndex.  To be used on application startup by the DataService for the IDWatcher's 
-        /// AvailablePostItIDs.
-        /// </summary>
-        /// <returns></returns>
-        public List<int>? RetrievePostItIndex()
-        {
-            try
-            {
-                if (!File.Exists(PostitIdsPath))
-                {
-                    var f = new FileStream(PostitIdsPath, FileMode.CreateNew);
-                    f.Close();
-
-                }
-                else
-                {
-                    List<int>? oldSubjectIDs = new();
-
-                    foreach (string s in File.ReadLines(PostitIdsPath))
-                    {
-                        oldSubjectIDs.Add(int.Parse(s));
-                    }
-
-                    return oldSubjectIDs;
-                }
-
-
-            }
-            catch (Exception)
-            {
-                // TODO
-            }
-
-            return null;
-        }
-
-        /// <summary>
-        /// Saves unused PostItIDs. To be used by IDWatcher's AvailablePostItIDs when the app closes and after a log has been stored.
-        /// </summary>
-        /// <param name="idsToCache">A list of PostItIDs that aren't used which can be given to new post its. This method will store them.</param>
-        public void SavePostItIndex(List<int>? idsToCache)
-        {
-            try
-            {
-                if (idsToCache is not null)
-                {
-                    File.Delete(PostitIdsPath);
-                    var fileStream = new FileStream(PostitIdsPath, FileMode.CreateNew);
-                    fileStream.Close();
-
-                    Writer = new StreamWriter(PostitIdsPath);
-
-                    foreach (int id in idsToCache.Order())
-                    {
-                        Writer.WriteLine(id);
-                    }
-
-                    Writer.Close();
-
-                }
-            }
-            catch (Exception)
-            {
-
-                throw;
-            }
-        }
-
-
-
 
 
 
@@ -643,7 +501,7 @@ namespace Data_Logger_1._3.Services
         /// <param name="dataService">The service that will interface with the UI.</param>
         /// <param name="account">The author of the logs.</param>
         /// <returns>A list of QtLOGViewModels.</returns>
-        public ObservableCollection<QtLOGViewModel>? LoadQtViewModels(LogCacheViewModel logCacheViewModel, DataService dataService, ACCOUNT account)
+        public ObservableCollection<QtLOGViewModel>? LoadQtViewModels(LogCacheViewModel logCacheViewModel, IDataService dataService, ACCOUNT account)
         {
             if (Identifiers is not null)
             {
@@ -732,7 +590,7 @@ namespace Data_Logger_1._3.Services
         /// <param name="logCacheViewModel">The Android Studio dashboard/owner that is requesting the cache.</param>
         /// <param name="dataService">The service that will interface with the UI.</param>
         /// <returns></returns>
-        public ObservableCollection<AndroidLOGViewModel>? LoadASViewModels(LogCacheViewModel logCacheViewModel, DataService dataService, ACCOUNT account)
+        public ObservableCollection<AndroidLOGViewModel>? LoadASViewModels(LogCacheViewModel logCacheViewModel, IDataService dataService, ACCOUNT account)
         {
             if (Identifiers is not null)
             {
@@ -817,7 +675,7 @@ namespace Data_Logger_1._3.Services
         /// <param name="dataService">The service that will interface with the UI.</param>
         /// <param name="account">The author of the logs.</param>
         /// <returns>A list of CodeLOGViewModels.</returns>
-        public ObservableCollection<CodeLOGViewModel>? LoadCodeViewModels(LogCacheViewModel logCacheViewModel, DataService dataService, ACCOUNT account)
+        public ObservableCollection<CodeLOGViewModel>? LoadCodeViewModels(LogCacheViewModel logCacheViewModel, IDataService dataService, ACCOUNT account)
         {
             if (Identifiers is not null)
             {
@@ -904,7 +762,7 @@ namespace Data_Logger_1._3.Services
         /// <param name="dataService">The service that will interface with the UI.</param>
         /// <param name="account"></param>
         /// <returns>A list of GraphicsLOGViewModels.</returns>
-        public ObservableCollection<GraphicsLOGViewModel>? LoadGraphicsViewModels(LogCacheViewModel logCacheViewModel, DataService dataService, ACCOUNT account)
+        public ObservableCollection<GraphicsLOGViewModel>? LoadGraphicsViewModels(LogCacheViewModel logCacheViewModel, IDataService dataService, ACCOUNT account)
         {
             if (Identifiers is not null)
             {
@@ -982,7 +840,7 @@ namespace Data_Logger_1._3.Services
 
 
 
-        public ObservableCollection<FilmLOGViewModel>? LoadFilmViewModels(LogCacheViewModel logCacheViewModel, DataService dataService, ACCOUNT account)
+        public ObservableCollection<FilmLOGViewModel>? LoadFilmViewModels(LogCacheViewModel logCacheViewModel, IDataService dataService, ACCOUNT account)
         {
             if (Identifiers is not null)
             {
@@ -1059,7 +917,7 @@ namespace Data_Logger_1._3.Services
 
 
 
-        public ObservableCollection<FlexiLOGViewModel>? LoadFlexiViewModels(LogCacheViewModel logCacheViewModel, DataService dataService, ACCOUNT account)
+        public ObservableCollection<FlexiLOGViewModel>? LoadFlexiViewModels(LogCacheViewModel logCacheViewModel, IDataService dataService, ACCOUNT account)
         {
             if (Identifiers is not null)
             {

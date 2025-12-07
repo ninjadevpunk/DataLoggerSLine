@@ -9,12 +9,12 @@ namespace Data_Logger_1._3.ViewModels.Dashboard
     {
 
 
-        public CodingQtViewModel(NavigationService navigationService, DataService dataService) : base(navigationService, dataService)
+        public CodingQtViewModel(NavigationService navigationService, IDataService dataService) : base(navigationService, dataService)
         {
             CacheItems = new ObservableCollection<QtLOGViewModel>();
         }
 
-        public CodingQtViewModel(string logCount, NavigationService navigationService, DataService dataService) : base(navigationService, dataService)
+        public CodingQtViewModel(string logCount, NavigationService navigationService, IDataService dataService) : base(navigationService, dataService)
         {
             CacheItems = new ObservableCollection<QtLOGViewModel>();
             LogCount = logCount;

@@ -26,7 +26,7 @@ namespace Data_Logger_1._3.ViewModels.Dialogs.Create
         public IEnumerable<string> Formats => _formats;
         public IEnumerable<string> FlexiLogCategories => _flexiLogCategories;
 
-        public flexiCreateViewModel(NavigationService navigationService, LogCacheViewModel logCacheViewModel, DataService dataService) : base(navigationService, logCacheViewModel, dataService)
+        public flexiCreateViewModel(NavigationService navigationService, LogCacheViewModel logCacheViewModel, IDataService dataService) : base(navigationService, logCacheViewModel, dataService)
         {
             AppFieldEnabled = true;
             ApplicationName = "Unity";
@@ -86,7 +86,7 @@ namespace Data_Logger_1._3.ViewModels.Dialogs.Create
             await UpdateLogCount();
         }
 
-        private async Task InitializeProjectsAndApplications(DataService dataService)
+        private async Task InitializeProjectsAndApplications(IDataService dataService)
         {
             await dataService.InitialiseProjectsLISTAsync(Category);
             var items = dataService.SQLITE_PROJECTS;

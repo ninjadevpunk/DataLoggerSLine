@@ -19,7 +19,8 @@ namespace Data_Logger_1._3.ViewModels.LogViewModels
 
 
 
-        public CodeLOGViewModel(CodingLOG codingLOG, LogCacheViewModel logCacheViewModel, ObservableCollection<PostItViewModel> createPostItViewModels, DataService dataService) :
+        public CodeLOGViewModel(CodingLOG codingLOG, LogCacheViewModel logCacheViewModel, 
+            ObservableCollection<PostItViewModel> createPostItViewModels, IDataService dataService) :
             base(codingLOG, logCacheViewModel, createPostItViewModels, dataService)
         {
             _CodeLOG = codingLOG;
@@ -29,7 +30,7 @@ namespace Data_Logger_1._3.ViewModels.LogViewModels
             _cacheMaster.SaveCodeViewModel(this, LOGViewModelContext);
         }
 
-        public CodeLOGViewModel(CodingLOG codingLOG, LogCacheViewModel logCacheViewModel, DataService dataService) :
+        public CodeLOGViewModel(CodingLOG codingLOG, LogCacheViewModel logCacheViewModel, IDataService dataService) :
             base(codingLOG, logCacheViewModel, dataService)
         {
             _CodeLOG = codingLOG;

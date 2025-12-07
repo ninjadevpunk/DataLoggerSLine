@@ -21,7 +21,7 @@ namespace Data_Logger_1._3.ViewModels.Reporter.Desk
         /// </summary>
         /// <param name="navigationService">The service for navigating in adn out of the Qt Report desk.</param>
         /// <param name="dataService">The service required to perform database operations.</param>
-        public QtReportDeskViewModel(NavigationService navigationService, DataService dataService) : base(navigationService, dataService)
+        public QtReportDeskViewModel(NavigationService navigationService, IDataService dataService) : base(navigationService, dataService)
         {
             _ = _dataService.InitialiseProjectsLISTAsync(LOG.CATEGORY.CODING);
 
@@ -74,7 +74,7 @@ namespace Data_Logger_1._3.ViewModels.Reporter.Desk
         /// <param name="navigationService">The service for navigating in adn out of the Qt Report desk.</param>
         /// <param name="dataService">The service required to perform database operations.</param>
         /// <param name="pdfService">The service for generating PDFs.</param>
-        public QtReportDeskViewModel(NavigationService navigationService, DataService dataService, PDFService pdfService) : base(navigationService, dataService, pdfService)
+        public QtReportDeskViewModel(NavigationService navigationService, IDataService dataService, PDFService pdfService) : base(navigationService, dataService, pdfService)
         {
             _ = _dataService.InitialiseProjectsLISTAsync(LOG.CATEGORY.CODING);
 

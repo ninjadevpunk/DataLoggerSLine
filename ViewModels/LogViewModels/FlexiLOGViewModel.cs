@@ -19,7 +19,8 @@ namespace Data_Logger_1._3.ViewModels.LogViewModels
 
 
 
-        public FlexiLOGViewModel(FlexiNotesLOG flexiLOG, LogCacheViewModel logCacheViewModel, ObservableCollection<PostItViewModel> createPostItViewModels, DataService dataService) :
+        public FlexiLOGViewModel(FlexiNotesLOG flexiLOG, LogCacheViewModel logCacheViewModel, 
+            ObservableCollection<PostItViewModel> createPostItViewModels, IDataService dataService) :
             base(flexiLOG, logCacheViewModel, createPostItViewModels, dataService)
         {
             _FlexiLOG = flexiLOG;
@@ -28,7 +29,7 @@ namespace Data_Logger_1._3.ViewModels.LogViewModels
 
             _cacheMaster.SaveFlexiViewModel(this, LOGViewModelContext);
         }
-        public FlexiLOGViewModel(FlexiNotesLOG flexiLOG, LogCacheViewModel logCacheViewModel, DataService dataService) :
+        public FlexiLOGViewModel(FlexiNotesLOG flexiLOG, LogCacheViewModel logCacheViewModel, IDataService dataService) :
             base(flexiLOG, logCacheViewModel, dataService)
         {
             _FlexiLOG = flexiLOG;

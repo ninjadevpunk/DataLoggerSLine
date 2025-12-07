@@ -25,7 +25,7 @@ namespace Data_Logger_1._3.ViewModels.Reporter.Updater
         public IEnumerable<string> Formats => _formats;
         public IEnumerable<string> FlexiLogCategories => _flexiLogCategories;
 
-        public flexiUpdateViewModel(NavigationService navigationService, ReportDeskViewModel reportDeskViewModel, DataService dataService, LOG log) : 
+        public flexiUpdateViewModel(NavigationService navigationService, ReportDeskViewModel reportDeskViewModel, IDataService dataService, LOG log) : 
             base(navigationService, reportDeskViewModel, dataService, log)
         {
             AppFieldEnabled = true;

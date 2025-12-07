@@ -12,7 +12,7 @@ namespace Data_Logger_1._3.ViewModels.Reporter.Updater
         /// <param name="navigationService">The navigation service to take the user back to the updater</param>
         /// <param name="dataService">The data service to populate the subjects list</param>
         /// <param name="reporterUpdaterViewModel">The updater instance resolved from DI</param>
-        public EF_EditPostItViewModel(NavigationService navigationService, DataService dataService, ReporterUpdaterViewModel reporterUpdaterViewModel) :
+        public EF_EditPostItViewModel(NavigationService navigationService, IDataService dataService, ReporterUpdaterViewModel reporterUpdaterViewModel) :
             base(navigationService, dataService, reporterUpdaterViewModel)
         {
             Subject = string.Empty;
@@ -46,8 +46,8 @@ namespace Data_Logger_1._3.ViewModels.Reporter.Updater
         /// <param name="ReporterUpdaterViewModel">The updater instance resolved from DI</param>
         /// <param name="project">The project instance needed for the subjects list retrieval</param>
         /// <param name="postItViewModel">A PostIt viewmodel to populate fields</param>
-        public EF_EditPostItViewModel(int id, NavigationService navigationService, DataService dataService, ReporterUpdaterViewModel ReporterUpdaterViewModel, ProjectClass project,
-            EF_PostItViewModel postItViewModel) :
+        public EF_EditPostItViewModel(int id, NavigationService navigationService, IDataService dataService, 
+            ReporterUpdaterViewModel ReporterUpdaterViewModel, ProjectClass project, EF_PostItViewModel postItViewModel) :
             base(navigationService, dataService, ReporterUpdaterViewModel, project)
         {
             ID = id;

@@ -9,7 +9,8 @@ namespace Data_Logger_1._3.ViewModels.Reporter
     {
         public override CacheContext SearchResultContext => CacheContext.Graphics;
 
-        public graphics_SearchResultViewModel(LOG log, ReportDeskViewModel reportDeskViewModel, NavigationService navigationService) : base(log, reportDeskViewModel, navigationService)
+        public graphics_SearchResultViewModel(LOG log, ReportDeskViewModel reportDeskViewModel, NavigationService navigationService) : 
+            base(log, reportDeskViewModel, navigationService)
         {
         }
 

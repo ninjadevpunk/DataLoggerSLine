@@ -12,12 +12,12 @@ namespace Data_Logger_1._3.Commands.NotesCommands
     public class SaveNoteCommand : AsyncCommandBase
     {
         protected readonly NavigationService _navigationService;
-        protected readonly DataService _dataService;
+        protected readonly IDataService _dataService;
         protected readonly CreateNoteViewModel _createNoteViewModel;
         protected readonly NOTESViewModel _notesViewModel;
 
 
-        public SaveNoteCommand(NavigationService navigationService, DataService dataService, CreateNoteViewModel createNoteViewModel, NOTESViewModel notesViewModel)
+        public SaveNoteCommand(NavigationService navigationService, IDataService dataService, CreateNoteViewModel createNoteViewModel, NOTESViewModel notesViewModel)
         {
             try
             {
@@ -33,7 +33,7 @@ namespace Data_Logger_1._3.Commands.NotesCommands
             }
         }
 
-        public SaveNoteCommand(NavigationService navigationService, DataService dataService, CreateNoteViewModel createNoteViewModel, NOTESViewModel notesViewModel, NoteLOGViewModel noteLOGViewModel)
+        public SaveNoteCommand(NavigationService navigationService, IDataService dataService, CreateNoteViewModel createNoteViewModel, NOTESViewModel notesViewModel, NoteLOGViewModel noteLOGViewModel)
         {
             try
             {
@@ -82,7 +82,7 @@ namespace Data_Logger_1._3.Commands.NotesCommands
 
 
                         // Send to database
-                        await _dataService.InsertLOG(noteItem);
+                        await _dataService.CreateLOG(noteItem);
 
                         var list = _notesViewModel.NoteItems;
                         list.Add(new NoteLOGViewModel(_dataService, _notesViewModel, noteItem));

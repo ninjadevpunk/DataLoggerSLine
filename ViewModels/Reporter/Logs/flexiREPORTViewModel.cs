@@ -10,7 +10,7 @@ namespace Data_Logger_1._3.ViewModels.Reporter.Logs
         private readonly FlexiNotesLOG _FlexiLOG;
         public override CacheContext Context => CacheContext.Flexi;
 
-        public flexiREPORTViewModel(FlexiNotesLOG flexiNotesLOG, NavigationService navigationService, DataService dataService, PDFService pdfService) : base(flexiNotesLOG, navigationService, dataService)
+        public flexiREPORTViewModel(FlexiNotesLOG flexiNotesLOG, NavigationService navigationService, IDataService dataService, PDFService pdfService) : base(flexiNotesLOG, navigationService, dataService)
         {
             _FlexiLOG = flexiNotesLOG;
             SingleExport = new SingleExportCommand(Context, pdfService);

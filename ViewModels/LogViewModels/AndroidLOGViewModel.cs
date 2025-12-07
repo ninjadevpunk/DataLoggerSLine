@@ -21,8 +21,9 @@ namespace Data_Logger_1._3.ViewModels.LogViewModels
 
 
 
-        public AndroidLOGViewModel(AndroidCodingLOG androidCodingLOG, LogCacheViewModel logCacheViewModel, ObservableCollection<PostItViewModel> createPostItViewModels, DataService dataService) :
-            base(androidCodingLOG, logCacheViewModel, createPostItViewModels, dataService)
+        public AndroidLOGViewModel(AndroidCodingLOG androidCodingLOG, LogCacheViewModel logCacheViewModel, 
+            ObservableCollection<PostItViewModel> createPostItViewModels, IDataService dataService) :
+                base(androidCodingLOG, logCacheViewModel, createPostItViewModels, dataService)
 
         {
             _AndroidCodingLOG = androidCodingLOG;
@@ -32,7 +33,7 @@ namespace Data_Logger_1._3.ViewModels.LogViewModels
             _cacheMaster.SaveASViewModel(this, LOGViewModelContext);
         }
 
-        public AndroidLOGViewModel(AndroidCodingLOG androidCodingLOG, LogCacheViewModel logCacheViewModel, DataService dataService) :
+        public AndroidLOGViewModel(AndroidCodingLOG androidCodingLOG, LogCacheViewModel logCacheViewModel, IDataService dataService) :
             base(androidCodingLOG, logCacheViewModel, dataService)
         {
             _AndroidCodingLOG = androidCodingLOG;

@@ -11,7 +11,7 @@ namespace Data_Logger_1._3.ViewModels.Dialogs.Create
     {
         private readonly CodingAndroidViewModel _ASviewModel;
 
-        public AScodeCreateViewModel(NavigationService navigationService, LogCacheViewModel logCacheViewModel, DataService dataService)
+        public AScodeCreateViewModel(NavigationService navigationService, LogCacheViewModel logCacheViewModel, IDataService dataService)
             : base(navigationService, logCacheViewModel, dataService)
         {
             ApplicationName = AndroidStudio;

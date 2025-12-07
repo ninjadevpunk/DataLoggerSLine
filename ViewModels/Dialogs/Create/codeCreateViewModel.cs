@@ -28,7 +28,7 @@ namespace Data_Logger_1._3.ViewModels.Dialogs.Create
 
         }
 
-        public codeCreateViewModel(NavigationService navigationService, LogCacheViewModel logCacheViewModel, DataService dataService)
+        public codeCreateViewModel(NavigationService navigationService, LogCacheViewModel logCacheViewModel, IDataService dataService)
             : base(navigationService, logCacheViewModel, dataService)
         {
             _viewModel = (CodingViewModel)logCacheViewModel;
@@ -45,7 +45,7 @@ namespace Data_Logger_1._3.ViewModels.Dialogs.Create
 
 
 
-        public codeCreateViewModel(NavigationService navigationService, LogCacheViewModel logCacheViewModel, string application, DataService dataService)
+        public codeCreateViewModel(NavigationService navigationService, LogCacheViewModel logCacheViewModel, string application, IDataService dataService)
             : base(navigationService, logCacheViewModel, dataService)
         {
 

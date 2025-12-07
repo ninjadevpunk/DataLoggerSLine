@@ -23,7 +23,7 @@ namespace Data_Logger_1._3.ViewModels.Reporter.Updater
         private bool QtOnly = false;
         protected bool ASOnly = false;
 
-        public codeUpdateViewModel(NavigationService navigationService, DataService dataService, ReportDeskViewModel reportDeskViewModel, LOG log)
+        public codeUpdateViewModel(NavigationService navigationService, IDataService dataService, ReportDeskViewModel reportDeskViewModel, LOG log)
             : base(navigationService, reportDeskViewModel, dataService, log)
         {
             _reportDeskViewModel = (CodeReportDeskViewModel)reportDeskViewModel;
@@ -39,7 +39,8 @@ namespace Data_Logger_1._3.ViewModels.Reporter.Updater
             ClearLoggerCommand = new EF_ResetLoggerCommand();
         }
 
-        public codeUpdateViewModel(NavigationService navigationService, DataService dataService, ReportDeskViewModel reportDeskViewModel, string application, LOG log)
+        public codeUpdateViewModel(NavigationService navigationService, IDataService dataService, ReportDeskViewModel reportDeskViewModel, 
+            string application, LOG log)
             : base(navigationService, reportDeskViewModel, dataService, log)
         {
             if (application == Qt)
