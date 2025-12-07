@@ -14,11 +14,11 @@ namespace Data_Logger_1._3.ViewModels.Reporter.Desk
         public override CacheContext Context => CacheContext.Coding;
         private bool _isBusy = false;
 
-        public CodeReportDeskViewModel(NavigationService navigationService, DataService dataService) : base(navigationService, dataService)
+        public CodeReportDeskViewModel(NavigationService navigationService, IDataService dataService) : base(navigationService, dataService)
         {
         }
 
-        public CodeReportDeskViewModel(NavigationService navigationService, DataService dataService, PDFService pdfService) : 
+        public CodeReportDeskViewModel(NavigationService navigationService, IDataService dataService, PDFService pdfService) : 
             base(navigationService, dataService, pdfService)
         {
 

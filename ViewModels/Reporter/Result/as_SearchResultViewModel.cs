@@ -9,7 +9,8 @@ namespace Data_Logger_1._3.ViewModels.Reporter
     {
         public override CacheContext SearchResultContext => CacheContext.AndroidStudio;
 
-        public as_SearchResultViewModel(LOG log, ReportDeskViewModel reportDeskViewModel, NavigationService navigationService) : base(log, reportDeskViewModel, navigationService)
+        public as_SearchResultViewModel(LOG log, ReportDeskViewModel reportDeskViewModel, NavigationService navigationService) : 
+            base(log, reportDeskViewModel, navigationService)
         {
         }
     }

@@ -1,11 +1,14 @@
 ﻿using Data_Logger_1._3.Models;
-using Data_Logger_1._3.Models.App_Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
+using Microsoft.Extensions.DependencyInjection;
 using System.Data;
+using System.Diagnostics;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Windows;
+using static Data_Logger_1._3.Models.FeedbackMessage;
 using static Data_Logger_1._3.Models.NotesLOG;
 using static Data_Logger_1._3.Services.ENTITYREADER;
 
@@ -13,16 +16,119 @@ namespace Data_Logger_1._3.Services
 {
     public class ENTITYWRITER
     {
-        private readonly ENTITYREADER _reader;
-        private readonly ENTITYMASTER _master;
+        private readonly IServiceProvider _serviceProvider;
+        private ENTITYREADER _reader;
+        private ENTITYMASTER _master;
 
         /// <summary>
         /// Official Entity Framework data writer.
         /// </summary>
-        public ENTITYWRITER(ENTITYREADER reader, ENTITYMASTER entityMaster)
+        public ENTITYWRITER(IServiceProvider serviceProvider)
         {
-            _reader = reader;
-            _master = entityMaster;
+            _serviceProvider = serviceProvider;
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+        private async Task<AsyncServiceScope> ActivateMasterAsync()
+        {
+            await using var scope = _serviceProvider.CreateAsyncScope();
+            _master = scope.ServiceProvider.GetRequiredService<ENTITYMASTER>();
+
+            return scope;
+        }
+
+        private async Task ActivateMasterAsync(AsyncServiceScope scope)
+        {
+            _master = scope.ServiceProvider.GetRequiredService<ENTITYMASTER>();
+        }
+
+        private async Task<AsyncServiceScope> ActivateReaderAsync()
+        {
+            await using var scope = _serviceProvider.CreateAsyncScope();
+            _reader = scope.ServiceProvider.GetRequiredService<ENTITYREADER>();
+
+            return scope;
+        }
+
+        private async Task<AsyncServiceScope> ActivateReaderAsync(AsyncServiceScope scope)
+        {
+            _reader = scope.ServiceProvider.GetRequiredService<ENTITYREADER>();
+
+            return scope;
+        }
+
+        /// <summary>
+        /// Sets the currently online user to online.
+        /// </summary>
+        /// <param name="account">The account that is online.</param>
+        /// <returns>Returns whether the account is set successfully.</returns>
+        public async Task<bool> SetCurrentUser(ACCOUNT account)
+        {
+            var scope = await ActivateReaderAsync();
+            await ActivateMasterAsync(scope);
+
+            try
+            {
+                var all = await _master.Accounts.ToListAsync();
+
+                foreach (var a in all)
+                    a.IsOnline = (a.accountID == account.accountID);
+
+                await _master.SaveChangesAsync();
+
+                var user = await _master.Accounts.FirstOrDefaultAsync(a => a.accountID == account.accountID);
+
+                return user?.IsOnline ?? false;
+            }
+            catch (Exception ex)
+            {
+                await HandleExceptionAsync(ex, "SetCurrentUser(account)");
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// Sets the currently online user to offline.
+        /// </summary>
+        /// <returns>Returns whether the account is unset successfully.</returns>
+        public async Task<bool> UnsetCurrentUser()
+        {
+            await ActivateMasterAsync();
+
+            try
+            {
+                var onlineUsers = await _master.Accounts.Where(a => a.IsOnline).ToListAsync();
+
+                if (!onlineUsers.Any())
+                    return true;
+
+                foreach (var u in onlineUsers)
+                {
+                    u.IsOnline = false;
+                }
+
+                await _master.SaveChangesAsync();
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                await HandleExceptionAsync(ex, "UnsetCurrentUser(account)");
+            }
+
+            return false;
         }
 
 
@@ -33,6 +139,9 @@ namespace Data_Logger_1._3.Services
         /// <returns">A boolean value that indicated if the process was successful or not.</returns>
         public async Task<bool> AddAccount(ACCOUNT account)
         {
+            var scope = await ActivateMasterAsync();
+            await ActivateReaderAsync(scope);
+
             bool accountCreated = false;
 
             try
@@ -41,7 +150,7 @@ namespace Data_Logger_1._3.Services
                     throw new ArgumentNullException($"\"{nameof(account)}\" - Account not initialised. Operation aborted.");
 
 
-                if (!await _reader.EmailExists(account.Email))
+                if (!await _reader.EmailExists(scope, account.Email))
                 {
                     account.IsOnline = false;
 
@@ -65,22 +174,23 @@ namespace Data_Logger_1._3.Services
             }
             catch (EmailConflictException mailex)
             {
-                await _master.HandleExceptionAsync("AddAccount(account)", mailex, "Error", "The email you entered has been taken. Please use a different one.", "EmailConflictException");
+                await HandleExceptionAsync("AddAccount(account)", mailex, "Error", "The email you entered has been taken. Please use a different one.", "EmailConflictException");
             }
             catch (ArgumentNullException nullex)
             {
-                await _master.HandleExceptionAsync("AddAccount(account)", nullex, "Error", "A problem occurred on our end so please try again later. We " +
+                await HandleExceptionAsync("AddAccount(account)", nullex, "Error", "A problem occurred on our end so please try again later. We " +
                     "apologise for any inconvenience caused. Feedback will automatically be sent to us.", "ArgumentNullException");
             }
             catch (Exception ex)
             {
-                await _master.HandleExceptionAsync("AddAccount(account)", ex, "Error", "A problem occurred on our end so please try again later. We " +
+                await HandleExceptionAsync("AddAccount(account)", ex, "Error", "A problem occurred on our end so please try again later. We " +
                     "apologise for any inconvenience caused. Feedback will automatically be sent to us.");
             }
 
             return accountCreated;
 
         }
+
 
 
 
@@ -100,12 +210,15 @@ namespace Data_Logger_1._3.Services
         /// <param name="log">The log being stored.</param>
         public async Task<bool> CreateLOG(LOG log)
         {
+            var scope = await ActivateMasterAsync();
+
             await using var transaction = await _master.Database.BeginTransactionAsync();
 
             try
             {
-                await PrepareLogDetails(log);
-                await PreparePostItDetails(log);
+                await PrepareLogDetails(log, scope);
+                await PreparePostItDetails(log, scope);
+
                 await InsertSubLogDetails(log);
 
                 await _master.SaveChangesAsync();
@@ -114,17 +227,17 @@ namespace Data_Logger_1._3.Services
             }
             catch (InvalidCastException castx)
             {
-                await _master.HandleExceptionAsync(castx, "CreateLOG(log)", "InvalidCastException");
+                await HandleExceptionAsync(castx, "CreateLOG(log)", "InvalidCastException");
 
             }
             catch (OperationCanceledException opex)
             {
-                await _master.HandleExceptionAsync(opex, "CreateLOG(log)", "OperationCanceledException");
+                await HandleExceptionAsync(opex, "CreateLOG(log)", "OperationCanceledException");
 
             }
             catch (Exception ex)
             {
-                await _master.HandleExceptionAsync(ex, "CreateLOG(log)");
+                await HandleExceptionAsync(ex, "CreateLOG(log)");
             }
             finally
             {
@@ -139,8 +252,10 @@ namespace Data_Logger_1._3.Services
         }
 
 
-        private async Task PrepareLogDetails(LOG log)
+        private async Task PrepareLogDetails(LOG log, AsyncServiceScope scope)
         {
+            await ActivateReaderAsync(scope);
+
             var onlineUser = await _reader.FindAccountByID((int)await _reader.GetOnlineAccountIDAsync());
             var userID = onlineUser.accountID;
 
@@ -190,8 +305,10 @@ namespace Data_Logger_1._3.Services
             return regex.IsMatch(input) ? input : string.Empty;
         }
 
-        private async Task PreparePostItDetails(LOG log)
+        private async Task PreparePostItDetails(LOG log, AsyncServiceScope scope)
         {
+            await ActivateReaderAsync(scope);
+
             var onlineUser = await _reader.FindAccountByID((int)await _reader.GetOnlineAccountIDAsync());
 
             foreach (PostIt postIt in log.PostItList)
@@ -304,25 +421,75 @@ namespace Data_Logger_1._3.Services
             }
         }
 
-        public async Task<ACCOUNT> FindAccountByEmail(string email, string password)
+
+
+
+        #endregion
+
+
+
+
+
+        #region Feedback Creation
+
+
+
+        public async Task<int> CreateFeedback(int accountID, string description, bool canContact, bool isAutoFeed = true, FeedbackType category = FeedbackType.Bug)
         {
-            return await _reader.FindAccountByEmail(email, password);
+            try
+            {
+                var feedback = new FeedbackMessage
+                {
+                    accountID = accountID,
+                    Description = description,
+                    CanContact = canContact,
+                    Category = category,
+                    DateReported = DateTime.Now,
+                    IsAutoFeed = isAutoFeed
+                };
+
+                _master.AllFeedback.Add(feedback);
+                await _master.SaveChangesAsync();
+
+                return feedback.feedbackID;
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"Exception in CreateFeedback: {ex.Message}. Inner exception: {ex.InnerException.Message ?? ""}");
+                return -1;
+            }
         }
 
-        public async Task<bool> UnsetCurrentUser()
+        public async Task HandleExceptionAsync(string methodName, Exception ex, string messageBoxCaption, string messageBoxMessage = "A problem occurred on our end. We apologise for any inconvenience caused. Feedback will automatically be sent to us.", string exceptionType = "Exception")
         {
-            return await _master.UnsetCurrentUser();
+            // Build the exception description
+            var description = $"{exceptionType ?? "Exception"} occurred near {methodName}: {ex.Message}" +
+                  (ex.InnerException != null ? $" | Inner: {ex.InnerException.Message}" : "");
+
+
+            // Log to CreateFeedback
+            await CreateFeedback(1, description, false, true, FeedbackType.Exception);
+
+            // Show a message box only if showMessageBox is true
+            if (!string.IsNullOrEmpty(messageBoxCaption))
+            {
+                MessageBox.Show(messageBoxMessage,
+                                messageBoxCaption, MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK);
+            }
         }
 
-        public async Task<bool> SetCurrentUser(ACCOUNT account)
+        public async Task HandleExceptionAsync(Exception ex, string methodName, string exceptionType = null)
         {
-            return await _master.SetCurrentUser(account);
+            // Build the exception description
+            var description = $"{exceptionType ?? "Exception"} occurred near {methodName}: {ex.Message}" +
+                  (ex.InnerException != null ? $" | Inner: {ex.InnerException.Message}" : "");
+
+            // Log to CreateFeedback
+            await CreateFeedback(1, description, false, true, FeedbackType.Exception);
         }
 
-        public async Task HandleExceptionAsync(Exception exception, string methodName, string exceptionType = null)
-        {
-            await _master.HandleExceptionAsync(exception, methodName, exceptionType);
-        }
+
+
 
 
 

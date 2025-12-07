@@ -22,7 +22,7 @@ namespace Data_Logger_1._3.Commands.LoggerCommands
     public class AnnotateCommand : AsyncCommandBase
     {
         private readonly NavigationService _navigationService;
-        private readonly DataService _dataService;
+        private readonly IDataService _dataService;
         private readonly LoggerCreateViewModel _viewModel;
         private readonly LogCacheViewModel _dashboard;
 
@@ -39,7 +39,7 @@ namespace Data_Logger_1._3.Commands.LoggerCommands
 
         public CacheContext Type { get; set; }
 
-        public AnnotateCommand(CacheContext type, NavigationService navigationService, LoggerCreateViewModel viewModel, LogCacheViewModel logCacheViewModel, DataService dataService)
+        public AnnotateCommand(CacheContext type, NavigationService navigationService, LoggerCreateViewModel viewModel, LogCacheViewModel logCacheViewModel, IDataService dataService)
         {
 
             try
@@ -62,7 +62,7 @@ namespace Data_Logger_1._3.Commands.LoggerCommands
 
         }
 
-        public AnnotateCommand(ActionType actionType, CacheContext type, NavigationService navigationService, LoggerCreateViewModel viewModel, LogCacheViewModel logCacheViewModel, DataService dataService)
+        public AnnotateCommand(ActionType actionType, CacheContext type, NavigationService navigationService, LoggerCreateViewModel viewModel, LogCacheViewModel logCacheViewModel, IDataService dataService)
         {
 
 
@@ -85,7 +85,7 @@ namespace Data_Logger_1._3.Commands.LoggerCommands
 
         }
 
-        public AnnotateCommand(ActionType actionType, CacheContext type, NavigationService navigationService, LoggerCreateViewModel viewModel, LogCacheViewModel logCacheViewModel, DataService dataService, ViewModelBase viewModelBase)
+        public AnnotateCommand(ActionType actionType, CacheContext type, NavigationService navigationService, LoggerCreateViewModel viewModel, LogCacheViewModel logCacheViewModel, IDataService dataService, ViewModelBase viewModelBase)
         {
 
 

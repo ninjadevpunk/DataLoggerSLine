@@ -241,8 +241,8 @@ namespace Data_Logger_1._3.ViewModels.Reporter.Result
 
             }
 
-            ViewLogCommand = new ViewCommand(navigationService, SearchResultContext, ViewType.Log, codingLOG);
-            EditLogCommand = new EditLogCommand(codingLOG, codeReportDeskViewModel, navigationService);
+            ViewLogCommand = new ViewCommand(_navigationService, SearchResultContext, ViewType.Log, codingLOG);
+            EditLogCommand = new EditLogCommand(codingLOG, codeReportDeskViewModel, _navigationService);
             DeleteLogCommand = new DeleteLogCommand(dataService, codeReportDeskViewModel, SearchResultContext, codingLOG);
         }
 

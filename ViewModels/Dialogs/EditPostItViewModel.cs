@@ -9,7 +9,7 @@ namespace Data_Logger_1._3.ViewModels.Dialogs
 {
     public class EditPostItViewModel : PostItViewModel
     {
-        public EditPostItViewModel(NavigationService navigationService, DataService dataService, LoggerCreateViewModel loggerCreateViewModel, LOG.CATEGORY category,
+        public EditPostItViewModel(NavigationService navigationService, IDataService dataService, LoggerCreateViewModel loggerCreateViewModel, LOG.CATEGORY category,
             PostItViewModel createPostItViewModel) :
             base(navigationService, dataService, loggerCreateViewModel, category)
         {
@@ -29,7 +29,7 @@ namespace Data_Logger_1._3.ViewModels.Dialogs
             PostCommand = new PostCommand(ActionType.Edit, PostItContext.EDITPOSTIT, _navigationService, _loggerCreateViewModel, this, createPostItViewModel);
         }
 
-        public EditPostItViewModel(NavigationService navigationService, DataService dataService, LoggerCreateViewModel loggerCreateViewModel, ProjectClass project,
+        public EditPostItViewModel(NavigationService navigationService, IDataService dataService, LoggerCreateViewModel loggerCreateViewModel, ProjectClass project,
             PostItViewModel createPostItViewModel) :
             base(navigationService, dataService, loggerCreateViewModel, project)
         {

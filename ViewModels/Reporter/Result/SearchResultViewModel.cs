@@ -21,12 +21,14 @@ namespace Data_Logger_1._3.ViewModels.Reporter
     {
         protected readonly LOG _LOG;
         protected readonly ReportDeskViewModel _reportDesk;
+        protected readonly NavigationService _navigationService;
         public abstract CacheContext SearchResultContext { get; }
 
         public SearchResultViewModel(LOG log, ReportDeskViewModel reportDeskViewModel, NavigationService navigationService)
         {
             _LOG = log;
             _reportDesk = reportDeskViewModel;
+            _navigationService = navigationService;
 
 
         }

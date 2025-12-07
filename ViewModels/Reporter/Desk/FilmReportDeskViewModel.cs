@@ -7,11 +7,11 @@ namespace Data_Logger_1._3.ViewModels.Reporter.Desk
     {
         public override CacheContext Context => CacheContext.Film;
 
-        public FilmReportDeskViewModel(NavigationService navigationService, DataService dataService) : base(navigationService, dataService)
+        public FilmReportDeskViewModel(NavigationService navigationService, IDataService dataService) : base(navigationService, dataService)
         {
         }
 
-        public FilmReportDeskViewModel(NavigationService navigationService, DataService dataService, PDFService pdfService) : base(navigationService, dataService, pdfService)
+        public FilmReportDeskViewModel(NavigationService navigationService, IDataService dataService, PDFService pdfService) : base(navigationService, dataService, pdfService)
         {
         }
 

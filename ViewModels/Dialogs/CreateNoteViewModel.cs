@@ -9,13 +9,13 @@ namespace Data_Logger_1._3.ViewModels.Dialogs
 {
     public class CreateNoteViewModel : ViewModelBase
     {
-        private readonly DataService _dataService;
+        private readonly IDataService _dataService;
         private readonly NavigationService _navigationService;
 
 
 
 
-        public CreateNoteViewModel(NavigationService navigationService, DataService dataService, NOTESViewModel notesViewModel)
+        public CreateNoteViewModel(NavigationService navigationService, IDataService dataService, NOTESViewModel notesViewModel)
         {
             _navigationService = navigationService;
             _dataService = dataService;
@@ -25,7 +25,7 @@ namespace Data_Logger_1._3.ViewModels.Dialogs
             SaveNoteCommand = new SaveNoteCommand(_navigationService, _dataService, this, notesViewModel);
         }
 
-        public CreateNoteViewModel(NavigationService navigationService, DataService dataService, NOTESViewModel notesViewModel, NoteLOGViewModel noteLOGViewModel)
+        public CreateNoteViewModel(NavigationService navigationService, IDataService dataService, NOTESViewModel notesViewModel, NoteLOGViewModel noteLOGViewModel)
         {
             _navigationService = navigationService;
             _dataService = dataService;

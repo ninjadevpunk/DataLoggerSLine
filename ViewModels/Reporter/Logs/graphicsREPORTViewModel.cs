@@ -11,7 +11,7 @@ namespace Data_Logger_1._3.ViewModels.Reporter.Logs
         private readonly GraphicsLOG _GraphicsLOG;
         public override CacheContext Context => CacheContext.Graphics;
 
-        public graphicsREPORTViewModel(GraphicsLOG graphicsLOG, NavigationService navigationService, DataService dataService, PDFService pdfService) : base(graphicsLOG, navigationService, dataService)
+        public graphicsREPORTViewModel(GraphicsLOG graphicsLOG, NavigationService navigationService, IDataService dataService, PDFService pdfService) : base(graphicsLOG, navigationService, dataService)
         {
             _GraphicsLOG = graphicsLOG;
 

@@ -8,10 +8,10 @@ namespace Data_Logger_1._3.ViewModels.Dashboard
 {
     public class LogCacheViewModel : ViewModelBase
     {
-        protected readonly DataService _dataService;
+        protected readonly IDataService _dataService;
         public NavigationService _navigationService;
 
-        public LogCacheViewModel(NavigationService navigationService, DataService dataService)
+        public LogCacheViewModel(NavigationService navigationService, IDataService dataService)
         {
             _navigationService = navigationService;
             _dataService = dataService;

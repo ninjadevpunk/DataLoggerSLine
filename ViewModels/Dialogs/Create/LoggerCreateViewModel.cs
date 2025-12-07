@@ -15,7 +15,7 @@ namespace Data_Logger_1._3.ViewModels.Dialogs.Create
     public abstract class LoggerCreateViewModel : ViewModelBase
     {
 
-        protected readonly DataService _dataService;
+        protected readonly IDataService _dataService;
         protected readonly NavigationService _navigationService;
         protected readonly LogCacheViewModel _logCacheViewModel;
 
@@ -31,7 +31,7 @@ namespace Data_Logger_1._3.ViewModels.Dialogs.Create
             
         }
 
-        protected LoggerCreateViewModel(NavigationService navigationService, LogCacheViewModel logCacheViewModel, DataService dataService)
+        protected LoggerCreateViewModel(NavigationService navigationService, LogCacheViewModel logCacheViewModel, IDataService dataService)
         {
             _navigationService = navigationService;
             _logCacheViewModel = logCacheViewModel;

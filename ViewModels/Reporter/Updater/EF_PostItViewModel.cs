@@ -20,10 +20,10 @@ namespace Data_Logger_1._3.ViewModels.Reporter.Updater
         public enum PostItField { Error, Solution, Suggestion, Comment }
 
         protected readonly NavigationService _navigationService;
-        protected readonly DataService _dataService;
+        protected readonly IDataService _dataService;
         protected readonly ReporterUpdaterViewModel _reporterUpdaterViewModel;
 
-        public EF_PostItViewModel(NavigationService navigationService, DataService dataService, ReporterUpdaterViewModel reporterUpdaterViewModel)
+        public EF_PostItViewModel(NavigationService navigationService, IDataService dataService, ReporterUpdaterViewModel reporterUpdaterViewModel)
         {
             _navigationService = navigationService;
             _dataService = dataService;
@@ -58,7 +58,8 @@ namespace Data_Logger_1._3.ViewModels.Reporter.Updater
             HighlighterCommand = new EF_HighlighterCommand(this);
         }
 
-        public EF_PostItViewModel(NavigationService navigationService, DataService dataService, ReporterUpdaterViewModel reporterUpdaterViewModel, ProjectClass project)
+        public EF_PostItViewModel(NavigationService navigationService, IDataService dataService, ReporterUpdaterViewModel reporterUpdaterViewModel, 
+            ProjectClass project)
         {
             _navigationService = navigationService;
             _dataService = dataService;
@@ -90,8 +91,9 @@ namespace Data_Logger_1._3.ViewModels.Reporter.Updater
             HighlighterCommand = new EF_HighlighterCommand(this);
         }
 
-        public EF_PostItViewModel(int ID, NavigationService navigationService, DataService dataService, ReporterUpdaterViewModel reporterUpdaterViewModel, ProjectClass project,
-            string subject, string error, DateTime dateFound, string solution, DateTime dateSolved, string suggestion, string comment)
+        public EF_PostItViewModel(int ID, NavigationService navigationService, IDataService dataService, 
+            ReporterUpdaterViewModel reporterUpdaterViewModel, ProjectClass project, string subject, string error, DateTime dateFound, string solution, 
+            DateTime dateSolved, string suggestion, string comment)
         {
             _navigationService = navigationService;
             _reporterUpdaterViewModel = reporterUpdaterViewModel;

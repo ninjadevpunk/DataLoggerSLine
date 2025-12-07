@@ -12,7 +12,7 @@ namespace Data_Logger_1._3.Commands.ReporterCommands
     /// </summary>
     public class DeleteLogCommand : AsyncCommandBase
     {
-        private readonly DataService _dataService;
+        private readonly IDataService _dataService;
         private readonly ReportDeskViewModel _reportDeskViewModel;
         private readonly LOG _log;
         private Cachemaster.CacheContext _cacheContext;
@@ -26,20 +26,20 @@ namespace Data_Logger_1._3.Commands.ReporterCommands
             _log = log;
         }
 
-        public DeleteLogCommand(DataService dataService, LOG log)
+        public DeleteLogCommand(IDataService dataService, LOG log)
         {
             _log = log;
             _dataService = dataService;
         }
 
-        public DeleteLogCommand(DataService dataService, Cachemaster.CacheContext context, LOG log)
+        public DeleteLogCommand(IDataService dataService, Cachemaster.CacheContext context, LOG log)
         {
             _dataService = dataService;
             _cacheContext = context;
             _log = log;
         }
 
-        public DeleteLogCommand(DataService dataService, ReportDeskViewModel reportDeskViewModel, Cachemaster.CacheContext context, LOG log)
+        public DeleteLogCommand(IDataService dataService, ReportDeskViewModel reportDeskViewModel, Cachemaster.CacheContext context, LOG log)
         {
             _dataService = dataService;
             _reportDeskViewModel = reportDeskViewModel;

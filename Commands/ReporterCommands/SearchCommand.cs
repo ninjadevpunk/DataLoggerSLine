@@ -18,12 +18,12 @@ namespace Data_Logger_1._3.Commands.ReporterCommands
     public class SearchCommand : AsyncCommandBase
     {
         private readonly ReportDeskViewModel _reportDesk;
-        private readonly DataService _dataService;
+        private readonly IDataService _dataService;
         private readonly NavigationService _navigationService;
 
         public CacheContext Context { get; set; } = CacheContext.Coding;
 
-        public SearchCommand(ReportDeskViewModel reportDesk, DataService dataService, NavigationService navigationService, CacheContext cacheContext)
+        public SearchCommand(ReportDeskViewModel reportDesk, IDataService dataService, NavigationService navigationService, CacheContext cacheContext)
         {
             _reportDesk = reportDesk ?? throw new ArgumentNullException(nameof(reportDesk));
             _navigationService = navigationService ?? throw new ArgumentNullException(nameof(navigationService));

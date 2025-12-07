@@ -7,11 +7,11 @@ namespace Data_Logger_1._3.ViewModels.Reporter.Desk
     {
         public override CacheContext Context => CacheContext.Flexi;
 
-        public FlexiReportDeskViewModel(NavigationService navigationService, DataService dataService) : base(navigationService, dataService)
+        public FlexiReportDeskViewModel(NavigationService navigationService, IDataService dataService) : base(navigationService, dataService)
         {
         }
 
-        public FlexiReportDeskViewModel(NavigationService navigationService, DataService dataService, PDFService pdfService) : base(navigationService, dataService, pdfService)
+        public FlexiReportDeskViewModel(NavigationService navigationService, IDataService dataService, PDFService pdfService) : base(navigationService, dataService, pdfService)
         {
         }
 

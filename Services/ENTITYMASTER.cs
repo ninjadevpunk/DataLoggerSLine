@@ -12,9 +12,6 @@ namespace Data_Logger_1._3.Services
     public class ENTITYMASTER : DbContext
     {
 
-        /* CURRENT USER */
-        public ACCOUNT User { get; set; }
-
         public DbSet<ApplicationClass> Applications { get; set; }
         public DbSet<ProjectClass> Projects { get; set; }
         public DbSet<OutputClass> Outputs { get; set; }
@@ -129,71 +126,7 @@ namespace Data_Logger_1._3.Services
 
         }
 
-        /// <summary>
-        /// Sets the currently online user to online.
-        /// </summary>
-        /// <param name="account">The account that is online.</param>
-        /// <returns>Returns whether the account is set successfully.</returns>
-        public async Task<bool> SetCurrentUser(ACCOUNT account)
-        {
-            try
-            {
-                var all = await Accounts.ToListAsync();
-
-                foreach (var a in all)
-                    a.IsOnline = (a.accountID == account.accountID);
-
-                await SaveChangesAsync();
-
-                User = await Accounts.FirstOrDefaultAsync(a => a.accountID == account.accountID);
-
-                return User?.IsOnline ?? false;
-            }
-            catch (Exception ex)
-            {
-                await HandleExceptionAsync(ex, "SetCurrentUser(account)");
-            }
-
-            return false;
-        }
-
-        /// <summary>
-        /// Sets the currently online user to offline.
-        /// </summary>
-        /// <returns>Returns whether the account is unset successfully.</returns>
-        public async Task<bool> UnsetCurrentUser()
-        {
-            try
-            {
-                var onlineUsers = await Accounts.Where(a => a.IsOnline).ToListAsync();
-
-                if (User != null)
-                    User.IsOnline = false;
-
-                if (!onlineUsers.Any())
-                    return true;
-
-                foreach (var u in onlineUsers)
-                {
-                    u.IsOnline = false;
-                }
-
-
-                await SaveChangesAsync();
-
-                var entry = Entry(User);
-                if (entry != null)
-                    entry.State = EntityState.Detached;
-
-                return true;
-            }
-            catch (Exception ex)
-            {
-                await HandleExceptionAsync(ex, "UnsetCurrentUser(account)");
-            }
-
-            return false;
-        }
+        
 
 
 
@@ -516,76 +449,7 @@ namespace Data_Logger_1._3.Services
 
 
 
-        #region Feedback Creation
-
-
-
-        public async Task<int> CreateFeedback(int accountID, string description, bool canContact, bool isAutoFeed = true, FeedbackType category = FeedbackType.Bug)
-        {
-            try
-            {
-                var feedback = new FeedbackMessage
-                {
-                    accountID = accountID,
-                    Description = description,
-                    CanContact = canContact,
-                    Category = category,
-                    DateReported = DateTime.Now,
-                    IsAutoFeed = isAutoFeed
-                };
-
-                AllFeedback.Add(feedback);
-                await SaveChangesAsync();
-
-                return feedback.feedbackID;
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine($"Exception in CreateFeedback: {ex.Message}. Inner exception: {ex.InnerException.Message ?? ""}");
-                return -1;
-            }
-        }
-
-        public async Task HandleExceptionAsync(string methodName, Exception ex, string messageBoxCaption, string messageBoxMessage = "A problem occurred on our end. We apologise for any inconvenience caused. Feedback will automatically be sent to us.", string exceptionType = "Exception")
-        {
-            // Build the exception description
-            var description = $"{exceptionType ?? "Exception"} occurred near {methodName}: {ex.Message}" +
-                  (ex.InnerException != null ? $" | Inner: {ex.InnerException.Message}" : "");
-
-
-            // Log to CreateFeedback
-            await CreateFeedback(1, description, false, true, FeedbackType.Exception);
-
-            // Debug the error description
-            Debug.WriteLine(description);
-
-            // Show a message box only if showMessageBox is true
-            if (!string.IsNullOrEmpty(messageBoxCaption))
-            {
-                MessageBox.Show(messageBoxMessage,
-                                messageBoxCaption, MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK);
-            }
-        }
-
-        public async Task HandleExceptionAsync(Exception ex, string methodName, string exceptionType = null)
-        {
-            // Build the exception description
-            var description = $"{exceptionType ?? "Exception"} occurred near {methodName}: {ex.Message}" +
-                  (ex.InnerException != null ? $" | Inner: {ex.InnerException.Message}" : "");
-
-            // Log to CreateFeedback
-            await CreateFeedback(1, description, false, true, FeedbackType.Exception);
-
-            // Debug the error description
-            Debug.WriteLine(description);
-        }
-
-
-
-
-
-
-        #endregion
+        
 
 
 

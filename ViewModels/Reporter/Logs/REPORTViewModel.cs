@@ -18,7 +18,7 @@ namespace Data_Logger_1._3.ViewModels.Reporter
         public abstract CacheContext Context { get; }
         protected NavigationService _navigationService;
 
-        public REPORTViewModel(LOG log, NavigationService navigationService, DataService dataService)
+        public REPORTViewModel(LOG log, NavigationService navigationService, IDataService dataService)
         {
             _LOG = log;
             _navigationService = navigationService;

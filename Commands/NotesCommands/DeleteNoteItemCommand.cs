@@ -10,9 +10,9 @@ namespace Data_Logger_1._3.Commands.NotesCommands
     public class DeleteNoteItemCommand : AsyncCommandBase
     {
         private readonly NOTESViewModel _notesViewModel;
-        private readonly DataService _dataService;
+        private readonly IDataService _dataService;
 
-        public DeleteNoteItemCommand(NOTESViewModel notesViewModel, DataService dataService)
+        public DeleteNoteItemCommand(NOTESViewModel notesViewModel, IDataService dataService)
         {
             try
             {
@@ -21,8 +21,7 @@ namespace Data_Logger_1._3.Commands.NotesCommands
             }
             catch (Exception ex)
             {
-
-                //
+                Debug.WriteLine($"An error occurred near DeleteNoteItemCommand(notesViewModel,dataService) CONSTRUCTOR: {ex.Message}");
             }
         }
 
@@ -46,11 +45,10 @@ namespace Data_Logger_1._3.Commands.NotesCommands
             {
                 // Send to Feedback
 
-
                 MessageBox.Show("A problem occurred on our end. We apologise for any inconvenience caused. Feedback will automatically be sent to us.",
                    "Error", MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK);
 
-                Debug.WriteLine($"An error occurred near DeleteNoteItemCommand.Execute(): {ex.Message}");
+                await _dataService.HandleExceptionAsync(ex, "DeleteNoteItemCommand.Execute()");
             }
         }
     }

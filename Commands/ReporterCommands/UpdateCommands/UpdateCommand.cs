@@ -21,7 +21,7 @@ namespace Data_Logger_1._3.Commands.ReporterCommands.UpdateCommands
         private readonly ReportDeskViewModel? _desk;
         private readonly LOG? _log;
         private readonly NavigationService? _navigationService;
-        private readonly DataService? _dataService;
+        private readonly IDataService? _dataService;
 
 
         public UpdateCommand()
@@ -29,7 +29,7 @@ namespace Data_Logger_1._3.Commands.ReporterCommands.UpdateCommands
 
         }
 
-        public UpdateCommand(CacheContext context, ReporterUpdaterViewModel reporterEditorViewModel, ReportDeskViewModel reportDeskViewModel, NavigationService navigationService, DataService dataService, LOG log)
+        public UpdateCommand(CacheContext context, ReporterUpdaterViewModel reporterEditorViewModel, ReportDeskViewModel reportDeskViewModel, NavigationService navigationService, IDataService dataService, LOG log)
         {
             try
             {
@@ -175,18 +175,18 @@ namespace Data_Logger_1._3.Commands.ReporterCommands.UpdateCommands
             }
             catch (InvalidCastException castx)
             {
-                await _dataService.CreateFeedback(castx, "ExecuteAsync(parameter)", "InvalidCastException");
+                await _dataService.HandleExceptionAsync(castx, "ExecuteAsync(parameter)", "InvalidCastException");
             }
             catch (TaskCanceledException taskx)
             {
-                await _dataService.CreateFeedback(taskx, "ExecuteAsync(parameter)", "TaskCanceledException");
+                await _dataService.HandleExceptionAsync(taskx, "ExecuteAsync(parameter)", "TaskCanceledException");
             }
             catch (ArgumentNullException nullx)
             {
                 MessageBox.Show("A problem occurred on our end. We apologise for any inconvenience caused. Feedback will automatically be sent to us.",
                     "Error", MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK);
 
-                await _dataService.CreateFeedback(nullx, "ExecuteAsync(parameter)", "ArgumentNullException");
+                await _dataService.HandleExceptionAsync(nullx, "ExecuteAsync(parameter)", "ArgumentNullException");
 
             }
             catch (IndexOutOfRangeException index)
@@ -194,7 +194,7 @@ namespace Data_Logger_1._3.Commands.ReporterCommands.UpdateCommands
                 MessageBox.Show("A problem occurred on our end. We apologise for any inconvenience caused. Feedback will automatically be sent to us.",
                     "Error", MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK);
 
-                await _dataService.CreateFeedback(index, "ExecuteAsync(parameter)", "IndexOutOfRangeException");
+                await _dataService.HandleExceptionAsync(index, "ExecuteAsync(parameter)", "IndexOutOfRangeException");
 
             }
             catch (FormatException formx)
@@ -209,7 +209,7 @@ namespace Data_Logger_1._3.Commands.ReporterCommands.UpdateCommands
                     "Error", MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK);
                 }
 
-                await _dataService.CreateFeedback(formx, "ExecuteAsync(parameter)", "FormatException");
+                await _dataService.HandleExceptionAsync(formx, "ExecuteAsync(parameter)", "FormatException");
 
             }
             catch (Exception ex)
@@ -217,7 +217,7 @@ namespace Data_Logger_1._3.Commands.ReporterCommands.UpdateCommands
                 MessageBox.Show("A problem occurred on our end. We apologise for any inconvenience caused. Feedback will automatically be sent to us.",
                     "Error", MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK);
 
-                await _dataService.CreateFeedback(ex, "ExecuteAsync(parameter)");
+                await _dataService.HandleExceptionAsync(ex, "ExecuteAsync(parameter)");
 
             }
         }

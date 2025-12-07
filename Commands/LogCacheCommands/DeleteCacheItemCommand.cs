@@ -10,10 +10,10 @@ namespace Data_Logger_1._3.Commands.LogCacheCommands
     public class DeleteCacheItemCommand : AsyncCommandBase
     {
         private readonly LogCacheViewModel _viewModel;
-        private readonly DataService _dataService;
+        private readonly IDataService _dataService;
         private readonly bool _timeUp;
 
-        public DeleteCacheItemCommand(LogCacheViewModel logCacheViewModel, DataService dataService, bool timeIsUp)
+        public DeleteCacheItemCommand(LogCacheViewModel logCacheViewModel, IDataService dataService, bool timeIsUp)
         {
             try
             {
@@ -65,11 +65,11 @@ namespace Data_Logger_1._3.Commands.LogCacheCommands
             }
             catch (InvalidCastException castx)
             {
-                await _dataService.CreateFeedback(castx, "Execute() DeleteCacheItemCommand", "InvalidCastException");
+                await _dataService.HandleExceptionAsync(castx, "Execute() DeleteCacheItemCommand", "InvalidCastException");
             }
             catch (Exception e)
             {
-                await _dataService.CreateFeedback(e, "Execute() DeleteCacheItemCommand");
+                await _dataService.HandleExceptionAsync(e, "Execute() DeleteCacheItemCommand");
             }
         }
 
@@ -80,7 +80,7 @@ namespace Data_Logger_1._3.Commands.LogCacheCommands
             if (_timeUp)
             {
                 // Send data to database first
-                bool isLogged = await _dataService.InsertLOG(item._QtcodingLOG);
+                bool isLogged = await _dataService.CreateLOG(item._QtcodingLOG);
 
                 if (isLogged)
                 {
@@ -104,7 +104,7 @@ namespace Data_Logger_1._3.Commands.LogCacheCommands
             if (_timeUp)
             {
                 // Send data to database first
-                bool isLogged = await _dataService.InsertLOG(item._AndroidCodingLOG);
+                bool isLogged = await _dataService.CreateLOG(item._AndroidCodingLOG);
 
                 if (isLogged)
                 {
@@ -128,7 +128,7 @@ namespace Data_Logger_1._3.Commands.LogCacheCommands
             if (_timeUp)
             {
                 // Send data to database first
-                bool isLogged = await _dataService.InsertLOG(item._CodeLOG);
+                bool isLogged = await _dataService.CreateLOG(item._CodeLOG);
 
                 if (isLogged)
                 {
@@ -155,7 +155,7 @@ namespace Data_Logger_1._3.Commands.LogCacheCommands
             if (_timeUp)
             {
                 // Send data to database first
-                bool isLogged = await _dataService.InsertLOG(item._GraphicsLOG);
+                bool isLogged = await _dataService.CreateLOG(item._GraphicsLOG);
 
                 if (isLogged)
                 {
@@ -179,7 +179,7 @@ namespace Data_Logger_1._3.Commands.LogCacheCommands
             if (_timeUp)
             {
                 // Send data to database first
-                bool isLogged = await _dataService.InsertLOG(item._FilmLOG);
+                bool isLogged = await _dataService.CreateLOG(item._FilmLOG);
 
                 if (isLogged)
                 {
@@ -203,7 +203,7 @@ namespace Data_Logger_1._3.Commands.LogCacheCommands
             if (_timeUp)
             {
                 // Send data to database first
-                bool isLogged = await _dataService.InsertLOG(item._FlexiLOG);
+                bool isLogged = await _dataService.CreateLOG(item._FlexiLOG);
 
                 if (isLogged)
                 {

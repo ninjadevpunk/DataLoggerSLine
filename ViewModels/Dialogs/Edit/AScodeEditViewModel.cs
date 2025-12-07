@@ -11,12 +11,14 @@ namespace Data_Logger_1._3.ViewModels.Dialogs.Edit
     {
         private readonly AndroidLOGViewModel _androidLOGViewModel;
 
-        public AScodeEditViewModel(NavigationService navigationService, LogCacheViewModel logCacheViewModel, DataService dataService, ViewModelBase viewModelBase) : base(navigationService, logCacheViewModel, dataService)
+        public AScodeEditViewModel(NavigationService navigationService, LogCacheViewModel logCacheViewModel, IDataService dataService, 
+            ViewModelBase viewModelBase) : base(navigationService, logCacheViewModel, dataService)
         {
             _androidLOGViewModel = (AndroidLOGViewModel)viewModelBase;
 
             AnnotateCommand = null;
-            EditCommand = new AnnotateCommand(ActionType.Edit, Context, _navigationService, this, _logCacheViewModel, _dataService, _androidLOGViewModel);
+            EditCommand = new AnnotateCommand(ActionType.Edit, Context, _navigationService, this, _logCacheViewModel, _dataService, 
+                _androidLOGViewModel);
         }
     }
 }

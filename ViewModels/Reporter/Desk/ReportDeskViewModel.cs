@@ -13,7 +13,7 @@ namespace Data_Logger_1._3.ViewModels.Reporter.Desk
     public abstract class ReportDeskViewModel : ViewModelBase
     {
         public NavigationService _navigationService;
-        protected readonly DataService _dataService;
+        protected readonly IDataService _dataService;
         protected readonly PDFService _pdfService;
 
         public abstract CacheContext Context { get; }
@@ -21,13 +21,13 @@ namespace Data_Logger_1._3.ViewModels.Reporter.Desk
         protected bool AwaitCall = true;
 
 
-        public ReportDeskViewModel(NavigationService navigationService, DataService dataService)
+        public ReportDeskViewModel(NavigationService navigationService, IDataService dataService)
         {
             _navigationService = navigationService;
             _dataService = dataService;
         }
 
-        public ReportDeskViewModel(NavigationService navigationService, DataService dataService, PDFService pdfService)
+        public ReportDeskViewModel(NavigationService navigationService, IDataService dataService, PDFService pdfService)
         {
             _navigationService = navigationService;
             _dataService = dataService;

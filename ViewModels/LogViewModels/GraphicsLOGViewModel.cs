@@ -18,7 +18,8 @@ namespace Data_Logger_1._3.ViewModels.LogViewModels
         #region Constructor
 
 
-        public GraphicsLOGViewModel(GraphicsLOG graphicsLOG, LogCacheViewModel logCacheViewModel, ObservableCollection<PostItViewModel> createPostItViewModels, DataService dataService) :
+        public GraphicsLOGViewModel(GraphicsLOG graphicsLOG, LogCacheViewModel logCacheViewModel, 
+            ObservableCollection<PostItViewModel> createPostItViewModels, IDataService dataService) :
             base(graphicsLOG, logCacheViewModel, createPostItViewModels, dataService)
         {
             _GraphicsLOG = graphicsLOG;
@@ -29,7 +30,7 @@ namespace Data_Logger_1._3.ViewModels.LogViewModels
             _cacheMaster.SaveGraphicsViewModel(this, LOGViewModelContext);
         }
 
-        public GraphicsLOGViewModel(GraphicsLOG graphicsLOG, LogCacheViewModel logCacheViewModel, DataService dataService) :
+        public GraphicsLOGViewModel(GraphicsLOG graphicsLOG, LogCacheViewModel logCacheViewModel, IDataService dataService) :
             base(graphicsLOG, logCacheViewModel, dataService)
         {
             _GraphicsLOG = graphicsLOG;

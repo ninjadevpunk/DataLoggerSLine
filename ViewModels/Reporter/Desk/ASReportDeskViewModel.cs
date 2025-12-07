@@ -8,12 +8,12 @@ namespace Data_Logger_1._3.ViewModels.Reporter.Desk
     {
         public override CacheContext Context => CacheContext.AndroidStudio;
 
-        public ASReportDeskViewModel(NavigationService navigationService, DataService dataService) : base(navigationService, dataService)
+        public ASReportDeskViewModel(NavigationService navigationService, IDataService dataService) : base(navigationService, dataService)
         {
             ReturnToDashboard = new ReporterReturnCommand(_navigationService, Context);
         }
 
-        public ASReportDeskViewModel(NavigationService navigationService, DataService dataService, PDFService pdfService) : base(navigationService, dataService, pdfService)
+        public ASReportDeskViewModel(NavigationService navigationService, IDataService dataService, PDFService pdfService) : base(navigationService, dataService, pdfService)
         {
             ReturnToDashboard = new ReporterReturnCommand(_navigationService, Context);
         }

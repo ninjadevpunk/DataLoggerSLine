@@ -18,7 +18,8 @@ namespace Data_Logger_1._3.ViewModels.LogViewModels
         #region Constructor
 
 
-        public FilmLOGViewModel(FilmLOG filmLOG, LogCacheViewModel logCacheViewModel, ObservableCollection<PostItViewModel> createPostItViewModels, DataService dataService) :
+        public FilmLOGViewModel(FilmLOG filmLOG, LogCacheViewModel logCacheViewModel, 
+            ObservableCollection<PostItViewModel> createPostItViewModels, IDataService dataService) :
             base(filmLOG, logCacheViewModel, createPostItViewModels, dataService)
         {
             _FilmLOG = filmLOG;
@@ -28,7 +29,7 @@ namespace Data_Logger_1._3.ViewModels.LogViewModels
             _cacheMaster.SaveFilmViewModel(this, LOGViewModelContext);
         }
 
-        public FilmLOGViewModel(FilmLOG filmLOG, LogCacheViewModel logCacheViewModel, DataService dataService) :
+        public FilmLOGViewModel(FilmLOG filmLOG, LogCacheViewModel logCacheViewModel, IDataService dataService) :
             base(filmLOG, logCacheViewModel, dataService)
         {
             _FilmLOG = filmLOG;

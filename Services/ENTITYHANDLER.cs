@@ -5,15 +5,16 @@ namespace Data_Logger_1._3.Services
 {
     public class ENTITYHANDLER
     {
-        private readonly ENTITYMASTER _master;
+        private readonly IServiceProvider _serviceProvider;
+        private ENTITYMASTER _master;
 
 
         /// <summary>
         /// The Entity Framework updater and deleter for ENTITYMASTER.
         /// </summary>
-        public ENTITYHANDLER(ENTITYMASTER entityMaster)
+        public ENTITYHANDLER(IServiceProvider serviceProvider)
         {
-            _master = entityMaster;
+            _serviceProvider = serviceProvider;
         }
 
 

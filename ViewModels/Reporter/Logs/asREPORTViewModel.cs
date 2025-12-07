@@ -10,7 +10,7 @@ namespace Data_Logger_1._3.ViewModels.Reporter.Logs
         private readonly AndroidCodingLOG _AndroidCodingLOG;
         public override CacheContext Context => CacheContext.AndroidStudio;
 
-        public asREPORTViewModel(AndroidCodingLOG androidCodingLOG, NavigationService navigationService, DataService dataService, PDFService pdfService) : base(androidCodingLOG, navigationService, dataService)
+        public asREPORTViewModel(AndroidCodingLOG androidCodingLOG, NavigationService navigationService, IDataService dataService, PDFService pdfService) : base(androidCodingLOG, navigationService, dataService)
         {
             _AndroidCodingLOG = androidCodingLOG;
             SingleExport = new SingleExportCommand(Context, pdfService);

@@ -227,7 +227,7 @@ namespace Data_Logger_1._3.Services
 
             if (isSignOut)
             {
-                var dataService = _serviceProvider.GetRequiredService<DataService>();
+                var dataService = _serviceProvider.GetRequiredService<IDataService>();
                 await dataService.SignOutUser();
                 ClearSessionState();
 
@@ -263,7 +263,7 @@ namespace Data_Logger_1._3.Services
         {
             await using var scope = _serviceProvider.CreateAsyncScope();
             var master = scope.ServiceProvider.GetRequiredService<ENTITYMASTER>();
-
+            var dataService = _serviceProvider.GetRequiredService<IDataService>();
 
             try
             {
@@ -273,7 +273,6 @@ namespace Data_Logger_1._3.Services
                 SetMainFrame(mainWindow.frame_MAINWINDOW);
 
 
-                var dataService = _serviceProvider.GetRequiredService<DataService>();
                 await dataService.SignInUser();
 
                 await _serviceProvider.GetRequiredService<InitialService>().Initialise(dataService.GetUser().accountID);
@@ -298,13 +297,13 @@ namespace Data_Logger_1._3.Services
             }
             catch (InvalidOperationException invex)
             {
-                await master.HandleExceptionAsync(invex, "NavigateToMainWindow()", "InvalidOperationException");
+                await dataService.HandleExceptionAsync(invex, "NavigateToMainWindow()", "InvalidOperationException");
 
                 CloseApp();
             }
             catch (Exception ex)
             {
-                await master.HandleExceptionAsync(ex, "NavigateToMainWindow()");
+                await dataService.HandleExceptionAsync(ex, "NavigateToMainWindow()");
 
                 CloseApp();
             }
@@ -329,7 +328,7 @@ namespace Data_Logger_1._3.Services
         {
             await using var scope = _serviceProvider.CreateAsyncScope();
             var master = scope.ServiceProvider.GetRequiredService<ENTITYMASTER>();
-
+            var dataService = _serviceProvider.GetRequiredService<IDataService>();
 
             try
             {
@@ -407,11 +406,11 @@ namespace Data_Logger_1._3.Services
             }
             catch (InvalidOperationException invex)
             {
-                await master.HandleExceptionAsync(invex, "NavigateToPage<TViewModel>(page)", "InvalidOperationException");
+                await dataService.HandleExceptionAsync(invex, "NavigateToPage<TViewModel>(page)", "InvalidOperationException");
             }
             catch (Exception ex)
             {
-                await master.HandleExceptionAsync(ex, "NavigateToPage<TViewModel>(page)");
+                await dataService.HandleExceptionAsync(ex, "NavigateToPage<TViewModel>(page)");
             }
         }
 
@@ -421,6 +420,7 @@ namespace Data_Logger_1._3.Services
         {
             await using var scope = _serviceProvider.CreateAsyncScope();
             var master = scope.ServiceProvider.GetRequiredService<ENTITYMASTER>();
+            var dataService = _serviceProvider.GetRequiredService<IDataService>();
 
 
             try
@@ -448,11 +448,11 @@ namespace Data_Logger_1._3.Services
             }
             catch (InvalidOperationException invex)
             {
-                await master.HandleExceptionAsync(invex, "NavigateToPage(page, viewModel)", "InvalidOperationException");
+                await dataService.HandleExceptionAsync(invex, "NavigateToPage(page, viewModel)", "InvalidOperationException");
             }
             catch (Exception ex)
             {
-                await master.HandleExceptionAsync(ex, "NavigateToPage(page, viewModel)");
+                await dataService.HandleExceptionAsync(ex, "NavigateToPage(page, viewModel)");
             }
         }
 
@@ -462,6 +462,7 @@ namespace Data_Logger_1._3.Services
         {
             await using var scope = _serviceProvider.CreateAsyncScope();
             var master = scope.ServiceProvider.GetRequiredService<ENTITYMASTER>();
+            var dataService = _serviceProvider.GetRequiredService<IDataService>();
 
 
             try
@@ -477,11 +478,11 @@ namespace Data_Logger_1._3.Services
             }
             catch (InvalidOperationException invex)
             {
-                await master.HandleExceptionAsync(invex, "NavigateToPage(page, viewModel)", "InvalidOperationException");
+                await dataService.HandleExceptionAsync(invex, "NavigateToPage(page, viewModel)", "InvalidOperationException");
             }
             catch (Exception ex)
             {
-                await master.HandleExceptionAsync(ex, "NavigateToPage(page, viewModel)");
+                await dataService.HandleExceptionAsync(ex, "NavigateToPage(page, viewModel)");
             }
         }
 
@@ -489,6 +490,7 @@ namespace Data_Logger_1._3.Services
         {
             await using var scope = _serviceProvider.CreateAsyncScope();
             var master = scope.ServiceProvider.GetRequiredService<ENTITYMASTER>();
+            var dataService = _serviceProvider.GetRequiredService<IDataService>();
 
             try
             {
@@ -499,11 +501,11 @@ namespace Data_Logger_1._3.Services
             }
             catch (InvalidOperationException invex)
             {
-                await master.HandleExceptionAsync(invex, "NavigateToPage<TPage>()", "InvalidOperationException");
+                await dataService.HandleExceptionAsync(invex, "NavigateToPage<TPage>()", "InvalidOperationException");
             }
             catch (Exception ex)
             {
-                await master.HandleExceptionAsync(ex, "NavigateToPage<TPage>()");
+                await dataService.HandleExceptionAsync(ex, "NavigateToPage<TPage>()");
             }
         }
 
@@ -635,6 +637,7 @@ namespace Data_Logger_1._3.Services
         {
             await using var scope = _serviceProvider.CreateAsyncScope();
             var master = scope.ServiceProvider.GetRequiredService<ENTITYMASTER>();
+            var dataService = _serviceProvider.GetRequiredService<IDataService>();
 
             try
             {
@@ -717,11 +720,11 @@ namespace Data_Logger_1._3.Services
             }
             catch (XamlParseException xamlx)
             {
-                await master.HandleExceptionAsync(xamlx, "NavigateToLoggerCreator()", "XamlParseException");
+                await dataService.HandleExceptionAsync(xamlx, "NavigateToLoggerCreator()", "XamlParseException");
             }
             catch (Exception ex)
             {
-                await master.HandleExceptionAsync(ex, "NavigateToLoggerCreator()");
+                await dataService.HandleExceptionAsync(ex, "NavigateToLoggerCreator()");
             }
 
         }
@@ -730,6 +733,7 @@ namespace Data_Logger_1._3.Services
         {
             await using var scope = _serviceProvider.CreateAsyncScope();
             var master = scope.ServiceProvider.GetRequiredService<ENTITYMASTER>();
+            var dataService = _serviceProvider.GetRequiredService<IDataService>();
 
             try
             {
@@ -782,7 +786,6 @@ namespace Data_Logger_1._3.Services
                             codingEditor.Output = log.Output.Name;
                             codingEditor.Type = log.Type.Name;
 
-                            var dataService = _serviceProvider.GetRequiredService<DataService>();
 
                             foreach (var postIt in log.PostItList)
                             {
@@ -812,7 +815,7 @@ namespace Data_Logger_1._3.Services
             }
             catch (Exception ex)
             {
-                await master.HandleExceptionAsync(ex, "NavigateToLoggerEditor()");
+                await dataService.HandleExceptionAsync(ex, "NavigateToLoggerEditor()");
             }
         }
 
@@ -820,6 +823,7 @@ namespace Data_Logger_1._3.Services
         {
             await using var scope = _serviceProvider.CreateAsyncScope();
             var master = scope.ServiceProvider.GetRequiredService<ENTITYMASTER>();
+            var dataService = _serviceProvider.GetRequiredService<IDataService>();
 
             try
             {
@@ -879,7 +883,7 @@ namespace Data_Logger_1._3.Services
             }
             catch (Exception ex)
             {
-                await master.HandleExceptionAsync(ex, "NavigateToLoggerEditor()");
+                await dataService.HandleExceptionAsync(ex, "NavigateToLoggerEditor()");
             }
         }
 
@@ -887,6 +891,7 @@ namespace Data_Logger_1._3.Services
         {
             await using var scope = _serviceProvider.CreateAsyncScope();
             var master = scope.ServiceProvider.GetRequiredService<ENTITYMASTER>();
+            var dataService = _serviceProvider.GetRequiredService<IDataService>();
 
             try
             {
@@ -946,7 +951,7 @@ namespace Data_Logger_1._3.Services
             }
             catch (Exception ex)
             {
-                await master.HandleExceptionAsync(ex, "NavigateToLoggerEditor()");
+                await dataService.HandleExceptionAsync(ex, "NavigateToLoggerEditor()");
             }
         }
 
@@ -954,6 +959,7 @@ namespace Data_Logger_1._3.Services
         {
             await using var scope = _serviceProvider.CreateAsyncScope();
             var master = scope.ServiceProvider.GetRequiredService<ENTITYMASTER>();
+            var dataService = _serviceProvider.GetRequiredService<IDataService>();
 
             try
             {
@@ -1011,7 +1017,7 @@ namespace Data_Logger_1._3.Services
             }
             catch (Exception ex)
             {
-                await master.HandleExceptionAsync(ex, "NavigateToLoggerEditor()");
+                await dataService.HandleExceptionAsync(ex, "NavigateToLoggerEditor()");
             }
         }
 
@@ -1071,7 +1077,7 @@ namespace Data_Logger_1._3.Services
                             codingUpdater.Output = log.Output.Name;
                             codingUpdater.Type = log.Type.Name;
 
-                            var dataService = _serviceProvider.GetRequiredService<DataService>();
+                            var dataService = _serviceProvider.GetRequiredService<IDataService>();
 
                             foreach (var postIt in log.PostItList)
                             {

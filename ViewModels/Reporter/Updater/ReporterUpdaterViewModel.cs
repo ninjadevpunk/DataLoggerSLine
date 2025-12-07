@@ -13,7 +13,7 @@ namespace Data_Logger_1._3.ViewModels.Reporter.Updater
 {
     public abstract class ReporterUpdaterViewModel : ViewModelBase
     {
-        protected readonly DataService _dataService;
+        protected readonly IDataService _dataService;
         protected readonly NavigationService _navigationService;
         protected readonly ReportDeskViewModel _reportDesk;
 
@@ -21,7 +21,7 @@ namespace Data_Logger_1._3.ViewModels.Reporter.Updater
         public abstract CacheContext Context { get; }
         public abstract string LogType { get; }
 
-        protected ReporterUpdaterViewModel(NavigationService navigationService, ReportDeskViewModel reportDeskViewModel, DataService dataService, LOG log)
+        protected ReporterUpdaterViewModel(NavigationService navigationService, ReportDeskViewModel reportDeskViewModel, IDataService dataService, LOG log)
         {
             _navigationService = navigationService;
             _reportDesk = reportDeskViewModel;

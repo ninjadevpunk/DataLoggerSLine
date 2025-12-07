@@ -10,12 +10,12 @@ namespace Data_Logger_1._3.ViewModels.Dashboard
     {
 
 
-        public FilmViewModel(NavigationService navigationService, DataService _dataService) : base(navigationService, _dataService)
+        public FilmViewModel(NavigationService navigationService, IDataService _dataService) : base(navigationService, _dataService)
         {
             CacheItems = new ObservableCollection<FilmLOGViewModel>();
         }
 
-        public FilmViewModel(string logCount, NavigationService navigationService, DataService _dataService) : base(navigationService, _dataService)
+        public FilmViewModel(string logCount, NavigationService navigationService, IDataService _dataService) : base(navigationService, _dataService)
         {
             CacheItems = new ObservableCollection<FilmLOGViewModel>();
 

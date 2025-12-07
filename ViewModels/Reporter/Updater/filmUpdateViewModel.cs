@@ -15,7 +15,7 @@ namespace Data_Logger_1._3.ViewModels.Reporter.Updater
 
         private readonly FilmReportDeskViewModel _filmViewModel;
 
-        public filmUpdateViewModel(NavigationService navigationService, ReportDeskViewModel reportDeskViewModel, DataService dataService, LOG log) : 
+        public filmUpdateViewModel(NavigationService navigationService, ReportDeskViewModel reportDeskViewModel, IDataService dataService, LOG log) : 
             base(navigationService, reportDeskViewModel, dataService, log)
         {
             AppFieldEnabled = true;

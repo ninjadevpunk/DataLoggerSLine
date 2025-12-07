@@ -9,11 +9,11 @@ namespace Data_Logger_1._3.ViewModels.Dialogs
 {
     public class CreateCheckListViewModel : ViewModelBase
     {
-        private readonly DataService _dataService;
+        private readonly IDataService _dataService;
         private readonly NavigationService _navigationService;
         private readonly ViewModelFactory _viewModelFactory;
 
-        public CreateCheckListViewModel(NavigationService navigationService, DataService dataService, NOTESViewModel notesViewModel, ViewModelFactory viewModelFactory)
+        public CreateCheckListViewModel(NavigationService navigationService, IDataService dataService, NOTESViewModel notesViewModel, ViewModelFactory viewModelFactory)
         {
             _dataService = dataService;
             _navigationService = navigationService;

@@ -11,12 +11,12 @@ namespace Data_Logger_1._3.Commands.LoggerCommands
     public class SaveCommand : AsyncCommandBase
     {
         private readonly LoggerCreateViewModel _loggerCreateViewModel;
-        private readonly DataService _dataService;
+        private readonly IDataService _dataService;
         private ApplicationClass QtCreator;
         private ApplicationClass AndroidStudio;
 
 
-        public SaveCommand(LoggerCreateViewModel loggerCreateViewModel, DataService dataService)
+        public SaveCommand(LoggerCreateViewModel loggerCreateViewModel, IDataService dataService)
         {
             try
             {
@@ -73,8 +73,8 @@ namespace Data_Logger_1._3.Commands.LoggerCommands
                 {
                     case CacheContext.Qt:
                         {
-                            dialog.DefaultExt = ".qtlog"; // Default file extension
-                            dialog.Filter = "Qt LOG (.qtlog)|*.qtlog|JSON (.json)|*.json"; // Filter files by extension
+                            dialog.DefaultExt = ".log";
+                            dialog.Filter = "Qt LOG (.log)|*.log|JSON (.json)|*.json";
 
                             // Show save file dialog box
                             bool? result = dialog.ShowDialog();

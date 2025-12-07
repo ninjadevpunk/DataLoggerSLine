@@ -10,7 +10,7 @@ namespace Data_Logger_1._3.ViewModels.Reporter.Updater
     {
         private readonly ASReportDeskViewModel _ASviewModel;
 
-        public AScodeUpdateViewModel(NavigationService navigationService, DataService dataService, ReportDeskViewModel reportDeskViewModel, LOG log) : 
+        public AScodeUpdateViewModel(NavigationService navigationService, IDataService dataService, ReportDeskViewModel reportDeskViewModel, LOG log) : 
             base(navigationService, dataService, reportDeskViewModel, log)
         {
             ApplicationName = AndroidStudio;

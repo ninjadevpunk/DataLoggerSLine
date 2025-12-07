@@ -32,7 +32,7 @@ namespace Data_Logger_1._3.Services
                 _serviceProvider.GetRequiredService<NavigationService>(),
                 _serviceProvider.GetRequiredService<CodingQtViewModel>(),
                 "Qt",
-                _serviceProvider.GetRequiredService<DataService>()
+                _serviceProvider.GetRequiredService<IDataService>()
             );
         }
 
@@ -41,7 +41,7 @@ namespace Data_Logger_1._3.Services
             return new codeCreateViewModel(
                 _serviceProvider.GetRequiredService<NavigationService>(),
                 _serviceProvider.GetRequiredService<CodingViewModel>(), 
-                _serviceProvider.GetRequiredService<DataService>()
+                _serviceProvider.GetRequiredService<IDataService>()
             );
         }
 
@@ -50,7 +50,7 @@ namespace Data_Logger_1._3.Services
             return new codeEditViewModel(
                 _serviceProvider.GetRequiredService<NavigationService>(),
                 _serviceProvider.GetRequiredService<CodingViewModel>(),
-                _serviceProvider.GetRequiredService<DataService>(),
+                _serviceProvider.GetRequiredService<IDataService>(),
                 viewModelBase
             );
         }
@@ -58,7 +58,7 @@ namespace Data_Logger_1._3.Services
         public codeUpdateViewModel CreateCodeUpdateViewModel(CodeReportDeskViewModel codeReportDeskViewModel, LOG log)
         {
             return new codeUpdateViewModel(_serviceProvider.GetRequiredService<NavigationService>(),
-                _serviceProvider.GetRequiredService<DataService>(),
+                _serviceProvider.GetRequiredService<IDataService>(),
                 codeReportDeskViewModel,
                 log
                 );
@@ -68,7 +68,7 @@ namespace Data_Logger_1._3.Services
         {
             var postItVM = new PostItViewModel(
                 _serviceProvider.GetRequiredService<NavigationService>(),
-                _serviceProvider.GetRequiredService<DataService>(),
+                _serviceProvider.GetRequiredService<IDataService>(),
                 loggerCreateViewModel,
                 category
                 );
@@ -83,7 +83,7 @@ namespace Data_Logger_1._3.Services
         {
             var ef_editPostItViewModel = new EF_EditPostItViewModel(
                 _serviceProvider.GetRequiredService<NavigationService>(),
-                _serviceProvider.GetRequiredService<DataService>(),
+                _serviceProvider.GetRequiredService<IDataService>(),
                 reporterUpdaterViewModel
             );
 

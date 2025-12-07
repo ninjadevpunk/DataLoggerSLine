@@ -42,7 +42,7 @@ namespace Data_Logger_1._3.ViewModels.LogViewModels
 
 
 
-        public LOGViewModel(LOG log, LogCacheViewModel logCacheViewModel, ObservableCollection<PostItViewModel> createPostItViewModels, DataService dataService)
+        public LOGViewModel(LOG log, LogCacheViewModel logCacheViewModel, ObservableCollection<PostItViewModel> createPostItViewModels, IDataService dataService)
         {
             _vm = logCacheViewModel;
 
@@ -60,7 +60,7 @@ namespace Data_Logger_1._3.ViewModels.LogViewModels
 
         }
 
-        public LOGViewModel(LOG log, LogCacheViewModel logCacheViewModel, DataService dataService)
+        public LOGViewModel(LOG log, LogCacheViewModel logCacheViewModel, IDataService dataService)
         {
             _vm = logCacheViewModel;
 
@@ -75,7 +75,7 @@ namespace Data_Logger_1._3.ViewModels.LogViewModels
             _cacheMaster = dataService.GetCachemaster();
         }
 
-        private void Setup(DataService dataService)
+        private void Setup(IDataService dataService)
         {
             DeleteCacheItemCommand = new DeleteCacheItemCommand(_vm, dataService, true);
             QuickDeleteCacheItemCommand = new DeleteCacheItemCommand(_vm, dataService, false);

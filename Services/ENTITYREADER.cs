@@ -3,6 +3,7 @@ using Data_Logger_1._3.Models.App_Models;
 using Microsoft.EntityFrameworkCore;
 using System.Diagnostics;
 using Data_Logger_1._3.ViewModels.Dialogs;
+using Microsoft.Extensions.DependencyInjection;
 using static Data_Logger_1._3.Models.FeedbackMessage;
 using static Data_Logger_1._3.Models.LOG;
 
@@ -10,19 +11,70 @@ namespace Data_Logger_1._3.Services
 {
     public class ENTITYREADER
     {
-        private readonly ENTITYMASTER _master;
+        private ENTITYMASTER _master;
+        private ENTITYWRITER _writer;
+        private readonly IServiceProvider _serviceProvider;
 
 
         /// <summary>
         /// The Entity Framework data reader for ENTITYMASTER.
         /// </summary>
-        public ENTITYREADER(ENTITYMASTER entityMaster)
+        public ENTITYREADER(IServiceProvider serviceProvider)
         {
-            _master = entityMaster;
+            _serviceProvider = serviceProvider;
         }
 
-        public async Task SaveChangesAsync() => await _master.SaveChangesAsync();
+        private async Task<AsyncServiceScope> ActivateMasterAsync()
+        {
+            await using var scope = _serviceProvider.CreateAsyncScope();
+            _master = scope.ServiceProvider.GetRequiredService<ENTITYMASTER>();
 
+            return scope;
+        }
+
+        private async Task<AsyncServiceScope> ActivateMasterAsync(AsyncServiceScope scope)
+        {
+            _master = scope.ServiceProvider.GetRequiredService<ENTITYMASTER>();
+
+            return scope;
+        }
+
+        private async Task<AsyncServiceScope> ActivateWriterAsync()
+        {
+            await using var scope = _serviceProvider.CreateAsyncScope();
+            _writer = scope.ServiceProvider.GetRequiredService<ENTITYWRITER>();
+
+            return scope;
+        }
+
+        private async Task<AsyncServiceScope> ActivateWriterAsync(AsyncServiceScope scope)
+        {
+            _writer = scope.ServiceProvider.GetRequiredService<ENTITYWRITER>();
+
+            return scope;
+        }
+
+        private async Task ActivateMasterAndWriterAsync()
+        {
+            var scope = await ActivateMasterAsync();
+            await ActivateWriterAsync(scope);
+        }
+
+        public async Task<AsyncServiceScope> SaveChangesAsync()
+        {
+            var scope = await ActivateMasterAsync();
+
+            await _master.SaveChangesAsync();
+
+            return scope;
+        }
+
+        public async Task SaveChangesAsync(AsyncServiceScope scope)
+        {
+            _master = scope.ServiceProvider.GetRequiredService<ENTITYMASTER>();
+
+            await _master.SaveChangesAsync();
+        }
 
         /// <summary>
         /// Retrieve a profile pic from on an account with the matching email address.
@@ -31,6 +83,8 @@ namespace Data_Logger_1._3.Services
         /// <returns>Returns a profile pic file path or an empty string if the path is null.</returns>
         public async Task<string> RetrieveProfilePic(string emailAddress)
         {
+            await ActivateMasterAsync();
+
             return await _master.Accounts
                 .Where(a => a.Email == emailAddress)
                 .Select(a => a.ProfilePic)
@@ -47,6 +101,8 @@ namespace Data_Logger_1._3.Services
         /// <returns>Returns only 1 log with the specified ID.</returns>
         public async Task<LOG?> RetrieveLog(int id)
         {
+            await ActivateMasterAsync();
+
             var accountID = await GetOnlineAccountIDAsync();
 
             return await _master.Logs
@@ -57,6 +113,8 @@ namespace Data_Logger_1._3.Services
 
         public async Task<List<LOG>> RetrieveLogs()
         {
+            await ActivateMasterAsync();
+
             var accountID = await GetOnlineAccountIDAsync();
 
             return await _master.Logs
@@ -71,6 +129,8 @@ namespace Data_Logger_1._3.Services
         /// <returns>Returns a list of CodingLOG objects.</returns>
         public async Task<List<CodingLOG>> RetrieveCodingLogs()
         {
+            await ActivateMasterAsync();
+
             var accountID = await GetOnlineAccountIDAsync();
 
             return await _master.CodingLogs
@@ -88,6 +148,8 @@ namespace Data_Logger_1._3.Services
 
         public async Task<List<CodingLOG>> RetrieveQtCodingLogs()
         {
+            await ActivateMasterAsync();
+
             var accountID = await GetOnlineAccountIDAsync();
 
             return await _master.CodingLogs
@@ -98,32 +160,48 @@ namespace Data_Logger_1._3.Services
 
         public async Task<List<AndroidCodingLOG>> RetrieveAndroidCodingLogs()
         {
+            await ActivateMasterAsync();
+
+            var accountID = await GetOnlineAccountIDAsync();
+
             return await _master.AndroidCodingLogs
-                .Where(a => a.accountID == _master.User.accountID && a.Application.appID == 2)
+                .Where(a => a.accountID == accountID && a.Application.appID == 2)
                 .OrderBy(a => a.Start)
                 .ToListAsync();
         }
 
         public async Task<List<GraphicsLOG>> RetrieveGraphicsLogs()
         {
+            await ActivateMasterAsync();
+
+            var accountID = await GetOnlineAccountIDAsync();
+
             return await _master.GraphicsLogs
-                .Where(g => g.accountID == _master.User.accountID)
+                .Where(g => g.accountID == accountID)
                 .OrderBy(g => g.Start)
                 .ToListAsync();
         }
 
         public async Task<List<FilmLOG>> RetrieveFilmLogs()
         {
+            await ActivateMasterAsync();
+
+            var accountID = await GetOnlineAccountIDAsync();
+
             return await _master.FilmLogs
-                .Where(f => f.accountID == _master.User.accountID)
+                .Where(f => f.accountID == accountID)
                 .OrderBy(f => f.Start)
                 .ToListAsync();
         }
 
         public async Task<List<FlexiNotesLOG>> RetrieveFlexiNotesLogs()
         {
+            await ActivateMasterAsync();
+
+            var accountID = await GetOnlineAccountIDAsync();
+
             return await _master.FlexiNotesLogs
-                .Where(fn => fn.accountID == _master.User.accountID)
+                .Where(fn => fn.accountID == accountID)
                 .OrderBy(fn => fn.Start)
                 .ToListAsync();
         }
@@ -131,6 +209,8 @@ namespace Data_Logger_1._3.Services
 
         public async Task<List<NoteItem>> RetrieveGenericNotes(int id)
         {
+            await ActivateMasterAsync();
+
             return await _master.NoteItems
                 .Where(n => n.accountID == id)
                 .ToListAsync();
@@ -138,8 +218,12 @@ namespace Data_Logger_1._3.Services
 
         public async Task<List<CheckList>> RetrieveCheckList()
         {
+            await ActivateMasterAsync();
+
+            var accountID = await GetOnlineAccountIDAsync();
+
             return await _master.Checklists
-                .Where((cl => cl.accountID == _master.User.accountID))
+                .Where((cl => cl.accountID == accountID))
                 .ToListAsync();
         }
 
@@ -149,6 +233,9 @@ namespace Data_Logger_1._3.Services
         /// <returns>Returns a single account ID</returns>
         public async Task<int?> GetOnlineAccountIDAsync()
         {
+            var scope = await ActivateMasterAsync();
+            await ActivateWriterAsync(scope);
+
             try
             {
                 var onlineAccount = await _master.Accounts
@@ -158,7 +245,7 @@ namespace Data_Logger_1._3.Services
             }
             catch (Exception ex)
             {
-                await _master.HandleExceptionAsync(ex, "GetOnlineAccountIDAsync");
+                await _writer.HandleExceptionAsync(ex, "GetOnlineAccountIDAsync");
             }
 
             return null;
@@ -167,6 +254,8 @@ namespace Data_Logger_1._3.Services
 
         public async Task<ACCOUNT> FindAccountByID(int id)
         {
+            await ActivateMasterAndWriterAsync();
+
             try
             {
                 return await _master.Accounts
@@ -176,7 +265,7 @@ namespace Data_Logger_1._3.Services
             {
                 var description = $"Exception near FindAccountByID(id): {ex.Message}";
 
-                await _master.CreateFeedback(1, description, false, true, FeedbackType.Exception);
+                await _writer.CreateFeedback(1, description, false, true, FeedbackType.Exception);
                 Debug.WriteLine(description);
 
                 return null;
@@ -185,6 +274,8 @@ namespace Data_Logger_1._3.Services
 
         public async Task<ACCOUNT?> FindAccountByEmail(string emailAddress, string password)
         {
+            await ActivateMasterAndWriterAsync();
+
             try
             {
                 var account = await _master.Accounts
@@ -201,7 +292,7 @@ namespace Data_Logger_1._3.Services
             {
                 var description = $"Exception near FindAccountByEmail(email,password): {ex.Message}";
 
-                await _master.CreateFeedback(1, description, false, true, FeedbackType.Exception);
+                await _writer.CreateFeedback(1, description, false, true, FeedbackType.Exception);
                 Debug.WriteLine(description);
 
                 return null;
@@ -210,6 +301,8 @@ namespace Data_Logger_1._3.Services
 
         public async Task<ApplicationClass?> FindApplication(string name)
         {
+            await ActivateMasterAndWriterAsync();
+
             try
             {
                 var application = await _master.Applications
@@ -219,7 +312,7 @@ namespace Data_Logger_1._3.Services
             }
             catch (Exception ex)
             {
-                await _master.HandleExceptionAsync(ex, "FindApplication(name)");
+                await _writer.HandleExceptionAsync(ex, "FindApplication(name)");
             }
 
             return null;
@@ -227,6 +320,8 @@ namespace Data_Logger_1._3.Services
 
         public async Task<ApplicationClass?> FindApplication(int? ID, string name)
         {
+            await ActivateMasterAndWriterAsync();
+
             try
             {
                 if (ID == null)
@@ -240,7 +335,7 @@ namespace Data_Logger_1._3.Services
             }
             catch (Exception ex)
             {
-                await _master.HandleExceptionAsync(ex, "FindApplication(name)");
+                await _writer.HandleExceptionAsync(ex, "FindApplication(name)");
             }
 
             return null;
@@ -249,6 +344,8 @@ namespace Data_Logger_1._3.Services
 
         public async Task<ApplicationClass?> FindApplicationByID(int appID)
         {
+            await ActivateMasterAndWriterAsync();
+
             try
             {
                 var application = await _master.Applications
@@ -258,7 +355,7 @@ namespace Data_Logger_1._3.Services
             }
             catch (Exception ex)
             {
-                await _master.HandleExceptionAsync(ex, "FindApplicationByID(appID)");
+                await _writer.HandleExceptionAsync(ex, "FindApplicationByID(appID)");
             }
 
             return null;
@@ -266,6 +363,8 @@ namespace Data_Logger_1._3.Services
 
         public async Task<ProjectClass?> FindProject(int? userID, string projectName, int appID)
         {
+            await ActivateMasterAndWriterAsync();
+
             try
             {
                 if (userID == null)
@@ -281,15 +380,17 @@ namespace Data_Logger_1._3.Services
             }
             catch (Exception ex)
             {
-                await _master.HandleExceptionAsync(ex, "FindProject(projectName, appID)");
+                await _writer.HandleExceptionAsync(ex, "FindProject(projectName, appID)");
             }
 
             return null;
         }
 
 
-        public async Task<ProjectClass> FindProjectByID(int projectID)
+        public async Task<ProjectClass?> FindProjectByID(int projectID)
         {
+            await ActivateMasterAndWriterAsync();
+
             try
             {
                 var project = await _master.Projects
@@ -299,7 +400,7 @@ namespace Data_Logger_1._3.Services
             }
             catch (Exception ex)
             {
-                await _master.HandleExceptionAsync(ex, "FindProjectByID(projectID)");
+                await _writer.HandleExceptionAsync(ex, "FindProjectByID(projectID)");
             }
 
             return null;
@@ -307,6 +408,8 @@ namespace Data_Logger_1._3.Services
 
         public async Task<OutputClass?> FindOutput(string name)
         {
+            await ActivateMasterAndWriterAsync();
+
             try
             {
                 return await _master.Outputs
@@ -315,7 +418,7 @@ namespace Data_Logger_1._3.Services
             }
             catch (Exception ex)
             {
-                await _master.HandleExceptionAsync(ex, "FindOutput(name)");
+                await _writer.HandleExceptionAsync(ex, "FindOutput(name)");
             }
 
             return null;
@@ -323,6 +426,8 @@ namespace Data_Logger_1._3.Services
 
         public async Task<OutputClass?> FindOutputByID(int outputID)
         {
+            await ActivateMasterAndWriterAsync();
+
             try
             {
                 var output = await _master.Outputs
@@ -332,7 +437,7 @@ namespace Data_Logger_1._3.Services
             }
             catch (Exception ex)
             {
-                await _master.HandleExceptionAsync(ex, "FindOutputByID(outputID)");
+                await _writer.HandleExceptionAsync(ex, "FindOutputByID(outputID)");
             }
 
             return null;
@@ -340,6 +445,8 @@ namespace Data_Logger_1._3.Services
 
         public async Task<TypeClass?> FindType(string name)
         {
+            await ActivateMasterAndWriterAsync();
+
             try
             {
                 return await _master.Types
@@ -348,7 +455,7 @@ namespace Data_Logger_1._3.Services
             }
             catch (Exception ex)
             {
-                await _master.HandleExceptionAsync(ex, "FindType(name)");
+                await _writer.HandleExceptionAsync(ex, "FindType(name)");
             }
 
             return null;
@@ -356,6 +463,8 @@ namespace Data_Logger_1._3.Services
 
         public async Task<TypeClass?> FindTypeByID(int typeID)
         {
+            await ActivateMasterAndWriterAsync();
+
             try
             {
                 var type = await _master.Types
@@ -365,7 +474,7 @@ namespace Data_Logger_1._3.Services
             }
             catch (Exception ex)
             {
-                await _master.HandleExceptionAsync(ex, "FindTypeByID(typeID)");
+                await _writer.HandleExceptionAsync(ex, "FindTypeByID(typeID)");
             }
 
             return null;
@@ -401,6 +510,9 @@ namespace Data_Logger_1._3.Services
         /// <exception cref="EmailConflictException"></exception>
         public async Task<bool> EmailExists(string email)
         {
+            var scope = await ActivateMasterAsync();
+            await ActivateWriterAsync(scope);
+
             try
             {
                 var account = await _master.Accounts
@@ -419,7 +531,43 @@ namespace Data_Logger_1._3.Services
             }
             catch (Exception ex)
             {
-                await _master.HandleExceptionAsync(ex, "EmailExists(email)");
+                await _writer.HandleExceptionAsync(ex, "EmailExists(email)");
+
+                return true;
+            }
+        }
+
+        /// <summary>
+        /// Checks if an email exists in the database.
+        /// </summary>
+        /// <param name="scope">The scope for the DbContext.</param>
+        /// <param name="email">The email provided by the user signing up.</param>
+        /// <returns>Returns whether the email exists or not. Will throw an ExmailConflictException if the email exists.</returns>
+        /// <exception cref="EmailConflictException"></exception>
+        public async Task<bool> EmailExists(AsyncServiceScope scope, string email)
+        {
+            await ActivateMasterAsync(scope);
+            await ActivateWriterAsync(scope);
+
+            try
+            {
+                var account = await _master.Accounts
+                    .FirstOrDefaultAsync(a => a.Email == email);
+
+                if (account is not null)
+                {
+                    throw new EmailConflictException("This email already exists.");
+                }
+
+                return false;
+            }
+            catch (EmailConflictException mailex)
+            {
+                return true;
+            }
+            catch (Exception ex)
+            {
+                await _writer.HandleExceptionAsync(ex, "EmailExists(email)");
 
                 return true;
             }
@@ -432,6 +580,8 @@ namespace Data_Logger_1._3.Services
         /// <returns>Returns whether the log with the specified logID has PostIts.</returns>
         public async Task<bool> PostItsExists(int logID)
         {
+            await ActivateMasterAsync();
+
             return await _master.PostIts.AnyAsync(p =>
                     p.logID == logID);
         }
@@ -445,6 +595,8 @@ namespace Data_Logger_1._3.Services
         /// <returns>Returns an account ID.</returns>
         public async Task<int> FindAccountIDAsync(ACCOUNT account)
         {
+            await ActivateMasterAndWriterAsync();
+
             try
             {
                 var result = await _master.Accounts
@@ -458,7 +610,7 @@ namespace Data_Logger_1._3.Services
             {
                 var description = $"Exception near FindAccountID(account): {ex.Message}";
 
-                await _master.CreateFeedback(1, description, false, true, FeedbackType.Exception);
+                await _writer.CreateFeedback(1, description, false, true, FeedbackType.Exception);
                 Debug.WriteLine(description);
 
                 return -1;
@@ -474,6 +626,8 @@ namespace Data_Logger_1._3.Services
         /// <returns>An app ID if found; -1 if not.</returns>
         public async Task<int> FindAppID(ApplicationClass app)
         {
+            await ActivateMasterAndWriterAsync();
+
             try
             {
                 var appID = await _master.Applications
@@ -487,11 +641,11 @@ namespace Data_Logger_1._3.Services
             }
             catch (ArgumentNullException nullex)
             {
-                await _master.HandleExceptionAsync(nullex, "FindAppID(app)", "ArgumentNullException");
+                await _writer.HandleExceptionAsync(nullex, "FindAppID(app)", "ArgumentNullException");
             }
             catch (Exception ex)
             {
-                await _master.HandleExceptionAsync(ex, "FindAppID(app)");
+                await _writer.HandleExceptionAsync(ex, "FindAppID(app)");
             }
 
             return -1;
@@ -505,6 +659,8 @@ namespace Data_Logger_1._3.Services
         /// <returns>Returns an ID for the given project. Returns 1 (Unknown) if not found.</returns>
         public async Task<int> FindProjectID(ProjectClass project)
         {
+            await ActivateMasterAndWriterAsync();
+
             if (string.IsNullOrEmpty(project.Name) || project.Name == "Unknown")
                 return 1;
 
@@ -534,11 +690,11 @@ namespace Data_Logger_1._3.Services
             }
             catch (OperationCanceledException opex)
             {
-                await _master.HandleExceptionAsync(opex, "FindProjectID(project)", "OperationCanceledException");
+                await _writer.HandleExceptionAsync(opex, "FindProjectID(project)", "OperationCanceledException");
             }
             catch (Exception ex)
             {
-                await _master.HandleExceptionAsync(ex, "FindProjectID(project)");
+                await _writer.HandleExceptionAsync(ex, "FindProjectID(project)");
             }
 
             return 1;
@@ -548,6 +704,8 @@ namespace Data_Logger_1._3.Services
 
         public async Task<SubjectClass?> FindSubject(string name, LOG.CATEGORY category)
         {
+            await ActivateMasterAndWriterAsync();
+
             try
             {
                 var onlineUserID = await GetOnlineAccountIDAsync();
@@ -560,7 +718,7 @@ namespace Data_Logger_1._3.Services
             }
             catch (Exception ex)
             {
-                await _master.HandleExceptionAsync(ex, "FindType(name)");
+                await _writer.HandleExceptionAsync(ex, "FindType(name)");
             }
 
             return null;
@@ -573,6 +731,8 @@ namespace Data_Logger_1._3.Services
         /// <returns>Returns an ID for the SubjectClass if it exists. 1 returned for nothing found.</returns>
         public async Task<int> FindSubjectID(SubjectClass subject)
         {
+            await ActivateMasterAndWriterAsync();
+
             int subjectKey = 1;
 
             try
@@ -593,7 +753,7 @@ namespace Data_Logger_1._3.Services
             }
             catch (Exception ex)
             {
-                await _master.HandleExceptionAsync(ex, "FindSubjectID(subject)");
+                await _writer.HandleExceptionAsync(ex, "FindSubjectID(subject)");
             }
 
             return subjectKey;
@@ -606,6 +766,8 @@ namespace Data_Logger_1._3.Services
         /// <returns>Returns the log count.</returns>
         public async Task<int> LogCount()
         {
+            await ActivateMasterAndWriterAsync();
+
             try
             {
                 return await _master.Logs.CountAsync();
@@ -614,7 +776,7 @@ namespace Data_Logger_1._3.Services
             {
                 var description = $"Exception in LogCount: {ex.Message}";
 
-                await _master.CreateFeedback(1, description, false, true, FeedbackType.Exception);
+                await _writer.CreateFeedback(1, description, false, true, FeedbackType.Exception);
                 Debug.WriteLine(description);
 
                 return -1;
@@ -627,6 +789,8 @@ namespace Data_Logger_1._3.Services
         /// <returns>Returns the log count.</returns>
         public async Task<int?> LogCount(CATEGORY category)
         {
+            await ActivateMasterAndWriterAsync();
+
             try
             {
                 var onlineUserID = await GetOnlineAccountIDAsync();
@@ -640,7 +804,7 @@ namespace Data_Logger_1._3.Services
             {
                 var description = $"Exception in LogCount: {ex.Message}";
 
-                await _master.CreateFeedback(1, description, false, true, FeedbackType.Exception);
+                await _writer.CreateFeedback(1, description, false, true, FeedbackType.Exception);
                 Debug.WriteLine(description);
 
             }
@@ -655,6 +819,7 @@ namespace Data_Logger_1._3.Services
         /// <returns>The count of Qt logs ONLY.</returns>
         public async Task<int> QtLogCount()
         {
+            await ActivateMasterAndWriterAsync();
 
             try
             {
@@ -671,7 +836,7 @@ namespace Data_Logger_1._3.Services
             {
                 var description = $"Exception in QtLogCount: {ex.Message}";
 
-                await _master.CreateFeedback(1, description, false, true, FeedbackType.Exception);
+                await _writer.CreateFeedback(1, description, false, true, FeedbackType.Exception);
                 Debug.WriteLine(description);
 
                 return -1;
@@ -684,6 +849,7 @@ namespace Data_Logger_1._3.Services
         /// <returns>The count of Android Studio logs ONLY.</returns>
         public async Task<int> ASLogCount()
         {
+            await ActivateMasterAndWriterAsync();
 
             try
             {
@@ -700,7 +866,7 @@ namespace Data_Logger_1._3.Services
             {
                 var description = $"Exception occurred near ASLogCount: {ex.Message}";
 
-                await _master.CreateFeedback(1, description, false, true, FeedbackType.Exception);
+                await _writer.CreateFeedback(1, description, false, true, FeedbackType.Exception);
                 Debug.WriteLine(description);
                 return -1;
             }
@@ -714,6 +880,8 @@ namespace Data_Logger_1._3.Services
         /// <returns>Returns the count of coding logs.</returns>
         public async Task<int> CodingLogCount()
         {
+            await ActivateMasterAndWriterAsync();
+
             try
             {
                 var accountID = await GetOnlineAccountIDAsync();
@@ -729,7 +897,7 @@ namespace Data_Logger_1._3.Services
             {
                 var description = $"Exception occurred near CodingLogCount: {ex.Message}";
 
-                await _master.CreateFeedback(1, description, false, true, FeedbackType.Exception);
+                await _writer.CreateFeedback(1, description, false, true, FeedbackType.Exception);
                 Debug.WriteLine(description);
 
                 return -1;
@@ -743,9 +911,13 @@ namespace Data_Logger_1._3.Services
         /// <returns>Returns the count of gfx logs.</returns>
         public async Task<int> GraphicsLogCount()
         {
+            await ActivateMasterAndWriterAsync();
+
             try
             {
-                var graphicsLogs = _master.Logs.Where(l => l.accountID == _master.User.accountID)
+                var accountID = await GetOnlineAccountIDAsync();
+
+                var graphicsLogs = _master.Logs.Where(l => l.accountID == accountID)
                     .Where(l => l.Category == LOG.CATEGORY.GRAPHICS);
 
                 return await graphicsLogs.CountAsync();
@@ -754,7 +926,7 @@ namespace Data_Logger_1._3.Services
             {
                 var description = $"Exception occurred near GraphicsLogCount: {ex.Message}";
 
-                await _master.CreateFeedback(1, description, false, true, FeedbackType.Exception);
+                await _writer.CreateFeedback(1, description, false, true, FeedbackType.Exception);
                 Debug.WriteLine(description);
 
                 return -1;
@@ -768,17 +940,21 @@ namespace Data_Logger_1._3.Services
         /// <returns>Returns the count of film logs.</returns>
         public async Task<int> FilmLogCount()
         {
+            await ActivateMasterAndWriterAsync();
+
             try
             {
+                var accountID = await GetOnlineAccountIDAsync();
+
                 return await _master.Logs
-                    .Where(l => l.accountID == _master.User.accountID)
+                    .Where(l => l.accountID == accountID)
                     .Where(l => l.Category == LOG.CATEGORY.FILM).CountAsync();
             }
             catch (Exception ex)
             {
                 var description = $"Exception occurred near FilmLogCount: {ex.Message}";
 
-                await _master.CreateFeedback(1, description, false, true, FeedbackType.Exception);
+                await _writer.CreateFeedback(1, description, false, true, FeedbackType.Exception);
                 Debug.WriteLine(description);
 
                 return -1;
@@ -792,10 +968,14 @@ namespace Data_Logger_1._3.Services
         /// <returns>Returns the count of notes logs.</returns>
         public async Task<int> NoteItemCount()
         {
+            await ActivateMasterAndWriterAsync();
+
             try
             {
+                var accountID = await GetOnlineAccountIDAsync();
+
                 return await _master.Logs
-                    .Where(l => l.accountID == _master.User.accountID)
+                    .Where(l => l.accountID == accountID)
                     .Where(l => l.Category == LOG.CATEGORY.NOTES)
                     .Where(l => l.appID == 15 || l.appID == 16).CountAsync();
             }
@@ -803,7 +983,7 @@ namespace Data_Logger_1._3.Services
             {
                 var description = $"Exception occurred near NoteItemCount: {ex.Message}";
 
-                await _master.CreateFeedback(1, description, false, true, FeedbackType.Exception);
+                await _writer.CreateFeedback(1, description, false, true, FeedbackType.Exception);
                 Debug.WriteLine(description);
 
                 return -1;
@@ -817,10 +997,14 @@ namespace Data_Logger_1._3.Services
         /// <returns>Returns the count of flexible notes logs.</returns>
         public async Task<int> FlexiNotesLogCount()
         {
+            await ActivateMasterAndWriterAsync();
+
             try
             {
+                var accountID = await GetOnlineAccountIDAsync();
+
                 return await _master.Logs
-                    .Where(l => l.accountID == _master.User.accountID)
+                    .Where(l => l.accountID == accountID)
                     .Where(l => l.Category == LOG.CATEGORY.NOTES)
                     .Where(l => l.appID != 15 && l.appID != 16).CountAsync();
             }
@@ -828,7 +1012,7 @@ namespace Data_Logger_1._3.Services
             {
                 var description = $"Exception occurred near FlexiNotesLogCount: {ex.Message}";
 
-                await _master.CreateFeedback(1, description, false, true, FeedbackType.Exception);
+                await _writer.CreateFeedback(1, description, false, true, FeedbackType.Exception);
 
                 return -1;
             }
@@ -845,6 +1029,8 @@ namespace Data_Logger_1._3.Services
         /// <returns>A List of ApplicationClass objects.</returns>
         public async Task<List<ApplicationClass>> ListApplications()
         {
+            await ActivateMasterAndWriterAsync();
+
             try
             {
                 var accountID = await GetOnlineAccountIDAsync();
@@ -859,7 +1045,7 @@ namespace Data_Logger_1._3.Services
             {
                 var description = $"Exception occurred near ListApplications(category): {ex.Message}";
 
-                await _master.CreateFeedback(1, description, false, true, FeedbackType.Exception);
+                await _writer.CreateFeedback(1, description, false, true, FeedbackType.Exception);
             }
 
             return new();
@@ -874,6 +1060,8 @@ namespace Data_Logger_1._3.Services
         /// <returns>A List of ApplicationClass objects.</returns>
         public async Task<List<ApplicationClass>> ListApplications(CATEGORY category)
         {
+            await ActivateMasterAndWriterAsync();
+
             try
             {
                 var accountID = await GetOnlineAccountIDAsync();
@@ -890,7 +1078,7 @@ namespace Data_Logger_1._3.Services
             {
                 var description = $"Exception occurred near ListApplications(category): {ex.Message}";
 
-                await _master.CreateFeedback(1, description, false, true, FeedbackType.Exception);
+                await _writer.CreateFeedback(1, description, false, true, FeedbackType.Exception);
             }
 
             return new();
@@ -904,6 +1092,8 @@ namespace Data_Logger_1._3.Services
         /// <returns>A List of ProjectClass objects.</returns>
         public async Task<List<ProjectClass>> ListProjects()
         {
+            await ActivateMasterAndWriterAsync();
+
             try
             {
                 var accountID = await GetOnlineAccountIDAsync();
@@ -919,7 +1109,7 @@ namespace Data_Logger_1._3.Services
             {
                 var description = $"Exception occurred near ListProjects(category): {ex.Message}";
 
-                await _master.CreateFeedback(1, description, false, true, FeedbackType.Exception);
+                await _writer.CreateFeedback(1, description, false, true, FeedbackType.Exception);
                 Debug.WriteLine(description);
             }
 
@@ -934,6 +1124,8 @@ namespace Data_Logger_1._3.Services
         /// <returns>A List of ProjectClass objects.</returns>
         public async Task<List<ProjectClass>> ListProjects(CATEGORY category)
         {
+            await ActivateMasterAndWriterAsync();
+
             try
             {
                 var accountID = await GetOnlineAccountIDAsync();
@@ -950,7 +1142,7 @@ namespace Data_Logger_1._3.Services
             {
                 var description = $"Exception occurred near ListProjects(category): {ex.Message}";
 
-                await _master.CreateFeedback(1, description, false, true, FeedbackType.Exception);
+                await _writer.CreateFeedback(1, description, false, true, FeedbackType.Exception);
                 Debug.WriteLine(description);
             }
 
@@ -967,6 +1159,8 @@ namespace Data_Logger_1._3.Services
         /// <returns>A List of ProjectClass objects.</returns>
         public async Task<List<ProjectClass>> ListProjects(ApplicationClass app)
         {
+            await ActivateMasterAndWriterAsync();
+
             try
             {
                 var accountID = await GetOnlineAccountIDAsync();
@@ -981,7 +1175,7 @@ namespace Data_Logger_1._3.Services
             }
             catch (Exception ex)
             {
-                await _master.HandleExceptionAsync(ex, "ListProjects(app)");
+                await _writer.HandleExceptionAsync(ex, "ListProjects(app)");
             }
 
             return new();
@@ -999,6 +1193,8 @@ namespace Data_Logger_1._3.Services
         /// <returns></returns>
         public async Task<List<SubjectClass>> ListSubjects(CATEGORY category)
         {
+            await ActivateMasterAndWriterAsync();
+
             try
             {
                 var accountID = await GetOnlineAccountIDAsync();
@@ -1016,7 +1212,7 @@ namespace Data_Logger_1._3.Services
             {
                 var description = $"Exception occurred near ListSubjects(category): {ex.Message}";
 
-                await _master.CreateFeedback(1, description, false, true, FeedbackType.Exception);
+                await _writer.CreateFeedback(1, description, false, true, FeedbackType.Exception);
                 Debug.WriteLine(description);
             }
 
@@ -1030,6 +1226,8 @@ namespace Data_Logger_1._3.Services
         /// <returns>A List with SubjectClass objects.</returns>
         public async Task<List<SubjectClass>> ListSubjects(ProjectClass project)
         {
+            await ActivateMasterAndWriterAsync();
+
             try
             {
                 var accountID = await GetOnlineAccountIDAsync();
@@ -1049,7 +1247,7 @@ namespace Data_Logger_1._3.Services
             {
                 var description = $"Exception occurred near ListSubjects(project): {ex.Message}";
 
-                await _master.CreateFeedback(1, description, false, true, FeedbackType.Exception);
+                await _writer.CreateFeedback(1, description, false, true, FeedbackType.Exception);
                 Debug.WriteLine(description);
             }
 
@@ -1063,6 +1261,8 @@ namespace Data_Logger_1._3.Services
         /// <returns>A List of Qt OutputClass objects.</returns>
         public async Task<List<OutputClass>> ListQtOutputs()
         {
+            await ActivateMasterAndWriterAsync();
+
             try
             {
                 var accountID = await GetOnlineAccountIDAsync();
@@ -1076,7 +1276,7 @@ namespace Data_Logger_1._3.Services
             {
                 var description = $"Exception occurred near ListQtOutputs(): {ex.Message}";
 
-                await _master.CreateFeedback(1, description, false, true, FeedbackType.Exception);
+                await _writer.CreateFeedback(1, description, false, true, FeedbackType.Exception);
                 Debug.WriteLine(description);
             }
 
@@ -1089,6 +1289,8 @@ namespace Data_Logger_1._3.Services
         /// <returns>A List of Qt OutputClass objects.</returns>
         public async Task<List<OutputClass>> ListASOutputs()
         {
+            await ActivateMasterAndWriterAsync();
+
             try
             {
                 return await _master.Outputs
@@ -1100,7 +1302,7 @@ namespace Data_Logger_1._3.Services
             {
                 var description = $"Exception occurred near ListASOutputs(): {ex.Message}";
 
-                await _master.CreateFeedback(1, description, false, true, FeedbackType.Exception);
+                await _writer.CreateFeedback(1, description, false, true, FeedbackType.Exception);
                 Debug.WriteLine(description);
             }
 
@@ -1114,6 +1316,8 @@ namespace Data_Logger_1._3.Services
         /// <returns>A List of OutputClass objects.</returns>
         public async Task<List<OutputClass>> ListOutputs(CATEGORY category)
         {
+            await ActivateMasterAndWriterAsync();
+
             try
             {
                 return await _master.Outputs
@@ -1126,7 +1330,7 @@ namespace Data_Logger_1._3.Services
             {
                 var description = $"Exception occurred near ListOutputs(application): {ex.Message}";
 
-                await _master.CreateFeedback(1, description, false, true, FeedbackType.Exception);
+                await _writer.CreateFeedback(1, description, false, true, FeedbackType.Exception);
                 Debug.WriteLine(description);
             }
 
@@ -1145,6 +1349,8 @@ namespace Data_Logger_1._3.Services
         /// <returns>A List of Qt OutputClass objects.</returns>
         public async Task<List<TypeClass>> ListQtTypes()
         {
+            await ActivateMasterAndWriterAsync();
+
             try
             {
                 return await _master.Types
@@ -1156,7 +1362,7 @@ namespace Data_Logger_1._3.Services
             {
                 var description = $"Exception occurred near ListQtTypes(): {ex.Message}";
 
-                await _master.CreateFeedback(1, description, false, true, FeedbackType.Exception);
+                await _writer.CreateFeedback(1, description, false, true, FeedbackType.Exception);
                 Debug.WriteLine(description);
             }
 
@@ -1169,6 +1375,8 @@ namespace Data_Logger_1._3.Services
         /// <returns>A List of Qt OutputClass objects.</returns>
         public async Task<List<TypeClass>> ListASTypes()
         {
+            await ActivateMasterAndWriterAsync();
+
             try
             {
                 return await _master.Types
@@ -1180,7 +1388,7 @@ namespace Data_Logger_1._3.Services
             {
                 var description = $"Exception occurred near ListASTypes(): {ex.Message}";
 
-                await _master.CreateFeedback(1, description, false, true, FeedbackType.Exception);
+                await _writer.CreateFeedback(1, description, false, true, FeedbackType.Exception);
                 Debug.WriteLine(description);
             }
 
@@ -1194,6 +1402,8 @@ namespace Data_Logger_1._3.Services
         /// <returns>A List of OutputClass objects.</returns>
         public async Task<List<TypeClass>> ListTypes(CATEGORY category)
         {
+            await ActivateMasterAndWriterAsync();
+
             try
             {
                 return await _master.Types
@@ -1206,7 +1416,7 @@ namespace Data_Logger_1._3.Services
             {
                 var description = $"Exception occurred near ListOutputs(application): {ex.Message}";
 
-                await _master.CreateFeedback(1, description, false, true, FeedbackType.Exception);
+                await _writer.CreateFeedback(1, description, false, true, FeedbackType.Exception);
                 Debug.WriteLine(description);
             }
 
@@ -1236,6 +1446,8 @@ namespace Data_Logger_1._3.Services
         /// <returns>Returns a list of logs that match the search bar text.</returns>
         public async Task<List<CodingLOG>?> SearchCodingLogs(string searchBarText)
         {
+            await ActivateMasterAndWriterAsync();
+
             try
             {
                 searchBarText = searchBarText.Trim();
@@ -1280,7 +1492,7 @@ namespace Data_Logger_1._3.Services
             catch (Exception ex)
             {
                 var description = $"Exception occurred near SearchCodingLogs(searchBarText): {ex.Message}";
-                await _master.CreateFeedback(1, description, false, true, FeedbackType.Exception);
+                await _writer.CreateFeedback(1, description, false, true, FeedbackType.Exception);
             }
 
             return null;
@@ -1296,6 +1508,8 @@ namespace Data_Logger_1._3.Services
         /// <returns>A list of logs that match the search bar text that were created with the provided app filter.</returns>
         public async Task<List<CodingLOG>?> SearchCodingLogs(string searchBarText, int appID)
         {
+            await ActivateMasterAndWriterAsync();
+
             try
             {
                 searchBarText = searchBarText.Trim();
@@ -1345,7 +1559,7 @@ namespace Data_Logger_1._3.Services
             catch (Exception ex)
             {
                 var description = $"Exception occurred near SearchCodingLogs(searchBarText,projectID,appID): {ex.Message}";
-                await _master.CreateFeedback(1, description, false, true, FeedbackType.Exception);
+                await _writer.CreateFeedback(1, description, false, true, FeedbackType.Exception);
             }
 
             return null;
@@ -1362,6 +1576,8 @@ namespace Data_Logger_1._3.Services
         /// <returns>A list of logs that match the search bar text that were created with the provided app and project filter.</returns>
         public async Task<List<CodingLOG>?> SearchCodingLogs(string searchBarText, int projectID, int appID)
         {
+            await ActivateMasterAndWriterAsync();
+
             try
             {
                 searchBarText = searchBarText.Trim();
@@ -1412,7 +1628,7 @@ namespace Data_Logger_1._3.Services
             catch (Exception ex)
             {
                 var description = $"Exception occurred near SearchCodingLogs(searchBarText,projectID,appID): {ex.Message}";
-                await _master.CreateFeedback(1, description, false, true, FeedbackType.Exception);
+                await _writer.CreateFeedback(1, description, false, true, FeedbackType.Exception);
             }
 
             return null;
