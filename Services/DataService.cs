@@ -11,10 +11,11 @@ using static Data_Logger_1._3.Services.Cachemaster;
 namespace Data_Logger_1._3.Services
 {
 
-    public class DataService
+    public class DataService : IDataService
     {
-        private readonly ENTITYREADER _reader;
-        private readonly ENTITYHANDLER _handler;
+        private ENTITYWRITER _writer;
+        private ENTITYREADER _reader;
+        private ENTITYHANDLER _handler;
         private readonly Cachemaster _cachemaster;
         private readonly IServiceProvider _serviceProvider;
 
@@ -23,64 +24,59 @@ namespace Data_Logger_1._3.Services
         private const string Qt = "Qt Creator";
         private const string Android = "Android Studio Meerkat 2024.3.1";
 
-        // Retrieve Project Names for the Logger Create Page here
-        public ProjectsLIST SQLITE_PROJECTS { get; set; } = new();
+        internal ProjectsLIST SQLITE_PROJECTS { get; private set; } = new();
+        internal ApplicationsLIST SQLITE_APPLICATIONS { get; private set; } = new();
+        internal List<SubjectClass> SQLITE_SUBJECTS { get; private set; } = new();
 
-        // Retrieve Application Names here
-        public ApplicationsLIST SQLITE_APPLICATIONS { get; set; } = new();
+        IReadOnlyList<ProjectClass> IDataService.SQLITE_PROJECTS => SQLITE_PROJECTS;
+        IReadOnlyList<ApplicationClass> IDataService.SQLITE_APPLICATIONS => SQLITE_APPLICATIONS;
+        IReadOnlyList<SubjectClass> IDataService.SQLITE_SUBJECTS => SQLITE_SUBJECTS;
 
-        public List<SubjectClass> SQLITE_SUBJECTS { get; set; } = new();
 
-
-        public DataService(ENTITYWRITER writer, ENTITYREADER reader, ENTITYHANDLER handler, Cachemaster cachemaster,
-            AuthService authService, IServiceProvider serviceProvider)
+        public DataService(Cachemaster cachemaster, AuthService authService, IServiceProvider serviceProvider)
         {
-            _reader = reader;
-            _handler = handler;
             _cachemaster = cachemaster;
 
             _authService = authService;
             _serviceProvider = serviceProvider;
         }
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        /// <summary>
+        /// Signs in the current user by setting them as the current user in the database.
+        /// </summary>
         public async Task SignInUser()
         {
-            await using var scope = _serviceProvider.CreateAsyncScope();
-            var master = scope.ServiceProvider.GetRequiredService<ENTITYMASTER>();
+            var account = _authService?.Account;
+            if (account == null)
+                return;
 
-            try
-            {
-                var account = _authService?.Account;
-                if (account == null)
-                    return;
-
-                var writer = scope.ServiceProvider.GetRequiredService<ENTITYWRITER>();
-                await writer.SetCurrentUser(account);
-            }
-            catch (InvalidOperationException invex)
-            {
-                await master.HandleExceptionAsync(invex, "SignInUser()", "InvalidOperationException");
-            }
-            catch (Exception ex)
-            {
-                await master.HandleExceptionAsync(ex, "SignInUser()");
-            }
+            await UseWriterAsync(writer => writer.SetCurrentUser(account));
         }
+
 
 
         public async Task SignOutUser()
         {
-            var account = _authService?.Account;
-            if (account is null)
-                return;
-
-            await using var scope = _serviceProvider.CreateAsyncScope();
-            var writer = scope.ServiceProvider.GetRequiredService<ENTITYWRITER>();
-            await writer.UnsetCurrentUser();
+            await UseWriterAsync(writer => writer.UnsetCurrentUser());
         }
 
 
-        public static bool IsValidEmail(string email)
+        private static bool IsValidEmail(string email)
         {
             // Regular expression pattern for email validation
             string pattern = @"^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$";
@@ -91,10 +87,7 @@ namespace Data_Logger_1._3.Services
 
         public async Task<string> UpdateProfilePic(string emailAddress)
         {
-            await using var scope = _serviceProvider.CreateAsyncScope();
-            var reader = scope.ServiceProvider.GetRequiredService<ENTITYREADER>();
-
-            return await reader.RetrieveProfilePic(emailAddress);
+            return await UseReaderAsync(reader => reader.RetrieveProfilePic(emailAddress));
         }
 
 
@@ -122,18 +115,14 @@ namespace Data_Logger_1._3.Services
 
 
         /// <summary>
-        /// Retrieves projects from the database.
+        /// Retrieves projects from the database and populates SQLITE_PROJECTS, skipping unnamed projects.
         /// </summary>
-        public async Task InitialiseProjectsLISTAsync()
+        public Task InitialiseProjectsLISTAsync()
         {
-            await using var scope = _serviceProvider.CreateAsyncScope();
-            var master = scope.ServiceProvider.GetRequiredService<ENTITYMASTER>();
+            SQLITE_PROJECTS.Clear();
 
-            try
+            return UseReaderAsync<Task>(async reader =>
             {
-                SQLITE_PROJECTS.Clear();
-
-                var reader = scope.ServiceProvider.GetRequiredService<ENTITYREADER>();
                 var collection = await reader.ListProjects();
 
                 foreach (var pro in collection)
@@ -141,34 +130,25 @@ namespace Data_Logger_1._3.Services
                     if (pro != null && pro.Name != "Unnamed Project")
                         SQLITE_PROJECTS.Add(pro);
                 }
-            }
-            catch (InvalidOperationException invex)
-            {
-                await master.HandleExceptionAsync(invex, "SignInUser()", "InvalidOperationException");
-            }
-            catch (Exception ex)
-            {
-                await master.HandleExceptionAsync(ex, "InitialiseProjectsLISTAsync()");
-            }
+
+                return Task.CompletedTask;
+            });
         }
 
 
 
 
+
         /// <summary>
-        /// Retrieves projects from the database of a specified category.
+        /// Retrieves projects from the database of a specified category and populates SQLITE_PROJECTS, skipping unnamed projects.
         /// </summary>
         /// <param name="category">The type of project.</param>
-        public async Task InitialiseProjectsLISTAsync(LOG.CATEGORY category)
+        public Task InitialiseProjectsLISTAsync(LOG.CATEGORY category)
         {
-            await using var scope = _serviceProvider.CreateAsyncScope();
-            var master = scope.ServiceProvider.GetRequiredService<ENTITYMASTER>();
+            SQLITE_PROJECTS.Clear();
 
-            try
+            return UseReaderAsync<Task>(async reader =>
             {
-                SQLITE_PROJECTS.Clear();
-
-                var reader = scope.ServiceProvider.GetRequiredService<ENTITYREADER>();
                 var collection = await reader.ListProjects(category);
 
                 foreach (var pro in collection)
@@ -176,32 +156,23 @@ namespace Data_Logger_1._3.Services
                     if (pro != null && pro.Name != "Unnamed Project")
                         SQLITE_PROJECTS.Add(pro);
                 }
-            }
-            catch (InvalidOperationException invex)
-            {
-                await master.HandleExceptionAsync(invex, "InitialiseProjectsLISTAsync(category)", "InvalidOperationException");
-            }
-            catch (Exception ex)
-            {
-                await master.HandleExceptionAsync(ex, "InitialiseProjectsLISTAsync(category)");
-            }
+
+                return Task.CompletedTask;
+            });
         }
 
 
 
+
         /// <summary>
-        /// Retrieves applications from the database.
+        /// Retrieves applications from the database and populates SQLITE_APPLICATIONS.
         /// </summary>
-        public async Task InitialiseApplicationsLISTAsync()
+        public Task InitialiseApplicationsLISTAsync()
         {
-            await using var scope = _serviceProvider.CreateAsyncScope();
-            var master = scope.ServiceProvider.GetRequiredService<ENTITYMASTER>();
+            SQLITE_APPLICATIONS.Clear();
 
-            try
+            return UseReaderAsync<Task>(async reader =>
             {
-                SQLITE_APPLICATIONS.Clear();
-
-                var reader = scope.ServiceProvider.GetRequiredService<ENTITYREADER>();
                 var collection = await reader.ListApplications();
 
                 foreach (var app in collection)
@@ -209,32 +180,23 @@ namespace Data_Logger_1._3.Services
                     if (app != null)
                         SQLITE_APPLICATIONS.Add(app);
                 }
-            }
-            catch (InvalidOperationException invex)
-            {
-                await master.HandleExceptionAsync(invex, "InitialiseApplicationsLISTAsync()", "InvalidOperationException");
-            }
-            catch (Exception ex)
-            {
-                await master.HandleExceptionAsync(ex, "InitialiseApplicationsLISTAsync()");
-            }
+
+                return Task.CompletedTask;
+            });
         }
 
 
+
         /// <summary>
-        /// Retrieves applications from the database of a specified category.
+        /// Retrieves applications from the database of a specified category and populates SQLITE_APPLICATIONS.
         /// </summary>
         /// <param name="category">The type of application.</param>
-        public async Task InitialiseApplicationsLISTAsync(LOG.CATEGORY category)
+        public Task InitialiseApplicationsLISTAsync(LOG.CATEGORY category)
         {
-            await using var scope = _serviceProvider.CreateAsyncScope();
-            var master = scope.ServiceProvider.GetRequiredService<ENTITYMASTER>();
+            SQLITE_APPLICATIONS.Clear();
 
-            try
+            return UseReaderAsync<Task>(async reader =>
             {
-                SQLITE_APPLICATIONS.Clear();
-
-                var reader = scope.ServiceProvider.GetRequiredService<ENTITYREADER>();
                 var collection = await reader.ListApplications(category);
 
                 foreach (var app in collection)
@@ -242,33 +204,24 @@ namespace Data_Logger_1._3.Services
                     if (app != null)
                         SQLITE_APPLICATIONS.Add(app);
                 }
-            }
-            catch (InvalidOperationException invex)
-            {
-                await master.HandleExceptionAsync(invex, "InitialiseApplicationsLISTAsync(category)", "InvalidOperationException");
-            }
-            catch (Exception ex)
-            {
-                await master.HandleExceptionAsync(ex, "InitialiseApplicationsLISTAsync(category)");
-            }
+
+                return Task.CompletedTask;
+            });
         }
 
 
 
+
         /// <summary>
-        /// Retrieves subjects from the database.
+        /// Retrieves subjects from the database of a specified category and populates SQLITE_SUBJECTS, skipping "No Subject".
         /// </summary>
         /// <param name="category">The type of subjects being retrieved.</param>
-        public async Task InitialiseSubjectsLIST(LOG.CATEGORY category)
+        public Task InitialiseSubjectsLIST(LOG.CATEGORY category)
         {
-            await using var scope = _serviceProvider.CreateAsyncScope();
-            var master = scope.ServiceProvider.GetRequiredService<ENTITYMASTER>();
+            SQLITE_SUBJECTS.Clear();
 
-            try
+            return UseReaderAsync<Task>(async reader =>
             {
-                SQLITE_SUBJECTS.Clear();
-
-                var reader = scope.ServiceProvider.GetRequiredService<ENTITYREADER>();
                 var collection = await reader.ListSubjects(category);
 
                 foreach (var subject in collection)
@@ -276,32 +229,23 @@ namespace Data_Logger_1._3.Services
                     if (subject != null && subject.Subject != "No Subject")
                         SQLITE_SUBJECTS.Add(subject);
                 }
-            }
-            catch (InvalidOperationException invex)
-            {
-                await master.HandleExceptionAsync(invex, "InitialiseSubjectsLIST(category)", "InvalidOperationException");
-            }
-            catch (Exception ex)
-            {
-                await master.HandleExceptionAsync(ex, "InitialiseSubjectsLIST(category)");
-            }
+
+                return Task.CompletedTask;
+            });
         }
 
 
+
         /// <summary>
-        /// Retrieves subjects from the database. Also adds the subjects in DataService's subject list property for easy retrieval in cases where the most recent database update is not needed.
+        /// Retrieves subjects from the database for a specific project and populates SQLITE_SUBJECTS.
         /// </summary>
-        /// <param name="project">Subjects from the specified ProjectClass will be retrieved ONLY.</param>
-        public async Task InitialiseSubjectsLIST(ProjectClass project)
+        /// <param name="project">Subjects from the specified ProjectClass will be retrieved only.</param>
+        public Task InitialiseSubjectsLIST(ProjectClass project)
         {
-            await using var scope = _serviceProvider.CreateAsyncScope();
-            var master = scope.ServiceProvider.GetRequiredService<ENTITYMASTER>();
+            SQLITE_SUBJECTS.Clear();
 
-            try
+            return UseReaderAsync<Task>(async reader =>
             {
-                SQLITE_SUBJECTS.Clear();
-
-                var reader = scope.ServiceProvider.GetRequiredService<ENTITYREADER>();
                 var collection = await reader.ListSubjects(project);
 
                 foreach (var subject in collection)
@@ -309,38 +253,26 @@ namespace Data_Logger_1._3.Services
                     if (subject != null)
                         SQLITE_SUBJECTS.Add(subject);
                 }
-            }
-            catch (InvalidOperationException invex)
-            {
-                await master.HandleExceptionAsync(invex, "InitialiseSubjectsLIST(project)", "InvalidOperationException");
-            }
-            catch (Exception ex)
-            {
-                await master.HandleExceptionAsync(ex, "InitialiseSubjectsLIST(project)");
-            }
+
+                return Task.CompletedTask;
+            });
         }
 
 
 
-        public async Task SaveChangesAsync()
+
+        /// <summary>
+        /// Saves all pending changes in the database through the reader.
+        /// </summary>
+        public Task SaveChangesAsync()
         {
-            await using var scope = _serviceProvider.CreateAsyncScope();
-            var master = scope.ServiceProvider.GetRequiredService<ENTITYMASTER>();
-
-            try
+            return UseReaderAsync<Task>(async reader =>
             {
-                var reader = scope.ServiceProvider.GetRequiredService<ENTITYREADER>();
                 await reader.SaveChangesAsync();
-            }
-            catch (InvalidOperationException invex)
-            {
-                await master.HandleExceptionAsync(invex, "SaveChangesAsync()", "InvalidOperationException");
-            }
-            catch (Exception ex)
-            {
-                await master.HandleExceptionAsync(ex, "SaveChangesAsync()");
-            }
+                return Task.CompletedTask;
+            });
         }
+
 
 
 
@@ -352,7 +284,7 @@ namespace Data_Logger_1._3.Services
         public async Task<List<SubjectClass>?> ListSubjects(ProjectClass project)
         {
             await using var scope = _serviceProvider.CreateAsyncScope();
-            var master = scope.ServiceProvider.GetRequiredService<ENTITYMASTER>();
+            
 
             try
             {
@@ -361,12 +293,12 @@ namespace Data_Logger_1._3.Services
             }
             catch (InvalidOperationException invex)
             {
-                await master.HandleExceptionAsync(invex, "ListSubjects(project)", "InvalidOperationException");
+                await _writer.HandleExceptionAsync(invex, "ListSubjects(project)", "InvalidOperationException");
                 return new List<SubjectClass>();
             }
             catch (Exception ex)
             {
-                await master.HandleExceptionAsync(ex, "ListSubjects(project)");
+                await _writer.HandleExceptionAsync(ex, "ListSubjects(project)");
                 return new List<SubjectClass>();
             }
         }
@@ -378,7 +310,7 @@ namespace Data_Logger_1._3.Services
         public async Task<List<OutputClass>?> ListQtOutputs()
         {
             await using var scope = _serviceProvider.CreateAsyncScope();
-            var master = scope.ServiceProvider.GetRequiredService<ENTITYMASTER>();
+            
 
             try
             {
@@ -387,12 +319,12 @@ namespace Data_Logger_1._3.Services
             }
             catch (InvalidOperationException invex)
             {
-                await master.HandleExceptionAsync(invex, "ListQtOutputs()", "InvalidOperationException");
+                await _writer.HandleExceptionAsync(invex, "ListQtOutputs()", "InvalidOperationException");
                 return new List<OutputClass>();
             }
             catch (Exception ex)
             {
-                await master.HandleExceptionAsync(ex, "ListQtOutputs()");
+                await _writer.HandleExceptionAsync(ex, "ListQtOutputs()");
                 return new List<OutputClass>();
             }
         }
@@ -404,7 +336,7 @@ namespace Data_Logger_1._3.Services
         public async Task<List<OutputClass>?> ListASOutputs()
         {
             await using var scope = _serviceProvider.CreateAsyncScope();
-            var master = scope.ServiceProvider.GetRequiredService<ENTITYMASTER>();
+            
 
             try
             {
@@ -413,11 +345,11 @@ namespace Data_Logger_1._3.Services
             }
             catch (InvalidOperationException invex)
             {
-                await master.HandleExceptionAsync(invex, "ListASOutputs()", "InvalidOperationException");
+                await _writer.HandleExceptionAsync(invex, "ListASOutputs()", "InvalidOperationException");
             }
             catch (Exception ex)
             {
-                await master.HandleExceptionAsync(ex, "ListASOutputs()");
+                await _writer.HandleExceptionAsync(ex, "ListASOutputs()");
             }
 
             return null;
@@ -431,7 +363,7 @@ namespace Data_Logger_1._3.Services
         public async Task<List<OutputClass>?> ListOutputs(CATEGORY category)
         {
             await using var scope = _serviceProvider.CreateAsyncScope();
-            var master = scope.ServiceProvider.GetRequiredService<ENTITYMASTER>();
+            
 
             try
             {
@@ -440,11 +372,11 @@ namespace Data_Logger_1._3.Services
             }
             catch (InvalidOperationException invex)
             {
-                await master.HandleExceptionAsync(invex, "ListOutputs(category)", "InvalidOperationException");
+                await _writer.HandleExceptionAsync(invex, "ListOutputs(category)", "InvalidOperationException");
             }
             catch (Exception ex)
             {
-                await master.HandleExceptionAsync(ex, "ListOutputs(category)");
+                await _writer.HandleExceptionAsync(ex, "ListOutputs(category)");
             }
 
             return null;
@@ -459,7 +391,7 @@ namespace Data_Logger_1._3.Services
         public async Task<List<TypeClass>?> ListQtTypes()
         {
             await using var scope = _serviceProvider.CreateAsyncScope();
-            var master = scope.ServiceProvider.GetRequiredService<ENTITYMASTER>();
+            
 
             try
             {
@@ -468,12 +400,12 @@ namespace Data_Logger_1._3.Services
             }
             catch (InvalidOperationException invex)
             {
-                await master.HandleExceptionAsync(invex, "ListQtTypes()", "InvalidOperationException");
+                await _writer.HandleExceptionAsync(invex, "ListQtTypes()", "InvalidOperationException");
                 return null;
             }
             catch (Exception ex)
             {
-                await master.HandleExceptionAsync(ex, "ListQtTypes()");
+                await _writer.HandleExceptionAsync(ex, "ListQtTypes()");
                 return null;
             }
         }
@@ -485,7 +417,7 @@ namespace Data_Logger_1._3.Services
         public async Task<List<TypeClass>?> ListASTypes()
         {
             await using var scope = _serviceProvider.CreateAsyncScope();
-            var master = scope.ServiceProvider.GetRequiredService<ENTITYMASTER>();
+            
 
             try
             {
@@ -494,12 +426,12 @@ namespace Data_Logger_1._3.Services
             }
             catch (InvalidOperationException invex)
             {
-                await master.HandleExceptionAsync(invex, "ListASTypes()", "InvalidOperationException");
+                await _writer.HandleExceptionAsync(invex, "ListASTypes()", "InvalidOperationException");
                 return null;
             }
             catch (Exception ex)
             {
-                await master.HandleExceptionAsync(ex, "ListASTypes()");
+                await _writer.HandleExceptionAsync(ex, "ListASTypes()");
                 return null;
             }
         }
@@ -512,7 +444,7 @@ namespace Data_Logger_1._3.Services
         public async Task<List<TypeClass>?> ListTypes(CATEGORY category)
         {
             await using var scope = _serviceProvider.CreateAsyncScope();
-            var master = scope.ServiceProvider.GetRequiredService<ENTITYMASTER>();
+            
 
             try
             {
@@ -521,11 +453,11 @@ namespace Data_Logger_1._3.Services
             }
             catch (InvalidOperationException invex)
             {
-                await master.HandleExceptionAsync(invex, "ListTypes(category)", "InvalidOperationException");
+                await _writer.HandleExceptionAsync(invex, "ListTypes(category)", "InvalidOperationException");
             }
             catch (Exception ex)
             {
-                await master.HandleExceptionAsync(ex, "ListTypes(category)");
+                await _writer.HandleExceptionAsync(ex, "ListTypes(category)");
             }
 
             return null;
@@ -539,6 +471,81 @@ namespace Data_Logger_1._3.Services
 
 
 
+
+        /// <summary>
+        /// Executes a function with an ENTITYREADER instance, managing scope and exceptions.
+        /// </summary>
+        private async Task<T> UseReaderAsync<T>(Func<ENTITYREADER, Task<T>> func)
+        {
+            try
+            {
+                await using var scope = _serviceProvider.CreateAsyncScope();
+
+                var reader = scope.ServiceProvider.GetRequiredService<ENTITYREADER>();
+                _writer = scope.ServiceProvider.GetRequiredService<ENTITYWRITER>();
+
+                return await func(reader);
+            }
+            catch (InvalidOperationException invex)
+            {
+                await _writer.HandleExceptionAsync(invex, "UseReaderAsync<T>(func)", "InvalidOperationException");
+                throw;
+            }
+            catch (Exception ex)
+            {
+                await _writer.HandleExceptionAsync(ex, "UseReaderAsync<T>(func)");
+                throw;
+            }
+        }
+
+        /// <summary>
+        /// Executes a function with an ENTITYWRITER instance, managing scope and exceptions.
+        /// </summary>
+        private async Task<T> UseWriterAsync<T>(Func<ENTITYWRITER, Task<T>> func)
+        {
+            try
+            {
+                await using var scope = _serviceProvider.CreateAsyncScope();
+
+                var writer = scope.ServiceProvider.GetRequiredService<ENTITYWRITER>();
+                _writer = writer;
+
+                return await func(writer);
+            }
+            catch (InvalidOperationException invex)
+            {
+                await _writer.HandleExceptionAsync(invex, "UseWriterAsync<T>(func)", "InvalidOperationException");
+                throw;
+            }
+            catch (Exception ex)
+            {
+                await _writer.HandleExceptionAsync(ex, "UseWriterAsync<T>(func)");
+                throw;
+            }
+        }
+
+        /// <summary>
+        /// Executes a function with an ENTITYHANDLER instance, managing scope and exceptions.
+        /// </summary>
+        private async Task<T> UseHandlerAsync<T>(Func<ENTITYHANDLER, Task<T>> func)
+        {
+            try
+            {
+                await using var scope = _serviceProvider.CreateAsyncScope();
+                var handler = scope.ServiceProvider.GetRequiredService<ENTITYHANDLER>();
+                return await func(handler);
+            }
+            catch (InvalidOperationException invex)
+            {
+                await _writer.HandleExceptionAsync(invex, "UseHandlerAsync<T>(func)", "InvalidOperationException");
+                throw;
+            }
+            catch (Exception ex)
+            {
+                await _writer.HandleExceptionAsync(ex, "UseHandlerAsync<T>(func)");
+                throw;
+            }
+        }
 
 
         /// <summary>
@@ -547,55 +554,21 @@ namespace Data_Logger_1._3.Services
         /// <param name="ID">The application ID.</param>
         /// <param name="name">The application name.</param>
         /// <returns>Returns the ApplicationClass if found; otherwise null.</returns>
-        public async Task<ApplicationClass?> FindApplication(int ID, string name)
+        public Task<ApplicationClass?> FindApplication(int ID, string name)
         {
-            await using var scope = _serviceProvider.CreateAsyncScope();
-            var master = scope.ServiceProvider.GetRequiredService<ENTITYMASTER>();
-
-            try
-            {
-                var reader = scope.ServiceProvider.GetRequiredService<ENTITYREADER>();
-                return await reader.FindApplication(ID, name);
-            }
-            catch (InvalidOperationException invex)
-            {
-                await master.HandleExceptionAsync(invex, "FindApplication(ID, name)", "InvalidOperationException");
-            }
-            catch (Exception ex)
-            {
-                await master.HandleExceptionAsync(ex, "FindApplication(ID, name)");
-            }
-
-            return null;
+            return UseReaderAsync(reader => reader.FindApplication(ID, name));
         }
+
 
         /// <summary>
         /// Finds an application by its ID.
         /// </summary>
         /// <param name="appID">The application ID.</param>
         /// <returns>Returns the ApplicationClass if found; otherwise null.</returns>
-        public async Task<ApplicationClass?> FindApplicationByID(int appID)
+        public Task<ApplicationClass?> FindApplicationByID(int appID)
         {
-            await using var scope = _serviceProvider.CreateAsyncScope();
-            var master = scope.ServiceProvider.GetRequiredService<ENTITYMASTER>();
-
-            try
-            {
-                var reader = scope.ServiceProvider.GetRequiredService<ENTITYREADER>();
-                return await reader.FindApplicationByID(appID);
-            }
-            catch (InvalidOperationException invex)
-            {
-                await master.HandleExceptionAsync(invex, "FindApplicationByID(appID)", "InvalidOperationException");
-            }
-            catch (Exception ex)
-            {
-                await master.HandleExceptionAsync(ex, "FindApplicationByID(appID)");
-            }
-
-            return null;
+            return UseReaderAsync(reader => reader.FindApplicationByID(appID));
         }
-
 
         /// <summary>
         /// Finds a project by user ID, project name, and application ID.
@@ -604,26 +577,9 @@ namespace Data_Logger_1._3.Services
         /// <param name="projectName">The project name.</param>
         /// <param name="appID">The application ID.</param>
         /// <returns>Returns the ProjectClass if found; otherwise null.</returns>
-        public async Task<ProjectClass?> FindProject(int? userID, string projectName, int appID)
+        public Task<ProjectClass?> FindProject(int? userID, string projectName, int appID)
         {
-            await using var scope = _serviceProvider.CreateAsyncScope();
-            var master = scope.ServiceProvider.GetRequiredService<ENTITYMASTER>();
-
-            try
-            {
-                var reader = scope.ServiceProvider.GetRequiredService<ENTITYREADER>();
-                return await reader.FindProject(userID, projectName, appID);
-            }
-            catch (InvalidOperationException invex)
-            {
-                await master.HandleExceptionAsync(invex, "FindProject(userID, projectName, appID)", "InvalidOperationException");
-            }
-            catch (Exception ex)
-            {
-                await master.HandleExceptionAsync(ex, "FindProject(userID, projectName, appID)");
-            }
-
-            return null;
+            return UseReaderAsync(reader => reader.FindProject(userID, projectName, appID));
         }
 
         /// <summary>
@@ -631,194 +587,61 @@ namespace Data_Logger_1._3.Services
         /// </summary>
         /// <param name="projectID">The project ID.</param>
         /// <returns>Returns the ProjectClass if found; otherwise null.</returns>
-        public async Task<ProjectClass?> FindProjectByID(int projectID)
+        public Task<ProjectClass?> FindProjectByID(int projectID)
         {
-            await using var scope = _serviceProvider.CreateAsyncScope();
-            var master = scope.ServiceProvider.GetRequiredService<ENTITYMASTER>();
-
-            try
-            {
-                var reader = scope.ServiceProvider.GetRequiredService<ENTITYREADER>();
-                return await reader.FindProjectByID(projectID);
-            }
-            catch (InvalidOperationException invex)
-            {
-                await master.HandleExceptionAsync(invex, "FindProjectByID(projectID)", "InvalidOperationException");
-            }
-            catch (Exception ex)
-            {
-                await master.HandleExceptionAsync(ex, "FindProjectByID(projectID)");
-            }
-
-            return null;
+            return UseReaderAsync(reader => reader.FindProjectByID(projectID));
         }
+
 
 
         /// <summary>
         /// Finds an output by its name.
         /// </summary>
-        /// <param name="name">The output name.</param>
-        /// <returns>Returns the OutputClass if found; otherwise null.</returns>
-        public async Task<OutputClass?> FindOutput(string name)
+        public Task<OutputClass?> FindOutput(string name)
         {
-            await using var scope = _serviceProvider.CreateAsyncScope();
-            var master = scope.ServiceProvider.GetRequiredService<ENTITYMASTER>();
-
-            try
-            {
-                var reader = scope.ServiceProvider.GetRequiredService<ENTITYREADER>();
-                return await reader.FindOutput(name);
-            }
-            catch (InvalidOperationException invex)
-            {
-                await master.HandleExceptionAsync(invex, "FindOutput(name)", "InvalidOperationException");
-            }
-            catch (Exception ex)
-            {
-                await master.HandleExceptionAsync(ex, "FindOutput(name)");
-            }
-
-            return null;
+            return UseReaderAsync(reader => reader.FindOutput(name));
         }
 
         /// <summary>
         /// Finds an output by its ID.
         /// </summary>
-        /// <param name="outputID">The output ID.</param>
-        /// <returns>Returns the OutputClass if found; otherwise null.</returns>
-        public async Task<OutputClass?> FindOutputByID(int outputID)
+        public Task<OutputClass?> FindOutputByID(int outputID)
         {
-            await using var scope = _serviceProvider.CreateAsyncScope();
-            var master = scope.ServiceProvider.GetRequiredService<ENTITYMASTER>();
-
-            try
-            {
-                var reader = scope.ServiceProvider.GetRequiredService<ENTITYREADER>();
-                return await reader.FindOutputByID(outputID);
-            }
-            catch (InvalidOperationException invex)
-            {
-                await master.HandleExceptionAsync(invex, "FindOutputByID(outputID)", "InvalidOperationException");
-            }
-            catch (Exception ex)
-            {
-                await master.HandleExceptionAsync(ex, "FindOutputByID(outputID)");
-            }
-
-            return null;
+            return UseReaderAsync(reader => reader.FindOutputByID(outputID));
         }
-
-
 
         /// <summary>
         /// Finds a type by its name.
         /// </summary>
-        /// <param name="name">The type name.</param>
-        /// <returns>Returns the TypeClass if found; otherwise null.</returns>
-        public async Task<TypeClass?> FindType(string name)
+        public Task<TypeClass?> FindType(string name)
         {
-            await using var scope = _serviceProvider.CreateAsyncScope();
-            var master = scope.ServiceProvider.GetRequiredService<ENTITYMASTER>();
-
-            try
-            {
-                var reader = scope.ServiceProvider.GetRequiredService<ENTITYREADER>();
-                return await reader.FindType(name);
-            }
-            catch (InvalidOperationException invex)
-            {
-                await master.HandleExceptionAsync(invex, "FindType(name)", "InvalidOperationException");
-            }
-            catch (Exception ex)
-            {
-                await master.HandleExceptionAsync(ex, "FindType(name)");
-            }
-
-            return null;
+            return UseReaderAsync(reader => reader.FindType(name));
         }
 
         /// <summary>
         /// Finds a type by its ID.
         /// </summary>
-        /// <param name="typeID">The type ID.</param>
-        /// <returns>Returns the TypeClass if found; otherwise null.</returns>
-        public async Task<TypeClass?> FindTypeByID(int typeID)
+        public Task<TypeClass?> FindTypeByID(int typeID)
         {
-            await using var scope = _serviceProvider.CreateAsyncScope();
-            var master = scope.ServiceProvider.GetRequiredService<ENTITYMASTER>();
-
-            try
-            {
-                var reader = scope.ServiceProvider.GetRequiredService<ENTITYREADER>();
-                return await reader.FindTypeByID(typeID);
-            }
-            catch (InvalidOperationException invex)
-            {
-                await master.HandleExceptionAsync(invex, "FindTypeByID(typeID)", "InvalidOperationException");
-            }
-            catch (Exception ex)
-            {
-                await master.HandleExceptionAsync(ex, "FindTypeByID(typeID)");
-            }
-
-            return null;
+            return UseReaderAsync(reader => reader.FindTypeByID(typeID));
         }
-
 
         /// <summary>
         /// Finds a subject by its name and category.
         /// </summary>
-        /// <param name="subject">The subject name.</param>
-        /// <param name="category">The category of the subject.</param>
-        /// <returns>Returns the SubjectClass if found; otherwise null.</returns>
-        public async Task<SubjectClass?> FindSubject(string subject, LOG.CATEGORY category)
+        public Task<SubjectClass?> FindSubject(string subject, LOG.CATEGORY category)
         {
-            await using var scope = _serviceProvider.CreateAsyncScope();
-            var master = scope.ServiceProvider.GetRequiredService<ENTITYMASTER>();
-
-            try
-            {
-                var reader = scope.ServiceProvider.GetRequiredService<ENTITYREADER>();
-                return await reader.FindSubject(subject, category);
-            }
-            catch (InvalidOperationException invex)
-            {
-                await master.HandleExceptionAsync(invex, "FindSubject(subject, category)", "InvalidOperationException");
-            }
-            catch (Exception ex)
-            {
-                await master.HandleExceptionAsync(ex, "FindSubject(subject, category)");
-            }
-
-            return null;
+            return UseReaderAsync(reader => reader.FindSubject(subject, category));
         }
 
         /// <summary>
         /// Finds the ID of a subject.
         /// </summary>
-        /// <param name="subject">The SubjectClass object.</param>
-        /// <returns>Returns the subject ID if found; otherwise 0.</returns>
-        public async Task<int> FindSubjectID(SubjectClass subject)
+        public Task<int> FindSubjectID(SubjectClass subject)
         {
-            await using var scope = _serviceProvider.CreateAsyncScope();
-            var master = scope.ServiceProvider.GetRequiredService<ENTITYMASTER>();
-
-            try
-            {
-                var reader = scope.ServiceProvider.GetRequiredService<ENTITYREADER>();
-                return await reader.FindSubjectID(subject);
-            }
-            catch (InvalidOperationException invex)
-            {
-                await master.HandleExceptionAsync(invex, "FindSubjectID(subject)", "InvalidOperationException");
-            }
-            catch (Exception ex)
-            {
-                await master.HandleExceptionAsync(ex, "FindSubjectID(subject)");
-            }
-
-            return 0;
+            return UseReaderAsync(reader => reader.FindSubjectID(subject));
         }
+
 
 
 
@@ -844,30 +667,14 @@ namespace Data_Logger_1._3.Services
             _cachemaster.SaveLog(log, filePath);
         }
 
-        public async Task<bool> InsertLOG(LOG log)
+        /// <summary>
+        /// Inserts a log into the database.
+        /// </summary>
+        /// <param name="log">The log to insert.</param>
+        /// <returns>Returns true if the log was successfully created; otherwise false.</returns>
+        public Task<bool> CreateLOG(LOG log)
         {
-            await using var scope = _serviceProvider.CreateAsyncScope();
-            var master = scope.ServiceProvider.GetRequiredService<ENTITYMASTER>();
-
-            try
-            {
-                var writer = scope.ServiceProvider.GetRequiredService<ENTITYWRITER>();
-
-                if (await writer.CreateLOG(log))
-                {
-                    return true;
-                }
-            }
-            catch (InvalidOperationException invex)
-            {
-                await master.HandleExceptionAsync(invex, "InsertLOG(log)", "InvalidOperationException");
-            }
-            catch (Exception ex)
-            {
-                await master.HandleExceptionAsync(ex, "InsertLOG(log)");
-            }
-
-            return false;
+            return UseWriterAsync(writer => writer.CreateLOG(log));
         }
 
 
@@ -889,26 +696,9 @@ namespace Data_Logger_1._3.Services
         /// Retrieves all logs from the database.
         /// </summary>
         /// <returns>Returns a List of LOG objects, or null if an error occurs.</returns>
-        public async Task<List<LOG>?> RetrieveLogs()
+        public Task<List<LOG>?> RetrieveLogs()
         {
-            await using var scope = _serviceProvider.CreateAsyncScope();
-            var master = scope.ServiceProvider.GetRequiredService<ENTITYMASTER>();
-
-            try
-            {
-                var reader = scope.ServiceProvider.GetRequiredService<ENTITYREADER>();
-                return await reader.RetrieveLogs();
-            }
-            catch (InvalidOperationException invex)
-            {
-                await master.HandleExceptionAsync(invex, "RetrieveLogs()", "InvalidOperationException");
-            }
-            catch (Exception ex)
-            {
-                await master.HandleExceptionAsync(ex, "RetrieveLogs()");
-            }
-
-            return null;
+            return UseReaderAsync(reader => reader.RetrieveLogs());
         }
 
         /// <summary>
@@ -916,173 +706,71 @@ namespace Data_Logger_1._3.Services
         /// </summary>
         /// <param name="context">The cache context to filter logs.</param>
         /// <returns>Returns an IEnumerable of LOG objects, or null if an error occurs.</returns>
-        public async Task<IEnumerable<LOG>?> RetrieveLogs(CacheContext context)
+        public Task<IEnumerable<LOG>?> RetrieveLogs(CacheContext context)
         {
-            await using var scope = _serviceProvider.CreateAsyncScope();
-            var master = scope.ServiceProvider.GetRequiredService<ENTITYMASTER>();
-
-            try
+            return UseReaderAsync<IEnumerable<LOG>?>(async reader =>
             {
-                var reader = scope.ServiceProvider.GetRequiredService<ENTITYREADER>();
-
-                switch (context)
+                return context switch
                 {
-                    case CacheContext.Qt:
-                        return await reader.RetrieveQtCodingLogs();
-                    case CacheContext.AndroidStudio:
-                        return await reader.RetrieveAndroidCodingLogs();
-                    case CacheContext.Coding:
-                        return await reader.RetrieveCodingLogs();
-                    case CacheContext.Graphics:
-                        return await reader.RetrieveGraphicsLogs();
-                    case CacheContext.Film:
-                        return await reader.RetrieveFilmLogs();
-                    case CacheContext.Flexi:
-                        return await reader.RetrieveFlexiNotesLogs();
-                }
-            }
-            catch (InvalidOperationException invex)
-            {
-                await master.HandleExceptionAsync(invex, "RetrieveLogs(context)", "InvalidOperationException");
-            }
-            catch (Exception ex)
-            {
-                await master.HandleExceptionAsync(ex, "RetrieveLogs(context)");
-            }
-
-            return null;
+                    CacheContext.Qt => await reader.RetrieveQtCodingLogs(),
+                    CacheContext.AndroidStudio => await reader.RetrieveAndroidCodingLogs(),
+                    CacheContext.Coding => await reader.RetrieveCodingLogs(),
+                    CacheContext.Graphics => await reader.RetrieveGraphicsLogs(),
+                    CacheContext.Film => await reader.RetrieveFilmLogs(),
+                    CacheContext.Flexi => await reader.RetrieveFlexiNotesLogs(),
+                    _ => null
+                };
+            });
         }
+
+
+
 
 
         /// <summary>
         /// Counts the total number of logs.
         /// </summary>
-        /// <returns>The total count of logs, or null if an error occurs.</returns>
-        public async Task<int> LogCount()
+        /// <returns>The total count of logs, or 0 if an error occurs.</returns>
+        public Task<int> LogCount()
         {
-            await using var scope = _serviceProvider.CreateAsyncScope();
-            var master = scope.ServiceProvider.GetRequiredService<ENTITYMASTER>();
-
-            try
-            {
-                var reader = scope.ServiceProvider.GetRequiredService<ENTITYREADER>();
-                return await reader.LogCount();
-            }
-            catch (InvalidOperationException invex)
-            {
-                await master.HandleExceptionAsync(invex, "LogCount()", "InvalidOperationException");
-            }
-            catch (Exception ex)
-            {
-                await master.HandleExceptionAsync(ex, "LogCount()");
-            }
-
-            return 0;
+            return UseReaderAsync(reader => reader.LogCount());
         }
 
         /// <summary>
         /// Counts the number of logs in a specific category.
         /// </summary>
         /// <param name="category">The log category to count.</param>
-        /// <returns>The count of logs in the specified category, or null if an error occurs.</returns>
-        public async Task<int?> LogCount(LOG.CATEGORY category)
+        /// <returns>The count of logs in the specified category, or 0 if an error occurs.</returns>
+        public Task<int?> LogCount(LOG.CATEGORY category)
         {
-            await using var scope = _serviceProvider.CreateAsyncScope();
-            var master = scope.ServiceProvider.GetRequiredService<ENTITYMASTER>();
-
-            try
-            {
-                var reader = scope.ServiceProvider.GetRequiredService<ENTITYREADER>();
-                return await reader.LogCount(category);
-            }
-            catch (InvalidOperationException invex)
-            {
-                await master.HandleExceptionAsync(invex, "LogCount(category)", "InvalidOperationException");
-            }
-            catch (Exception ex)
-            {
-                await master.HandleExceptionAsync(ex, "LogCount(category)");
-            }
-
-            return 0;
+            return UseReaderAsync(reader => reader.LogCount(category));
         }
 
         /// <summary>
         /// Counts the total number of Qt logs.
         /// </summary>
         /// <returns>The count of Qt logs, or 0 if an error occurs.</returns>
-        public async Task<int> QtLogCount()
+        public Task<int> QtLogCount()
         {
-            await using var scope = _serviceProvider.CreateAsyncScope();
-            var master = scope.ServiceProvider.GetRequiredService<ENTITYMASTER>();
-
-            try
-            {
-                var reader = scope.ServiceProvider.GetRequiredService<ENTITYREADER>();
-                return await reader.QtLogCount();
-            }
-            catch (InvalidOperationException invex)
-            {
-                await master.HandleExceptionAsync(invex, "QtLogCount()", "InvalidOperationException");
-            }
-            catch (Exception ex)
-            {
-                await master.HandleExceptionAsync(ex, "QtLogCount()");
-            }
-
-            return 0;
+            return UseReaderAsync(reader => reader.QtLogCount());
         }
 
         /// <summary>
         /// Counts the total number of Android Studio logs.
         /// </summary>
         /// <returns>The count of AS logs, or 0 if an error occurs.</returns>
-        public async Task<int> ASLogCount()
+        public Task<int> ASLogCount()
         {
-            await using var scope = _serviceProvider.CreateAsyncScope();
-            var master = scope.ServiceProvider.GetRequiredService<ENTITYMASTER>();
-
-            try
-            {
-                var reader = scope.ServiceProvider.GetRequiredService<ENTITYREADER>();
-                return await reader.ASLogCount();
-            }
-            catch (InvalidOperationException invex)
-            {
-                await master.HandleExceptionAsync(invex, "ASLogCount()", "InvalidOperationException");
-            }
-            catch (Exception ex)
-            {
-                await master.HandleExceptionAsync(ex, "ASLogCount()");
-            }
-
-            return 0;
+            return UseReaderAsync(reader => reader.ASLogCount());
         }
 
         /// <summary>
         /// Counts the total number of Flexi Notes logs.
         /// </summary>
         /// <returns>The count of Flexi Notes logs, or 0 if an error occurs.</returns>
-        public async Task<int> FlexiLogCountAsync()
+        public Task<int> FlexiLogCountAsync()
         {
-            await using var scope = _serviceProvider.CreateAsyncScope();
-            var master = scope.ServiceProvider.GetRequiredService<ENTITYMASTER>();
-
-            try
-            {
-                var reader = scope.ServiceProvider.GetRequiredService<ENTITYREADER>();
-                return await reader.FlexiNotesLogCount();
-            }
-            catch (InvalidOperationException invex)
-            {
-                await master.HandleExceptionAsync(invex, "FlexiLogCountAsync()", "InvalidOperationException");
-            }
-            catch (Exception ex)
-            {
-                await master.HandleExceptionAsync(ex, "FlexiLogCountAsync()");
-            }
-
-            return 0;
+            return UseReaderAsync(reader => reader.FlexiNotesLogCount());
         }
 
 
@@ -1094,36 +782,48 @@ namespace Data_Logger_1._3.Services
 
 
 
-        // Qt
-        public async Task<List<CodingLOG>?> SearchQtLogs(string searchBarText)
-        {
-            return await _reader.SearchQtLogs(searchBarText);
-        }
-        public async Task<List<CodingLOG>?> SearchQtLogs(string searchBarText, int projectID)
-        {
-            return await _reader.SearchQtLogs(searchBarText, projectID);
-        }
 
-        public async Task<List<CodingLOG>?> SearchQtLogs(string searchBarText, int projectID, int appID)
-        {
-            return await _reader.SearchQtLogs(searchBarText, projectID, appID);
-        }
+        // ---------------- Qt Logs ----------------
+
+        /// <summary>
+        /// Searches Qt logs based on a search text.
+        /// </summary>
+        public Task<List<CodingLOG>?> SearchQtLogs(string searchBarText) =>
+            UseReaderAsync(reader => reader.SearchQtLogs(searchBarText));
+
+        /// <summary>
+        /// Searches Qt logs within a specific project.
+        /// </summary>
+        public Task<List<CodingLOG>?> SearchQtLogs(string searchBarText, int projectID) =>
+            UseReaderAsync(reader => reader.SearchQtLogs(searchBarText, projectID));
+
+        /// <summary>
+        /// Searches Qt logs within a specific project and application.
+        /// </summary>
+        public Task<List<CodingLOG>?> SearchQtLogs(string searchBarText, int projectID, int appID) =>
+            UseReaderAsync(reader => reader.SearchQtLogs(searchBarText, projectID, appID));
 
 
-        // CODING
-        public async Task<List<CodingLOG>?> SearchCodingLogs(string searchBarText)
-        {
-            return await _reader.SearchCodingLogs(searchBarText);
-        }
-        public async Task<List<CodingLOG>?> SearchCodingLogs(string searchBarText, int projectID)
-        {
-            return await _reader.SearchCodingLogs(searchBarText, projectID);
-        }
+        // ---------------- Coding Logs ----------------
 
-        public async Task<List<CodingLOG>?> SearchCodingLogs(string searchBarText, int projectID, int appID)
-        {
-            return await _reader.SearchCodingLogs(searchBarText, projectID, appID);
-        }
+        /// <summary>
+        /// Searches coding logs based on a search text.
+        /// </summary>
+        public Task<List<CodingLOG>?> SearchCodingLogs(string searchBarText) =>
+            UseReaderAsync(reader => reader.SearchCodingLogs(searchBarText));
+
+        /// <summary>
+        /// Searches coding logs within a specific project.
+        /// </summary>
+        public Task<List<CodingLOG>?> SearchCodingLogs(string searchBarText, int projectID) =>
+            UseReaderAsync(reader => reader.SearchCodingLogs(searchBarText, projectID));
+
+        /// <summary>
+        /// Searches coding logs within a specific project and application.
+        /// </summary>
+        public Task<List<CodingLOG>?> SearchCodingLogs(string searchBarText, int projectID, int appID) =>
+            UseReaderAsync(reader => reader.SearchCodingLogs(searchBarText, projectID, appID));
+
 
 
 
@@ -1168,31 +868,32 @@ namespace Data_Logger_1._3.Services
 
 
 
-        public async Task<bool> DeleteLOG(LOG log)
+        /// <summary>
+        /// Deletes a log from the database.
+        /// </summary>
+        /// <param name="log">The log to delete.</param>
+        /// <returns>True if the deletion succeeded, false otherwise.</returns>
+        public Task<bool> DeleteLOG(LOG log)
         {
-            
-            await using var scope = _serviceProvider.CreateAsyncScope();
-            var master = scope.ServiceProvider.GetRequiredService<ENTITYMASTER>();
-
-            try
-            {
-                var handler = scope.ServiceProvider.GetRequiredService<ENTITYHANDLER>();
-                return await handler.DeleteLOG(log);
-            }
-            catch (InvalidOperationException invex)
-            {
-                await master.HandleExceptionAsync(invex, "DeleteLOG(log)", "InvalidOperationException");
-            }
-            catch (Exception ex)
-            {
-                await master.HandleExceptionAsync(ex, "DeleteLOG(log)");
-            }
-
-            return false;
+            return UseHandlerAsync(handler => handler.DeleteLOG(log));
         }
-        public async Task<bool> DeleteLOGByID(int ID) => await _handler.DeleteLOGByID(ID);
 
-        public async Task<bool> DeleteNote(int ID) => await _handler.DeleteNote(ID);
+        /// <summary>
+        /// Deletes a log from the database by its ID.
+        /// </summary>
+        /// <param name="ID">The ID of the log to delete.</param>
+        /// <returns>True if the deletion succeeded, false otherwise.</returns>
+        public Task<bool> DeleteLOGByID(int ID) =>
+            UseHandlerAsync(handler => handler.DeleteLOGByID(ID));
+
+        /// <summary>
+        /// Deletes a note from the database by its ID.
+        /// </summary>
+        /// <param name="ID">The ID of the note to delete.</param>
+        /// <returns>True if the deletion succeeded, false otherwise.</returns>
+        public Task<bool> DeleteNote(int ID) =>
+            UseHandlerAsync(handler => handler.DeleteNote(ID));
+
 
 
 
@@ -1247,7 +948,7 @@ namespace Data_Logger_1._3.Services
         /// <param name="logCacheViewModel">The Qt dashboard/owner that is requesting the cache.</param>
         /// <param name="dataService">The service that will interface with the UI.</param>
         /// <returns>An observable collection of QtLOGViewModels</returns>
-        public ObservableCollection<QtLOGViewModel> RetrieveQtCache(LogCacheViewModel logCacheViewModel, DataService dataService)
+        public ObservableCollection<QtLOGViewModel> RetrieveQtCache(LogCacheViewModel logCacheViewModel, IDataService dataService)
         {
             return _cachemaster.LoadQtViewModels(logCacheViewModel, dataService, _authService.Account) ?? new();
         }
@@ -1314,12 +1015,12 @@ namespace Data_Logger_1._3.Services
 
 
 
-        public async Task CreateFeedback(Exception exception, string methodName, string exceptionType = "Exception")
+        public async Task HandleExceptionAsync(Exception exception, string methodName, string exceptionType = "Exception")
         {
             await using var scope = _serviceProvider.CreateAsyncScope();
-            var master = scope.ServiceProvider.GetRequiredService<ENTITYMASTER>();
+            
 
-            await master.HandleExceptionAsync(exception, methodName, exceptionType);
+            await _writer.HandleExceptionAsync(exception, methodName, exceptionType);
         }
 
 
