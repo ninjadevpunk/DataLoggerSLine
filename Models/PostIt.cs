@@ -41,7 +41,7 @@ namespace Data_Logger_1._3.Models
         /// The PostIt's subject. Gives context to the PostIt's content.
         /// </summary>
         [ForeignKey("subjectID")]
-        public SubjectClass Subject { get; set; } = new();
+        public SubjectClass Subject { get; set; }
         public int subjectID { get; set; }
 
         /// <summary>
