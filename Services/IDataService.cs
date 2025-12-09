@@ -3,7 +3,6 @@ using Data_Logger_1._3.Models.App_Models;
 using Data_Logger_1._3.ViewModels.Dashboard;
 using Data_Logger_1._3.ViewModels.LogViewModels;
 using System.Collections.ObjectModel;
-using System.Reflection.Metadata;
 using static Data_Logger_1._3.Models.LOG;
 using static Data_Logger_1._3.Services.Cachemaster;
 
@@ -18,10 +17,12 @@ namespace Data_Logger_1._3.Services
 
         // Save Database Changes
         Task SaveChangesAsync();
+        Task UpdateLogAsync(LOG log);
 
 
         // --- User / Account ---
         Task SignInUser();
+        Task<(bool Success, ACCOUNT? Account)> SignInUser(string email, string password);
         Task SignOutUser();
         ACCOUNT GetUser();
         string GetAuthorName();

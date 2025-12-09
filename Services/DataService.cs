@@ -13,9 +13,6 @@ namespace Data_Logger_1._3.Services
 
     public class DataService : IDataService
     {
-        private ENTITYWRITER _writer;
-        private ENTITYREADER _reader;
-        private ENTITYHANDLER _handler;
         private readonly Cachemaster _cachemaster;
         private readonly IServiceProvider _serviceProvider;
 
@@ -66,6 +63,26 @@ namespace Data_Logger_1._3.Services
                 return;
 
             await UseWriterAsync(writer => writer.SetCurrentUser(account));
+        }
+
+        /// <summary>
+        /// Signs in the current user by setting them as the current user in the database.
+        /// </summary>
+        /// <param name="email">User's email.</param>
+        /// <param name="password">User's password.</param>
+        /// <returns>Returns a tuple: (success flag, the ACCOUNT object if sign-in succeeded ?? otherwise null is returned).</returns>
+        public async Task<(bool Success, ACCOUNT? Account)> SignInUser(string email, string password)
+        {
+            var temporaryAccount = await UseReaderAsync(reader => reader.FindAccountByEmail(email, password));
+
+            if (temporaryAccount == null)
+                return (false, null);
+
+            temporaryAccount.IsOnline = true;
+
+            var result = await UseWriterAsync(writer => writer.SetCurrentUser(temporaryAccount));
+
+            return (result, temporaryAccount);
         }
 
 
@@ -261,17 +278,7 @@ namespace Data_Logger_1._3.Services
 
 
 
-        /// <summary>
-        /// Saves all pending changes in the database through the reader.
-        /// </summary>
-        public Task SaveChangesAsync()
-        {
-            return UseReaderAsync<Task>(async reader =>
-            {
-                await reader.SaveChangesAsync();
-                return Task.CompletedTask;
-            });
-        }
+        
 
 
 
@@ -284,7 +291,8 @@ namespace Data_Logger_1._3.Services
         public async Task<List<SubjectClass>?> ListSubjects(ProjectClass project)
         {
             await using var scope = _serviceProvider.CreateAsyncScope();
-            
+            var writer = scope.ServiceProvider.GetRequiredService<ENTITYWRITER>();
+
 
             try
             {
@@ -293,12 +301,12 @@ namespace Data_Logger_1._3.Services
             }
             catch (InvalidOperationException invex)
             {
-                await _writer.HandleExceptionAsync(invex, "ListSubjects(project)", "InvalidOperationException");
+                await writer.HandleExceptionAsync(invex, "ListSubjects(project)", "InvalidOperationException");
                 return new List<SubjectClass>();
             }
             catch (Exception ex)
             {
-                await _writer.HandleExceptionAsync(ex, "ListSubjects(project)");
+                await writer.HandleExceptionAsync(ex, "ListSubjects(project)");
                 return new List<SubjectClass>();
             }
         }
@@ -310,7 +318,8 @@ namespace Data_Logger_1._3.Services
         public async Task<List<OutputClass>?> ListQtOutputs()
         {
             await using var scope = _serviceProvider.CreateAsyncScope();
-            
+            var writer = scope.ServiceProvider.GetRequiredService<ENTITYWRITER>();
+
 
             try
             {
@@ -319,12 +328,12 @@ namespace Data_Logger_1._3.Services
             }
             catch (InvalidOperationException invex)
             {
-                await _writer.HandleExceptionAsync(invex, "ListQtOutputs()", "InvalidOperationException");
+                await writer.HandleExceptionAsync(invex, "ListQtOutputs()", "InvalidOperationException");
                 return new List<OutputClass>();
             }
             catch (Exception ex)
             {
-                await _writer.HandleExceptionAsync(ex, "ListQtOutputs()");
+                await writer.HandleExceptionAsync(ex, "ListQtOutputs()");
                 return new List<OutputClass>();
             }
         }
@@ -336,7 +345,8 @@ namespace Data_Logger_1._3.Services
         public async Task<List<OutputClass>?> ListASOutputs()
         {
             await using var scope = _serviceProvider.CreateAsyncScope();
-            
+            var writer = scope.ServiceProvider.GetRequiredService<ENTITYWRITER>();
+
 
             try
             {
@@ -345,11 +355,11 @@ namespace Data_Logger_1._3.Services
             }
             catch (InvalidOperationException invex)
             {
-                await _writer.HandleExceptionAsync(invex, "ListASOutputs()", "InvalidOperationException");
+                await writer.HandleExceptionAsync(invex, "ListASOutputs()", "InvalidOperationException");
             }
             catch (Exception ex)
             {
-                await _writer.HandleExceptionAsync(ex, "ListASOutputs()");
+                await writer.HandleExceptionAsync(ex, "ListASOutputs()");
             }
 
             return null;
@@ -363,7 +373,8 @@ namespace Data_Logger_1._3.Services
         public async Task<List<OutputClass>?> ListOutputs(CATEGORY category)
         {
             await using var scope = _serviceProvider.CreateAsyncScope();
-            
+            var writer = scope.ServiceProvider.GetRequiredService<ENTITYWRITER>();
+
 
             try
             {
@@ -372,11 +383,11 @@ namespace Data_Logger_1._3.Services
             }
             catch (InvalidOperationException invex)
             {
-                await _writer.HandleExceptionAsync(invex, "ListOutputs(category)", "InvalidOperationException");
+                await writer.HandleExceptionAsync(invex, "ListOutputs(category)", "InvalidOperationException");
             }
             catch (Exception ex)
             {
-                await _writer.HandleExceptionAsync(ex, "ListOutputs(category)");
+                await writer.HandleExceptionAsync(ex, "ListOutputs(category)");
             }
 
             return null;
@@ -391,7 +402,8 @@ namespace Data_Logger_1._3.Services
         public async Task<List<TypeClass>?> ListQtTypes()
         {
             await using var scope = _serviceProvider.CreateAsyncScope();
-            
+            var writer = scope.ServiceProvider.GetRequiredService<ENTITYWRITER>();
+
 
             try
             {
@@ -400,12 +412,12 @@ namespace Data_Logger_1._3.Services
             }
             catch (InvalidOperationException invex)
             {
-                await _writer.HandleExceptionAsync(invex, "ListQtTypes()", "InvalidOperationException");
+                await writer.HandleExceptionAsync(invex, "ListQtTypes()", "InvalidOperationException");
                 return null;
             }
             catch (Exception ex)
             {
-                await _writer.HandleExceptionAsync(ex, "ListQtTypes()");
+                await writer.HandleExceptionAsync(ex, "ListQtTypes()");
                 return null;
             }
         }
@@ -417,7 +429,8 @@ namespace Data_Logger_1._3.Services
         public async Task<List<TypeClass>?> ListASTypes()
         {
             await using var scope = _serviceProvider.CreateAsyncScope();
-            
+            var writer = scope.ServiceProvider.GetRequiredService<ENTITYWRITER>();
+
 
             try
             {
@@ -426,12 +439,12 @@ namespace Data_Logger_1._3.Services
             }
             catch (InvalidOperationException invex)
             {
-                await _writer.HandleExceptionAsync(invex, "ListASTypes()", "InvalidOperationException");
+                await writer.HandleExceptionAsync(invex, "ListASTypes()", "InvalidOperationException");
                 return null;
             }
             catch (Exception ex)
             {
-                await _writer.HandleExceptionAsync(ex, "ListASTypes()");
+                await writer.HandleExceptionAsync(ex, "ListASTypes()");
                 return null;
             }
         }
@@ -444,7 +457,8 @@ namespace Data_Logger_1._3.Services
         public async Task<List<TypeClass>?> ListTypes(CATEGORY category)
         {
             await using var scope = _serviceProvider.CreateAsyncScope();
-            
+            var writer = scope.ServiceProvider.GetRequiredService<ENTITYWRITER>();
+
 
             try
             {
@@ -453,11 +467,11 @@ namespace Data_Logger_1._3.Services
             }
             catch (InvalidOperationException invex)
             {
-                await _writer.HandleExceptionAsync(invex, "ListTypes(category)", "InvalidOperationException");
+                await writer.HandleExceptionAsync(invex, "ListTypes(category)", "InvalidOperationException");
             }
             catch (Exception ex)
             {
-                await _writer.HandleExceptionAsync(ex, "ListTypes(category)");
+                await writer.HandleExceptionAsync(ex, "ListTypes(category)");
             }
 
             return null;
@@ -477,23 +491,22 @@ namespace Data_Logger_1._3.Services
         /// </summary>
         private async Task<T> UseReaderAsync<T>(Func<ENTITYREADER, Task<T>> func)
         {
+            await using var scope = _serviceProvider.CreateAsyncScope();
+            var reader = scope.ServiceProvider.GetRequiredService<ENTITYREADER>();
+            var writer = scope.ServiceProvider.GetRequiredService<ENTITYWRITER>();
+
             try
             {
-                await using var scope = _serviceProvider.CreateAsyncScope();
-
-                var reader = scope.ServiceProvider.GetRequiredService<ENTITYREADER>();
-                _writer = scope.ServiceProvider.GetRequiredService<ENTITYWRITER>();
-
                 return await func(reader);
             }
             catch (InvalidOperationException invex)
             {
-                await _writer.HandleExceptionAsync(invex, "UseReaderAsync<T>(func)", "InvalidOperationException");
+                await writer.HandleExceptionAsync(invex, "UseReaderAsync<T>(func)", "InvalidOperationException");
                 throw;
             }
             catch (Exception ex)
             {
-                await _writer.HandleExceptionAsync(ex, "UseReaderAsync<T>(func)");
+                await writer.HandleExceptionAsync(ex, "UseReaderAsync<T>(func)");
                 throw;
             }
         }
@@ -503,23 +516,21 @@ namespace Data_Logger_1._3.Services
         /// </summary>
         private async Task<T> UseWriterAsync<T>(Func<ENTITYWRITER, Task<T>> func)
         {
+            await using var scope = _serviceProvider.CreateAsyncScope();
+            var writer = scope.ServiceProvider.GetRequiredService<ENTITYWRITER>();
+
             try
             {
-                await using var scope = _serviceProvider.CreateAsyncScope();
-
-                var writer = scope.ServiceProvider.GetRequiredService<ENTITYWRITER>();
-                _writer = writer;
-
                 return await func(writer);
             }
             catch (InvalidOperationException invex)
             {
-                await _writer.HandleExceptionAsync(invex, "UseWriterAsync<T>(func)", "InvalidOperationException");
+                await writer.HandleExceptionAsync(invex, "UseWriterAsync<T>(func)", "InvalidOperationException");
                 throw;
             }
             catch (Exception ex)
             {
-                await _writer.HandleExceptionAsync(ex, "UseWriterAsync<T>(func)");
+                await writer.HandleExceptionAsync(ex, "UseWriterAsync<T>(func)");
                 throw;
             }
         }
@@ -529,20 +540,22 @@ namespace Data_Logger_1._3.Services
         /// </summary>
         private async Task<T> UseHandlerAsync<T>(Func<ENTITYHANDLER, Task<T>> func)
         {
+            await using var scope = _serviceProvider.CreateAsyncScope();
+            var handler = scope.ServiceProvider.GetRequiredService<ENTITYHANDLER>();
+            var writer = scope.ServiceProvider.GetRequiredService<ENTITYWRITER>();
+
             try
             {
-                await using var scope = _serviceProvider.CreateAsyncScope();
-                var handler = scope.ServiceProvider.GetRequiredService<ENTITYHANDLER>();
                 return await func(handler);
             }
             catch (InvalidOperationException invex)
             {
-                await _writer.HandleExceptionAsync(invex, "UseHandlerAsync<T>(func)", "InvalidOperationException");
+                await writer.HandleExceptionAsync(invex, "UseHandlerAsync<T>(func)", "InvalidOperationException");
                 throw;
             }
             catch (Exception ex)
             {
-                await _writer.HandleExceptionAsync(ex, "UseHandlerAsync<T>(func)");
+                await writer.HandleExceptionAsync(ex, "UseHandlerAsync<T>(func)");
                 throw;
             }
         }
@@ -846,6 +859,33 @@ namespace Data_Logger_1._3.Services
 
         //public async Task<bool> UpdateNotesLog(NoteItem noteItem) => await _handler.UpdateNotesLog(noteItem);
 
+        /// <summary>
+        /// Saves all pending changes in the database through the reader.
+        /// </summary>
+        public async Task SaveChangesAsync()
+        {
+            await UseReaderAsync<Task>(async reader =>
+            {
+                await reader.SaveChangesAsync();
+
+                return Task.CompletedTask;
+            });
+        }
+
+        /// <summary>
+        /// Saves all pending changes on the current log to the database through the reader.
+        /// </summary>
+        /// <param name="log">The edited log</param>
+        public async Task UpdateLogAsync(LOG log)
+        {
+            await UseHandlerAsync<Task>(async handler =>
+            {
+                await handler.UpdateLogAsync(log);
+
+                return Task.CompletedTask;
+            });
+        }
+
 
 
 
@@ -1018,9 +1058,10 @@ namespace Data_Logger_1._3.Services
         public async Task HandleExceptionAsync(Exception exception, string methodName, string exceptionType = "Exception")
         {
             await using var scope = _serviceProvider.CreateAsyncScope();
-            
+            var writer = scope.ServiceProvider.GetRequiredService<ENTITYWRITER>();
 
-            await _writer.HandleExceptionAsync(exception, methodName, exceptionType);
+
+            await writer.HandleExceptionAsync(exception, methodName, exceptionType);
         }
 
 
