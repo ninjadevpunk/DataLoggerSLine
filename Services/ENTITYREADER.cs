@@ -1,9 +1,9 @@
 ﻿using Data_Logger_1._3.Models;
 using Data_Logger_1._3.Models.App_Models;
-using Microsoft.EntityFrameworkCore;
-using System.Diagnostics;
 using Data_Logger_1._3.ViewModels.Dialogs;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using System.Diagnostics;
 using static Data_Logger_1._3.Models.FeedbackMessage;
 using static Data_Logger_1._3.Models.LOG;
 
@@ -11,8 +11,6 @@ namespace Data_Logger_1._3.Services
 {
     public class ENTITYREADER
     {
-        private ENTITYMASTER _master;
-        private ENTITYWRITER _writer;
         private readonly IServiceProvider _serviceProvider;
 
 
@@ -24,56 +22,36 @@ namespace Data_Logger_1._3.Services
             _serviceProvider = serviceProvider;
         }
 
-        private async Task<AsyncServiceScope> ActivateMasterAsync()
-        {
-            await using var scope = _serviceProvider.CreateAsyncScope();
-            _master = scope.ServiceProvider.GetRequiredService<ENTITYMASTER>();
-
-            return scope;
-        }
-
-        private async Task<AsyncServiceScope> ActivateMasterAsync(AsyncServiceScope scope)
-        {
-            _master = scope.ServiceProvider.GetRequiredService<ENTITYMASTER>();
-
-            return scope;
-        }
-
-        private async Task<AsyncServiceScope> ActivateWriterAsync()
-        {
-            await using var scope = _serviceProvider.CreateAsyncScope();
-            _writer = scope.ServiceProvider.GetRequiredService<ENTITYWRITER>();
-
-            return scope;
-        }
-
-        private async Task<AsyncServiceScope> ActivateWriterAsync(AsyncServiceScope scope)
-        {
-            _writer = scope.ServiceProvider.GetRequiredService<ENTITYWRITER>();
-
-            return scope;
-        }
-
-        private async Task ActivateMasterAndWriterAsync()
-        {
-            var scope = await ActivateMasterAsync();
-            await ActivateWriterAsync(scope);
-        }
-
         public async Task<AsyncServiceScope> SaveChangesAsync()
         {
-            var scope = await ActivateMasterAsync();
+            await using var scope = _serviceProvider.CreateAsyncScope();
+            var master = scope.ServiceProvider.GetRequiredService<ENTITYMASTER>();
 
-            await _master.SaveChangesAsync();
+            await master.SaveChangesAsync();
+
+            return scope;
+        }
+
+        public async Task<AsyncServiceScope> SaveChangesAsync(LOG log)
+        {
+            await using var scope = _serviceProvider.CreateAsyncScope();
+            var master = scope.ServiceProvider.GetRequiredService<ENTITYMASTER>();
+
+            if (!master.Logs.Local.Contains(log))
+            {
+                master.Attach(log);
+            }
+
+            await master.SaveChangesAsync();
 
             return scope;
         }
 
         public async Task SaveChangesAsync(AsyncServiceScope scope)
         {
-            _master = scope.ServiceProvider.GetRequiredService<ENTITYMASTER>();
+            var master = scope.ServiceProvider.GetRequiredService<ENTITYMASTER>();
 
-            await _master.SaveChangesAsync();
+            await master.SaveChangesAsync();
         }
 
         /// <summary>
@@ -83,9 +61,10 @@ namespace Data_Logger_1._3.Services
         /// <returns>Returns a profile pic file path or an empty string if the path is null.</returns>
         public async Task<string> RetrieveProfilePic(string emailAddress)
         {
-            await ActivateMasterAsync();
+            await using var scope = _serviceProvider.CreateAsyncScope();
+            var master = scope.ServiceProvider.GetRequiredService<ENTITYMASTER>();
 
-            return await _master.Accounts
+            return await master.Accounts
                 .Where(a => a.Email == emailAddress)
                 .Select(a => a.ProfilePic)
                 .FirstOrDefaultAsync() ?? string.Empty;
@@ -101,11 +80,12 @@ namespace Data_Logger_1._3.Services
         /// <returns>Returns only 1 log with the specified ID.</returns>
         public async Task<LOG?> RetrieveLog(int id)
         {
-            await ActivateMasterAsync();
+            await using var scope = _serviceProvider.CreateAsyncScope();
+            var master = scope.ServiceProvider.GetRequiredService<ENTITYMASTER>();
 
             var accountID = await GetOnlineAccountIDAsync();
 
-            return await _master.Logs
+            return await master.Logs
                 .Where(l => l.accountID == accountID && l.ID == id)
                 .SingleOrDefaultAsync();
         }
@@ -113,11 +93,12 @@ namespace Data_Logger_1._3.Services
 
         public async Task<List<LOG>> RetrieveLogs()
         {
-            await ActivateMasterAsync();
+            await using var scope = _serviceProvider.CreateAsyncScope();
+            var master = scope.ServiceProvider.GetRequiredService<ENTITYMASTER>();
 
             var accountID = await GetOnlineAccountIDAsync();
 
-            return await _master.Logs
+            return await master.Logs
                 .Where(l => l.accountID == accountID)
                 .OrderBy(l => l.Start)
                 .ToListAsync();
@@ -129,11 +110,12 @@ namespace Data_Logger_1._3.Services
         /// <returns>Returns a list of CodingLOG objects.</returns>
         public async Task<List<CodingLOG>> RetrieveCodingLogs()
         {
-            await ActivateMasterAsync();
+            await using var scope = _serviceProvider.CreateAsyncScope();
+            var master = scope.ServiceProvider.GetRequiredService<ENTITYMASTER>();
 
             var accountID = await GetOnlineAccountIDAsync();
 
-            return await _master.CodingLogs
+            return await master.CodingLogs
                 .Where(c => c.accountID == accountID && !new[] { 1, 2 }.Contains(c.Application.appID))
                 .Include(l => l.Author)
                 .Include(l => l.Project)
@@ -148,11 +130,12 @@ namespace Data_Logger_1._3.Services
 
         public async Task<List<CodingLOG>> RetrieveQtCodingLogs()
         {
-            await ActivateMasterAsync();
+            await using var scope = _serviceProvider.CreateAsyncScope();
+            var master = scope.ServiceProvider.GetRequiredService<ENTITYMASTER>();
 
             var accountID = await GetOnlineAccountIDAsync();
 
-            return await _master.CodingLogs
+            return await master.CodingLogs
                 .Where(qt => qt.accountID == accountID && qt.Application.appID == 1)
                 .OrderBy(qt => qt.Start)
                 .ToListAsync();
@@ -160,11 +143,12 @@ namespace Data_Logger_1._3.Services
 
         public async Task<List<AndroidCodingLOG>> RetrieveAndroidCodingLogs()
         {
-            await ActivateMasterAsync();
+            await using var scope = _serviceProvider.CreateAsyncScope();
+            var master = scope.ServiceProvider.GetRequiredService<ENTITYMASTER>();
 
             var accountID = await GetOnlineAccountIDAsync();
 
-            return await _master.AndroidCodingLogs
+            return await master.AndroidCodingLogs
                 .Where(a => a.accountID == accountID && a.Application.appID == 2)
                 .OrderBy(a => a.Start)
                 .ToListAsync();
@@ -172,11 +156,12 @@ namespace Data_Logger_1._3.Services
 
         public async Task<List<GraphicsLOG>> RetrieveGraphicsLogs()
         {
-            await ActivateMasterAsync();
+            await using var scope = _serviceProvider.CreateAsyncScope();
+            var master = scope.ServiceProvider.GetRequiredService<ENTITYMASTER>();
 
             var accountID = await GetOnlineAccountIDAsync();
 
-            return await _master.GraphicsLogs
+            return await master.GraphicsLogs
                 .Where(g => g.accountID == accountID)
                 .OrderBy(g => g.Start)
                 .ToListAsync();
@@ -184,11 +169,12 @@ namespace Data_Logger_1._3.Services
 
         public async Task<List<FilmLOG>> RetrieveFilmLogs()
         {
-            await ActivateMasterAsync();
+            await using var scope = _serviceProvider.CreateAsyncScope();
+            var master = scope.ServiceProvider.GetRequiredService<ENTITYMASTER>();
 
             var accountID = await GetOnlineAccountIDAsync();
 
-            return await _master.FilmLogs
+            return await master.FilmLogs
                 .Where(f => f.accountID == accountID)
                 .OrderBy(f => f.Start)
                 .ToListAsync();
@@ -196,11 +182,12 @@ namespace Data_Logger_1._3.Services
 
         public async Task<List<FlexiNotesLOG>> RetrieveFlexiNotesLogs()
         {
-            await ActivateMasterAsync();
+            await using var scope = _serviceProvider.CreateAsyncScope();
+            var master = scope.ServiceProvider.GetRequiredService<ENTITYMASTER>();
 
             var accountID = await GetOnlineAccountIDAsync();
 
-            return await _master.FlexiNotesLogs
+            return await master.FlexiNotesLogs
                 .Where(fn => fn.accountID == accountID)
                 .OrderBy(fn => fn.Start)
                 .ToListAsync();
@@ -209,20 +196,22 @@ namespace Data_Logger_1._3.Services
 
         public async Task<List<NoteItem>> RetrieveGenericNotes(int id)
         {
-            await ActivateMasterAsync();
+            await using var scope = _serviceProvider.CreateAsyncScope();
+            var master = scope.ServiceProvider.GetRequiredService<ENTITYMASTER>();
 
-            return await _master.NoteItems
+            return await master.NoteItems
                 .Where(n => n.accountID == id)
                 .ToListAsync();
         }
 
         public async Task<List<CheckList>> RetrieveCheckList()
         {
-            await ActivateMasterAsync();
+            await using var scope = _serviceProvider.CreateAsyncScope();
+            var master = scope.ServiceProvider.GetRequiredService<ENTITYMASTER>();
 
             var accountID = await GetOnlineAccountIDAsync();
 
-            return await _master.Checklists
+            return await master.Checklists
                 .Where((cl => cl.accountID == accountID))
                 .ToListAsync();
         }
@@ -231,41 +220,87 @@ namespace Data_Logger_1._3.Services
         /// Find the account ID of the user who's online.
         /// </summary>
         /// <returns>Returns a single account ID</returns>
-        public async Task<int?> GetOnlineAccountIDAsync()
+        public async Task<int> GetOnlineAccountIDAsync()
         {
-            var scope = await ActivateMasterAsync();
-            await ActivateWriterAsync(scope);
+            await using var scope = _serviceProvider.CreateAsyncScope();
+            var master = scope.ServiceProvider.GetRequiredService<ENTITYMASTER>();
+            var writer = scope.ServiceProvider.GetRequiredService<ENTITYWRITER>();
 
             try
             {
-                var onlineAccount = await _master.Accounts
+                var onlineAccount = await master.Accounts
+                    .SingleAsync(a => a.IsOnline);
+
+                return onlineAccount.accountID;
+            }
+            catch (Exception ex)
+            {
+                await writer.HandleExceptionAsync(ex, "GetOnlineAccountIDAsync");
+            }
+
+            return 0;
+        }
+
+        /// <summary>
+        /// Find the account ID of the user who's online.
+        /// </summary>
+        /// <returns>Returns a single account ID</returns>
+        public async Task<int?> GetOnlineAccountIDAsync(AsyncServiceScope scope, ENTITYMASTER master)
+        {
+            var writer = scope.ServiceProvider.GetRequiredService<ENTITYWRITER>();
+
+            try
+            {
+                var onlineAccount = await master.Accounts
                     .SingleAsync(a => a.IsOnline);
 
                 return onlineAccount?.accountID;
             }
             catch (Exception ex)
             {
-                await _writer.HandleExceptionAsync(ex, "GetOnlineAccountIDAsync");
+                await writer.HandleExceptionAsync(ex, "GetOnlineAccountIDAsync");
             }
 
             return null;
         }
 
 
-        public async Task<ACCOUNT> FindAccountByID(int id)
+        public async Task<ACCOUNT?> FindAccountByID(int id)
         {
-            await ActivateMasterAndWriterAsync();
+            await using var scope = _serviceProvider.CreateAsyncScope();
+            var master = scope.ServiceProvider.GetRequiredService<ENTITYMASTER>();
+            var writer = scope.ServiceProvider.GetRequiredService<ENTITYWRITER>();
 
             try
             {
-                return await _master.Accounts
+                return await master.Accounts
                     .FirstOrDefaultAsync(a => a.accountID == id);
             }
             catch (Exception ex)
             {
                 var description = $"Exception near FindAccountByID(id): {ex.Message}";
 
-                await _writer.CreateFeedback(1, description, false, true, FeedbackType.Exception);
+                await writer.CreateFeedback(1, description, false, true, FeedbackType.Exception);
+                Debug.WriteLine(description);
+
+                return null;
+            }
+        }
+
+        public async Task<ACCOUNT?> FindAccountByID(AsyncServiceScope scope, ENTITYMASTER master, int id)
+        {
+            var writer = scope.ServiceProvider.GetRequiredService<ENTITYWRITER>();
+
+            try
+            {
+                return await master.Accounts
+                    .FirstOrDefaultAsync(a => a.accountID == id);
+            }
+            catch (Exception ex)
+            {
+                var description = $"Exception near FindAccountByID(id): {ex.Message}";
+
+                await writer.CreateFeedback(1, description, false, true, FeedbackType.Exception);
                 Debug.WriteLine(description);
 
                 return null;
@@ -274,11 +309,13 @@ namespace Data_Logger_1._3.Services
 
         public async Task<ACCOUNT?> FindAccountByEmail(string emailAddress, string password)
         {
-            await ActivateMasterAndWriterAsync();
+            await using var scope = _serviceProvider.CreateAsyncScope();
+            var master = scope.ServiceProvider.GetRequiredService<ENTITYMASTER>();
+            var writer = scope.ServiceProvider.GetRequiredService<ENTITYWRITER>();
 
             try
             {
-                var account = await _master.Accounts
+                var account = await master.Accounts
                     .SingleAsync(a => a.Email == emailAddress);
 
                 if (account is not null && VerifyPassword(account, password))
@@ -292,7 +329,7 @@ namespace Data_Logger_1._3.Services
             {
                 var description = $"Exception near FindAccountByEmail(email,password): {ex.Message}";
 
-                await _writer.CreateFeedback(1, description, false, true, FeedbackType.Exception);
+                await writer.CreateFeedback(1, description, false, true, FeedbackType.Exception);
                 Debug.WriteLine(description);
 
                 return null;
@@ -301,18 +338,20 @@ namespace Data_Logger_1._3.Services
 
         public async Task<ApplicationClass?> FindApplication(string name)
         {
-            await ActivateMasterAndWriterAsync();
+            await using var scope = _serviceProvider.CreateAsyncScope();
+            var master = scope.ServiceProvider.GetRequiredService<ENTITYMASTER>();
+            var writer = scope.ServiceProvider.GetRequiredService<ENTITYWRITER>();
 
             try
             {
-                var application = await _master.Applications
+                var application = await master.Applications
                     .FirstOrDefaultAsync(app => app.Name == name);
 
                 return application;
             }
             catch (Exception ex)
             {
-                await _writer.HandleExceptionAsync(ex, "FindApplication(name)");
+                await writer.HandleExceptionAsync(ex, "FindApplication(name)");
             }
 
             return null;
@@ -320,14 +359,16 @@ namespace Data_Logger_1._3.Services
 
         public async Task<ApplicationClass?> FindApplication(int? ID, string name)
         {
-            await ActivateMasterAndWriterAsync();
+            await using var scope = _serviceProvider.CreateAsyncScope();
+            var master = scope.ServiceProvider.GetRequiredService<ENTITYMASTER>();
+            var writer = scope.ServiceProvider.GetRequiredService<ENTITYWRITER>();
 
             try
             {
                 if (ID == null)
                     throw new ArgumentNullException("ID is needed to find application's from Data Logger or user!");
 
-                var application = await _master.Applications
+                var application = await master.Applications
                     .Where(app => app.accountID == ID || app.accountID == 1)
                     .FirstOrDefaultAsync(app => app.Name == name);
 
@@ -335,7 +376,30 @@ namespace Data_Logger_1._3.Services
             }
             catch (Exception ex)
             {
-                await _writer.HandleExceptionAsync(ex, "FindApplication(name)");
+                await writer.HandleExceptionAsync(ex, "FindApplication(name)");
+            }
+
+            return null;
+        }
+
+        public async Task<ApplicationClass?> FindApplication(AsyncServiceScope scope, ENTITYMASTER master, int? ID, string name)
+        {
+            var writer = scope.ServiceProvider.GetRequiredService<ENTITYWRITER>();
+
+            try
+            {
+                if (ID == null)
+                    throw new ArgumentNullException("ID is needed to find application's from Data Logger or user!");
+
+                var application = await master.Applications
+                    .Where(app => (app.accountID == ID || app.accountID == 1) && app.Name == name)
+                    .FirstOrDefaultAsync();
+
+                return application;
+            }
+            catch (Exception ex)
+            {
+                await writer.HandleExceptionAsync(ex, "FindApplication(name)");
             }
 
             return null;
@@ -344,18 +408,20 @@ namespace Data_Logger_1._3.Services
 
         public async Task<ApplicationClass?> FindApplicationByID(int appID)
         {
-            await ActivateMasterAndWriterAsync();
+            await using var scope = _serviceProvider.CreateAsyncScope();
+            var master = scope.ServiceProvider.GetRequiredService<ENTITYMASTER>();
+            var writer = scope.ServiceProvider.GetRequiredService<ENTITYWRITER>();
 
             try
             {
-                var application = await _master.Applications
+                var application = await master.Applications
                     .FirstOrDefaultAsync(app => app.appID == appID);
 
                 return application;
             }
             catch (Exception ex)
             {
-                await _writer.HandleExceptionAsync(ex, "FindApplicationByID(appID)");
+                await writer.HandleExceptionAsync(ex, "FindApplicationByID(appID)");
             }
 
             return null;
@@ -363,14 +429,16 @@ namespace Data_Logger_1._3.Services
 
         public async Task<ProjectClass?> FindProject(int? userID, string projectName, int appID)
         {
-            await ActivateMasterAndWriterAsync();
+            await using var scope = _serviceProvider.CreateAsyncScope();
+            var master = scope.ServiceProvider.GetRequiredService<ENTITYMASTER>();
+            var writer = scope.ServiceProvider.GetRequiredService<ENTITYWRITER>();
 
             try
             {
                 if (userID == null)
                     throw new ArgumentNullException("userID is required to find a user's projects!");
 
-                var project = await _master.Projects
+                var project = await master.Projects
                     .Where(p => (p.accountID == userID || p.accountID == 1)
                                 && p.Name == projectName
                                 && p.appID == appID)
@@ -380,7 +448,32 @@ namespace Data_Logger_1._3.Services
             }
             catch (Exception ex)
             {
-                await _writer.HandleExceptionAsync(ex, "FindProject(projectName, appID)");
+                await writer.HandleExceptionAsync(ex, "FindProject(projectName, appID)");
+            }
+
+            return null;
+        }
+
+        public async Task<ProjectClass?> FindProject(AsyncServiceScope scope, ENTITYMASTER master, int? userID, string projectName, int appID)
+        {
+            var writer = scope.ServiceProvider.GetRequiredService<ENTITYWRITER>();
+
+            try
+            {
+                if (userID == null)
+                    throw new ArgumentNullException("userID is required to find a user's projects!");
+
+                var project = await master.Projects
+                    .Where(p => (p.accountID == userID || p.accountID == 1)
+                                && p.Name == projectName
+                                && p.appID == appID)
+                    .FirstOrDefaultAsync();
+
+                return project;
+            }
+            catch (Exception ex)
+            {
+                await writer.HandleExceptionAsync(ex, "FindProject(projectName, appID)");
             }
 
             return null;
@@ -389,18 +482,20 @@ namespace Data_Logger_1._3.Services
 
         public async Task<ProjectClass?> FindProjectByID(int projectID)
         {
-            await ActivateMasterAndWriterAsync();
+            await using var scope = _serviceProvider.CreateAsyncScope();
+            var master = scope.ServiceProvider.GetRequiredService<ENTITYMASTER>();
+            var writer = scope.ServiceProvider.GetRequiredService<ENTITYWRITER>();
 
             try
             {
-                var project = await _master.Projects
+                var project = await master.Projects
                     .FirstOrDefaultAsync((pro => pro.projectID == projectID));
 
                 return project;
             }
             catch (Exception ex)
             {
-                await _writer.HandleExceptionAsync(ex, "FindProjectByID(projectID)");
+                await writer.HandleExceptionAsync(ex, "FindProjectByID(projectID)");
             }
 
             return null;
@@ -408,17 +503,37 @@ namespace Data_Logger_1._3.Services
 
         public async Task<OutputClass?> FindOutput(string name)
         {
-            await ActivateMasterAndWriterAsync();
+            await using var scope = _serviceProvider.CreateAsyncScope();
+            var master = scope.ServiceProvider.GetRequiredService<ENTITYMASTER>();
+            var writer = scope.ServiceProvider.GetRequiredService<ENTITYWRITER>();
 
             try
             {
-                return await _master.Outputs
+                return await master.Outputs
                     .Where(o => o.accountID == 1 && o.Name == name)
                     .FirstOrDefaultAsync();
             }
             catch (Exception ex)
             {
-                await _writer.HandleExceptionAsync(ex, "FindOutput(name)");
+                await writer.HandleExceptionAsync(ex, "FindOutput(name)");
+            }
+
+            return null;
+        }
+
+        public async Task<OutputClass?> FindOutput(AsyncServiceScope scope, ENTITYMASTER master, string name)
+        {
+            var writer = scope.ServiceProvider.GetRequiredService<ENTITYWRITER>();
+
+            try
+            {
+                return await master.Outputs
+                    .Where(o => o.accountID == 1 && o.Name == name)
+                    .FirstOrDefaultAsync();
+            }
+            catch (Exception ex)
+            {
+                await writer.HandleExceptionAsync(ex, "FindOutput(name)");
             }
 
             return null;
@@ -426,18 +541,20 @@ namespace Data_Logger_1._3.Services
 
         public async Task<OutputClass?> FindOutputByID(int outputID)
         {
-            await ActivateMasterAndWriterAsync();
+            await using var scope = _serviceProvider.CreateAsyncScope();
+            var master = scope.ServiceProvider.GetRequiredService<ENTITYMASTER>();
+            var writer = scope.ServiceProvider.GetRequiredService<ENTITYWRITER>();
 
             try
             {
-                var output = await _master.Outputs
+                var output = await master.Outputs
                     .FirstOrDefaultAsync(output => output.outputID == outputID);
 
                 return output;
             }
             catch (Exception ex)
             {
-                await _writer.HandleExceptionAsync(ex, "FindOutputByID(outputID)");
+                await writer.HandleExceptionAsync(ex, "FindOutputByID(outputID)");
             }
 
             return null;
@@ -445,17 +562,37 @@ namespace Data_Logger_1._3.Services
 
         public async Task<TypeClass?> FindType(string name)
         {
-            await ActivateMasterAndWriterAsync();
+            await using var scope = _serviceProvider.CreateAsyncScope();
+            var master = scope.ServiceProvider.GetRequiredService<ENTITYMASTER>();
+            var writer = scope.ServiceProvider.GetRequiredService<ENTITYWRITER>();
 
             try
             {
-                return await _master.Types
+                return await master.Types
                     .Where(t => t.accountID == 1 && t.Name == name)
                     .FirstOrDefaultAsync();
             }
             catch (Exception ex)
             {
-                await _writer.HandleExceptionAsync(ex, "FindType(name)");
+                await writer.HandleExceptionAsync(ex, "FindType(name)");
+            }
+
+            return null;
+        }
+
+        public async Task<TypeClass?> FindType(AsyncServiceScope scope, ENTITYMASTER master, string name)
+        {
+            var writer = scope.ServiceProvider.GetRequiredService<ENTITYWRITER>();
+
+            try
+            {
+                return await master.Types
+                    .Where(t => t.accountID == 1 && t.Name == name)
+                    .FirstOrDefaultAsync();
+            }
+            catch (Exception ex)
+            {
+                await writer.HandleExceptionAsync(ex, "FindType(name)");
             }
 
             return null;
@@ -463,18 +600,20 @@ namespace Data_Logger_1._3.Services
 
         public async Task<TypeClass?> FindTypeByID(int typeID)
         {
-            await ActivateMasterAndWriterAsync();
+            await using var scope = _serviceProvider.CreateAsyncScope();
+            var master = scope.ServiceProvider.GetRequiredService<ENTITYMASTER>();
+            var writer = scope.ServiceProvider.GetRequiredService<ENTITYWRITER>();
 
             try
             {
-                var type = await _master.Types
+                var type = await master.Types
                     .FirstOrDefaultAsync(type => type.typeID == typeID);
 
                 return type;
             }
             catch (Exception ex)
             {
-                await _writer.HandleExceptionAsync(ex, "FindTypeByID(typeID)");
+                await writer.HandleExceptionAsync(ex, "FindTypeByID(typeID)");
             }
 
             return null;
@@ -510,12 +649,13 @@ namespace Data_Logger_1._3.Services
         /// <exception cref="EmailConflictException"></exception>
         public async Task<bool> EmailExists(string email)
         {
-            var scope = await ActivateMasterAsync();
-            await ActivateWriterAsync(scope);
+            await using var scope = _serviceProvider.CreateAsyncScope();
+            var master = scope.ServiceProvider.GetRequiredService<ENTITYMASTER>();
+            var writer = scope.ServiceProvider.GetRequiredService<ENTITYWRITER>();
 
             try
             {
-                var account = await _master.Accounts
+                var account = await master.Accounts
                 .FirstOrDefaultAsync(a => a.Email == email);
 
                 if (account is not null)
@@ -527,11 +667,13 @@ namespace Data_Logger_1._3.Services
             }
             catch (EmailConflictException mailex)
             {
+                await writer.HandleExceptionAsync(mailex, "EmailExists(email)", "EmailConflictException");
+
                 return true;
             }
             catch (Exception ex)
             {
-                await _writer.HandleExceptionAsync(ex, "EmailExists(email)");
+                await writer.HandleExceptionAsync(ex, "EmailExists(email)");
 
                 return true;
             }
@@ -546,12 +688,12 @@ namespace Data_Logger_1._3.Services
         /// <exception cref="EmailConflictException"></exception>
         public async Task<bool> EmailExists(AsyncServiceScope scope, string email)
         {
-            await ActivateMasterAsync(scope);
-            await ActivateWriterAsync(scope);
+            var master = scope.ServiceProvider.GetRequiredService<ENTITYMASTER>();
+            var writer = scope.ServiceProvider.GetRequiredService<ENTITYWRITER>();
 
             try
             {
-                var account = await _master.Accounts
+                var account = await master.Accounts
                     .FirstOrDefaultAsync(a => a.Email == email);
 
                 if (account is not null)
@@ -563,11 +705,13 @@ namespace Data_Logger_1._3.Services
             }
             catch (EmailConflictException mailex)
             {
+                await writer.HandleExceptionAsync(mailex, "EmailExists(scope,email)", "EmailConflictException");
+
                 return true;
             }
             catch (Exception ex)
             {
-                await _writer.HandleExceptionAsync(ex, "EmailExists(email)");
+                await writer.HandleExceptionAsync(ex, "EmailExists(email)");
 
                 return true;
             }
@@ -580,9 +724,10 @@ namespace Data_Logger_1._3.Services
         /// <returns>Returns whether the log with the specified logID has PostIts.</returns>
         public async Task<bool> PostItsExists(int logID)
         {
-            await ActivateMasterAsync();
+            await using var scope = _serviceProvider.CreateAsyncScope();
+            var master = scope.ServiceProvider.GetRequiredService<ENTITYMASTER>();
 
-            return await _master.PostIts.AnyAsync(p =>
+            return await master.PostIts.AnyAsync(p =>
                     p.logID == logID);
         }
 
@@ -595,11 +740,13 @@ namespace Data_Logger_1._3.Services
         /// <returns>Returns an account ID.</returns>
         public async Task<int> FindAccountIDAsync(ACCOUNT account)
         {
-            await ActivateMasterAndWriterAsync();
+            await using var scope = _serviceProvider.CreateAsyncScope();
+            var master = scope.ServiceProvider.GetRequiredService<ENTITYMASTER>();
+            var writer = scope.ServiceProvider.GetRequiredService<ENTITYWRITER>();
 
             try
             {
-                var result = await _master.Accounts
+                var result = await master.Accounts
                     .Where(a => a.Email == account.Email)
                     .Select(a => a.accountID)
                     .FirstOrDefaultAsync();
@@ -610,7 +757,7 @@ namespace Data_Logger_1._3.Services
             {
                 var description = $"Exception near FindAccountID(account): {ex.Message}";
 
-                await _writer.CreateFeedback(1, description, false, true, FeedbackType.Exception);
+                await writer.CreateFeedback(1, description, false, true, FeedbackType.Exception);
                 Debug.WriteLine(description);
 
                 return -1;
@@ -626,11 +773,13 @@ namespace Data_Logger_1._3.Services
         /// <returns>An app ID if found; -1 if not.</returns>
         public async Task<int> FindAppID(ApplicationClass app)
         {
-            await ActivateMasterAndWriterAsync();
+            await using var scope = _serviceProvider.CreateAsyncScope();
+            var master = scope.ServiceProvider.GetRequiredService<ENTITYMASTER>();
+            var writer = scope.ServiceProvider.GetRequiredService<ENTITYWRITER>();
 
             try
             {
-                var appID = await _master.Applications
+                var appID = await master.Applications
                     .Where(a => a.Name == app.Name
                                 && a.Category == app.Category
                                 && (a.User.accountID == 1 || a.User.accountID == app.User.accountID))
@@ -641,11 +790,11 @@ namespace Data_Logger_1._3.Services
             }
             catch (ArgumentNullException nullex)
             {
-                await _writer.HandleExceptionAsync(nullex, "FindAppID(app)", "ArgumentNullException");
+                await writer.HandleExceptionAsync(nullex, "FindAppID(app)", "ArgumentNullException");
             }
             catch (Exception ex)
             {
-                await _writer.HandleExceptionAsync(ex, "FindAppID(app)");
+                await writer.HandleExceptionAsync(ex, "FindAppID(app)");
             }
 
             return -1;
@@ -659,7 +808,9 @@ namespace Data_Logger_1._3.Services
         /// <returns>Returns an ID for the given project. Returns 1 (Unknown) if not found.</returns>
         public async Task<int> FindProjectID(ProjectClass project)
         {
-            await ActivateMasterAndWriterAsync();
+            await using var scope = _serviceProvider.CreateAsyncScope();
+            var master = scope.ServiceProvider.GetRequiredService<ENTITYMASTER>();
+            var writer = scope.ServiceProvider.GetRequiredService<ENTITYWRITER>();
 
             if (string.IsNullOrEmpty(project.Name) || project.Name == "Unknown")
                 return 1;
@@ -675,7 +826,7 @@ namespace Data_Logger_1._3.Services
                 // If application ID is not 3, perform search and add project if not found
                 if (appID != 3)
                 {
-                    var projectID = await _master.Projects
+                    var projectID = await master.Projects
                         .Where(p => p.Name == project.Name
                         && p.Category == project.Category
                         && p.Application.appID == project.Application.appID
@@ -690,11 +841,11 @@ namespace Data_Logger_1._3.Services
             }
             catch (OperationCanceledException opex)
             {
-                await _writer.HandleExceptionAsync(opex, "FindProjectID(project)", "OperationCanceledException");
+                await writer.HandleExceptionAsync(opex, "FindProjectID(project)", "OperationCanceledException");
             }
             catch (Exception ex)
             {
-                await _writer.HandleExceptionAsync(ex, "FindProjectID(project)");
+                await writer.HandleExceptionAsync(ex, "FindProjectID(project)");
             }
 
             return 1;
@@ -704,21 +855,45 @@ namespace Data_Logger_1._3.Services
 
         public async Task<SubjectClass?> FindSubject(string name, LOG.CATEGORY category)
         {
-            await ActivateMasterAndWriterAsync();
+            await using var scope = _serviceProvider.CreateAsyncScope();
+            var master = scope.ServiceProvider.GetRequiredService<ENTITYMASTER>();
+            var writer = scope.ServiceProvider.GetRequiredService<ENTITYWRITER>();
 
             try
             {
                 var onlineUserID = await GetOnlineAccountIDAsync();
 
-                return await _master.Subjects
-                    .Where(s => new[]{1, onlineUserID}.Contains(s.accountID))
+                return await master.Subjects
+                    .Where(s => new[] { 1, onlineUserID }.Contains(s.accountID))
                     .Where(s => s.Subject == name)
                     .Where(s => s.Category == category)
                     .FirstOrDefaultAsync();
             }
             catch (Exception ex)
             {
-                await _writer.HandleExceptionAsync(ex, "FindType(name)");
+                await writer.HandleExceptionAsync(ex, "FindType(name)");
+            }
+
+            return null;
+        }
+
+        public async Task<SubjectClass?> FindSubject(AsyncServiceScope scope, ENTITYMASTER master, string name, LOG.CATEGORY category)
+        {
+            var writer = scope.ServiceProvider.GetRequiredService<ENTITYWRITER>();
+
+            try
+            {
+                var onlineUserID = await GetOnlineAccountIDAsync();
+
+                return await master.Subjects
+                    .Where(s => new[] { 1, onlineUserID }.Contains(s.accountID))
+                    .Where(s => s.Subject == name)
+                    .Where(s => s.Category == category)
+                    .FirstOrDefaultAsync();
+            }
+            catch (Exception ex)
+            {
+                await writer.HandleExceptionAsync(ex, "FindType(name)");
             }
 
             return null;
@@ -731,7 +906,9 @@ namespace Data_Logger_1._3.Services
         /// <returns>Returns an ID for the SubjectClass if it exists. 1 returned for nothing found.</returns>
         public async Task<int> FindSubjectID(SubjectClass subject)
         {
-            await ActivateMasterAndWriterAsync();
+            await using var scope = _serviceProvider.CreateAsyncScope();
+            var master = scope.ServiceProvider.GetRequiredService<ENTITYMASTER>();
+            var writer = scope.ServiceProvider.GetRequiredService<ENTITYWRITER>();
 
             int subjectKey = 1;
 
@@ -739,7 +916,7 @@ namespace Data_Logger_1._3.Services
             {
                 var onlineUserID = await GetOnlineAccountIDAsync();
 
-                subjectKey = await _master.Subjects
+                subjectKey = await master.Subjects
                     .Where(s => s.Subject == subject.Subject
                         && (s.accountID == 1 || s.accountID == onlineUserID)
                         && s.Category == subject.Category
@@ -753,7 +930,7 @@ namespace Data_Logger_1._3.Services
             }
             catch (Exception ex)
             {
-                await _writer.HandleExceptionAsync(ex, "FindSubjectID(subject)");
+                await writer.HandleExceptionAsync(ex, "FindSubjectID(subject)");
             }
 
             return subjectKey;
@@ -766,17 +943,19 @@ namespace Data_Logger_1._3.Services
         /// <returns>Returns the log count.</returns>
         public async Task<int> LogCount()
         {
-            await ActivateMasterAndWriterAsync();
+            await using var scope = _serviceProvider.CreateAsyncScope();
+            var master = scope.ServiceProvider.GetRequiredService<ENTITYMASTER>();
+            var writer = scope.ServiceProvider.GetRequiredService<ENTITYWRITER>();
 
             try
             {
-                return await _master.Logs.CountAsync();
+                return await master.Logs.CountAsync();
             }
             catch (Exception ex)
             {
                 var description = $"Exception in LogCount: {ex.Message}";
 
-                await _writer.CreateFeedback(1, description, false, true, FeedbackType.Exception);
+                await writer.CreateFeedback(1, description, false, true, FeedbackType.Exception);
                 Debug.WriteLine(description);
 
                 return -1;
@@ -789,13 +968,15 @@ namespace Data_Logger_1._3.Services
         /// <returns>Returns the log count.</returns>
         public async Task<int?> LogCount(CATEGORY category)
         {
-            await ActivateMasterAndWriterAsync();
+            await using var scope = _serviceProvider.CreateAsyncScope();
+            var master = scope.ServiceProvider.GetRequiredService<ENTITYMASTER>();
+            var writer = scope.ServiceProvider.GetRequiredService<ENTITYWRITER>();
 
             try
             {
                 var onlineUserID = await GetOnlineAccountIDAsync();
 
-                return await _master.Logs
+                return await master.Logs
                     .Where(l => l.accountID == onlineUserID)
                     .Where(l => l.Category == category)
                     .CountAsync();
@@ -804,7 +985,7 @@ namespace Data_Logger_1._3.Services
             {
                 var description = $"Exception in LogCount: {ex.Message}";
 
-                await _writer.CreateFeedback(1, description, false, true, FeedbackType.Exception);
+                await writer.CreateFeedback(1, description, false, true, FeedbackType.Exception);
                 Debug.WriteLine(description);
 
             }
@@ -819,13 +1000,15 @@ namespace Data_Logger_1._3.Services
         /// <returns>The count of Qt logs ONLY.</returns>
         public async Task<int> QtLogCount()
         {
-            await ActivateMasterAndWriterAsync();
+            await using var scope = _serviceProvider.CreateAsyncScope();
+            var master = scope.ServiceProvider.GetRequiredService<ENTITYMASTER>();
+            var writer = scope.ServiceProvider.GetRequiredService<ENTITYWRITER>();
 
             try
             {
                 var onlineUserID = await GetOnlineAccountIDAsync();
 
-                var qtLogs = _master.Logs
+                var qtLogs = master.Logs
                     .Where(l => l.accountID == onlineUserID)
                     .Where(l => l.appID == 1)
                     .Where(l => l.Category == LOG.CATEGORY.CODING);
@@ -836,7 +1019,7 @@ namespace Data_Logger_1._3.Services
             {
                 var description = $"Exception in QtLogCount: {ex.Message}";
 
-                await _writer.CreateFeedback(1, description, false, true, FeedbackType.Exception);
+                await writer.CreateFeedback(1, description, false, true, FeedbackType.Exception);
                 Debug.WriteLine(description);
 
                 return -1;
@@ -849,13 +1032,15 @@ namespace Data_Logger_1._3.Services
         /// <returns>The count of Android Studio logs ONLY.</returns>
         public async Task<int> ASLogCount()
         {
-            await ActivateMasterAndWriterAsync();
+            await using var scope = _serviceProvider.CreateAsyncScope();
+            var master = scope.ServiceProvider.GetRequiredService<ENTITYMASTER>();
+            var writer = scope.ServiceProvider.GetRequiredService<ENTITYWRITER>();
 
             try
             {
                 var onlineUserID = await GetOnlineAccountIDAsync();
 
-                var androidLogs = _master.Logs
+                var androidLogs = master.Logs
                     .Where(l => l.accountID == onlineUserID)
                     .Where(l => l.appID == 2)
                     .Where(l => l.Category == LOG.CATEGORY.CODING);
@@ -866,7 +1051,7 @@ namespace Data_Logger_1._3.Services
             {
                 var description = $"Exception occurred near ASLogCount: {ex.Message}";
 
-                await _writer.CreateFeedback(1, description, false, true, FeedbackType.Exception);
+                await writer.CreateFeedback(1, description, false, true, FeedbackType.Exception);
                 Debug.WriteLine(description);
                 return -1;
             }
@@ -880,13 +1065,15 @@ namespace Data_Logger_1._3.Services
         /// <returns>Returns the count of coding logs.</returns>
         public async Task<int> CodingLogCount()
         {
-            await ActivateMasterAndWriterAsync();
+            await using var scope = _serviceProvider.CreateAsyncScope();
+            var master = scope.ServiceProvider.GetRequiredService<ENTITYMASTER>();
+            var writer = scope.ServiceProvider.GetRequiredService<ENTITYWRITER>();
 
             try
             {
                 var accountID = await GetOnlineAccountIDAsync();
 
-                var codingLogs = _master.Logs
+                var codingLogs = master.Logs
                     .Where(l => l.accountID == accountID)
                     .Where(l => l.Category == LOG.CATEGORY.CODING)
                     .Where(l => l.appID > 2);
@@ -897,7 +1084,7 @@ namespace Data_Logger_1._3.Services
             {
                 var description = $"Exception occurred near CodingLogCount: {ex.Message}";
 
-                await _writer.CreateFeedback(1, description, false, true, FeedbackType.Exception);
+                await writer.CreateFeedback(1, description, false, true, FeedbackType.Exception);
                 Debug.WriteLine(description);
 
                 return -1;
@@ -911,13 +1098,15 @@ namespace Data_Logger_1._3.Services
         /// <returns>Returns the count of gfx logs.</returns>
         public async Task<int> GraphicsLogCount()
         {
-            await ActivateMasterAndWriterAsync();
+            await using var scope = _serviceProvider.CreateAsyncScope();
+            var master = scope.ServiceProvider.GetRequiredService<ENTITYMASTER>();
+            var writer = scope.ServiceProvider.GetRequiredService<ENTITYWRITER>();
 
             try
             {
                 var accountID = await GetOnlineAccountIDAsync();
 
-                var graphicsLogs = _master.Logs.Where(l => l.accountID == accountID)
+                var graphicsLogs = master.Logs.Where(l => l.accountID == accountID)
                     .Where(l => l.Category == LOG.CATEGORY.GRAPHICS);
 
                 return await graphicsLogs.CountAsync();
@@ -926,7 +1115,7 @@ namespace Data_Logger_1._3.Services
             {
                 var description = $"Exception occurred near GraphicsLogCount: {ex.Message}";
 
-                await _writer.CreateFeedback(1, description, false, true, FeedbackType.Exception);
+                await writer.CreateFeedback(1, description, false, true, FeedbackType.Exception);
                 Debug.WriteLine(description);
 
                 return -1;
@@ -940,13 +1129,15 @@ namespace Data_Logger_1._3.Services
         /// <returns>Returns the count of film logs.</returns>
         public async Task<int> FilmLogCount()
         {
-            await ActivateMasterAndWriterAsync();
+            await using var scope = _serviceProvider.CreateAsyncScope();
+            var master = scope.ServiceProvider.GetRequiredService<ENTITYMASTER>();
+            var writer = scope.ServiceProvider.GetRequiredService<ENTITYWRITER>();
 
             try
             {
                 var accountID = await GetOnlineAccountIDAsync();
 
-                return await _master.Logs
+                return await master.Logs
                     .Where(l => l.accountID == accountID)
                     .Where(l => l.Category == LOG.CATEGORY.FILM).CountAsync();
             }
@@ -954,7 +1145,7 @@ namespace Data_Logger_1._3.Services
             {
                 var description = $"Exception occurred near FilmLogCount: {ex.Message}";
 
-                await _writer.CreateFeedback(1, description, false, true, FeedbackType.Exception);
+                await writer.CreateFeedback(1, description, false, true, FeedbackType.Exception);
                 Debug.WriteLine(description);
 
                 return -1;
@@ -968,13 +1159,15 @@ namespace Data_Logger_1._3.Services
         /// <returns>Returns the count of notes logs.</returns>
         public async Task<int> NoteItemCount()
         {
-            await ActivateMasterAndWriterAsync();
+            await using var scope = _serviceProvider.CreateAsyncScope();
+            var master = scope.ServiceProvider.GetRequiredService<ENTITYMASTER>();
+            var writer = scope.ServiceProvider.GetRequiredService<ENTITYWRITER>();
 
             try
             {
                 var accountID = await GetOnlineAccountIDAsync();
 
-                return await _master.Logs
+                return await master.Logs
                     .Where(l => l.accountID == accountID)
                     .Where(l => l.Category == LOG.CATEGORY.NOTES)
                     .Where(l => l.appID == 15 || l.appID == 16).CountAsync();
@@ -983,7 +1176,7 @@ namespace Data_Logger_1._3.Services
             {
                 var description = $"Exception occurred near NoteItemCount: {ex.Message}";
 
-                await _writer.CreateFeedback(1, description, false, true, FeedbackType.Exception);
+                await writer.CreateFeedback(1, description, false, true, FeedbackType.Exception);
                 Debug.WriteLine(description);
 
                 return -1;
@@ -997,13 +1190,15 @@ namespace Data_Logger_1._3.Services
         /// <returns>Returns the count of flexible notes logs.</returns>
         public async Task<int> FlexiNotesLogCount()
         {
-            await ActivateMasterAndWriterAsync();
+            await using var scope = _serviceProvider.CreateAsyncScope();
+            var master = scope.ServiceProvider.GetRequiredService<ENTITYMASTER>();
+            var writer = scope.ServiceProvider.GetRequiredService<ENTITYWRITER>();
 
             try
             {
                 var accountID = await GetOnlineAccountIDAsync();
 
-                return await _master.Logs
+                return await master.Logs
                     .Where(l => l.accountID == accountID)
                     .Where(l => l.Category == LOG.CATEGORY.NOTES)
                     .Where(l => l.appID != 15 && l.appID != 16).CountAsync();
@@ -1012,7 +1207,7 @@ namespace Data_Logger_1._3.Services
             {
                 var description = $"Exception occurred near FlexiNotesLogCount: {ex.Message}";
 
-                await _writer.CreateFeedback(1, description, false, true, FeedbackType.Exception);
+                await writer.CreateFeedback(1, description, false, true, FeedbackType.Exception);
 
                 return -1;
             }
@@ -1029,13 +1224,15 @@ namespace Data_Logger_1._3.Services
         /// <returns>A List of ApplicationClass objects.</returns>
         public async Task<List<ApplicationClass>> ListApplications()
         {
-            await ActivateMasterAndWriterAsync();
+            await using var scope = _serviceProvider.CreateAsyncScope();
+            var master = scope.ServiceProvider.GetRequiredService<ENTITYMASTER>();
+            var writer = scope.ServiceProvider.GetRequiredService<ENTITYWRITER>();
 
             try
             {
                 var accountID = await GetOnlineAccountIDAsync();
 
-                return await _master.Applications
+                return await master.Applications
                     .Where(a => new[] { 1, accountID }.Contains(a.accountID))
                     .Where(a => a.Name != "Unknown")
                     .Include(a => a.User)
@@ -1045,7 +1242,7 @@ namespace Data_Logger_1._3.Services
             {
                 var description = $"Exception occurred near ListApplications(category): {ex.Message}";
 
-                await _writer.CreateFeedback(1, description, false, true, FeedbackType.Exception);
+                await writer.CreateFeedback(1, description, false, true, FeedbackType.Exception);
             }
 
             return new();
@@ -1060,13 +1257,15 @@ namespace Data_Logger_1._3.Services
         /// <returns>A List of ApplicationClass objects.</returns>
         public async Task<List<ApplicationClass>> ListApplications(CATEGORY category)
         {
-            await ActivateMasterAndWriterAsync();
+            await using var scope = _serviceProvider.CreateAsyncScope();
+            var master = scope.ServiceProvider.GetRequiredService<ENTITYMASTER>();
+            var writer = scope.ServiceProvider.GetRequiredService<ENTITYWRITER>();
 
             try
             {
                 var accountID = await GetOnlineAccountIDAsync();
 
-                return await _master.Applications
+                return await master.Applications
                     .Where(a => new[] { 1, accountID }.Contains(a.accountID))
                     .Where(a => !new[] { 1, 2 }.Contains(a.appID))
                     .Where(a => a.Category == category)
@@ -1078,7 +1277,7 @@ namespace Data_Logger_1._3.Services
             {
                 var description = $"Exception occurred near ListApplications(category): {ex.Message}";
 
-                await _writer.CreateFeedback(1, description, false, true, FeedbackType.Exception);
+                await writer.CreateFeedback(1, description, false, true, FeedbackType.Exception);
             }
 
             return new();
@@ -1092,13 +1291,15 @@ namespace Data_Logger_1._3.Services
         /// <returns>A List of ProjectClass objects.</returns>
         public async Task<List<ProjectClass>> ListProjects()
         {
-            await ActivateMasterAndWriterAsync();
+            await using var scope = _serviceProvider.CreateAsyncScope();
+            var master = scope.ServiceProvider.GetRequiredService<ENTITYMASTER>();
+            var writer = scope.ServiceProvider.GetRequiredService<ENTITYWRITER>();
 
             try
             {
                 var accountID = await GetOnlineAccountIDAsync();
 
-                return await _master.Projects
+                return await master.Projects
                     .Where(p => new[] { 1, accountID }.Contains(p.accountID))
                     .Where(p => p.Name != "Unnamed Project")
                     .Include(p => p.User)
@@ -1109,7 +1310,7 @@ namespace Data_Logger_1._3.Services
             {
                 var description = $"Exception occurred near ListProjects(category): {ex.Message}";
 
-                await _writer.CreateFeedback(1, description, false, true, FeedbackType.Exception);
+                await writer.CreateFeedback(1, description, false, true, FeedbackType.Exception);
                 Debug.WriteLine(description);
             }
 
@@ -1124,13 +1325,15 @@ namespace Data_Logger_1._3.Services
         /// <returns>A List of ProjectClass objects.</returns>
         public async Task<List<ProjectClass>> ListProjects(CATEGORY category)
         {
-            await ActivateMasterAndWriterAsync();
+            await using var scope = _serviceProvider.CreateAsyncScope();
+            var master = scope.ServiceProvider.GetRequiredService<ENTITYMASTER>();
+            var writer = scope.ServiceProvider.GetRequiredService<ENTITYWRITER>();
 
             try
             {
                 var accountID = await GetOnlineAccountIDAsync();
 
-                return await _master.Projects
+                return await master.Projects
                     .Where(p => new[] { 1, accountID }.Contains(p.accountID))
                     .Where(p => p.Category == category)
                     .Where(p => p.Name != "Unnamed Project")
@@ -1142,7 +1345,7 @@ namespace Data_Logger_1._3.Services
             {
                 var description = $"Exception occurred near ListProjects(category): {ex.Message}";
 
-                await _writer.CreateFeedback(1, description, false, true, FeedbackType.Exception);
+                await writer.CreateFeedback(1, description, false, true, FeedbackType.Exception);
                 Debug.WriteLine(description);
             }
 
@@ -1159,13 +1362,15 @@ namespace Data_Logger_1._3.Services
         /// <returns>A List of ProjectClass objects.</returns>
         public async Task<List<ProjectClass>> ListProjects(ApplicationClass app)
         {
-            await ActivateMasterAndWriterAsync();
+            await using var scope = _serviceProvider.CreateAsyncScope();
+            var master = scope.ServiceProvider.GetRequiredService<ENTITYMASTER>();
+            var writer = scope.ServiceProvider.GetRequiredService<ENTITYWRITER>();
 
             try
             {
                 var accountID = await GetOnlineAccountIDAsync();
 
-                return await _master.Projects
+                return await master.Projects
                     .Where(p => new[] { 1, accountID }.Contains(p.accountID))
                     .Where(p => p.Application == app)
                     .Where(p => p.Name != "Unnamed Project")
@@ -1175,7 +1380,7 @@ namespace Data_Logger_1._3.Services
             }
             catch (Exception ex)
             {
-                await _writer.HandleExceptionAsync(ex, "ListProjects(app)");
+                await writer.HandleExceptionAsync(ex, "ListProjects(app)");
             }
 
             return new();
@@ -1193,13 +1398,15 @@ namespace Data_Logger_1._3.Services
         /// <returns></returns>
         public async Task<List<SubjectClass>> ListSubjects(CATEGORY category)
         {
-            await ActivateMasterAndWriterAsync();
+            await using var scope = _serviceProvider.CreateAsyncScope();
+            var master = scope.ServiceProvider.GetRequiredService<ENTITYMASTER>();
+            var writer = scope.ServiceProvider.GetRequiredService<ENTITYWRITER>();
 
             try
             {
                 var accountID = await GetOnlineAccountIDAsync();
 
-                return await _master.Subjects
+                return await master.Subjects
                     .Where(s => new[] { 1, accountID }.Contains(s.accountID))
                     .Where(s => s.Category == category)
                     .Where(s => s.Subject != "No Subject")
@@ -1212,7 +1419,7 @@ namespace Data_Logger_1._3.Services
             {
                 var description = $"Exception occurred near ListSubjects(category): {ex.Message}";
 
-                await _writer.CreateFeedback(1, description, false, true, FeedbackType.Exception);
+                await writer.CreateFeedback(1, description, false, true, FeedbackType.Exception);
                 Debug.WriteLine(description);
             }
 
@@ -1226,13 +1433,15 @@ namespace Data_Logger_1._3.Services
         /// <returns>A List with SubjectClass objects.</returns>
         public async Task<List<SubjectClass>> ListSubjects(ProjectClass project)
         {
-            await ActivateMasterAndWriterAsync();
+            await using var scope = _serviceProvider.CreateAsyncScope();
+            var master = scope.ServiceProvider.GetRequiredService<ENTITYMASTER>();
+            var writer = scope.ServiceProvider.GetRequiredService<ENTITYWRITER>();
 
             try
             {
                 var accountID = await GetOnlineAccountIDAsync();
 
-                return await _master.Subjects
+                return await master.Subjects
                     .Where(s => new[] { 1, accountID }.Contains(s.accountID))
                     .Where(s => s.Category == project.Category)
                     .Where(s => s.appID == project.appID)
@@ -1247,7 +1456,7 @@ namespace Data_Logger_1._3.Services
             {
                 var description = $"Exception occurred near ListSubjects(project): {ex.Message}";
 
-                await _writer.CreateFeedback(1, description, false, true, FeedbackType.Exception);
+                await writer.CreateFeedback(1, description, false, true, FeedbackType.Exception);
                 Debug.WriteLine(description);
             }
 
@@ -1261,13 +1470,15 @@ namespace Data_Logger_1._3.Services
         /// <returns>A List of Qt OutputClass objects.</returns>
         public async Task<List<OutputClass>> ListQtOutputs()
         {
-            await ActivateMasterAndWriterAsync();
+            await using var scope = _serviceProvider.CreateAsyncScope();
+            var master = scope.ServiceProvider.GetRequiredService<ENTITYMASTER>();
+            var writer = scope.ServiceProvider.GetRequiredService<ENTITYWRITER>();
 
             try
             {
                 var accountID = await GetOnlineAccountIDAsync();
 
-                return await _master.Outputs
+                return await master.Outputs
                     .Where(o => o.appID == 1)
                     .Include(o => o.Application)
                     .ToListAsync();
@@ -1276,7 +1487,7 @@ namespace Data_Logger_1._3.Services
             {
                 var description = $"Exception occurred near ListQtOutputs(): {ex.Message}";
 
-                await _writer.CreateFeedback(1, description, false, true, FeedbackType.Exception);
+                await writer.CreateFeedback(1, description, false, true, FeedbackType.Exception);
                 Debug.WriteLine(description);
             }
 
@@ -1289,11 +1500,13 @@ namespace Data_Logger_1._3.Services
         /// <returns>A List of Qt OutputClass objects.</returns>
         public async Task<List<OutputClass>> ListASOutputs()
         {
-            await ActivateMasterAndWriterAsync();
+            await using var scope = _serviceProvider.CreateAsyncScope();
+            var master = scope.ServiceProvider.GetRequiredService<ENTITYMASTER>();
+            var writer = scope.ServiceProvider.GetRequiredService<ENTITYWRITER>();
 
             try
             {
-                return await _master.Outputs
+                return await master.Outputs
                     .Where(o => o.appID == 2)
                     .Include(o => o.Application)
                     .ToListAsync();
@@ -1302,7 +1515,7 @@ namespace Data_Logger_1._3.Services
             {
                 var description = $"Exception occurred near ListASOutputs(): {ex.Message}";
 
-                await _writer.CreateFeedback(1, description, false, true, FeedbackType.Exception);
+                await writer.CreateFeedback(1, description, false, true, FeedbackType.Exception);
                 Debug.WriteLine(description);
             }
 
@@ -1316,11 +1529,13 @@ namespace Data_Logger_1._3.Services
         /// <returns>A List of OutputClass objects.</returns>
         public async Task<List<OutputClass>> ListOutputs(CATEGORY category)
         {
-            await ActivateMasterAndWriterAsync();
+            await using var scope = _serviceProvider.CreateAsyncScope();
+            var master = scope.ServiceProvider.GetRequiredService<ENTITYMASTER>();
+            var writer = scope.ServiceProvider.GetRequiredService<ENTITYWRITER>();
 
             try
             {
-                return await _master.Outputs
+                return await master.Outputs
                     .Where(o => o.Category == category)
                     .Where(o => !new[] { 1, 2 }.Contains(o.appID))
                     .Include(o => o.Application)
@@ -1330,7 +1545,7 @@ namespace Data_Logger_1._3.Services
             {
                 var description = $"Exception occurred near ListOutputs(application): {ex.Message}";
 
-                await _writer.CreateFeedback(1, description, false, true, FeedbackType.Exception);
+                await writer.CreateFeedback(1, description, false, true, FeedbackType.Exception);
                 Debug.WriteLine(description);
             }
 
@@ -1349,11 +1564,13 @@ namespace Data_Logger_1._3.Services
         /// <returns>A List of Qt OutputClass objects.</returns>
         public async Task<List<TypeClass>> ListQtTypes()
         {
-            await ActivateMasterAndWriterAsync();
+            await using var scope = _serviceProvider.CreateAsyncScope();
+            var master = scope.ServiceProvider.GetRequiredService<ENTITYMASTER>();
+            var writer = scope.ServiceProvider.GetRequiredService<ENTITYWRITER>();
 
             try
             {
-                return await _master.Types
+                return await master.Types
                     .Where(t => t.appID == 1)
                     .Include(t => t.Application)
                     .ToListAsync();
@@ -1362,7 +1579,7 @@ namespace Data_Logger_1._3.Services
             {
                 var description = $"Exception occurred near ListQtTypes(): {ex.Message}";
 
-                await _writer.CreateFeedback(1, description, false, true, FeedbackType.Exception);
+                await writer.CreateFeedback(1, description, false, true, FeedbackType.Exception);
                 Debug.WriteLine(description);
             }
 
@@ -1375,11 +1592,13 @@ namespace Data_Logger_1._3.Services
         /// <returns>A List of Qt OutputClass objects.</returns>
         public async Task<List<TypeClass>> ListASTypes()
         {
-            await ActivateMasterAndWriterAsync();
+            await using var scope = _serviceProvider.CreateAsyncScope();
+            var master = scope.ServiceProvider.GetRequiredService<ENTITYMASTER>();
+            var writer = scope.ServiceProvider.GetRequiredService<ENTITYWRITER>();
 
             try
             {
-                return await _master.Types
+                return await master.Types
                     .Where(t => t.appID == 2)
                     .Include(t => t.Application)
                     .ToListAsync();
@@ -1388,7 +1607,7 @@ namespace Data_Logger_1._3.Services
             {
                 var description = $"Exception occurred near ListASTypes(): {ex.Message}";
 
-                await _writer.CreateFeedback(1, description, false, true, FeedbackType.Exception);
+                await writer.CreateFeedback(1, description, false, true, FeedbackType.Exception);
                 Debug.WriteLine(description);
             }
 
@@ -1402,11 +1621,13 @@ namespace Data_Logger_1._3.Services
         /// <returns>A List of OutputClass objects.</returns>
         public async Task<List<TypeClass>> ListTypes(CATEGORY category)
         {
-            await ActivateMasterAndWriterAsync();
+            await using var scope = _serviceProvider.CreateAsyncScope();
+            var master = scope.ServiceProvider.GetRequiredService<ENTITYMASTER>();
+            var writer = scope.ServiceProvider.GetRequiredService<ENTITYWRITER>();
 
             try
             {
-                return await _master.Types
+                return await master.Types
                     .Where(t => t.Category == category)
                     .Where(t => !new[] { 1, 2 }.Contains(t.appID))
                     .Include(t => t.Application)
@@ -1416,7 +1637,7 @@ namespace Data_Logger_1._3.Services
             {
                 var description = $"Exception occurred near ListOutputs(application): {ex.Message}";
 
-                await _writer.CreateFeedback(1, description, false, true, FeedbackType.Exception);
+                await writer.CreateFeedback(1, description, false, true, FeedbackType.Exception);
                 Debug.WriteLine(description);
             }
 
@@ -1446,14 +1667,16 @@ namespace Data_Logger_1._3.Services
         /// <returns>Returns a list of logs that match the search bar text.</returns>
         public async Task<List<CodingLOG>?> SearchCodingLogs(string searchBarText)
         {
-            await ActivateMasterAndWriterAsync();
+            await using var scope = _serviceProvider.CreateAsyncScope();
+            var master = scope.ServiceProvider.GetRequiredService<ENTITYMASTER>();
+            var writer = scope.ServiceProvider.GetRequiredService<ENTITYWRITER>();
 
             try
             {
                 searchBarText = searchBarText.Trim();
                 var accountID = await GetOnlineAccountIDAsync();
 
-                var logs = await _master.CodingLogs
+                var logs = await master.CodingLogs
                     .Where(l => l.accountID == accountID)
                     .Include(l => l.Project)
                     .Include(l => l.Application)
@@ -1492,7 +1715,7 @@ namespace Data_Logger_1._3.Services
             catch (Exception ex)
             {
                 var description = $"Exception occurred near SearchCodingLogs(searchBarText): {ex.Message}";
-                await _writer.CreateFeedback(1, description, false, true, FeedbackType.Exception);
+                await writer.CreateFeedback(1, description, false, true, FeedbackType.Exception);
             }
 
             return null;
@@ -1508,7 +1731,9 @@ namespace Data_Logger_1._3.Services
         /// <returns>A list of logs that match the search bar text that were created with the provided app filter.</returns>
         public async Task<List<CodingLOG>?> SearchCodingLogs(string searchBarText, int appID)
         {
-            await ActivateMasterAndWriterAsync();
+            await using var scope = _serviceProvider.CreateAsyncScope();
+            var master = scope.ServiceProvider.GetRequiredService<ENTITYMASTER>();
+            var writer = scope.ServiceProvider.GetRequiredService<ENTITYWRITER>();
 
             try
             {
@@ -1516,7 +1741,7 @@ namespace Data_Logger_1._3.Services
                 var accountID = await GetOnlineAccountIDAsync();
 
                 // Fetch only logs for current user first
-                var logs = await _master.CodingLogs
+                var logs = await master.CodingLogs
                     .Where(l => l.accountID == accountID)
                     .Include(l => l.Project)
                     .Include(l => l.Application)
@@ -1559,7 +1784,7 @@ namespace Data_Logger_1._3.Services
             catch (Exception ex)
             {
                 var description = $"Exception occurred near SearchCodingLogs(searchBarText,projectID,appID): {ex.Message}";
-                await _writer.CreateFeedback(1, description, false, true, FeedbackType.Exception);
+                await writer.CreateFeedback(1, description, false, true, FeedbackType.Exception);
             }
 
             return null;
@@ -1576,7 +1801,9 @@ namespace Data_Logger_1._3.Services
         /// <returns>A list of logs that match the search bar text that were created with the provided app and project filter.</returns>
         public async Task<List<CodingLOG>?> SearchCodingLogs(string searchBarText, int projectID, int appID)
         {
-            await ActivateMasterAndWriterAsync();
+            await using var scope = _serviceProvider.CreateAsyncScope();
+            var master = scope.ServiceProvider.GetRequiredService<ENTITYMASTER>();
+            var writer = scope.ServiceProvider.GetRequiredService<ENTITYWRITER>();
 
             try
             {
@@ -1584,7 +1811,7 @@ namespace Data_Logger_1._3.Services
                 var accountID = await GetOnlineAccountIDAsync();
 
                 // Fetch only logs for current user first
-                var logs = await _master.CodingLogs
+                var logs = await master.CodingLogs
                     .Where(l => l.accountID == accountID)
                     .Include(l => l.Project)
                     .Include(l => l.Application)
@@ -1628,7 +1855,7 @@ namespace Data_Logger_1._3.Services
             catch (Exception ex)
             {
                 var description = $"Exception occurred near SearchCodingLogs(searchBarText,projectID,appID): {ex.Message}";
-                await _writer.CreateFeedback(1, description, false, true, FeedbackType.Exception);
+                await writer.CreateFeedback(1, description, false, true, FeedbackType.Exception);
             }
 
             return null;
