@@ -43,6 +43,19 @@ namespace Data_Logger_1._3.Models.App_Models
             Name = projectName;
         }
 
+        public ProjectClass(string projectName, ApplicationClass app)
+        {
+            Name = projectName;
+            Application = app;
+        }
+
+        public ProjectClass(ACCOUNT user, string name, ApplicationClass application)
+        {
+            accountID = user.accountID;
+            Name = name;
+            Application = application;
+        }
+
         public ProjectClass(int projectID, string name, ApplicationClass application)
         {
             this.projectID = projectID;

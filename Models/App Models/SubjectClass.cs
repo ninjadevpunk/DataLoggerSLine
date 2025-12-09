@@ -54,7 +54,7 @@ namespace Data_Logger_1._3.Models.App_Models
         public SubjectClass(LOG.CATEGORY category, ACCOUNT user, string subject, ProjectClass project, ApplicationClass application)
         {
             Category = category;
-            User = user;
+            accountID = user.accountID;
             Subject = subject;
             Project = project;
             Application = application;

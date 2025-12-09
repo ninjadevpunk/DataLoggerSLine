@@ -41,6 +41,12 @@ namespace Data_Logger_1._3.Models.App_Models
             Name = name;
         }
 
+        public ApplicationClass(ACCOUNT user, string name)
+        {
+            accountID = user.accountID;
+            Name = name;
+        }
+
         public ApplicationClass(int appID, string name, LOG.CATEGORY category)
         {
             this.appID = appID;
