@@ -17,8 +17,6 @@ namespace Data_Logger_1._3.Services
     public class ENTITYWRITER
     {
         private readonly IServiceProvider _serviceProvider;
-        private ENTITYREADER _reader;
-        private ENTITYMASTER _master;
 
         /// <summary>
         /// Official Entity Framework data writer.
@@ -40,33 +38,7 @@ namespace Data_Logger_1._3.Services
 
 
 
-        private async Task<AsyncServiceScope> ActivateMasterAsync()
-        {
-            await using var scope = _serviceProvider.CreateAsyncScope();
-            _master = scope.ServiceProvider.GetRequiredService<ENTITYMASTER>();
 
-            return scope;
-        }
-
-        private async Task ActivateMasterAsync(AsyncServiceScope scope)
-        {
-            _master = scope.ServiceProvider.GetRequiredService<ENTITYMASTER>();
-        }
-
-        private async Task<AsyncServiceScope> ActivateReaderAsync()
-        {
-            await using var scope = _serviceProvider.CreateAsyncScope();
-            _reader = scope.ServiceProvider.GetRequiredService<ENTITYREADER>();
-
-            return scope;
-        }
-
-        private async Task<AsyncServiceScope> ActivateReaderAsync(AsyncServiceScope scope)
-        {
-            _reader = scope.ServiceProvider.GetRequiredService<ENTITYREADER>();
-
-            return scope;
-        }
 
         /// <summary>
         /// Sets the currently online user to online.
@@ -75,19 +47,20 @@ namespace Data_Logger_1._3.Services
         /// <returns>Returns whether the account is set successfully.</returns>
         public async Task<bool> SetCurrentUser(ACCOUNT account)
         {
-            var scope = await ActivateReaderAsync();
-            await ActivateMasterAsync(scope);
+            await using var scope = _serviceProvider.CreateAsyncScope();
+            var master = scope.ServiceProvider.GetRequiredService<ENTITYMASTER>();
+            var reader = scope.ServiceProvider.GetRequiredService<ENTITYREADER>();
 
             try
             {
-                var all = await _master.Accounts.ToListAsync();
+                var all = await master.Accounts.ToListAsync();
 
                 foreach (var a in all)
                     a.IsOnline = (a.accountID == account.accountID);
 
-                await _master.SaveChangesAsync();
+                await master.SaveChangesAsync();
 
-                var user = await _master.Accounts.FirstOrDefaultAsync(a => a.accountID == account.accountID);
+                var user = await master.Accounts.FirstOrDefaultAsync(a => a.accountID == account.accountID);
 
                 return user?.IsOnline ?? false;
             }
@@ -105,11 +78,12 @@ namespace Data_Logger_1._3.Services
         /// <returns>Returns whether the account is unset successfully.</returns>
         public async Task<bool> UnsetCurrentUser()
         {
-            await ActivateMasterAsync();
+            await using var scope = _serviceProvider.CreateAsyncScope();
+            var master = scope.ServiceProvider.GetRequiredService<ENTITYMASTER>();
 
             try
             {
-                var onlineUsers = await _master.Accounts.Where(a => a.IsOnline).ToListAsync();
+                var onlineUsers = await master.Accounts.Where(a => a.IsOnline).ToListAsync();
 
                 if (!onlineUsers.Any())
                     return true;
@@ -119,7 +93,7 @@ namespace Data_Logger_1._3.Services
                     u.IsOnline = false;
                 }
 
-                await _master.SaveChangesAsync();
+                await master.SaveChangesAsync();
 
                 return true;
             }
@@ -139,8 +113,9 @@ namespace Data_Logger_1._3.Services
         /// <returns">A boolean value that indicated if the process was successful or not.</returns>
         public async Task<bool> AddAccount(ACCOUNT account)
         {
-            var scope = await ActivateMasterAsync();
-            await ActivateReaderAsync(scope);
+            await using var scope = _serviceProvider.CreateAsyncScope();
+            var master = scope.ServiceProvider.GetRequiredService<ENTITYMASTER>();
+            var reader = scope.ServiceProvider.GetRequiredService<ENTITYREADER>();
 
             bool accountCreated = false;
 
@@ -150,7 +125,7 @@ namespace Data_Logger_1._3.Services
                     throw new ArgumentNullException($"\"{nameof(account)}\" - Account not initialised. Operation aborted.");
 
 
-                if (!await _reader.EmailExists(scope, account.Email))
+                if (!await reader.EmailExists(scope, account.Email))
                 {
                     account.IsOnline = false;
 
@@ -158,12 +133,12 @@ namespace Data_Logger_1._3.Services
                     account.Password = string.Empty;
 
 
-                    await _master.Accounts.AddAsync(account);
-                    await _master.SaveChangesAsync();
+                    await master.Accounts.AddAsync(account);
+                    await master.SaveChangesAsync();
 
                     account.Password = SaltedSHA256Hash(hiddenPassword, account.accountID.ToString());
 
-                    await _master.SaveChangesAsync();
+                    await master.SaveChangesAsync();
 
 
                     accountCreated = true;
@@ -210,18 +185,19 @@ namespace Data_Logger_1._3.Services
         /// <param name="log">The log being stored.</param>
         public async Task<bool> CreateLOG(LOG log)
         {
-            var scope = await ActivateMasterAsync();
+            await using var scope = _serviceProvider.CreateAsyncScope();
+            var master = scope.ServiceProvider.GetRequiredService<ENTITYMASTER>();
 
-            await using var transaction = await _master.Database.BeginTransactionAsync();
+            await using var transaction = await master.Database.BeginTransactionAsync();
 
             try
             {
-                await PrepareLogDetails(log, scope);
-                await PreparePostItDetails(log, scope);
+                await PrepareLogDetails(log, scope, master);
+                await PreparePostItDetails(log, scope, master);
 
-                await InsertSubLogDetails(log);
+                await InsertSubLogDetails(log, scope, master);
 
-                await _master.SaveChangesAsync();
+                await master.SaveChangesAsync();
                 await transaction.CommitAsync();
                 return true;
             }
@@ -242,7 +218,7 @@ namespace Data_Logger_1._3.Services
             finally
             {
                 var dbConnection = transaction.GetDbTransaction().Connection;
-                if (dbConnection != null && !dbConnection.State.HasFlag(ConnectionState.Closed))
+                if (transaction != null && master.Database.CurrentTransaction != null)
                 {
                     await transaction.RollbackAsync();
                 }
@@ -252,30 +228,33 @@ namespace Data_Logger_1._3.Services
         }
 
 
-        private async Task PrepareLogDetails(LOG log, AsyncServiceScope scope)
+        private async Task PrepareLogDetails(LOG log, AsyncServiceScope scope, ENTITYMASTER master)
         {
-            await ActivateReaderAsync(scope);
+            var reader = scope.ServiceProvider.GetRequiredService<ENTITYREADER>();
 
-            var onlineUser = await _reader.FindAccountByID((int)await _reader.GetOnlineAccountIDAsync());
+            var onlineUser = await reader.FindAccountByID(scope, master, (int)await reader.GetOnlineAccountIDAsync(scope, master));
+            if (onlineUser == null)
+                onlineUser = new();
             var userID = onlineUser.accountID;
 
             log.Author = onlineUser;
             var app = log.Application;
             app.User = onlineUser;
 
-            var existingApp = await _reader.FindApplication(userID, app.Name);
+            var existingApp = await reader.FindApplication(scope, master, userID, app.Name);
 
             var project = log.Project;
             project.User = onlineUser;
-
-            log.Output = await _reader.FindOutput(log.Output.Name);
-            log.Type = await _reader.FindType(log.Type.Name);
+            var output = log.Output;
+            log.Output = await reader.FindOutput(scope, master, log.Output.Name) ?? output;
+            var type = log.Type;
+            log.Type = await reader.FindType(scope, master, log.Type.Name) ?? type;
 
             if (existingApp != null)
             {
                 app = existingApp;
 
-                var existingProject = await _reader.FindProject(userID, project.Name, app.appID);
+                var existingProject = await reader.FindProject(scope, master, userID, project.Name, app.appID);
 
                 if (existingProject != null)
                 {
@@ -285,7 +264,7 @@ namespace Data_Logger_1._3.Services
             }
             else if (project.Name.Contains("Unnamed Project", StringComparison.OrdinalIgnoreCase))
             {
-                var existingProject = await _reader.FindProject(userID, project.Name, app.appID);
+                var existingProject = await reader.FindProject(scope, master, userID, project.Name, app.appID);
 
                 if (existingProject != null)
                 {
@@ -305,11 +284,14 @@ namespace Data_Logger_1._3.Services
             return regex.IsMatch(input) ? input : string.Empty;
         }
 
-        private async Task PreparePostItDetails(LOG log, AsyncServiceScope scope)
+        private async Task PreparePostItDetails(LOG log, AsyncServiceScope scope, ENTITYMASTER master)
         {
-            await ActivateReaderAsync(scope);
+            var reader = scope.ServiceProvider.GetRequiredService<ENTITYREADER>();
 
-            var onlineUser = await _reader.FindAccountByID((int)await _reader.GetOnlineAccountIDAsync());
+            var onlineUser = await reader.FindAccountByID(scope, master, (int)await reader.GetOnlineAccountIDAsync(scope, master));
+
+            if (onlineUser == null)
+                onlineUser = new();
 
             foreach (PostIt postIt in log.PostItList)
             {
@@ -320,7 +302,7 @@ namespace Data_Logger_1._3.Services
                     postIt.Subject.Application = log.Application;
                     postIt.Subject.Project = log.Project;
 
-                    var existingSubject = await _reader.FindSubject(postIt.Subject.Subject, log.Category);
+                    var existingSubject = await reader.FindSubject(scope, master, postIt.Subject.Subject, log.Category);
 
                     if (existingSubject != null)
                     {
@@ -332,27 +314,28 @@ namespace Data_Logger_1._3.Services
             }
         }
 
-        private async Task InsertSubLogDetails(LOG log)
+        private async Task InsertSubLogDetails(LOG log, AsyncServiceScope scope, ENTITYMASTER master)
         {
+
             switch (log.Category)
             {
                 case LOG.CATEGORY.CODING when log is CodingLOG codingLog:
 
                     if (codingLog is AndroidCodingLOG androidCodingLog)
                     {
-                        await _master.AndroidCodingLogs.AddAsync(androidCodingLog);
+                        await master.AndroidCodingLogs.AddAsync(androidCodingLog);
                     }
                     else
                     {
-                        await _master.CodingLogs.AddAsync(codingLog);
+                        await master.CodingLogs.AddAsync(codingLog);
                     }
 
                     break;
                 case LOG.CATEGORY.GRAPHICS when log is GraphicsLOG graphicsLog:
-                    await _master.GraphicsLogs.AddAsync(graphicsLog);
+                    await master.GraphicsLogs.AddAsync(graphicsLog);
                     break;
                 case LOG.CATEGORY.FILM when log is FilmLOG filmLog:
-                    await _master.FilmLogs.AddAsync(filmLog);
+                    await master.FilmLogs.AddAsync(filmLog);
                     break;
                 case LOG.CATEGORY.NOTES when log is NotesLOG notesLog:
 
@@ -360,7 +343,7 @@ namespace Data_Logger_1._3.Services
                     {
                         case NOTELOGType.FLEXI when notesLog is FlexiNotesLOG flexiNotesLog:
                             {
-                                await _master.FlexiNotesLogs.AddAsync(flexiNotesLog);
+                                await master.FlexiNotesLogs.AddAsync(flexiNotesLog);
 
                                 break;
                             }
@@ -371,14 +354,14 @@ namespace Data_Logger_1._3.Services
 
                                 if (genericNotesLog.Checklist is not null && genericNotesLog.Checklist.Items.Count > 0)
                                 {
-                                    _master.Checklists.Add(genericNotesLog.Checklist);
+                                    master.Checklists.Add(genericNotesLog.Checklist);
 
                                     foreach (var item in genericNotesLog.Checklist.Items)
-                                        await _master.ChecklistItems.AddAsync(item);
+                                        await master.ChecklistItems.AddAsync(item);
                                 }
                                 else
                                 {
-                                    await _master.NoteItems.AddAsync(genericNotesLog);
+                                    await master.NoteItems.AddAsync(genericNotesLog);
                                 }
                                 break;
                             }
@@ -436,6 +419,9 @@ namespace Data_Logger_1._3.Services
 
         public async Task<int> CreateFeedback(int accountID, string description, bool canContact, bool isAutoFeed = true, FeedbackType category = FeedbackType.Bug)
         {
+            await using var scope = _serviceProvider.CreateAsyncScope();
+            var master = scope.ServiceProvider.GetRequiredService<ENTITYMASTER>();
+
             try
             {
                 var feedback = new FeedbackMessage
@@ -448,14 +434,19 @@ namespace Data_Logger_1._3.Services
                     IsAutoFeed = isAutoFeed
                 };
 
-                _master.AllFeedback.Add(feedback);
-                await _master.SaveChangesAsync();
+                master.AllFeedback.Add(feedback);
+                await master.SaveChangesAsync();
 
                 return feedback.feedbackID;
             }
             catch (Exception ex)
             {
-                Debug.WriteLine($"Exception in CreateFeedback: {ex.Message}. Inner exception: {ex.InnerException.Message ?? ""}");
+                if (ex.InnerException == null)
+                    Debug.WriteLine($"Exception in CreateFeedback: {ex.Message}.");
+
+                else
+                    Debug.WriteLine($"Exception in CreateFeedback: {ex.Message}. Inner exception: {ex.InnerException.Message ?? ""}");
+
                 return -1;
             }
         }
@@ -478,7 +469,7 @@ namespace Data_Logger_1._3.Services
             }
         }
 
-        public async Task HandleExceptionAsync(Exception ex, string methodName, string exceptionType = null)
+        public async Task HandleExceptionAsync(Exception ex, string methodName, string exceptionType = "")
         {
             // Build the exception description
             var description = $"{exceptionType ?? "Exception"} occurred near {methodName}: {ex.Message}" +
