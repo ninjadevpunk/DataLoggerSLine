@@ -53,9 +53,7 @@ namespace Data_Logger_1._3.Commands.ReporterCommands
             {
                 if (await _dataService.DeleteLOG(_log))
                 {
-                    await _reportDeskViewModel.UpdateLogsAsync();
-
-                    await _dataService.SaveChangesAsync();
+                    await _reportDeskViewModel.UpdateLogsListAsync();
                 }
             }
             catch (Exception e)
