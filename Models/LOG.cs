@@ -279,14 +279,19 @@ namespace Data_Logger_1._3.Models
             return hash.ToHashCode();
         }
 
-        public static bool operator ==(LOG left, LOG right)
+        public static bool operator ==(LOG? left, LOG? right)
         {
+            if (ReferenceEquals(left, right)) return true;
+            if (left is null || right is null) return false;
             return left.Equals(right);
         }
 
-        public static bool operator !=(LOG left, LOG right)
+        public static bool operator !=(LOG? left, LOG? right)
         {
+            if (ReferenceEquals(left, right)) return false;
+            if (left is null || right is null) return true;
             return !left.Equals(right);
         }
+
     }
 }
