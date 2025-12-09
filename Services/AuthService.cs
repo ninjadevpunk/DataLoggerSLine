@@ -27,11 +27,10 @@ namespace Data_Logger_1._3.Services
             Account.ProfilePic = source;
         }
 
-        public async Task<bool> SignUp(string dp, string email, string password, string displayName, string surname, 
+        public async Task<bool> SignUp(string dp, string email, string password, string displayName, string surname,
             bool isEmployee, string companyName, string companyAddress, string companyLogo)
         {
             await using var scope = _serviceProvider.CreateAsyncScope();
-            var writer = scope.ServiceProvider.GetRequiredService<ENTITYWRITER>();
 
             // Validate input
             if (string.IsNullOrWhiteSpace(email) || password is null || password.Length <= 5)
@@ -50,6 +49,7 @@ namespace Data_Logger_1._3.Services
                 }
                 catch (Exception ex)
                 {
+                    var writer = scope.ServiceProvider.GetRequiredService<ENTITYWRITER>();
                     await writer.HandleExceptionAsync(ex, "SignUp(dp,email,password,displayName,surname,isEmployee,companyName,companyAddress,companyLogo)");
                 }
 
@@ -59,6 +59,7 @@ namespace Data_Logger_1._3.Services
 
             try
             {
+                var writer = scope.ServiceProvider.GetRequiredService<ENTITYWRITER>();
                 await writer.UnsetCurrentUser();
 
                 var account = new ACCOUNT
@@ -86,7 +87,7 @@ namespace Data_Logger_1._3.Services
             }
             catch (Exception ex)
             {
-
+                var writer = scope.ServiceProvider.GetRequiredService<ENTITYWRITER>();
                 await writer.HandleExceptionAsync(ex, "SignUp(dp,email,password,displayName,surname,isEmployee,companyName,companyAddress,companyLogo)");
 
                 MessageBox.Show("A problem occurred on our end. We apologise for any inconvenience caused. Feedback will automatically be sent to us.",
@@ -101,30 +102,25 @@ namespace Data_Logger_1._3.Services
 
         public async Task<bool> SignIn(string email, string password)
         {
-            await using var scope = _serviceProvider.CreateAsyncScope();
-            var writer = scope.ServiceProvider.GetRequiredService<ENTITYWRITER>();
-            var reader = scope.ServiceProvider.GetRequiredService<ENTITYREADER>();
+            var dataService = _serviceProvider.GetRequiredService<IDataService>();
 
             try
             {
-                
 
-                var temporaryAccount = await reader.FindAccountByEmail(email, password);
-                if (temporaryAccount is null)
+
+                var (userFound, temporaryAccount) = await dataService.SignInUser(email, password);
+                if (!userFound)
                     return false;
 
-                temporaryAccount.IsOnline = true;
-                var ok = await writer.SetCurrentUser(temporaryAccount);
 
-                if (ok)
-                    Account = temporaryAccount;
+                Account = temporaryAccount;
 
-                return ok;
+                return userFound;
             }
             catch (Exception ex)
             {
 
-                await writer.HandleExceptionAsync(ex, "SignIn(email, password)");
+                await dataService.HandleExceptionAsync(ex, "SignIn(email, password)");
 
                 MessageBox.Show("A problem occurred on our end. We apologise for any inconvenience caused. Feedback will automatically be sent to us.",
                     "Error Occurred", MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK);
