@@ -1,14 +1,10 @@
-﻿using System.Diagnostics;
-using System.Windows;
-using Data_Logger_1._3.Models;
+﻿using Data_Logger_1._3.Models;
 using Data_Logger_1._3.Models.App_Models;
 using Microsoft.EntityFrameworkCore;
 using SQLitePCL;
 
 namespace Data_Logger_1._3.Services
 {
-    using static FeedbackMessage;
-
     public class ENTITYMASTER : DbContext
     {
 
