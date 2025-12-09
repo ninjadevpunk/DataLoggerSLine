@@ -63,7 +63,6 @@ namespace Data_Logger_1._3.ViewModels.Reporter.Desk
             ExportCommand = new ExportCommand();
             ReturnToDashboard = new ReporterReturnCommand(_navigationService, Context);
 
-            _ = UpdateLogsAsync();
 
             AwaitCall = false;
         }
@@ -116,7 +115,6 @@ namespace Data_Logger_1._3.ViewModels.Reporter.Desk
             ExportCommand = new ExportCommand();
             ReturnToDashboard = new ReporterReturnCommand(_navigationService, Context);
 
-            _ = UpdateLogsAsync();
 
             AwaitCall = false;
         }
@@ -125,7 +123,7 @@ namespace Data_Logger_1._3.ViewModels.Reporter.Desk
         /// Updates logs in the Qt Report Desk.
         /// </summary>
         /// <param name="project">The Qt project you want logs from.</param>
-        public override async Task UpdateLogsAsync()
+        public override async Task UpdateLogsListAsync()
         {
             Logs.Clear();
             ObservableCollection<REPORTViewModel> list = new ObservableCollection<REPORTViewModel>();

@@ -15,7 +15,7 @@ namespace Data_Logger_1._3.ViewModels.Reporter.Desk
         {
         }
 
-        public override async Task UpdateLogsAsync()
+        public override async Task UpdateLogsListAsync()
         {
             
         }

@@ -26,12 +26,12 @@ namespace Data_Logger_1._3.Views.ReportPages
         private async void on_Application_Changed(object sender, System.Windows.RoutedEventArgs e)
         {
             await _reportDeskViewModel.InitialiseProjectsAsync();
-            await _reportDeskViewModel.UpdateLogsAsync();
+            await _reportDeskViewModel.UpdateLogsListAsync();
         }
 
         private async void on_Project_Changed(object sender, System.Windows.RoutedEventArgs e)
         {
-            await _reportDeskViewModel.UpdateLogsAsync();
+            await _reportDeskViewModel.UpdateLogsListAsync();
         }
     }
 }

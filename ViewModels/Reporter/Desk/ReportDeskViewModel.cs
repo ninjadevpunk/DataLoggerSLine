@@ -218,7 +218,7 @@ namespace Data_Logger_1._3.ViewModels.Reporter.Desk
 
 
 
-        public abstract Task UpdateLogsAsync();
+        public abstract Task UpdateLogsListAsync();
         public abstract Task InitialiseAppsAsync();
         public abstract Task InitialiseProjectsAsync();
 

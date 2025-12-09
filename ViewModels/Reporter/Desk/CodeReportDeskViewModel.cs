@@ -40,7 +40,7 @@ namespace Data_Logger_1._3.ViewModels.Reporter.Desk
             await InitialiseProjectsAsync();
 
             // UPDATE LOGS
-            await UpdateLogsAsync();
+            await UpdateLogsListAsync();
         }
 
         /// <summary>
@@ -148,7 +148,7 @@ namespace Data_Logger_1._3.ViewModels.Reporter.Desk
         /// <summary>
         /// Updates logs in the Qt Report Desk.
         /// </summary>
-        public override async Task UpdateLogsAsync()
+        public override async Task UpdateLogsListAsync()
         {
 
             try

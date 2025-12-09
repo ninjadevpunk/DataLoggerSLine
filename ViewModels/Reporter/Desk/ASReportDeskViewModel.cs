@@ -18,7 +18,7 @@ namespace Data_Logger_1._3.ViewModels.Reporter.Desk
             ReturnToDashboard = new ReporterReturnCommand(_navigationService, Context);
         }
 
-        public override async Task UpdateLogsAsync()
+        public override async Task UpdateLogsListAsync()
         {
             //
         }
