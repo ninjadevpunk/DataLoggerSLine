@@ -10,6 +10,14 @@
     <ApplicationIcon>AlphaBetaIcon.ico</ApplicationIcon>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <IsPublishable>True</IsPublishable>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <IsPublishable>True</IsPublishable>
+  </PropertyGroup>
+
   <ItemGroup>
     <Compile Remove="Converters\**" />
     <Compile Remove="Resources\Converters\**" />
