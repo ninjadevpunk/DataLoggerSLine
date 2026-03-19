@@ -72,7 +72,7 @@ namespace Data_Logger_1._3.Services
                     return;
 
                 // Register Syncfusion license
-                Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense("Ngo9BigBOggjHTQxAR8/V1NMaF5cXmBCf1FpRmJGdld5fUVHYVZUTXxaS00DNHVRdkdmWX1fcXRTR2BZU0JwWUc=");
+                
 
                 // PDF Document Setup
                 PdfDocument document = new PdfDocument();
