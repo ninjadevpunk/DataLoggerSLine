@@ -12,7 +12,10 @@ Log and store data entries with timestamps.
 
 Search and filter data records.
 
-Uses a local SQLite database stored in C:\Data Logger Central.
+Uses a local SQLite database stored in `C:\Data Logger Central`.
+
+## Usage
+Assuming you're using alpha4 please open the app and sign up. The app will take you to the dashboard. Navigate to the coding log dashboard (Qt and Android Studio disabled). Click on `Create Log` on the right and create a log. Enter the coding project's name, the application you're using, leave the set start time and then enter relevant details such as output before adding a sticky note/post-it in the post-it editor. Click `CURRENT` to update end time before clicking annotate and the log will be cached for 20 minutes before being stored. The log is viewable and editable by right-clicking the cached log. To view the log once it's stored please navigate to the report dashboard by clicking report. Your log will appear there if it has been stored. Use the drop-down filters if you need to find the log. Once it is found, right-click to view/edit or delete it from the database.
 
 ## Installation
 
