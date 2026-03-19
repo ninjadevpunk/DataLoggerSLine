@@ -1,8 +1,10 @@
-Description
+# Data Logger
+
+##Description
 
 Data Logger is a desktop application that records and tracks various types of data, stores it in a database, and allows you to search and analyze it efficiently.
 
-Features
+##Features
 
 Log and store data entries with timestamps.
 
@@ -10,7 +12,7 @@ Search and filter data records.
 
 Uses a local SQLite database stored in C:\Data Logger Central.
 
-Installation
+##Installation
 
 Download the latest published zip from the official site.
 
@@ -22,7 +24,7 @@ Run DataLogger.exe. The app will request permission to create the SQLite databas
 Optionally, you can open the project in Visual Studio (requires .NET 8) and run from there.
 
 
-Tech Stack & Dependencies
+##Tech Stack & Dependencies
 
 Entity Framework
 
