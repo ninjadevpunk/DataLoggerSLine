@@ -5,7 +5,7 @@ namespace Data_Logger_1._3
 {
     public class DLSWindow : Window
     {
-        protected string AppVersion { get; } = "alpha 4";
+        protected string AppVersion { get; } = "alpha 5";
 
         public DLSWindow()
         {
