@@ -1,0 +1,374 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    
+
+    <!--#region HEADINGS -->
+    
+    <!-- HEADING 1 -->
+    <Style x:Key="HEADING1" TargetType="TextBlock">
+        <Setter Property="FontFamily" Value="{StaticResource Red Hat Display}"/>
+        <Setter Property="FontWeight" Value="Bold"/>
+        <Setter Property="FontSize" Value="56"/>
+        <Setter Property="VerticalAlignment" Value="Center"/>
+    </Style>
+
+    <!-- HEADING 2 -->
+    <Style x:Key="HEADING2" TargetType="TextBlock" BasedOn="{StaticResource HEADING1}">
+        <Setter Property="FontSize" Value="45"/>
+    </Style>
+
+    <!-- HEADING 3 -->
+    <Style x:Key="HEADING3" TargetType="TextBlock" BasedOn="{StaticResource HEADING1}">
+        <Setter Property="FontSize" Value="35"/>
+    </Style>
+
+    <!-- HEADING 4 -->
+    <Style x:Key="HEADING4" TargetType="TextBlock" BasedOn="{StaticResource HEADING1}">
+        <Setter Property="FontSize" Value="27"/>
+    </Style>
+
+    <!-- HEADING 5 -->
+    <Style x:Key="HEADING5" TargetType="TextBlock" BasedOn="{StaticResource HEADING1}">
+        <Setter Property="FontSize" Value="21"/>
+    </Style>
+
+    <!-- HEADING 6 -->
+    <Style x:Key="HEADING6" TargetType="TextBlock" BasedOn="{StaticResource HEADING1}">
+        <Setter Property="FontSize" Value="16"/>
+    </Style>
+
+
+    <!-- SUB HEADING -->
+    <Style x:Key="text_SUB HEADING1" TargetType="TextBlock">
+        <Setter Property="FontFamily" Value="{StaticResource Red Hat Display}"/>
+        <Setter Property="FontWeight" Value="SemiBold"/>
+        <Setter Property="FontSize" Value="16"/>
+    </Style>
+
+    <!--#endregion-->
+
+    
+    <!--#region LOGO TEXT -->
+
+
+    <Style x:Key="text_logoTEXT02" TargetType="TextBlock">
+        <Setter Property="Foreground" Value="{DynamicResource BLACK}"/>
+        <Setter Property="FontFamily" Value="{DynamicResource ZektonRg}"/>
+        <Setter Property="FontSize" Value="16"/>
+        <Setter Property="FontWeight" Value="Regular"/>
+        <Setter Property="FontStyle" Value="Normal"/>
+        <Setter Property="HorizontalAlignment" Value="Left"/>
+        <Setter Property="VerticalAlignment" Value="Center"/>
+        <Setter Property="Text" Value="DATA LOGGER"/>
+    </Style>
+    
+    
+    
+    
+    
+    
+    
+    
+    <!--#endregion-->
+    
+    
+    
+    
+    <!-- Minor Heading 1 -->
+    <Style x:Key="text_minorHEADING1" TargetType="TextBlock" BasedOn="{StaticResource HEADING6}"/>
+
+
+    <!-- Minor Heading 2 -->
+    <Style x:Key="text_minHEADING2" TargetType="TextBlock" BasedOn="{StaticResource text_minorHEADING1}">
+        <Setter Property="FontSize" Value="13"/>
+    </Style>
+
+    <!-- Minor Heading 2 -->
+    <Style x:Key="text_minHEADING3" TargetType="TextBlock" BasedOn="{StaticResource text_minorHEADING1}">
+        <Setter Property="FontWeight" Value="SemiBold"/>
+    </Style>
+
+    <!-- LOGO SPLASH SCREEN -->
+    <Style x:Key="text_logoSPLASHscreen" TargetType="TextBlock">
+        <Setter Property="FontFamily" Value="{StaticResource ZektonBold}"/>
+        <Setter Property="FontSize" Value="16"/>
+        <Setter Property="FontStyle" Value="Normal"/>
+        <Setter Property="FontWeight" Value="Normal"/>
+        <Setter Property="Margin" Value="0 20"/>
+        <Setter Property="Foreground" Value="{DynamicResource PrimaryColour}"/>
+    </Style>
+    
+    <!-- VERSION -->
+    <Style x:Key="text_VERSION" TargetType="TextBlock">
+        <Setter Property="FontFamily" Value="{StaticResource Zekton Light}"/>
+        <Setter Property="Foreground" Value="{DynamicResource BLACK}"/>
+        <Setter Property="FontWeight" Value="Regular"/>
+        <Setter Property="FontSize" Value="13"/>
+        <Setter Property="HorizontalAlignment" Value="Center"/>
+        <Setter Property="VerticalAlignment" Value="Center"/>
+    </Style>
+    
+    <!-- PROGRESS BAR VALUE -->
+    <Style x:Key="text_progressVALUE" TargetType="TextBlock">
+        <Setter Property="FontFamily" Value="{StaticResource Red Hat Display}"/>
+        <Setter Property="Foreground" Value="{DynamicResource PrimaryColour}"/>
+        <Setter Property="FontWeight" Value="Bold"/>
+        <Setter Property="FontSize" Value="13"/>
+        <Setter Property="HorizontalAlignment" Value="Stretch"/>
+        <Setter Property="VerticalAlignment" Value="Center"/>
+        <Setter Property="TextAlignment" Value="Center"/>
+        <Setter Property="Width" Value="40"/>
+    </Style>
+
+    <!-- ALL BUTTON TEXT -->
+    <Style x:Key="text_button01" TargetType="TextBlock">
+        <Setter Property="FontFamily" Value="{StaticResource Red Hat Display}"/>
+        <Setter Property="FontWeight" Value="Bold"/>
+        <Setter Property="FontSize" Value="13"/>
+        <Setter Property="HorizontalAlignment" Value="Center"/>
+        <Setter Property="VerticalAlignment" Value="Center"/>
+    </Style>
+
+    <Style x:Key="text_button02" TargetType="TextBlock" BasedOn="{StaticResource text_button01}">
+        <Setter Property="FontSize" Value="13"/>
+    </Style>
+
+    <Style x:Key="text_button03" TargetType="TextBlock" BasedOn="{StaticResource text_button01}">
+        <Setter Property="Foreground" Value="{DynamicResource BLACK}"/>
+        <Setter Property="TextDecorations" Value="Underline"/>
+
+        <Style.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Foreground" Value="{DynamicResource iconCOLOURAccent01}"/>
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
+
+    <!-- #region PLACEHOLDERS -->
+
+    <Style x:Key="text_login_PLACEHOLDER" TargetType="TextBlock">
+        <Setter Property="Foreground" Value="{DynamicResource PlaceholderText}"/>
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="FontFamily" Value="{StaticResource Red Hat Display}"/>
+        <Setter Property="FontSize" Value="13"/>
+        <Setter Property="Padding" Value="12 0"/>
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="TextAlignment" Value="Right" />
+    </Style>
+
+    <Style x:Key="text_PROJECT_Placeholder" TargetType="TextBlock">
+        <Setter Property="FontFamily" Value="{DynamicResource Red Hat Display}"/>
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="Foreground" Value="{DynamicResource PlaceholderText}"/>
+        <Setter Property="FontSize" Value="13"/>
+        <Setter Property="FontWeight" Value="Bold"/>
+        <Setter Property="Height" Value="17"/>
+        <Setter Property="Padding" Value="12 0 10 0"/>
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="TextAlignment" Value="Left"/>
+    </Style>
+
+
+    <Style x:Key="text_APP_Placeholder" TargetType="TextBlock" BasedOn="{StaticResource text_PROJECT_Placeholder}">
+        <Setter Property="FontWeight" Value="SemiBold"/>
+        <Setter Property="FontStyle" Value="Italic"/>
+    </Style>
+
+    <Style x:Key="text_Placeholder" TargetType="TextBlock" BasedOn="{StaticResource text_PROJECT_Placeholder}">
+        <Setter Property="FontWeight" Value="Medium"/>
+    </Style>
+
+    <Style x:Key="text_VIEWER_Author" TargetType="TextBlock">
+        <Setter Property="FontFamily" Value="{DynamicResource Red Hat Display}"/>
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="FontSize" Value="16"/>
+        <Setter Property="Foreground" Value="{DynamicResource BLACK}"/>
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="FontWeight" Value="Medium"/>
+        <Setter Property="FontStyle" Value="Normal"/>
+        <Setter Property="Padding" Value="0"/>
+    </Style>
+
+
+    <Style x:Key="text_VIEWER_Date" TargetType="TextBlock" BasedOn="{StaticResource text_VIEWER_Author}">
+        <Setter Property="FontSize" Value="12"/>
+        <Setter Property="Foreground" Value="{DynamicResource VIEWERDate}"/>
+    </Style>
+
+
+    <!-- #endregion -->
+    
+    <!-- #region LINKS-->
+
+    <Style x:Key="text_LINK01" TargetType="TextBlock">
+        <Setter Property="FontFamily" Value="{DynamicResource Red Hat Display}"/>
+        <Setter Property="FontSize" Value="13"/>
+        <Setter Property="TextDecorations" Value="Underline"/>
+        <Setter Property="Foreground" Value="{DynamicResource GREEN}"/>
+        <Setter Property="VerticalAlignment" Value="Center"/>
+        <Setter Property="Cursor" Value="Hand"/>
+    </Style>
+    <!-- #endregion -->
+
+    <!-- #region LABELS -->
+
+
+    <Style x:Key="text_LOGIN_InputStatus" TargetType="TextBlock" BasedOn="{StaticResource text_login_PLACEHOLDER}">
+        <Setter Property="Foreground" Value="{DynamicResource GREEN}" />
+    </Style>
+
+    <Style x:Key="text_LABEL01" TargetType="TextBlock">
+        <Setter Property="FontFamily" Value="{DynamicResource Red Hat Display}"/>
+        <Setter Property="Foreground" Value="{DynamicResource BLACK}"/>
+        <Setter Property="FontSize" Value="13"/>
+        <Setter Property="FontWeight" Value="SemiBold"/>
+        <Setter Property="VerticalAlignment" Value="Center"/>
+        <Setter Property="TextAlignment" Value="Center"/>
+    </Style>
+
+    <Style x:Key="text_LABEL02" TargetType="TextBlock" BasedOn="{StaticResource text_LABEL01}">
+        <Setter Property="FontWeight" Value="Medium"/>
+    </Style>
+
+    <Style x:Key="text_LABEL03" TargetType="TextBlock" BasedOn="{StaticResource text_LABEL01}">
+        <Setter Property="HorizontalAlignment" Value="Stretch"/>
+        <Setter Property="MaxWidth" Value="800"/>
+        <Setter Property="FontWeight" Value="Regular"/>
+        <Setter Property="TextAlignment" Value="Left"/>
+        <Setter Property="TextWrapping" Value="Wrap"/>
+        <Setter Property="TextTrimming" Value="CharacterEllipsis"/>
+    </Style>
+
+    <Style x:Key="text_LABEL03x2" TargetType="TextBlock" BasedOn="{StaticResource text_LABEL03}">
+        <Setter Property="TextWrapping" Value="Wrap"/>
+        <Setter Property="TextTrimming" Value="None"/>
+    </Style>
+
+    <Style x:Key="text_LIST_LABEL_HEADING" TargetType="TextBlock" BasedOn="{StaticResource text_LABEL01}">
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="FontWeight" Value="Bold"/>
+        <Setter Property="TextWrapping" Value="NoWrap"/>
+        <Setter Property="TextTrimming" Value="WordEllipsis"/>
+        <Setter Property="TextAlignment" Value="Left"/>
+    </Style>
+
+    <Style x:Key="text_LIST_LABEL_HEADING_View" TargetType="TextBlock" BasedOn="{StaticResource text_LIST_LABEL_HEADING}">
+        <Setter Property="TextWrapping" Value="Wrap"/>
+        <Setter Property="TextTrimming" Value="None"/>
+    </Style>
+
+    <Style x:Key="text_LIST_LABEL_DATE" TargetType="TextBlock" BasedOn="{StaticResource text_LIST_LABEL_HEADING}">
+        <Setter Property="FontWeight" Value="SemiBold"/>
+        <Setter Property="TextTrimming" Value="CharacterEllipsis"/>
+    </Style>
+    
+    <Style x:Key="text_LIST_LABEL_ERSO" TargetType="TextBlock" BasedOn="{StaticResource text_LABEL01}">
+        <Setter Property="FontWeight" Value="Bold"/>
+    </Style>
+
+    <Style x:Key="text_LIST_LABEL_CONTENT" TargetType="TextBlock" BasedOn="{StaticResource text_LIST_LABEL_HEADING}">
+        <Setter Property="Height" Value="70"/>
+        <Setter Property="FontWeight" Value="Regular"/>
+        <Setter Property="TextWrapping" Value="WrapWithOverflow"/>
+        <Setter Property="TextTrimming" Value="CharacterEllipsis"/>
+    </Style>
+
+    <Style x:Key="text_LIST_POSTIT_ERSO_CONTENT" TargetType="TextBlock" BasedOn="{StaticResource text_LIST_LABEL_CONTENT}">
+        <Setter Property="Height" Value="24"/>
+        <Setter Property="VerticalAlignment" Value="Center"/>
+    </Style>
+
+    <Style x:Key="text_LIST_ERROR_LABEL_CONTENT_View" TargetType="TextBlock" BasedOn="{StaticResource text_LIST_LABEL_CONTENT}">
+        <Setter Property="Height" Value="{Binding ErrorTextBlockHeight, FallbackValue=Auto}"/>
+        <Setter Property="MinHeight" Value="24"/>
+        <Setter Property="TextWrapping" Value="Wrap"/>
+        <Setter Property="TextTrimming" Value="None"/>
+    </Style>
+
+    <Style x:Key="text_LIST_SOLUTION_LABEL_CONTENT_View" TargetType="TextBlock" BasedOn="{StaticResource text_LIST_ERROR_LABEL_CONTENT_View}">
+        <Setter Property="Height" Value="{Binding SolutionTextBlockHeight, FallbackValue=Auto}"/>
+    </Style>
+
+    <Style x:Key="text_LIST_SUGGESTION_LABEL_CONTENT_View" TargetType="TextBlock" BasedOn="{StaticResource text_LIST_ERROR_LABEL_CONTENT_View}">
+        <Setter Property="Height" Value="{Binding SuggestionTextBlockHeight, FallbackValue=Auto}"/>
+    </Style>
+
+    <Style x:Key="text_LIST_COMMENT_LABEL_CONTENT_View" TargetType="TextBlock" BasedOn="{StaticResource text_LIST_ERROR_LABEL_CONTENT_View}">
+        <Setter Property="Height" Value="{Binding CommentTextBlockHeight, FallbackValue=Auto}"/>
+    </Style>
+
+    
+    <!-- RETURN TO DASHBOARD LABEL -->
+    <Style x:Key="text_RETURN_TO_DASHBOARD" TargetType="TextBlock" BasedOn="{StaticResource text_LABEL01}">
+        <Setter Property="FontSize" Value="16"/>
+        <Setter Property="TextAlignment" Value="Left"/>
+        <Setter Property="Text" Value="return to dashboard"/>
+    </Style>
+
+
+
+    <!-- #endregion -->
+    
+    
+    
+    
+    <!-- #region MENU TEXT -->
+    <Style x:Key="text_MENU" TargetType="TextBlock">
+        <Setter Property="Foreground" Value="{DynamicResource BLACK}"/>
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="FontFamily" Value="{StaticResource Red Hat Display}"/>
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="FontWeight" Value="Bold"/>
+        <Setter Property="Padding" Value="10 0"/>
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="TextAlignment" Value="Left" />
+    </Style>
+
+    <Style x:Key="text_SUBMENU BOLD" TargetType="TextBlock" BasedOn="{StaticResource text_MENU}" />
+
+    <Style x:Key="text_SUBMENU" TargetType="TextBlock" BasedOn="{StaticResource text_SUBMENU BOLD}">
+        <Setter Property="FontWeight" Value="SemiBold"/>
+    </Style>
+    
+    <!--#endregion-->
+
+    
+    <!-- #region NOTES TEXT -->
+    <Style x:Key="text_NOTE_HEADING" TargetType="TextBlock">
+        <Setter Property="FontFamily" Value="{DynamicResource Red Hat Display}"/>
+        <Setter Property="Foreground" Value="{DynamicResource BLACK}"/>
+        <Setter Property="FontSize" Value="16"/>
+        <Setter Property="FontWeight" Value="SemiBold"/>
+        <Setter Property="VerticalAlignment" Value="Center"/>
+        <Setter Property="TextTrimming" Value="WordEllipsis"/>
+        <Setter Property="TextWrapping" Value="NoWrap"/>
+    </Style>
+
+    <Style x:Key="text_NOTE_CONTENT" TargetType="TextBlock" BasedOn="{StaticResource text_NOTE_HEADING}">
+        <Setter Property="FontSize" Value="13"/>
+        <Setter Property="FontWeight" Value="Regular"/>
+        <Setter Property="VerticalAlignment" Value="Top"/>
+        <Setter Property="TextTrimming" Value="CharacterEllipsis"/>
+        <Setter Property="TextWrapping" Value="WrapWithOverflow"/>
+    </Style>
+
+    <Style x:Key="text_NOTE_DATE01" TargetType="TextBlock" BasedOn="{StaticResource text_NOTE_HEADING}">
+        <Setter Property="Foreground" Value="{DynamicResource Black50}"/>
+        <Setter Property="FontSize" Value="13"/>
+        <Setter Property="Padding" Value="5 0"/>
+        <Setter Property="FontStyle" Value="Italic"/>
+        <Setter Property="FontWeight" Value="Regular"/>
+        <Setter Property="TextTrimming" Value="CharacterEllipsis"/>
+    </Style>
+
+    <Style x:Key="text_NOTE_DATE02" TargetType="TextBlock" BasedOn="{StaticResource text_NOTE_DATE01}">
+        <Setter Property="Padding" Value="13"/>
+        <Setter Property="FontWeight" Value="SemiBold"/>
+    </Style>
+
+</ResourceDictionary>

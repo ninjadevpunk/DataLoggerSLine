@@ -1,0 +1,11 @@
+{
+  "profiles": {
+    "Data Logger 1.3": {
+      "commandName": "Project",
+      "environmentVariables": {
+        "DOTNET_ENVIRONMENT": "DevMode",
+        "SQLITE_KEY": "95b6bd9585b2b82a99be3f3f4d0c702c"
+      }
+    }
+  }
+}

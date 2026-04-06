@@ -1,0 +1,326 @@
+﻿<UserControl x:Class="Data_Logger_1._3.Components.Subcontrols.androidStudio_UserControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Data_Logger_1._3.Components.Subcontrols" xmlns:components="clr-namespace:Data_Logger_1._3.Components"
+             mc:Ignorable="d"
+             Margin="0 10"
+             Padding="0 20"
+             d:Background="White"
+             x:Name="control_ANDROIDSTUDIO_fields" >
+    
+    
+    
+    
+    
+    <UserControl.Resources>
+        
+        
+        
+        <Style x:Key="FocusVisual">
+            <Setter Property="Control.Template">
+                <Setter.Value>
+                    <ControlTemplate>
+                        <Rectangle Margin="2" StrokeDashArray="1 2" Stroke="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}" SnapsToDevicePixels="true" StrokeThickness="1"/>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        
+        
+        
+        
+        
+        <Style x:Key="template_OPTION_SWITCH" TargetType="{x:Type ToggleButton}">
+            <Setter Property="FocusVisualStyle" Value="{StaticResource FocusVisual}"/>
+            <Setter Property="Background" Value="{DynamicResource PrimaryColour}"/>
+            <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="HorizontalAlignment" Value="Left"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="Height" Value="35"/>
+            <Setter Property="Width" Value="100"/>
+            <Setter Property="Margin" Value="11 0"/>
+            <Setter Property="Padding" Value="15 10"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type ToggleButton}" >
+                        
+                        <Border x:Name="border"
+                                Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                SnapsToDevicePixels="true"
+                                CornerRadius="3" >
+                            
+                            <TextBlock x:Name="contentPresenter" Style="{DynamicResource text_LABEL02}"
+                                       Foreground="{DynamicResource WHITE}"
+                                       Focusable="False"
+                                       HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                       Margin="{TemplateBinding Padding}"
+                                       SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"
+                                       VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
+                            
+                            
+                        </Border>
+                        
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="Button.IsDefaulted" Value="true">
+                                <Setter Property="BorderBrush" TargetName="border" Value="{DynamicResource {x:Static SystemColors.HighlightBrushKey}}"/>
+                            </Trigger>
+                            <Trigger Property="IsMouseOver" Value="true">
+                                <Setter Property="Background" TargetName="border" Value="{DynamicResource HOVERPrimaryColour}"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="true">
+                                <Setter Property="Background" TargetName="border" Value="{DynamicResource HOVERPrimaryColour}"/>
+                            </Trigger>
+                            <Trigger Property="IsChecked" Value="True">
+                                <Setter Property="Text" TargetName="contentPresenter" Value="SIMPLE"/>
+                                <Setter Property="Background" TargetName="border" Value="{DynamicResource HOVERPrimaryColour}"/>
+                            </Trigger>
+                            <Trigger Property="IsChecked" Value="False">
+                                <Setter Property="Text" TargetName="contentPresenter" Value="FULL"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </UserControl.Resources>
+
+
+    <Grid>
+
+        <Grid.RowDefinitions>
+
+            <RowDefinition Height="*" />
+            
+            <RowDefinition Height="5" />
+            <RowDefinition Height="10" />
+            
+            <RowDefinition Height="*" />
+            <RowDefinition Height="5" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="5" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="5" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="5" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="5" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="5" />
+
+        </Grid.RowDefinitions>
+
+        <ToggleButton x:Name="toggleButton_SWITCH" Style="{DynamicResource template_OPTION_SWITCH}"
+                      IsChecked="{Binding IsSimple, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
+
+        <!-- SYNC -->
+        <Border Grid.Row="3"
+                Padding="12 0 10 0" >
+
+            <Grid>
+
+                <Grid.ColumnDefinitions>
+
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="10" />
+                    <ColumnDefinition Width="*" />
+
+                </Grid.ColumnDefinitions>
+
+
+                <TextBlock Grid.Column="0" Style="{DynamicResource text_LABEL03}"
+                           Text="Sync" />
+
+                <components:TimeInputField Grid.Column="2" x:Name="timeEdit_SYNC"
+                                           Time="{Binding SyncTime, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                                           Hours="{Binding SyncHours, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                                           Minutes="{Binding SyncMinutes, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                                           Seconds="{Binding SyncSeconds, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                                           Milliseconds="{Binding SyncMilliseconds, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
+
+            </Grid>
+            
+        </Border>
+        
+        <!-- GRADLE DAEMON -->
+        <Border Grid.Row="5"
+                Padding="12 0 10 0"
+                Visibility="{Binding GradleDaemonVisibility, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" >
+
+            <Grid>
+
+                <Grid.ColumnDefinitions>
+
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="10" />
+                    <ColumnDefinition Width="*" />
+
+                </Grid.ColumnDefinitions>
+
+
+                <Grid>
+
+                    <Grid.ColumnDefinitions>
+                        
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="auto" />
+                        
+                        
+                    </Grid.ColumnDefinitions>
+                    
+                <TextBlock Grid.Column="0" Style="{DynamicResource text_LABEL03}"
+                           Text="Starting Gradle Daemon"
+                           IsEnabled="{Binding IsConsidered, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"/>
+
+                <CheckBox Grid.Column="1" x:Name="checkBox_SHOWHIDE" Style="{DynamicResource check_SIGNUP}"
+                          IsChecked="{Binding IsConsidered, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                          Margin="10 0"
+                          HorizontalAlignment="Center" />
+                    
+                    
+                    
+                </Grid>
+
+
+                <components:TimeInputField Grid.Column="2" x:Name="timeEdit_GRADLEDAEMON"
+                                           IsEnabled="{Binding IsConsidered, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                                           Time="{Binding GradleDaemonTime, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                                           Hours="{Binding GradleDaemonHours, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                                           Minutes="{Binding GradleDaemonMinutes, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                                           Seconds="{Binding GradleDaemonSeconds, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                                           Milliseconds="{Binding GradleDaemonMilliseconds, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
+
+            </Grid>
+
+        </Border>
+
+        <!-- RUN BUILD -->
+        <Border Grid.Row="7"
+                Padding="12 0 10 0"
+                Visibility="{Binding RunBuildVisibility, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" >
+
+            <Grid>
+
+                <Grid.ColumnDefinitions>
+
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="10" />
+                    <ColumnDefinition Width="*" />
+
+                </Grid.ColumnDefinitions>
+
+
+                <TextBlock Grid.Column="0" Style="{DynamicResource text_LABEL03}"
+                           Text="Run Build" />
+
+                <components:TimeInputField Grid.Column="2" x:Name="timeEdit_RUNBUILD"
+                                           Time="{Binding RunBuildTime, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                                           Hours="{Binding RunBuildHours, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" 
+                                           Minutes="{Binding RunBuildMinutes, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" 
+                                           Seconds="{Binding RunBuildSeconds, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                                           Milliseconds="{Binding RunBuildMilliseconds, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
+
+            </Grid>
+
+        </Border>
+
+        <!-- LOAD BUILD -->
+        <Border Grid.Row="9"
+                Padding="12 0 10 0"
+                Visibility="{Binding LoadBuildVisibility, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" >
+
+            <Grid>
+
+                <Grid.ColumnDefinitions>
+
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="10" />
+                    <ColumnDefinition Width="*" />
+
+                </Grid.ColumnDefinitions>
+
+
+                <TextBlock Grid.Column="0" Style="{DynamicResource text_LABEL03}"
+                           Text="Load Build" />
+
+                <components:TimeInputField Grid.Column="2" x:Name="timeEdit_LOADBUILD"
+                                           Time="{Binding LoadBuildTime, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                                           Hours="{Binding LoadBuildHours, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                                           Minutes="{Binding LoadBuildMinutes, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                                           Seconds="{Binding LoadBuildSeconds, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                                           Milliseconds="{Binding LoadBuildMilliseconds, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
+
+            </Grid>
+
+        </Border>
+
+        <!-- CONFIGURE BUILD -->
+        <Border Grid.Row="11"
+                Padding="12 0 10 0"
+                Visibility="{Binding ConfigureBuildVisibility, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" >
+
+            <Grid>
+
+                <Grid.ColumnDefinitions>
+
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="10" />
+                    <ColumnDefinition Width="*" />
+
+                </Grid.ColumnDefinitions>
+
+
+                <TextBlock Grid.Column="0" Style="{DynamicResource text_LABEL03}"
+                           Text="Configure Build" />
+
+                <components:TimeInputField Grid.Column="2" x:Name="timeEdit_CONFIGUREBUILD"
+                                           Time="{Binding ConfigureBuildTime, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                                           Minutes="{Binding ConfigureBuildMinutes, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                                           Seconds="{Binding ConfigureBuildSeconds, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                                           Milliseconds="{Binding ConfigureBuildMilliseconds, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
+
+            </Grid>
+
+        </Border>
+
+        <!-- ALL PROJECTS -->
+        <Border Grid.Row="13"
+                Padding="12 0 10 0"
+                Visibility="{Binding AllProjectsVisibility, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" >
+
+            <Grid>
+
+                <Grid.ColumnDefinitions>
+
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="10" />
+                    <ColumnDefinition Width="*" />
+
+                </Grid.ColumnDefinitions>
+
+
+                <TextBlock Grid.Column="0" Style="{DynamicResource text_LABEL03}"
+                           Text="All Projects" />
+
+                <components:TimeInputField Grid.Column="2" x:Name="timeEdit_ALLPROJECTS"
+                                           Time="{Binding AllProjectsTime, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                                           Hours="{Binding AllProjectsHours, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                                           Minutes="{Binding AllProjectsMinutes, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                                           Seconds="{Binding AllProjectsSeconds, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                                           Milliseconds="{Binding AllProjectsMilliseconds, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
+
+            </Grid>
+
+        </Border>
+
+
+
+    </Grid>
+    
+    
+    
+</UserControl>

@@ -1,0 +1,62 @@
+﻿<UserControl x:Class="Data_Logger_1._3.Components.Subcontrols_View.film_UserControl_View"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Data_Logger_1._3.Components.Subcontrols_View"
+             mc:Ignorable="d"
+             d:Background="White"
+             x:Name="control_FILM_fields_View" >
+
+    <StackPanel d:Width="380">
+
+
+        <!-- HEIGHT x WIDTH MEASURING UNIT -->
+        <Border
+            Padding="20 0"
+            Height="35" >
+
+            <TextBlock x:Name="text_text_HxW" Style="{DynamicResource text_LABEL03}"
+                       Text="{Binding HxW, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
+
+        </Border>
+
+
+        <!-- LENGTH -->
+        <Border
+            Padding="20 0"
+            Height="35" >
+
+            <TextBlock x:Name="text_LENGTH" Style="{DynamicResource text_LABEL03}"
+                       Text="{Binding Length, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
+
+        </Border>
+
+
+        <!-- COMPLETED -->
+        <Border
+            Padding="20 0"
+            Height="35" >
+
+            <TextBlock x:Name="text_COMPLETED" Style="{DynamicResource text_LABEL03}"
+                       Text="{Binding IsCompleted, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
+
+        </Border>
+
+
+        <!-- SOURCE -->
+        <Border
+            Padding="20 0"
+            Height="35" >
+
+            <TextBlock x:Name="text_SOURCE" Style="{DynamicResource text_LABEL03x2}"
+                       Text="{Binding Source, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
+
+        </Border>
+
+
+
+
+    </StackPanel>
+
+</UserControl>

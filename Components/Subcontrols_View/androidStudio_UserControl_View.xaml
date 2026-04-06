@@ -1,0 +1,247 @@
+﻿<UserControl x:Class="Data_Logger_1._3.Components.Subcontrols_View.androidStudio_UserControl_View"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Data_Logger_1._3.Components.Subcontrols_View" xmlns:components="clr-namespace:Data_Logger_1._3.Components"
+             mc:Ignorable="d" 
+             d:Background="White"
+             HorizontalAlignment="Stretch"
+             x:Name="control_ANDROIDSTUDIO_fields_View" >
+
+    <UserControl.Resources>
+
+
+
+        <Style x:Key="FocusVisual">
+            <Setter Property="Control.Template">
+                <Setter.Value>
+                    <ControlTemplate>
+                        <Rectangle Margin="2" StrokeDashArray="1 2" Stroke="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}" SnapsToDevicePixels="true" StrokeThickness="1"/>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+
+
+
+
+    </UserControl.Resources>
+
+
+    <Grid>
+
+        <Grid.RowDefinitions>
+
+            <RowDefinition Height="*" />
+
+            <RowDefinition Height="*" />
+            
+            <RowDefinition Height="*" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="5" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="5" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="5" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="5" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="5" />
+
+        </Grid.RowDefinitions>
+
+        <Rectangle Height="0"/>
+
+        <!-- SYNC -->
+        <Border Grid.Row="2"
+                Padding="20 0" >
+
+            <Grid>
+
+                <Grid.ColumnDefinitions>
+
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="10" />
+                    <ColumnDefinition Width="*" />
+
+                </Grid.ColumnDefinitions>
+
+
+                <TextBlock Grid.Column="0" Style="{DynamicResource text_LABEL03}"
+                       Text="Sync" />
+
+                <TextBlock Grid.Column="2" x:Name="text_SYNC" Style="{DynamicResource text_LABEL03}"
+                           Height="35"
+                           Padding="10"
+                           VerticalAlignment="Center"
+                           Text="{Binding SyncTime}"/>
+
+            </Grid>
+
+        </Border>
+
+        <!-- GRADLE DAEMON -->
+        <Border Grid.Row="4"
+            Padding="20 0" Visibility="{Binding GradleDaemonVisibility}" >
+
+            <Grid>
+
+                <Grid.ColumnDefinitions>
+
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="10" />
+                    <ColumnDefinition Width="*" />
+
+                </Grid.ColumnDefinitions>
+
+
+                <Grid>
+
+                    <Grid.ColumnDefinitions>
+
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="auto" />
+
+
+                    </Grid.ColumnDefinitions>
+
+                    <TextBlock Grid.Column="0" Style="{DynamicResource text_LABEL03}"
+                               Text="Starting Gradle Daemon" />
+
+
+
+                </Grid>
+
+
+                <TextBlock Grid.Column="2" x:Name="text_GRADLEDAEMON" Style="{DynamicResource text_LABEL03}"
+                           Height="35"
+                           Padding="10"
+                           VerticalAlignment="Center"
+                           Text="{Binding GradleDaemonTime}"/>
+
+            </Grid>
+
+        </Border>
+
+        <!-- RUN BUILD -->
+        <Border Grid.Row="6"
+            Padding="20 0" Visibility="{Binding RunBuildVisibility}" >
+
+            <Grid>
+
+                <Grid.ColumnDefinitions>
+
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="10" />
+                    <ColumnDefinition Width="*" />
+
+                </Grid.ColumnDefinitions>
+
+
+                <TextBlock Grid.Column="0" Style="{DynamicResource text_LABEL03}"
+                       Text="Run Build" />
+
+                <TextBlock Grid.Column="2" x:Name="text_RUNBUILD" Style="{DynamicResource text_LABEL03}"
+                           Height="35"
+                           Padding="10"
+                           VerticalAlignment="Center"
+                           Text="{Binding RunBuildTime}" />
+
+            </Grid>
+
+        </Border>
+
+        <!-- LOAD BUILD -->
+        <Border Grid.Row="8"
+            Padding="20 0" Visibility="{Binding LoadBuildVisibility}">
+
+            <Grid>
+
+                <Grid.ColumnDefinitions>
+
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="10" />
+                    <ColumnDefinition Width="*" />
+
+                </Grid.ColumnDefinitions>
+
+
+                <TextBlock Grid.Column="0" Style="{DynamicResource text_LABEL03}"
+                       Text="Load Build" />
+
+                <TextBlock Grid.Column="2" x:Name="text_LOADBUILD" Style="{DynamicResource text_LABEL03}"
+                           Height="35"
+                           Padding="10"
+                           VerticalAlignment="Center"
+                           Text="{Binding LoadBuildTime}" />
+
+            </Grid>
+
+        </Border>
+
+        <!-- CONFIGURE BUILD -->
+        <Border Grid.Row="10"
+            Padding="20 0" Visibility="{Binding ConfigureBuildVisibility}" >
+
+            <Grid>
+
+                <Grid.ColumnDefinitions>
+
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="10" />
+                    <ColumnDefinition Width="*" />
+
+                </Grid.ColumnDefinitions>
+
+
+                <TextBlock Grid.Column="0" Style="{DynamicResource text_LABEL03}"
+                           Text="Configure Build" />
+
+                <TextBlock Grid.Column="2" x:Name="text_CONFIGUREBUILD" Style="{DynamicResource text_LABEL03}"
+                           Height="35"
+                           Padding="10"
+                           VerticalAlignment="Center"
+                           Text="{Binding ConfigureBuildTime}" />
+
+            </Grid>
+
+        </Border>
+
+        <!-- ALL PROJECTS -->
+        <Border Grid.Row="12"
+            Padding="20 0" Visibility="{Binding AllProjectsVisibility}" >
+
+            <Grid>
+
+                <Grid.ColumnDefinitions>
+
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="10" />
+                    <ColumnDefinition Width="*" />
+
+                </Grid.ColumnDefinitions>
+
+
+                <TextBlock Grid.Column="0" Style="{DynamicResource text_LABEL03}"
+                       Text="All Projects" />
+
+                <TextBlock Grid.Column="2" x:Name="text_ALLPROJECTS" Style="{DynamicResource text_LABEL03}"
+                           Height="35"
+                           Padding="10"
+                           VerticalAlignment="Center"
+                           Text="{Binding AllProjectsTime}" />
+
+            </Grid>
+
+        </Border>
+        
+        
+        
+        
+    </Grid>
+
+
+</UserControl>

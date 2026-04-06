@@ -1,0 +1,123 @@
+﻿<UserControl x:Class="Data_Logger_1._3.Components.Subcontrols_View.graphics_UserControl_View"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Data_Logger_1._3.Components.Subcontrols_View" xmlns:components="clr-namespace:Data_Logger_1._3.Components"
+             mc:Ignorable="d"
+             d:Background="White"
+             HorizontalAlignment="Stretch"
+             x:Name="control_GRAPHICS_fields_View">
+
+
+    <StackPanel d:Width="380">
+
+
+        <!-- HEIGHT x WIDTH -->
+        <Border
+            Padding="20 0"
+            Height="35" >
+
+            <TextBlock x:Name="text_HxW" Style="{DynamicResource text_LABEL03}"
+               Text="{Binding HxW}" />
+
+        </Border>
+
+        <!-- MEDIUM -->
+        <Border
+            Padding="20 0"
+            Height="35" >
+
+            <TextBlock x:Name="text_MEDIUM" Style="{DynamicResource text_LABEL03}"
+                       Text="{Binding Medium}" />
+
+        </Border>
+
+        <!-- FORMAT -->
+        <Border
+            Padding="20 0"
+            Height="35" >
+
+            <TextBlock x:Name="text_FORMAT" Style="{DynamicResource text_LABEL03}"
+                       Text="{Binding Format}" />
+
+        </Border>
+
+        <!-- BRUSH -->
+        <Border
+            Padding="20 0"
+            Height="35" >
+
+            <TextBlock x:Name="text_BRUSH" Style="{DynamicResource text_LABEL03}"
+               Text="{Binding Brush}" />
+
+        </Border>
+
+        <!-- MEASURING UNIT -->
+        <Border
+            Padding="20 0"
+            Height="35" >
+
+            <TextBlock x:Name="text_MEASURING_UNIT" Style="{DynamicResource text_LABEL03}"
+                       Text="{Binding MeasuringUnit}" />
+
+        </Border>
+
+        <!-- SIZE -->
+        <Border
+            Padding="20 0"
+            Height="35" >
+
+            <TextBlock x:Name="text_SIZE" Style="{DynamicResource text_LABEL03}"
+                       Text="{Binding Size}" />
+
+        </Border>
+
+        <!-- DPI -->
+        <Border
+            Padding="20 0"
+            Height="35" >
+
+            <TextBlock x:Name="text_DPI" Style="{DynamicResource text_LABEL03}"
+                       Text="{Binding DPI}" />
+
+        </Border>
+
+        <!-- COLOUR DEPTH -->
+        <Border
+            Padding="20 0"
+            Height="35" >
+
+            <TextBlock x:Name="text_DEPTH" Style="{DynamicResource text_LABEL03}"
+                       Text="{Binding ColourDepth}" />
+
+        </Border>
+
+        <!-- COMPLETED -->
+        <Border
+            Padding="20 0"
+            Height="35" >
+
+            <TextBlock x:Name="text_COMPLETED" Style="{DynamicResource text_LABEL03}"
+                       Text="{Binding IsCompleted}" />
+
+        </Border>
+
+
+        <!-- SOURCE -->
+        <Border
+            Padding="20 0"
+            MinHeight="35" >
+
+            <TextBlock x:Name="text_SOURCE" Style="{DynamicResource text_LABEL03x2}"
+                       Text="{Binding Source}" />
+
+        </Border>
+
+
+
+
+    </StackPanel>
+
+
+</UserControl>

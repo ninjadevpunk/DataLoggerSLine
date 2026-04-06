@@ -1,0 +1,149 @@
+﻿<UserControl x:Class="Data_Logger_1._3.Components.Subcontrols.film_UserControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Data_Logger_1._3.Components.Subcontrols" xmlns:components="clr-namespace:Data_Logger_1._3.Components"
+             mc:Ignorable="d" 
+             d:Background="White"
+             HorizontalAlignment="Stretch"
+             x:Name="control_FILM_fields" >
+
+
+    <Grid>
+
+        <Grid.RowDefinitions>
+
+            <RowDefinition Height="*" /> <!-- H x W -->
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="*" /> <!-- RESOLUTION -->
+            <RowDefinition Height="*" /> <!-- Length -->
+            <RowDefinition Height="5" />
+            <RowDefinition Height="*" /> <!-- IsCompleted? -->
+            <RowDefinition Height="5" />
+            <RowDefinition Height="*" /> <!-- Source -->
+
+        </Grid.RowDefinitions>
+
+        <Grid Margin="0 5">
+            <Grid.ColumnDefinitions>
+
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="10" />
+                <ColumnDefinition Width="*" />
+
+            </Grid.ColumnDefinitions>
+
+            <!-- HEIGHT -->
+            <components:PlainInputField x:Name="inputText_HEIGHT" Grid.Column="0"
+                            HorizontalAlignment="Stretch"
+                            VerticalAlignment="Center"
+                            PlaceholderText="Height"
+                            DynamicPlaceholderText="Height"
+                            UserTextBoxStyle="{DynamicResource inputText_LOGIN}"
+                            UserTextBlockStyle="{DynamicResource text_login_PLACEHOLDER}"
+                            UserInput="{Binding Height, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
+
+            <!-- WIDTH -->
+            <components:PlainInputField x:Name="inputText_WIDTH" Grid.Column="2"
+                            HorizontalAlignment="Stretch"
+                            VerticalAlignment="Center"
+                            PlaceholderText="Width"
+                            DynamicPlaceholderText="Width"
+                            UserTextBoxStyle="{DynamicResource inputText_LOGIN}"
+                            UserTextBlockStyle="{DynamicResource text_login_PLACEHOLDER}"
+                            UserInput="{Binding Width, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
+
+
+        </Grid>
+
+        <!-- RESOLUTION -->
+        <components:PlainInputField Grid.Row="2" x:Name="inputText_RESOLUTION"
+                                    Visibility="Collapsed"
+                                    Margin="0 5"
+                                    PlaceholderText="Resolution"
+                                    DynamicPlaceholderText="Resolution"
+                                    UserTextBoxStyle="{DynamicResource inputText_LOGIN}"
+                                    UserTextBlockStyle="{DynamicResource text_login_PLACEHOLDER}"
+                                    UserInput="{Binding Resolution, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
+
+        <!-- LENGTH -->
+        <components:PlainInputField Grid.Row="3" x:Name="inputText_LENGTH"
+                                    Margin="0 5"
+                                    PlaceholderText="Length"
+                                    DynamicPlaceholderText="Length"
+                                    UserTextBoxStyle="{DynamicResource inputText_LOGIN}"
+                                    UserTextBlockStyle="{DynamicResource text_login_PLACEHOLDER}"
+                                    UserInput="{Binding Length, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
+
+        <!-- COMPLETED -->
+        <Border Grid.Row="5"
+                Margin="0 0 0 5"
+                Height="40"
+                Padding="12 5 10 5"
+                BorderThickness="0.6"
+                BorderBrush="{DynamicResource STROKE}"
+                CornerRadius="3" >
+
+            <Grid>
+
+                <Grid.ColumnDefinitions>
+
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="10" />
+                    <ColumnDefinition Width="93" />
+
+                </Grid.ColumnDefinitions>
+
+
+                <TextBlock Grid.Column="0" Style="{DynamicResource text_LABEL03}"
+                           Text="Completed?" />
+
+                <CheckBox Grid.Column="2" x:Name="checkBox_IsCOMPLETED" Style="{DynamicResource check_SIGNUP}"
+                          HorizontalAlignment="Right"
+                          IsChecked="{Binding IsCompleted, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
+
+
+            </Grid>
+
+        </Border>
+
+
+        <!-- SOURCE -->
+        <Grid Grid.Row="7">
+
+            <Grid.ColumnDefinitions>
+
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="10" />
+                <ColumnDefinition Width="93" />
+
+            </Grid.ColumnDefinitions>
+
+            <components:PlainInputField Grid.Column="0"
+                                        PlaceholderText="Source"
+                                        DynamicPlaceholderText="Source"
+                                        UserTextBoxStyle="{DynamicResource inputText_LOGIN}"
+                                        UserTextBlockStyle="{DynamicResource text_login_PLACEHOLDER}"
+                                        UserInput="{Binding Source, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
+
+            <Button Grid.Column="3" Style="{DynamicResource ACTIONBrowse}"
+                    Height="auto"
+                    Width="auto"
+                    Command="{Binding BrowseCommand}" >
+
+                <TextBlock Style="{DynamicResource text_button01}"
+                           Text="Open" />
+
+            </Button>
+
+
+
+        </Grid>
+
+
+
+
+    </Grid>
+
+</UserControl>

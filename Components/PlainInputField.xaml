@@ -1,0 +1,33 @@
+﻿<UserControl x:Class="Data_Logger_1._3.Components.PlainInputField"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Data_Logger_1._3.Components"
+             mc:Ignorable="d" 
+             d:DesignHeight="34" d:DesignWidth="430"
+             x:Name="control_INPUT_plain"
+             >
+    
+    <Border CornerRadius="2"
+            Background="{DynamicResource WHITE}"
+            Height="40"
+            >
+        <Grid>
+            <!-- Placeholder Text here-->
+            <TextBlock x:Name="text_PlaceholderText" Style="{Binding UserTextBlockStyle, ElementName=control_INPUT_plain}"
+                       Text="{Binding DynamicPlaceholderText, ElementName=control_INPUT_plain}"
+                       TextAlignment="{Binding Aligned, ElementName=control_INPUT_plain}"
+                       />
+
+            <!-- User Input here -->
+            <TextBox x:Name="inputText_text" Style="{Binding UserTextBoxStyle, ElementName=control_INPUT_plain}"
+                     Text="{Binding UserInput, UpdateSourceTrigger=PropertyChanged, ElementName=control_INPUT_plain}"
+                     TextAlignment="{Binding Aligned, ElementName=control_INPUT_plain}"
+                     TextChanged="on_inputText_text_changed"
+                     LostFocus="on_inputText_lostFocus"
+                     />
+        </Grid>
+    </Border>
+    
+</UserControl>

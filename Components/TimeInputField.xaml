@@ -1,0 +1,90 @@
+﻿<UserControl x:Class="Data_Logger_1._3.Components.TimeInputField"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Data_Logger_1._3.Components"
+             mc:Ignorable="d"
+             d:Background="{DynamicResource TimeEdit}"
+             HorizontalAlignment="Stretch"
+             VerticalAlignment="Center"
+             Margin="0 5"
+             x:Name="control_TIME_edit" >
+    
+    
+    <Border BorderBrush="{DynamicResource STROKE}"
+            BorderThickness="0.6"
+            Height="40"
+            CornerRadius="2" >
+        
+        
+        <Grid>
+            
+            
+            
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="10"/>
+                <!-- Hours HHHHHHHHHHHHHHHHHHHHHH -->
+                <ColumnDefinition Width="*"/>
+                <!-- Minutes MMMMMMMMMMMMMMMMMMMM -->
+                <ColumnDefinition Width="*"/>
+                <!-- Seconds SSSSSSSSSSSSSSSSSSSS -->
+                <ColumnDefinition Width="*"/>
+                <!-- Milliseconds msmsmsmsmsmsmsms -->
+                <ColumnDefinition Width="1.2*"/>
+                
+                
+                <!--                  -->
+                <ColumnDefinition Width="10"/>
+            </Grid.ColumnDefinitions>
+
+            <local:SpinnerInputField x:Name="spinner_HOURS" Grid.Column="1" 
+                                     Digits="2"
+                                     Number="{Binding Hours, ElementName=control_TIME_edit, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" 
+                                     MinimumValue="0"
+                                     MaximumValue="23"
+                                     IsIncremented="updateTime"
+                                     IsDecremented="updateTime"
+                                     NumberChanged="updateTime"
+                                     Width="auto"
+                                     />
+
+            <local:SpinnerInputField x:Name="spinner_MINUTES"
+                                     Digits="2"
+                                     Grid.Column="2"
+                                     Number="{Binding Minutes, ElementName=control_TIME_edit, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" 
+                                     MinimumValue="0"
+                                     MaximumValue="59"
+                                     IsIncremented="updateTime"
+                                     IsDecremented="updateTime"
+                                     NumberChanged="updateTime"
+                                     Width="auto"
+                                     />
+
+            <local:SpinnerInputField x:Name="spinner_SECONDS"
+                                     Digits="2"
+                                     Grid.Column="3"
+                                     Number="{Binding Seconds, ElementName=control_TIME_edit, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" 
+                                     MinimumValue="0"
+                                     MaximumValue="59"
+                                     IsIncremented="updateTime"
+                                     IsDecremented="updateTime"
+                                     NumberChanged="updateTime"
+                                     Width="auto"
+                                     />
+
+            <local:SpinnerInputField x:Name="spinner_MILLISECONDS"
+                                     Digits="3"
+                                     Grid.Column="4"
+                                     Number="{Binding Milliseconds, ElementName=control_TIME_edit, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" 
+                                     MinimumValue="000"
+                                     MaximumValue="999"
+                                     IsIncremented="updateTime"
+                                     IsDecremented="updateTime"
+                                     NumberChanged="updateTime"
+                                     Width="auto"
+                                     />
+
+        </Grid>
+    </Border>
+</UserControl>

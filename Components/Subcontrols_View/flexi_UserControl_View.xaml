@@ -1,0 +1,92 @@
+﻿<UserControl x:Class="Data_Logger_1._3.Components.Subcontrols_View.flexi_UserControl_View"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Data_Logger_1._3.Components.Subcontrols_View"
+             mc:Ignorable="d"
+             d:Background="White"
+             HorizontalAlignment="Stretch"
+             x:Name="control_FLEXI_fields_View" >
+
+
+    <StackPanel d:Width="380">
+
+
+        <!-- FLEXI-NOTE CATEGORY -->
+        <Border
+            Padding="20 0"
+            Height="35" >
+
+            <TextBlock x:Name="text_FLEXINOTECATEGORY" Style="{DynamicResource text_LABEL03}"
+                       Text="{Binding FlexiNoteCategory, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
+
+        </Border>
+
+        <!-- MEDIUM -->
+        <Border
+            Padding="20 0"
+            Height="35" >
+
+            <TextBlock x:Name="text_MEDIUM" Style="{DynamicResource text_LABEL03}"
+                       Text="{Binding Medium, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
+
+        </Border>
+
+        <!-- FORMAT -->
+        <Border
+            Padding="20 0"
+            Height="35" >
+
+            <TextBlock x:Name="text_FORMAT" Style="{DynamicResource text_LABEL03}"
+                       Text="{Binding Format, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
+
+        </Border>
+
+        <!-- BITRATE -->
+        <Border
+            Padding="20 0"
+            Height="35" >
+
+            <TextBlock x:Name="text_BITRATE" Style="{DynamicResource text_LABEL03}"
+                       Text="{Binding Bitrate, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
+
+        </Border>
+
+        <!-- DUARTION -->
+        <Border
+            Padding="20 0"
+            Height="35" >
+
+            <TextBlock x:Name="text_DURATION" Style="{DynamicResource text_LABEL03}"
+                       Text="{Binding Duration, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
+
+        </Border>
+
+        <!-- COMPLETED -->
+        <Border
+            Padding="20 0"
+            Height="35" >
+
+            <TextBlock x:Name="text_COMPLETED" Style="{DynamicResource text_LABEL03}"
+                       Text="{Binding IsCompleted, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
+
+        </Border>
+
+
+        <!-- SOURCE -->
+        <Border
+            Padding="20 0"
+            Height="35" >
+
+            <TextBlock x:Name="text_SOURCE" Style="{DynamicResource text_LABEL03x2}"
+                       Text="{Binding Source, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
+
+        </Border>
+
+
+
+
+    </StackPanel>
+
+</UserControl>

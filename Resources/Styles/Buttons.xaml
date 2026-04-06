@@ -1,0 +1,1044 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+
+    <!--#region BUTTONS -->
+    
+    
+    
+    
+    
+    
+    
+    <!--#region PRIMARY BUTTONS -->
+
+
+
+
+    <!-- PRIMARY BUTTON -->
+    <Style x:Key="PRIMARY" TargetType="Button">
+        <Setter Property="Background" Value="{DynamicResource PrimaryColour}" />
+        <Setter Property="Foreground" Value="{DynamicResource WHITE}" />
+        <Setter Property="Padding" Value="15,10" />
+        <Setter Property="FontSize" Value="14" />
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="BorderBrush" Value="{DynamicResource PrimaryColour}" />
+        <Setter Property="Width" Value="128" />
+        <Setter Property="Height" Value="43" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type ButtonBase}">
+                    <Border x:Name="border" Background="{TemplateBinding Background}"
+                         BorderBrush="{TemplateBinding BorderBrush}"
+                         Padding="{TemplateBinding Padding}"
+                         CornerRadius="2">
+                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="true">
+                            <Setter Property="Background" TargetName="border" Value="{DynamicResource HOVERPrimaryColour}"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- PRIMARY CREATE -->
+    <Style x:Key="PRIMARYCreate" TargetType="Button" BasedOn="{StaticResource PRIMARY}">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type ButtonBase}">
+                    <Border x:Name="border" Background="{TemplateBinding Background}"
+                         BorderBrush="{TemplateBinding BorderBrush}"
+                         BorderThickness="{TemplateBinding BorderThickness}"
+                         Padding="{TemplateBinding Padding}"
+                         CornerRadius="2">
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+                            <Path x:Name="PRIMARYCreateICON" Style="{DynamicResource PRIMARYCreateICON}"/>
+                            <ContentPresenter HorizontalAlignment="Stretch" VerticalAlignment="Center"/>
+                        </StackPanel>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="true">
+                            <Setter Property="Background" TargetName="border" Value="{DynamicResource HOVERPrimaryColour}"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- PRIMARY REPORT -->
+    <Style x:Key="PRIMARYReport" TargetType="Button" BasedOn="{StaticResource PRIMARY}">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type ButtonBase}">
+                    <Border x:Name="border" Background="{TemplateBinding Background}"
+                     BorderBrush="{TemplateBinding BorderBrush}"
+                     BorderThickness="{TemplateBinding BorderThickness}"
+                     Padding="{TemplateBinding Padding}"
+                     CornerRadius="2">
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+                            <Grid Margin="0 0 10 0" Height="20" Width="20">
+                                <Path x:Name="PRIMARYReportICON1" Grid.Column="0" Style="{DynamicResource PRIMARYReportICON1}"/>
+                                <Path x:Name="PRIMARYReportICON2" Grid.Column="0" Style="{DynamicResource PRIMARYReportICON2}"/>
+                                <Path x:Name="PRIMARYReportICON3" Grid.Column="0" Style="{DynamicResource PRIMARYReportICON3}"/>
+                            </Grid>
+
+                            <ContentPresenter HorizontalAlignment="Stretch" VerticalAlignment="Center"/>
+                        </StackPanel>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="true">
+                            <Setter Property="Background" TargetName="border" Value="{DynamicResource HOVERPrimaryColour}"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+
+
+    <!--#endregion-->
+
+
+
+    <!--#region SECONDARY BUTTONS -->
+
+
+
+    <!-- SECONDARY BUTTON -->
+    <Style x:Key="SECONDARY" TargetType="Button">
+        <Setter Property="Background" Value="{DynamicResource WHITE}" />
+        <Setter Property="Foreground" Value="{DynamicResource PrimaryColour}" />
+        <Setter Property="Padding" Value="15,10" />
+        <Setter Property="FontSize" Value="14" />
+        <Setter Property="BorderThickness" Value="2" />
+        <Setter Property="BorderBrush" Value="{DynamicResource PrimaryColour}" />
+        <Setter Property="Width" Value="128" />
+        <Setter Property="Height" Value="43" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type ButtonBase}">
+                    <Border x:Name="border" Background="{TemplateBinding Background}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            Padding="{TemplateBinding Padding}"
+                            CornerRadius="2">
+                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="true">
+                            <Setter Property="Background" TargetName="border" Value="{DynamicResource PrimaryColour}"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+        <Style.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Foreground" Value="{DynamicResource WHITE}"/>
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
+    <!-- SECONDARY CREATE -->
+    <Style x:Key="SECONDARYCreate" TargetType="Button" BasedOn="{StaticResource SECONDARY}">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type ButtonBase}">
+                    <Border x:Name="border" Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            Padding="{TemplateBinding Padding}"
+                            CornerRadius="2">
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+                            <Path x:Name="SECONDARYCreateICON" Style="{DynamicResource SECONDARYCreateICON}"/>
+                            <ContentPresenter HorizontalAlignment="Stretch" VerticalAlignment="Center"/>
+                        </StackPanel>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="true">
+                            <Setter Property="Background" TargetName="border" Value="{DynamicResource PrimaryColour}"/>
+                            <Setter Property="Fill" TargetName="SECONDARYCreateICON" Value="{DynamicResource WHITE}"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+        <Style.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Foreground" Value="{DynamicResource WHITE}"/>
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
+    <!-- SECONDARY REPORT -->
+    <Style x:Key="SECONDARYReport" TargetType="Button" BasedOn="{StaticResource SECONDARY}">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type ButtonBase}">
+                    <Border x:Name="border" Background="{TemplateBinding Background}"
+                 BorderBrush="{TemplateBinding BorderBrush}"
+                 BorderThickness="{TemplateBinding BorderThickness}"
+                 Padding="{TemplateBinding Padding}"
+                 CornerRadius="2">
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+                            <Grid Margin="0 0 10 0" Height="20" Width="20">
+                                <Path x:Name="SECONDARYReportICON1" Grid.Column="0" Style="{DynamicResource SECONDARYReportICON1}"/>
+                                <Path x:Name="SECONDARYReportICON2" Grid.Column="0" Style="{DynamicResource SECONDARYReportICON2}"/>
+                                <Path x:Name="SECONDARYReportICON3" Grid.Column="0" Style="{DynamicResource SECONDARYReportICON3}"/>
+                            </Grid>
+
+                            <ContentPresenter HorizontalAlignment="Stretch" VerticalAlignment="Center"/>
+                        </StackPanel>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="true">
+                            <Setter Property="Background" TargetName="border" Value="{DynamicResource PrimaryColour}"/>
+                            <Setter Property="Fill" TargetName="SECONDARYReportICON1" Value="{DynamicResource WHITE}"/>
+                            <Setter Property="Fill" TargetName="SECONDARYReportICON2" Value="{DynamicResource WHITE}"/>
+                            <Setter Property="Fill" TargetName="SECONDARYReportICON3" Value="{DynamicResource WHITE}"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+        <Style.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Foreground" Value="{DynamicResource WHITE}"/>
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
+    <!-- SECONDARY SAVE -->
+    <Style x:Key="SECONDARYSave" TargetType="Button" BasedOn="{StaticResource SECONDARY}">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type ButtonBase}">
+                    <Border x:Name="border" Background="{TemplateBinding Background}"
+             BorderBrush="{TemplateBinding BorderBrush}"
+             BorderThickness="{TemplateBinding BorderThickness}"
+             Padding="{TemplateBinding Padding}"
+             CornerRadius="2">
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+                            <Path x:Name="SECONDARYSaveICON" Style="{DynamicResource SECONDARYSaveICON}"/>
+
+                            <ContentPresenter HorizontalAlignment="Stretch" VerticalAlignment="Center"/>
+                        </StackPanel>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="true">
+                            <Setter Property="Background" TargetName="border" Value="{DynamicResource PrimaryColour}"/>
+                            <Setter Property="Fill" TargetName="SECONDARYSaveICON" Value="{DynamicResource WHITE}"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+        <Style.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Foreground" Value="{DynamicResource WHITE}"/>
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
+
+
+
+    <!--#endregion-->
+
+
+
+    <!--#region ACTION BUTTONS -->
+
+
+
+
+    <!-- ACTION BUTTON -->
+    <Style x:Key="ACTION" TargetType="Button">
+        <Setter Property="Background" Value="{DynamicResource AccentColour}" />
+        <Setter Property="Foreground" Value="{DynamicResource BLACK}" />
+        <Setter Property="Padding" Value="15,10" />
+        <Setter Property="FontSize" Value="14" />
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="BorderBrush" Value="{DynamicResource BLACK}" />
+        <Setter Property="Width" Value="128" />
+        <Setter Property="Height" Value="43" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type ButtonBase}">
+                    <Border x:Name="border" Background="{TemplateBinding Background}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        Padding="{TemplateBinding Padding}"
+                        CornerRadius="2">
+                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="true">
+                            <Setter Property="Background" TargetName="border" Value="{DynamicResource WhiteAccent02}"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- ACTION CREATE -->
+    <Style x:Key="ACTIONCreate" TargetType="Button" BasedOn="{StaticResource ACTION}">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type ButtonBase}">
+                    <Border x:Name="border" Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        Padding="{TemplateBinding Padding}"
+                        CornerRadius="2">
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+                            <Path Height="20"
+                          Width="20"
+                          Margin="0 0 10 0"
+                          Fill="{TemplateBinding BorderBrush}" Data="M16.5 7.625H10.875V2C10.875 1.30977 10.3152 0.75 9.625 0.75H8.375C7.68477 0.75 7.125 1.30977 7.125 2V7.625H1.5C0.809766 7.625 0.25 8.18477 0.25 8.875V10.125C0.25 10.8152 0.809766 11.375 1.5 11.375H7.125V17C7.125 17.6902 7.68477 18.25 8.375 18.25H9.625C10.3152 18.25 10.875 17.6902 10.875 17V11.375H16.5C17.1902 11.375 17.75 10.8152 17.75 10.125V8.875C17.75 8.18477 17.1902 7.625 16.5 7.625Z"/>
+                            <ContentPresenter HorizontalAlignment="Stretch" VerticalAlignment="Center"/>
+                        </StackPanel>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="true">
+                            <Setter Property="Background" TargetName="border" Value="{DynamicResource WhiteAccent02}"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- ACTION REPORT -->
+    <Style x:Key="ACTIONReport" TargetType="Button" BasedOn="{StaticResource ACTION}">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type ButtonBase}">
+                    <Border x:Name="border" Background="{TemplateBinding Background}"
+             BorderBrush="{TemplateBinding BorderBrush}"
+             BorderThickness="{TemplateBinding BorderThickness}"
+             Padding="{TemplateBinding Padding}"
+             CornerRadius="2">
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+                            <Grid Margin="0 0 10 0">
+                                <Path Grid.Column="0" Data="M16 0.75H4V3.25H16V0.75Z" Fill="{TemplateBinding BorderBrush}"/>
+                                <Path Grid.Column="0" Fill="{TemplateBinding BorderBrush}" Data="M19.25 4.75H0.75C0.335781 4.75 0 5.08578 0 5.5V14.5C0 14.9142 0.335781 15.25 0.75 15.25H2.5V10.25H17.5V15.25H19.25C19.6642 15.25 20 14.9142 20 14.5V5.5C20 5.08578 19.6642 4.75 19.25 4.75ZM3.5 8.5C2.94859 8.5 2.5 8.05141 2.5 7.5C2.5 6.94859 2.94859 6.5 3.5 6.5C4.05145 6.5 4.5 6.94859 4.5 7.5C4.4998 8.05148 4.05121 8.5 3.5 8.5ZM6.5 8.5C5.94859 8.5 5.5 8.05141 5.5 7.5C5.5 6.94859 5.94859 6.5 6.5 6.5C7.05145 6.5 7.5 6.94859 7.5 7.5C7.4998 8.05148 7.05121 8.5 6.5 8.5Z"/>
+                                <Path Grid.Column="0" Fill="{TemplateBinding BorderBrush}" Data="M4 11.75V20.25H16V11.75H4ZM13 18.25H6V16.75H13V18.25ZM14 15.25H6V13.75H14V15.25Z"/>
+                            </Grid>
+
+                            <ContentPresenter HorizontalAlignment="Stretch" VerticalAlignment="Center"/>
+                        </StackPanel>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="true">
+                            <Setter Property="Background" TargetName="border" Value="{DynamicResource WhiteAccent02}"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- ACTION BROWSE -->
+    <Style x:Key="ACTIONBrowse" TargetType="Button" BasedOn="{StaticResource ACTION}">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type ButtonBase}">
+                    <Border x:Name="border" Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        Padding="{TemplateBinding Padding}"
+                        CornerRadius="2">
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+                            <Path Style="{DynamicResource ACTIONBrowseICON}"/>
+
+                            <ContentPresenter HorizontalAlignment="Stretch" VerticalAlignment="Center"/>
+                        </StackPanel>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="true">
+                            <Setter Property="Background" TargetName="border" Value="{DynamicResource WhiteAccent02}"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- ACTION SAVE -->
+    <Style x:Key="ACTIONSave" TargetType="Button" BasedOn="{StaticResource ACTION}">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type ButtonBase}">
+                    <Border x:Name="border" Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            Padding="{TemplateBinding Padding}"
+                            CornerRadius="2">
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+                            <Path Style="{DynamicResource ACTIONSaveICON}"/>
+
+                            <ContentPresenter HorizontalAlignment="Stretch" VerticalAlignment="Center"/>
+                        </StackPanel>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="true">
+                            <Setter Property="Background" TargetName="border" Value="{DynamicResource WhiteAccent02}"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- ACTION CURRENT DATE -->
+    <Style x:Key="ACTIONCurrentDate" TargetType="Button" BasedOn="{StaticResource ACTION}">
+        <Setter Property="Width" Value="93" />
+        <Setter Property="Height" Value="40" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type ButtonBase}">
+                    <Border x:Name="border" Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        Padding="{TemplateBinding Padding}"
+                        CornerRadius="2">
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+                            <ContentPresenter HorizontalAlignment="Stretch" VerticalAlignment="Center"/>
+                        </StackPanel>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="true">
+                            <Setter Property="Background" TargetName="border" Value="{DynamicResource WhiteAccent02}"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- ACTION SEARCH ITEM -->
+    <Style x:Key="ACTIONSearchItem" TargetType="Button" BasedOn="{StaticResource ACTION}">
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="Width" Value="87" />
+        <Setter Property="Height" Value="22" />
+        <Setter Property="Padding" Value="5" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type ButtonBase}">
+                    <Border x:Name="border" Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            Padding="{TemplateBinding Padding}"
+                            CornerRadius="2" >
+
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+                            <ContentPresenter HorizontalAlignment="Stretch" VerticalAlignment="Center"/>
+                        </StackPanel>
+
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+
+    
+    <!-- RETURN TO DASHBOARD -->
+    <Style x:Key="ACTIONReturnToDashboard" TargetType="Button">
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Foreground" Value="{DynamicResource BLACK}" />
+        <Setter Property="Padding" Value="15,10" />
+        <Setter Property="FontSize" Value="14" />
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="BorderBrush" Value="Transparent"/>
+        <Setter Property="Width" Value="210" />
+        <Setter Property="Height" Value="40" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type ButtonBase}">
+                    <Border x:Name="border" Background="{TemplateBinding Background}"
+                    BorderThickness="{TemplateBinding BorderThickness}"
+                    BorderBrush="{TemplateBinding BorderBrush}"
+                    Padding="{TemplateBinding Padding}"
+                    CornerRadius="2">
+                        <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="auto"/>
+                                <ColumnDefinition Width="10"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+
+                            <Path Grid.Column="0" x:Name="back_ARROW" Style="{DynamicResource path_RETURN_TO_DASHBOARD}"/>
+                            <TextBlock Grid.Column="2" Style="{DynamicResource text_RETURN_TO_DASHBOARD}" />
+
+                        </Grid>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="true">
+                            <Setter Property="Background" TargetName="border" Value="{DynamicResource WhiteAccent02}"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+
+
+
+
+
+    <!--#endregion-->
+    
+    
+    <!--#region API BUTTONS -->
+
+
+    <!-- GOOGLE BUTTON -->
+    <Style x:Key="button_API_GOOGLE" TargetType="Button">
+        <Setter Property="Background" Value="{DynamicResource WHITE}" />
+        <Setter Property="Foreground" Value="{DynamicResource BLACK}" />
+        <Setter Property="Height" Value="35" />
+        <Setter Property="BorderThickness" Value="0.6" />
+        <Setter Property="BorderBrush" Value="{DynamicResource STROKE}" />
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type ButtonBase}">
+                    <Border x:Name="border" Background="{TemplateBinding Background}"
+                      BorderBrush="{TemplateBinding BorderBrush}"
+                      BorderThickness="{TemplateBinding BorderThickness}"
+                      Padding="{TemplateBinding Padding}"
+                      CornerRadius="3">
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+                            <Grid Height="20" Width="20" Margin="0 0 10 0">
+                                <Path x:Name="GOOGLE_ICON1" Style="{DynamicResource GOOGLE_ICON1}"/>
+                                <Path x:Name="GOOGLE_ICON2" Style="{DynamicResource GOOGLE_ICON2}"/>
+                                <Path x:Name="GOOGLE_ICON3" Style="{DynamicResource GOOGLE_ICON3}"/>
+                                <Path x:Name="GOOGLE_ICON4" Style="{DynamicResource GOOGLE_ICON4}"/>
+                            </Grid>
+                            <TextBlock Style="{DynamicResource text_LABEL02}" Text="Continue with Google" Width="150"/>
+                        </StackPanel>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="true">
+                            <Setter Property="Background" TargetName="border" Value="{DynamicResource WhiteAccent02}"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+
+    <!-- MICROSOFT BUTTON -->
+    <Style x:Key="button_API_MICROSOFT" TargetType="Button">
+        <Setter Property="Background" Value="{DynamicResource WHITE}" />
+        <Setter Property="Foreground" Value="{DynamicResource BLACK}" />
+        <Setter Property="Height" Value="35" />
+        <Setter Property="BorderThickness" Value="0.6" />
+        <Setter Property="BorderBrush" Value="{DynamicResource STROKE}" />
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type ButtonBase}">
+                    <Border x:Name="border" Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            Padding="{TemplateBinding Padding}"
+                            CornerRadius="3"
+                            >
+                        <!-- TODO -->
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+                            <Grid Height="20" Width="20" Margin="0 0 10 0" Opacity=".4">
+                                <Path x:Name="MS_ICON1" Style="{DynamicResource MS_ICON1}"/>
+                                <Path x:Name="MS_ICON2" Style="{DynamicResource MS_ICON2}"/>
+                                <Path x:Name="MS_ICON3" Style="{DynamicResource MS_ICON3}"/>
+                                <Path x:Name="MS_ICON4" Style="{DynamicResource MS_ICON4}"/>
+                            </Grid>
+                            <TextBlock Style="{DynamicResource text_LABEL02}" Text="Continue with Microsoft" Width="150" Foreground="{DynamicResource SILVER}"/>
+                        </StackPanel>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="true">
+                            <Setter Property="Background" TargetName="border" Value="{DynamicResource WhiteAccent02}"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+
+
+
+
+
+    <!--#endregion-->
+    
+    
+    <!--#region TITLE BAR BUTTONS -->
+
+
+    <Style x:Key="FocusVisual">
+        <Setter Property="Control.Template">
+            <Setter.Value>
+                <ControlTemplate>
+                    <Rectangle Margin="2" StrokeDashArray="1 2" Stroke="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}" SnapsToDevicePixels="true" StrokeThickness="1"/>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    
+    <Style x:Key="button_TITLE_bar" TargetType="{x:Type Button}">
+        <Setter Property="FocusVisualStyle" Value="{StaticResource FocusVisual}"/>
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource WhiteAccent02}"/>
+        <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}"/>
+        <Setter Property="BorderThickness" Value="0"/>
+        <Setter Property="Height" Value="30"/>
+        <Setter Property="Width" Value="30"/>
+        <Setter Property="Margin" Value="0 5"/>
+        <Setter Property="HorizontalContentAlignment" Value="Center"/>
+        <Setter Property="VerticalContentAlignment" Value="Center"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type Button}">
+                    <Border x:Name="border" Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            SnapsToDevicePixels="true"
+                            Height="{TemplateBinding Height}"
+                            Width="{TemplateBinding Width}"
+                            CornerRadius="2"
+                            >
+                        <ContentPresenter x:Name="contentPresenter"
+                                          Focusable="False"
+                                          HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                          Margin="{TemplateBinding Padding}"
+                                          RecognizesAccessKey="True"
+                                          SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"
+                                          VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                                          />
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsDefaulted" Value="true">
+                            <Setter Property="BorderBrush" TargetName="border" Value="{DynamicResource {x:Static SystemColors.HighlightBrushKey}}"/>
+                        </Trigger>
+                        <Trigger Property="IsMouseOver" Value="true">
+                            <Setter Property="Background" TargetName="border" Value="{DynamicResource AccentColour}"/>
+                            <Setter Property="BorderBrush" TargetName="border" Value="{DynamicResource AccentColour}"/>
+                        </Trigger>
+                        <Trigger Property="IsPressed" Value="true">
+                            <Setter Property="Background" TargetName="border" Value="{DynamicResource WhiteAccent02}"/>
+                            <Setter Property="BorderBrush" TargetName="border" Value="{DynamicResource WhiteAccent02}"/>
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="false">
+                            <Setter Property="Background" TargetName="border" Value="Transparent"/>
+                            <Setter Property="BorderBrush" TargetName="border" Value="Transparent"/>
+                            <Setter Property="TextElement.Foreground" TargetName="contentPresenter" Value="{StaticResource Button.Disabled.Foreground}"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+
+
+
+    <!--#endregion-->
+    
+    
+    <!-- DISPLAY PIC BUTTON -->
+
+    <Style x:Key="button_DP" TargetType="Button">
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Foreground" Value="{DynamicResource BLACK}" />
+        <Setter Property="BorderThickness" Value="0.6" />
+        <Setter Property="BorderBrush" Value="{DynamicResource PlaceholderText}" />
+        <Setter Property="Width" Value="50" />
+        <Setter Property="Height" Value="50" />
+        <Setter Property="HorizontalAlignment" Value="Center"/>
+        <Setter Property="VerticalAlignment" Value="Center"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type ButtonBase}">
+                    <Border x:Name="border" 
+                            Style="{DynamicResource image_displayPic}">
+                        <Grid>
+                            <Path x:Name="path_USER" Style="{DynamicResource path_USER}"
+                                  Visibility="{Binding ShowDefault, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
+                            <Path x:Name="ACTIONCreateICON" Style="{DynamicResource ACTIONCreateICON}"
+                                  Fill="{DynamicResource iconCOLOURAccent02}"
+                                  Margin="0"
+                                  Visibility="Collapsed"
+                                  />
+                            <ContentPresenter />
+                        </Grid>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="true">
+                            <Setter Property="Background" TargetName="border" Value="{DynamicResource AccentColour}"/>
+                            <Setter Property="Visibility" TargetName="ACTIONCreateICON" Value="Visible"/>
+                            <Setter Property="Visibility" TargetName="path_USER" Value="Collapsed"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    
+    <!-- SUPPORT BUTTONS -->
+    <Style x:Key="button_SUPPORT" TargetType="{x:Type Button}" BasedOn="{StaticResource button_TITLE_bar}">
+        <Setter Property="Margin" Value="10 0"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type Button}">
+                    <Border x:Name="border" Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        SnapsToDevicePixels="true"
+                        Height="{TemplateBinding Height}"
+                        Width="{TemplateBinding Width}"
+                        CornerRadius="2" >
+                        
+                        <ContentPresenter x:Name="contentPresenter" Focusable="False" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" Margin="{TemplateBinding Padding}" RecognizesAccessKey="True" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsDefaulted" Value="true">
+                            <Setter Property="BorderBrush" TargetName="border" Value="{DynamicResource {x:Static SystemColors.HighlightBrushKey}}"/>
+                        </Trigger>
+                        <Trigger Property="IsMouseOver" Value="true">
+                            <Setter Property="Background" TargetName="border" Value="{DynamicResource WHITE}"/>
+                        </Trigger>
+                        <Trigger Property="IsPressed" Value="true">
+                            <Setter Property="Background" TargetName="border" Value="{DynamicResource WhiteAccent02}"/>
+                            <Setter Property="BorderBrush" TargetName="border" Value="{DynamicResource WhiteAccent02}"/>
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="false">
+                            <Setter Property="Background" TargetName="border" Value="Transparent"/>
+                            <Setter Property="BorderBrush" TargetName="border" Value="Transparent"/>
+                            <Setter Property="TextElement.Foreground" TargetName="contentPresenter" Value="{StaticResource Button.Disabled.Foreground}"/>
+                            <Setter Property="Opacity" TargetName="border" Value=".2"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+
+    <!-- #region SPINNER CONTROL BUTTON -->
+
+    
+    <!-- UP BUTTON TEMPLATE -->
+    <Style x:Key="button_SPINNER_UP" TargetType="Button">
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="Height" Value="8" />
+        <Setter Property="Width" Value="8" />
+        <Setter Property="Padding" Value="2" />
+        <Setter Property="HorizontalAlignment" Value="Center" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="HorizontalContentAlignment" Value="Center" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type ButtonBase}">
+                    <Border x:Name="border" Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            SnapsToDevicePixels="true"
+                            CornerRadius="1"
+                            >
+                        <Path x:Name="icon_UP" Style="{DynamicResource path_SPINNER_UP}"
+                              SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"
+                              />
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="Button.IsDefaulted" Value="true">
+                            <Setter Property="BorderBrush" TargetName="border" Value="{DynamicResource {x:Static SystemColors.HighlightBrushKey}}"/>
+                        </Trigger>
+                        <Trigger Property="IsMouseOver" Value="true">
+                            <Setter Property="Background" TargetName="border" Value="{DynamicResource AccentColour}"/>
+                        </Trigger>
+                        <Trigger Property="IsPressed" Value="true">
+                            <Setter Property="Background" TargetName="border" Value="{DynamicResource SILVER}"/>
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="false">
+                            <Setter Property="Background" TargetName="border" Value="Transparent"/>
+                            <Setter Property="Fill" TargetName="icon_UP" Value="{DynamicResource SILVER}"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+
+    <!-- DOWN BUTTON TEMPLATE -->
+    <Style x:Key="button_SPINNER_DOWN" TargetType="Button" BasedOn="{StaticResource button_SPINNER_UP}">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type ButtonBase}">
+                    <Border x:Name="border" Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        SnapsToDevicePixels="true"
+                        Height="{TemplateBinding Height}"
+                        Width="{TemplateBinding Width}"
+                            CornerRadius="1"
+                        >
+                        <Path x:Name="icon_DOWN" Style="{DynamicResource path_SPINNER_DOWN}"
+                              SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"
+                              />
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="Button.IsDefaulted" Value="true">
+                            <Setter Property="BorderBrush" TargetName="border" Value="{DynamicResource {x:Static SystemColors.HighlightBrushKey}}"/>
+                        </Trigger>
+                        <Trigger Property="IsMouseOver" Value="true">
+                            <Setter Property="Background" TargetName="border" Value="{DynamicResource AccentColour}"/>
+                        </Trigger>
+                        <Trigger Property="IsPressed" Value="true">
+                            <Setter Property="Background" TargetName="border" Value="{DynamicResource SILVER}"/>
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="false">
+                            <Setter Property="Background" TargetName="border" Value="Transparent"/>
+                            <Setter Property="Fill" TargetName="icon_DOWN" Value="{DynamicResource SILVER}"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    
+    <!--#endregion-->
+
+    <!-- CALENDAR BUTTON TEMPLATE -->
+    <Style x:Key="button_CALENDAR" TargetType="Button">
+        <Setter Property="Focusable" Value="False"/>
+        <Setter Property="HorizontalAlignment" Value="Center"/>
+        <Setter Property="VerticalAlignment" Value="Center"/>
+        <Setter Property="Margin" Value="3 0 3 0"/>
+        <Setter Property="Width" Value="20"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type Button}">
+                    <Grid>
+                        <Path x:Name="icon_CALENDAR01" Style="{DynamicResource path_CALENDAR1}"/>
+                        <Path x:Name="icon_CALENDAR02" Style="{DynamicResource path_CALENDAR2}"/>
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    
+    <!--#region TOOLBAR BUTTONS -->
+
+    <!-- TOOLBUTTON POST IT -->
+    <Style x:Key="toolButton_POSTIT" TargetType="{x:Type Button}">
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="BorderThickness" Value="0"/>
+        <Setter Property="HorizontalContentAlignment" Value="Center"/>
+        <Setter Property="VerticalContentAlignment" Value="Center"/>
+        <Setter Property="Padding" Value="1"/>
+        <Setter Property="Template">
+            <Setter.Value>
+
+                <ControlTemplate TargetType="{x:Type Button}">
+
+                    <Border x:Name="border"
+                        Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        SnapsToDevicePixels="true"
+                        CornerRadius="2" >
+
+                        <ContentPresenter x:Name="contentPresenter" Focusable="False" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" Margin="{TemplateBinding Padding}" RecognizesAccessKey="True" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+
+                    </Border>
+
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsDefaulted" Value="true">
+                            <Setter Property="Background" TargetName="border" Value="{DynamicResource {x:Static SystemColors.HighlightBrushKey}}"/>
+                        </Trigger>
+                        <Trigger Property="IsMouseOver" Value="true">
+                            <Setter Property="Background" TargetName="border" Value="{DynamicResource SELECTEDToolbutton}"/>
+                        </Trigger>
+                        <Trigger Property="IsPressed" Value="true">
+                            <Setter Property="Background" TargetName="border" Value="{DynamicResource WHITE}"/>
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="false">
+                            <Setter Property="TextElement.Foreground" TargetName="contentPresenter" Value="{StaticResource Button.Disabled.Foreground}"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    
+    <!-- TOOLBUTTON DELETE TEMPLATE -->
+    <Style x:Key="toolbutton_DELETE" TargetType="Button">
+        <Setter Property="Focusable" Value="False"/>
+        <Setter Property="VerticalAlignment" Value="Center"/>
+        <Setter Property="Margin" Value="3 0 3 0"/>
+        <Setter Property="Height" Value="20"/>
+        <Setter Property="Width" Value="20"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type Button}">
+                    <Grid Height="{TemplateBinding Height}" Width="{TemplateBinding Width}" Background="Transparent">
+                        <Path x:Name="icon_TOOLBUTTON" Style="{DynamicResource path_TOOLBUTTON_delete}"/>
+                    </Grid>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter Property="Fill" TargetName="icon_TOOLBUTTON" Value="{DynamicResource iconCOLOURAccent02}"/>
+                        </Trigger>
+                        <Trigger Property="IsPressed" Value="True">
+                            <Setter Property="Fill" TargetName="icon_TOOLBUTTON" Value="{DynamicResource RED}"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- TOOLBUTTON RESET TEMPLATE -->
+    <Style x:Key="toolbutton_RESET" TargetType="Button" BasedOn="{StaticResource toolbutton_DELETE}">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type Button}">
+                    <Grid Height="{TemplateBinding Height}" Width="{TemplateBinding Width}"
+                          Background="Transparent">
+                        <Path x:Name="icon_TOOLBUTTON" Style="{DynamicResource path_TOOLBUTTON_reset}"/>
+                    </Grid>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter Property="Fill" TargetName="icon_TOOLBUTTON" Value="{DynamicResource iconCOLOURAccent02}"/>
+                        </Trigger>
+                        <Trigger Property="IsPressed" Value="True">
+                            <Setter Property="Fill" TargetName="icon_TOOLBUTTON" Value="{DynamicResource RED}"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+
+    <!-- TOOLBUTTON ADOBE EXPORT -->
+    <Style x:Key="toolbutton_Adobe_EXPORT" TargetType="Button">
+        <Setter Property="Focusable" Value="False"/>
+        <Setter Property="HorizontalAlignment" Value="Right"/>
+        <Setter Property="VerticalAlignment" Value="Center"/>
+        <Setter Property="Height" Value="30"/>
+        <Setter Property="Width" Value="30"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type Button}">
+                    <Grid Height="{TemplateBinding Height}" Width="{TemplateBinding Width}">
+                        <Path x:Name="icon_adobe1" Style="{DynamicResource path_TOOLBUTTON_adobe01}"/>
+                        <Path x:Name="icon_adobe2" Style="{DynamicResource path_TOOLBUTTON_adobe02}"/>
+                        <Path x:Name="icon_adobe3" Style="{DynamicResource path_TOOLBUTTON_adobe03}"/>
+                        <Path x:Name="icon_adobe4" Style="{DynamicResource path_TOOLBUTTON_adobe04}"/>
+                    </Grid>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter Property="Fill" TargetName="icon_adobe1" Value="{DynamicResource iconCOLOURAccent02}"/>
+                            <Setter Property="Fill" TargetName="icon_adobe4" Value="{DynamicResource iconCOLOURAccent02}"/>
+                        </Trigger>
+                        <Trigger Property="IsPressed" Value="True">
+                            <Setter Property="Fill" TargetName="icon_adobe1" Value="{DynamicResource RED}"/>
+                            <Setter Property="Fill" TargetName="icon_adobe4" Value="{DynamicResource RED}"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- TOOLBUTTON PRINTER EXPORT -->
+    <Style x:Key="toolbutton_PRINTER_EXPORT" TargetType="Button" BasedOn="{StaticResource toolbutton_Adobe_EXPORT}">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type Button}">
+                    <Grid>
+                        <Path x:Name="icon_printer_export1" Style="{DynamicResource path_TOOLBUTTON_printer01}"/>
+                        <Path x:Name="icon_printer_export2" Style="{DynamicResource path_TOOLBUTTON_printer02}"/>
+                        <Path x:Name="icon_printer_export3" Style="{DynamicResource path_TOOLBUTTON_printer03}"/>
+                        <Path x:Name="icon_printer_export4" Style="{DynamicResource path_TOOLBUTTON_printer04}"/>
+                        <Path x:Name="icon_printer_export5" Style="{DynamicResource path_TOOLBUTTON_printer05}"/>
+                        <Path x:Name="icon_printer_export6" Style="{DynamicResource path_TOOLBUTTON_printer06}"/>
+                    </Grid>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter Property="Fill" TargetName="icon_printer_export1" Value="{DynamicResource iconCOLOURAccent02}"/>
+                            <Setter Property="Fill" TargetName="icon_printer_export4" Value="{DynamicResource iconCOLOURAccent02}"/>
+                            <Setter Property="Fill" TargetName="icon_printer_export5" Value="{DynamicResource iconCOLOURAccent02}"/>
+                            <Setter Property="Fill" TargetName="icon_printer_export6" Value="{DynamicResource iconCOLOURAccent02}"/>
+                        </Trigger>
+                        <Trigger Property="IsPressed" Value="True">
+                            <Setter Property="Fill" TargetName="icon_printer_export1" Value="{DynamicResource WHITE}"/>
+                            <Setter Property="Fill" TargetName="icon_printer_export2" Value="{DynamicResource BLACK}"/>
+                            <Setter Property="Fill" TargetName="icon_printer_export3" Value="{DynamicResource BLACK}"/>
+                            <Setter Property="Fill" TargetName="icon_printer_export4" Value="{DynamicResource WHITE}"/>
+                            <Setter Property="Fill" TargetName="icon_printer_export5" Value="{DynamicResource WHITE}"/>
+                            <Setter Property="Fill" TargetName="icon_printer_export6" Value="{DynamicResource WHITE}"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+
+
+
+
+
+    <!-- END TOOLBAR -->
+    <!--#endregion-->
+    
+    
+    
+    
+    
+    
+    
+
+
+    <!--#endregion-->
+
+
+    
+    
+    
+    <!-- #region TOGGLE BUTTONS -->
+    
+    
+    <!-- #endregion -->
+
+    
+    
+    
+    
+    <!-- #region RADIO BUTTONS -->
+
+    
+   
+
+    <!-- #endregion -->
+
+
+</ResourceDictionary>
