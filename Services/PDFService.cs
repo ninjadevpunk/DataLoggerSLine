@@ -24,6 +24,11 @@ namespace Data_Logger_1._3.Services
 
         private string filePath = "";
 
+        /// <summary>
+        /// Formats a date with the correct suffix
+        /// </summary>
+        /// <param name="date">The unformatted date</param>
+        /// <returns>Returns the date in its correct format</returns>
         public static string FormatDateWithSuffix(DateTime date)
         {
             string daySuffix = GetDaySuffix(date.Day);
@@ -32,7 +37,9 @@ namespace Data_Logger_1._3.Services
 
         public static string GetDaySuffix(int day)
         {
-            if (day >= 11 && day <= 13) // Special case for 11th, 12th, 13th
+
+            // Special case for 11th, 12th, 13th
+            if (day >= 11 && day <= 13) 
             {
                 return "th";
             }
