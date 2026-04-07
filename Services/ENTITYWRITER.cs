@@ -199,12 +199,12 @@ namespace Data_Logger_1._3.Services
 
                 await master.SaveChangesAsync();
                 await transaction.CommitAsync();
+
                 return true;
             }
             catch (InvalidCastException castx)
             {
                 await HandleExceptionAsync(castx, "CreateLOG(log)", "InvalidCastException");
-
             }
             catch (OperationCanceledException opex)
             {
@@ -442,13 +442,13 @@ namespace Data_Logger_1._3.Services
             catch (Exception ex)
             {
                 if (ex.InnerException == null)
-                    Debug.WriteLine($"Exception in CreateFeedback: {ex.Message}.");
-
+                    Debug.WriteLine($"CREATE FEEDBACK FAILED: {ex.Message}.");
                 else
-                    Debug.WriteLine($"Exception in CreateFeedback: {ex.Message}. Inner exception: {ex.InnerException.Message ?? ""}");
+                    Debug.WriteLine($"CREATE FEEDBACK FAILED: {ex.Message}. Inner exception: {ex.InnerException.Message ?? ""}");
 
-                return -1;
             }
+
+            return -1;
         }
 
         public async Task HandleExceptionAsync(string methodName, Exception ex, string messageBoxCaption, string messageBoxMessage = "A problem occurred on our end. We apologise for any inconvenience caused. Feedback will automatically be sent to us.", string exceptionType = "Exception")
