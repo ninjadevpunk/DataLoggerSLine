@@ -72,6 +72,10 @@ namespace Data_Logger_1._3.Services
                     existingLog.Output = master.Outputs.Local
                         .FirstOrDefault(o => o.outputID == log.Output.outputID) ?? log.Output;
 
+                if(log.Type != null)
+                    existingLog.Type = master.Types.Local
+                        .FirstOrDefault(t => t.typeID == log.Type.typeID) ?? log.Type;
+
                 var incomingIds = log.PostItList.Where(p => p.postItID != 0).Select(p => p.postItID).ToHashSet();
 
                 // Remove PostIts that were deleted
@@ -124,6 +128,11 @@ namespace Data_Logger_1._3.Services
 
 
                 await master.SaveChangesAsync();
+            }
+            catch (InvalidOperationException invex)
+            {
+                var writer = scope.ServiceProvider.GetRequiredService<ENTITYWRITER>();
+                await writer.HandleExceptionAsync(invex, "UpdateLogAsync(log)", "InvalidOperationException");
             }
             catch (Exception ex)
             {
