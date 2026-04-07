@@ -229,7 +229,19 @@ namespace Data_Logger_1._3
                 await AnimateProgressBar(splash.progressBar_splashscreen, 75, splash.text_progress);
                 var master = scope.ServiceProvider.GetRequiredService<ENTITYMASTER>();
                 await AnimateProgressBar(splash.progressBar_splashscreen, 80, splash.text_progress);
+
+                // Ensure DB exists
                 await master.Database.EnsureCreatedAsync();
+
+                // Enable WAL Mode
+                var connection = master.Database.GetDbConnection();
+
+                await connection.OpenAsync();
+                using (var command = connection.CreateCommand())
+                {
+                    command.CommandText = "PRAGMA journal_mode=WAL;";
+                    await command.ExecuteNonQueryAsync();
+                }
             }
 
 
