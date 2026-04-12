@@ -1,6 +1,7 @@
 ﻿using Data_Logger_1._3.Services;
 using Data_Logger_1._3.ViewModels;
 using MVVMEssentials.Commands;
+using System.IO;
 using System.Windows;
 
 namespace Data_Logger_1._3.Commands
@@ -36,12 +37,25 @@ namespace Data_Logger_1._3.Commands
                 // Process open file dialog box results
                 if (result == true)
                 {
-                    
-                    _signUpViewModel.ShowDefault = Visibility.Collapsed;
-                    _signUpViewModel.SignUpImage = dialog.FileName;
 
-                    if (_authService != null && _authService.Account != null)
-                        _authService.Account.ProfilePic = dialog.FileName;
+                    var fileInfo = new FileInfo(dialog.FileName);
+
+                    // Limit to 2MB
+                    if (fileInfo.Length > 2 * 1024 * 1024) 
+                    {
+                        MessageBox.Show("Image is too large.");
+                        return;
+                    }
+
+                    // Save resized image to AppData
+                    string optimized = BitmapService.SaveResizedImage(dialog.FileName);
+
+                    _signUpViewModel.ShowDefault = Visibility.Collapsed;
+                    _signUpViewModel.ProfilePicPath = optimized;
+                    _signUpViewModel.SignUpImage = BitmapService.LoadImage(optimized);
+
+                    if (_authService?.Account != null)
+                        _authService.Account.ProfilePic = optimized;
                 }
 
 
@@ -49,10 +63,12 @@ namespace Data_Logger_1._3.Commands
             catch (Exception)
             {
                 _signUpViewModel.ShowDefault = Visibility.Visible;
-                _signUpViewModel.SignUpImage = "";
-                if (_authService != null)
-                    if (_authService.Account != null)
-                        _authService.Account.ProfilePic = "";
+
+                
+                _signUpViewModel.SignUpImage = BitmapService.LoadImage("/Assets/login/user.png");
+
+                if (_authService?.Account != null)
+                    _authService.Account.ProfilePic = "";
             }
 
         }

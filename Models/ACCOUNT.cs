@@ -19,8 +19,7 @@ namespace Data_Logger_1._3.Models
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int accountID { get; set; }
 
-
-        public string ProfilePic { get; set; } = "/Assets/login/user.png";
+        public string ProfilePic { get; set; }
 
 
         public string FirstName { get; set; } = "";

@@ -208,12 +208,8 @@ namespace Data_Logger_1._3.Services
 
         private void SetupUserProfile()
         {
-            string displayPic = "/Assets/login/user.png";
-
-            _mainWindowViewModel.SignUpImage = _authService.Account.ProfilePic;
-
-            if (_mainWindowViewModel.SignUpImage == displayPic)
-                _mainWindowViewModel.SignUpImage = string.Empty;
+            if (_authService.Account != null)
+                _mainWindowViewModel.SignUpImage =  string.IsNullOrEmpty(_authService.Account.ProfilePic) ? null : BitmapService.LoadImage(_authService.Account.ProfilePic);
         }
 
     }

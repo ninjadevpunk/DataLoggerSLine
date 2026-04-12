@@ -114,7 +114,9 @@
     <Resource Include="Assets\login\ayo-ogunseinde-sibVwORYqs0-unsplash.jpg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
-    <Resource Include="Assets\login\user.png" />
+    <Resource Include="Assets\login\user.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
     <Resource Include="Assets\viewer_wallpaper.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>

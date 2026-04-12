@@ -8,7 +8,7 @@ namespace Data_Logger_1._3.Services
     {
         private readonly IServiceProvider _serviceProvider;
 
-        public ACCOUNT? Account { get; set; } = new();
+        public ACCOUNT? Account { get; set; }
 
         public AuthService()
         {
@@ -21,18 +21,13 @@ namespace Data_Logger_1._3.Services
             _serviceProvider = serviceProvider;
         }
 
-
-        public void SetDisplayPic(string source)
-        {
-            Account.ProfilePic = source;
-        }
-
         public async Task<bool> SignUp(string dp, string email, string password, string displayName, string surname,
             bool isEmployee, string companyName, string companyAddress, string companyLogo)
         {
             await using var scope = _serviceProvider.CreateAsyncScope();
 
             // Validate input
+            // TODO
             if (string.IsNullOrWhiteSpace(email) || password is null || password.Length <= 5)
             {
                 try

@@ -10,7 +10,7 @@
         <Setter Property="VerticalAlignment" Value="Center"/>
         <Setter Property="Height" Value="50"/>
         <Setter Property="Width" Value="50"/>
-        <Setter Property="RenderOptions.BitmapScalingMode" Value="Linear"/>
+        <Setter Property="RenderOptions.BitmapScalingMode" Value="Fant"/>
         <Setter Property="RenderOptions.CachingHint" Value="Cache"/>
         <Setter Property="SnapsToDevicePixels" Value="True"/>
         <Setter Property="Background">
@@ -33,6 +33,7 @@
         <Setter Property="Height" Value="899"/>
         <Setter Property="Width" Value="1145"/>
         <Setter Property="Padding" Value="40 60"/>
+        <Setter Property="RenderOptions.BitmapScalingMode" Value="Linear"/>
         <Setter Property="Background">
             <Setter.Value>
                 <ImageBrush ImageSource="/Assets/viewer_wallpaper.png" Stretch="UniformToFill"/>

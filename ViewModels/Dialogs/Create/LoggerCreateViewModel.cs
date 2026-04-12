@@ -8,6 +8,7 @@ using System.Collections.ObjectModel;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Media.Imaging;
 using static Data_Logger_1._3.Services.Cachemaster;
 
 namespace Data_Logger_1._3.ViewModels.Dialogs.Create
@@ -101,8 +102,8 @@ namespace Data_Logger_1._3.ViewModels.Dialogs.Create
         public string Author { get; set; }
 
 
-        private string signupImage;
-        public string SignUpImage
+        private BitmapImage? signupImage;
+        public BitmapImage? SignUpImage
         {
             get
             {
@@ -112,7 +113,7 @@ namespace Data_Logger_1._3.ViewModels.Dialogs.Create
             {
                 signupImage = value;
 
-                if (SignUpImage != "")
+                if (SignUpImage != null)
                     DisplayPicVisibility = Visibility.Collapsed;
                 else
                     DisplayPicVisibility = Visibility.Visible;
