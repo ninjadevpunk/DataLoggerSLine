@@ -89,6 +89,10 @@ namespace Data_Logger_1._3.Commands.LogCacheCommands
                                 case CacheContext.Qt:
                                     {
                                         var log = parameter as QtLOGViewModel;
+
+                                        if(log == null)
+                                            throw new ArgumentNullException(nameof(log));
+
                                         await _navigationService.NavigateToViewer(log);
 
                                         break;
@@ -96,6 +100,10 @@ namespace Data_Logger_1._3.Commands.LogCacheCommands
                                 case CacheContext.AndroidStudio:
                                     {
                                         var log = parameter as AndroidLOGViewModel;
+
+                                        if (log == null)
+                                            throw new ArgumentNullException(nameof(log));
+
                                         await _navigationService.NavigateToViewer(log);
 
                                         break;
@@ -103,6 +111,10 @@ namespace Data_Logger_1._3.Commands.LogCacheCommands
                                 case CacheContext.Coding:
                                     {
                                         var log = parameter as CodeLOGViewModel;
+
+                                        if (log == null)
+                                            throw new ArgumentNullException(nameof(log));
+
                                         await _navigationService.NavigateToViewer(log);
 
                                         break;
@@ -110,6 +122,10 @@ namespace Data_Logger_1._3.Commands.LogCacheCommands
                                 case CacheContext.Graphics:
                                     {
                                         var log = parameter as GraphicsLOGViewModel;
+
+                                        if (log == null)
+                                            throw new ArgumentNullException(nameof(log));
+
                                         await _navigationService.NavigateToViewer(log);
 
                                         break;
@@ -117,6 +133,10 @@ namespace Data_Logger_1._3.Commands.LogCacheCommands
                                 case CacheContext.Film:
                                     {
                                         var log = parameter as FilmLOGViewModel;
+
+                                        if (log == null)
+                                            throw new ArgumentNullException(nameof(log));
+
                                         await _navigationService.NavigateToViewer(log);
 
                                         break;
@@ -124,6 +144,10 @@ namespace Data_Logger_1._3.Commands.LogCacheCommands
                                 case CacheContext.Flexi:
                                     {
                                         var log = parameter as FlexiLOGViewModel;
+
+                                        if (log == null)
+                                            throw new ArgumentNullException(nameof(log));
+
                                         await _navigationService.NavigateToViewer(log);
 
                                         break;
