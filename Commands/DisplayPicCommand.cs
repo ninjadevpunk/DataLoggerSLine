@@ -54,7 +54,7 @@ namespace Data_Logger_1._3.Commands
                     _signUpViewModel.ProfilePicPath = optimized;
                     _signUpViewModel.SignUpImage = BitmapService.LoadImage(optimized);
 
-                    if (_authService != null && _authService.Account != null)
+                    if (_authService?.Account != null)
                         _authService.Account.ProfilePic = optimized;
                 }
 
