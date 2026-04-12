@@ -208,7 +208,6 @@ namespace Data_Logger_1._3.Services
 
         private void SetupUserProfile()
         {
-            // TODO
             if (_authService.Account != null)
                 _mainWindowViewModel.SignUpImage =  string.IsNullOrEmpty(_authService.Account.ProfilePic) ? null : BitmapService.LoadImage(_authService.Account.ProfilePic);
         }
