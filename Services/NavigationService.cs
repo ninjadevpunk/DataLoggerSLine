@@ -20,6 +20,7 @@ using MVVMEssentials.ViewModels;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Markup;
+using System.Windows.Media.Imaging;
 using static Data_Logger_1._3.Services.Cachemaster;
 
 namespace Data_Logger_1._3.Services
@@ -348,50 +349,42 @@ namespace Data_Logger_1._3.Services
 
 
 
-                const string displayPic = "/Assets/login/user.png";
-                var userProfilePic = _serviceProvider.GetRequiredService<AuthService>().Account.ProfilePic;
+                var auth = _serviceProvider.GetRequiredService<AuthService>();
+                string path = string.IsNullOrWhiteSpace(auth.Account?.ProfilePic) ? "/Assets/login/user.png" : auth.Account.ProfilePic;
 
-                if (viewModel is AScodeCreateViewModel aSviewModel)
+
+                async Task ApplyAsync(dynamic vm, bool autoStart = true)
                 {
-                    aSviewModel.SignUpImage = userProfilePic;
-                    await aSviewModel.AutoStartAsync();
+                    vm.SignUpImage = vm.SignUpImage ?? BitmapService.LoadImage(path);
 
-                    if (aSviewModel.SignUpImage == displayPic)
-                        aSviewModel.SignUpImage = string.Empty;
+                    if (autoStart)
+                        await vm.AutoStartAsync();
 
-                    page.DataContext = aSviewModel;
+                    page.DataContext = vm;
                 }
-                else if (viewModel is graphicCreateViewModel gfXviewModel)
+
+                switch (viewModel)
                 {
-                    gfXviewModel.SignUpImage = userProfilePic;
-                    await gfXviewModel.AutoStartAsync();
+                    case AScodeCreateViewModel vm:
+                        await ApplyAsync(vm);
+                        break;
 
-                    if (gfXviewModel.SignUpImage == displayPic)
-                        gfXviewModel.SignUpImage = string.Empty;
+                    case graphicCreateViewModel vm:
+                        await ApplyAsync(vm);
+                        break;
 
-                    page.DataContext = gfXviewModel;
+                    case filmCreateViewModel vm:
+                        await ApplyAsync(vm);
+                        break;
+
+                    case flexiCreateViewModel vm:
+                        await ApplyAsync(vm, autoStart: false);
+                        break;
+
+                    default:
+                        page.DataContext = viewModel;
+                        break;
                 }
-                else if (viewModel is filmCreateViewModel fLviewModel)
-                {
-                    fLviewModel.SignUpImage = userProfilePic;
-                    await fLviewModel.AutoStartAsync();
-
-                    if (fLviewModel.SignUpImage == displayPic)
-                        fLviewModel.SignUpImage = string.Empty;
-
-                    page.DataContext = fLviewModel;
-                }
-                else if (viewModel is flexiCreateViewModel fleXviewModel)
-                {
-                    fleXviewModel.SignUpImage = userProfilePic;
-
-                    if (fleXviewModel.SignUpImage == displayPic)
-                        fleXviewModel.SignUpImage = string.Empty;
-
-                    page.DataContext = fleXviewModel;
-                }
-                else
-                    page.DataContext = viewModel;
 
                 if (subPage != null)
                 {
@@ -646,8 +639,8 @@ namespace Data_Logger_1._3.Services
                 var uiFactory = _serviceProvider.GetRequiredService<UIFactory>();
                 var viewModelFactory = _serviceProvider.GetRequiredService<ViewModelFactory>();
                 var loggerCreatePage = uiFactory.CreatePage<LoggerCreatePage>();
-                const string displayPic = "/Assets/login/user.png";
-                var userProfilePic = _serviceProvider.GetRequiredService<AuthService>().Account.ProfilePic;
+                var auth = _serviceProvider.GetRequiredService<AuthService>();
+                string path = string.IsNullOrWhiteSpace(auth.Account?.ProfilePic) ? "/Assets/login/user.png" : auth.Account.ProfilePic;
 
 
                 SetLoggerFrame(loggerCreatePage.frame_VARIATIONS);
@@ -663,10 +656,7 @@ namespace Data_Logger_1._3.Services
                         {
                             var qtLogger = viewModelFactory.CreateQtCodeCreateViewModel();
                             await qtLogger.AutoStartAsync(true);
-                            qtLogger.SignUpImage = userProfilePic;
-
-                            if (qtLogger.SignUpImage == displayPic)
-                                qtLogger.SignUpImage = string.Empty;
+                            qtLogger.SignUpImage ??= BitmapService.LoadImage(path);
 
                             await NavigateToPage(loggerCreatePage, qtLogger, new coding_UserControl());
 
@@ -704,10 +694,7 @@ namespace Data_Logger_1._3.Services
                         {
                             var codingLogger = viewModelFactory.CreateCodeCreateViewModel();
                             await codingLogger.AutoStartAsync();
-                            codingLogger.SignUpImage = userProfilePic;
-
-                            if (codingLogger.SignUpImage == displayPic)
-                                codingLogger.SignUpImage = string.Empty;
+                            codingLogger.SignUpImage ??= BitmapService.LoadImage(path);
 
                             await NavigateToPage(loggerCreatePage, codingLogger, new coding_UserControl());
 
@@ -742,8 +729,8 @@ namespace Data_Logger_1._3.Services
                 var uiFactory = _serviceProvider.GetRequiredService<UIFactory>();
                 var viewModelFactory = _serviceProvider.GetRequiredService<ViewModelFactory>();
                 var loggerEditPage = uiFactory.CreatePage<LoggerEditPage>();
-                const string displayPic = "/Assets/login/user.png";
-                var userProfilePic = _serviceProvider.GetRequiredService<AuthService>().Account.ProfilePic;
+                var auth = _serviceProvider.GetRequiredService<AuthService>();
+                string path = string.IsNullOrWhiteSpace(auth.Account?.ProfilePic) ? "/Assets/login/user.png" : auth.Account.ProfilePic;
 
                 SetLoggerFrame(loggerEditPage.frame_VARIATIONS);
 
@@ -761,10 +748,7 @@ namespace Data_Logger_1._3.Services
                             var codingEditor = viewModelFactory.CreateCodeEditViewModel(codingLOGViewModel);
 
                             await codingEditor.AutoStartAsync();
-                            codingEditor.SignUpImage = userProfilePic;
-
-                            if (codingEditor.SignUpImage == displayPic)
-                                codingEditor.SignUpImage = string.Empty;
+                            codingEditor.SignUpImage ??= BitmapService.LoadImage(path);
 
                             var log = codingLOGViewModel._CodeLOG;
 
@@ -831,8 +815,8 @@ namespace Data_Logger_1._3.Services
 
                 var uiFactory = _serviceProvider.GetRequiredService<UIFactory>();
                 var loggerViewPage = uiFactory.CreatePage<LoggerViewPage>();
-                const string displayPic = "/Assets/login/user.png";
-                var userProfilePic = _serviceProvider.GetRequiredService<AuthService>().Account.ProfilePic;
+                var auth = _serviceProvider.GetRequiredService<AuthService>();
+                string path = string.IsNullOrWhiteSpace(auth.Account?.ProfilePic) ? "/Assets/login/user.png" : auth.Account.ProfilePic;
 
                 SetLoggerFrame(loggerViewPage.frame_VARIATIONS);
 
@@ -849,12 +833,12 @@ namespace Data_Logger_1._3.Services
 
                             var codeViewerViewModel = _serviceProvider.GetRequiredService<codeViewerViewModel>();
 
-                            codeViewerViewModel.SignUpImage = userProfilePic;
+                            codeViewerViewModel.SignUpImage ??= BitmapService.LoadImage(path);
 
-                            if (codeViewerViewModel.SignUpImage == displayPic)
-                                codeViewerViewModel.SignUpImage = string.Empty;
+                            var log = codingLOGViewModel?._CodeLOG;
 
-                            var log = codingLOGViewModel._CodeLOG;
+                            if (log == null)
+                                throw new ArgumentNullException("Log cannot be null");
 
                             codeViewerViewModel.ProjectName = log.Project.Name;
                             codeViewerViewModel.ApplicationName = log.Application.Name;
@@ -899,8 +883,8 @@ namespace Data_Logger_1._3.Services
 
                 var uiFactory = _serviceProvider.GetRequiredService<UIFactory>();
                 var loggerViewPage = uiFactory.CreatePage<LoggerViewPage>();
-                const string displayPic = "/Assets/login/user.png";
-                var userProfilePic = _serviceProvider.GetRequiredService<AuthService>().Account.ProfilePic;
+                var auth = _serviceProvider.GetRequiredService<AuthService>();
+                string path = string.IsNullOrWhiteSpace(auth.Account?.ProfilePic) ? "/Assets/login/user.png" : auth.Account.ProfilePic;
 
                 SetLoggerFrame(loggerViewPage.frame_VARIATIONS);
 
@@ -917,10 +901,7 @@ namespace Data_Logger_1._3.Services
                             var codeViewerViewModel = _serviceProvider.GetRequiredService<codeViewerViewModel>();
                             codeViewerViewModel.OKCommand = new ViewerOKCommand(this, ViewType.Log);
 
-                            codeViewerViewModel.SignUpImage = userProfilePic;
-
-                            if (codeViewerViewModel.SignUpImage == displayPic)
-                                codeViewerViewModel.SignUpImage = string.Empty;
+                            codeViewerViewModel.SignUpImage ??= BitmapService.LoadImage(path);
 
                             var codingLOG = (CodingLOG)log;
 
@@ -967,8 +948,8 @@ namespace Data_Logger_1._3.Services
 
                 var uiFactory = _serviceProvider.GetRequiredService<UIFactory>();
                 var loggerViewPage = uiFactory.CreatePage<LoggerViewPage>();
-                const string displayPic = "/Assets/login/user.png";
-                var userProfilePic = _serviceProvider.GetRequiredService<AuthService>().Account.ProfilePic;
+                var auth = _serviceProvider.GetRequiredService<AuthService>();
+                string path = string.IsNullOrWhiteSpace(auth.Account?.ProfilePic) ? "/Assets/login/user.png" : auth.Account.ProfilePic;
 
                 SetLoggerFrame(loggerViewPage.frame_VARIATIONS);
 
@@ -985,10 +966,7 @@ namespace Data_Logger_1._3.Services
 
                             var codeViewerViewModel = _serviceProvider.GetRequiredService<codeViewerViewModel>();
 
-                            codeViewerViewModel.SignUpImage = userProfilePic;
-
-                            if (codeViewerViewModel.SignUpImage == displayPic)
-                                codeViewerViewModel.SignUpImage = string.Empty;
+                            codeViewerViewModel.SignUpImage ??= BitmapService.LoadImage(path);
 
 
                             codeViewerViewModel.ProjectName = codingLOG.Project.Name;
@@ -1033,8 +1011,8 @@ namespace Data_Logger_1._3.Services
                 var uiFactory = _serviceProvider.GetRequiredService<UIFactory>();
                 var viewModelFactory = _serviceProvider.GetRequiredService<ViewModelFactory>();
                 var loggerEditPage = uiFactory.CreatePage<LoggerEditPage>();
-                const string displayPic = "/Assets/login/user.png";
-                var userProfilePic = _serviceProvider.GetRequiredService<AuthService>().Account.ProfilePic;
+                var auth = _serviceProvider.GetRequiredService<AuthService>();
+                string path = string.IsNullOrWhiteSpace(auth.Account?.ProfilePic) ? "/Assets/login/user.png" : auth.Account.ProfilePic;
 
                 SetLoggerFrame(loggerEditPage.frame_VARIATIONS);
 
@@ -1053,10 +1031,7 @@ namespace Data_Logger_1._3.Services
                                 log);
 
                             await codingUpdater.AutoStartAsync();
-                            codingUpdater.SignUpImage = userProfilePic;
-
-                            if (codingUpdater.SignUpImage == displayPic)
-                                codingUpdater.SignUpImage = string.Empty;
+                            codingUpdater.SignUpImage ??= BitmapService.LoadImage(path);
 
 
                             codingUpdater.ProjectName = log.Project.Name;
