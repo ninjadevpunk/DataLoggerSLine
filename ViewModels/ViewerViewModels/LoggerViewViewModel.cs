@@ -5,6 +5,7 @@ using System.Windows.Input;
 using System.Windows;
 using MVVMEssentials.ViewModels;
 using static Data_Logger_1._3.Services.Cachemaster;
+using System.Windows.Media.Imaging;
 
 namespace Data_Logger_1._3.ViewModels.ViewerViewModels
 {
@@ -21,7 +22,7 @@ namespace Data_Logger_1._3.ViewModels.ViewerViewModels
         {
             _navigationService = navigationService;
             _postIts = new List<PostItViewModel>();
-            DisplayPicVisibility = SignUpImage != "" ? Visibility.Collapsed : Visibility.Visible;
+            DisplayPicVisibility = SignUpImage != null ? Visibility.Collapsed : Visibility.Visible;
         }
 
         public void AddPostIt(PostItViewModel postIt)
@@ -35,7 +36,22 @@ namespace Data_Logger_1._3.ViewModels.ViewerViewModels
         public string Author { get; set; }
 
 
-        public string SignUpImage { get; set; }
+        private BitmapImage? signUpImage;
+        public BitmapImage? SignUpImage
+        {
+            get => signUpImage;
+            set
+            {
+                signUpImage = value;
+                OnPropertyChanged(nameof(SignUpImage));
+
+                DisplayPicVisibility = signUpImage != null
+                    ? Visibility.Collapsed
+                    : Visibility.Visible;
+
+                OnPropertyChanged(nameof(DisplayPicVisibility));
+            }
+        }
 
         public string ProjectName { get; set; }
 

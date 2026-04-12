@@ -4,6 +4,7 @@ using MVVMEssentials.ViewModels;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Media.Imaging;
 
 namespace Data_Logger_1._3.ViewModels
 {
@@ -21,7 +22,7 @@ namespace Data_Logger_1._3.ViewModels
             _navigationService = navigationService;
             _factory = uiFactory;
 
-            SignUpImage = "";
+            SignUpImage = null;
             Name = "";
             Surname = "";
             NoBox = true;
@@ -48,10 +49,11 @@ namespace Data_Logger_1._3.ViewModels
 
         /* PROPERTIES */
 
-        
 
-        private string signUpImage;
-        public string SignUpImage
+        public string ProfilePicPath { get; set; } = "/Assets/login/user.png";
+
+        private BitmapImage? signUpImage = null;
+        public BitmapImage? SignUpImage
         {
             get
             {

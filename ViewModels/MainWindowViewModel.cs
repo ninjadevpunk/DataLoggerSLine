@@ -4,6 +4,7 @@ using MVVMEssentials.ViewModels;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Media.Imaging;
 using static Data_Logger_1._3.Services.Cachemaster;
 using static Data_Logger_1._3.Services.NavigationService;
 
@@ -335,8 +336,8 @@ namespace Data_Logger_1._3.ViewModels
         }
 
 
-        private string signupImage = null!;
-        public string SignUpImage
+        private BitmapImage? signupImage = null!;
+        public BitmapImage? SignUpImage
         {
             get
             {
@@ -346,7 +347,7 @@ namespace Data_Logger_1._3.ViewModels
             {
                 signupImage = value;
 
-                if (SignUpImage != "")
+                if (SignUpImage != null)
                     ShowDefault = Visibility.Collapsed;
                 else
                     ShowDefault = Visibility.Visible;
