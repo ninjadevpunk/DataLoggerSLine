@@ -51,15 +51,13 @@ namespace Data_Logger_1._3.Services
                     .Include(l => l.Type)
                     .Include(l => l.PostItList)
                         .ThenInclude(p => p.Subject)
-                        .FirstOrDefaultAsync(l => l.ID == log.ID);
+                    .FirstOrDefaultAsync(l => l.ID == log.ID);
 
                 if (existingLog == null)
-                    throw new InvalidOperationException("Cannot update a log that doesn't exist.");
+                    throw new ArgumentNullException("Cannot update a log that doesn't exist.");
 
-                // 2️ Update scalar/primitive properties
                 master.Entry(existingLog).CurrentValues.SetValues(log);
 
-                // 3️ Update navigation properties safely
                 if (log.Application != null)
                     existingLog.Application = master.Applications.Local
                         .FirstOrDefault(a => a.appID == log.Application.appID) ?? log.Application;
@@ -72,67 +70,79 @@ namespace Data_Logger_1._3.Services
                     existingLog.Output = master.Outputs.Local
                         .FirstOrDefault(o => o.outputID == log.Output.outputID) ?? log.Output;
 
-                if(log.Type != null)
+                if (log.Type != null)
                     existingLog.Type = master.Types.Local
                         .FirstOrDefault(t => t.typeID == log.Type.typeID) ?? log.Type;
 
-                var incomingIds = log.PostItList.Where(p => p.postItID != 0).Select(p => p.postItID).ToHashSet();
+                var incomingIds = log.PostItList
+                    .Where(p => p.postItID != 0)
+                    .Select(p => p.postItID)
+                    .ToHashSet();
 
-                // Remove PostIts that were deleted
+                // REMOVE
                 foreach (var postIt in existingLog.PostItList.ToList())
                 {
                     if (!incomingIds.Contains(postIt.postItID))
                     {
                         master.PostIts.Remove(postIt);
-                        await master.SaveChangesAsync();
                     }
                 }
 
-                // Add or update incoming PostIts
+                // ADD + UPDATE
                 foreach (var postIt in log.PostItList)
                 {
                     if (postIt.postItID == 0)
                     {
-                        // New PostIt added to the log
-                        if(postIt.Subject != null)
-                        {
-                            postIt.Subject.Application = existingLog.Application;
-                            postIt.Subject.Project = existingLog.Project;
-                        }
-                        
+                        // resolve subject
+                        var trackedSubject = master.Subjects.Local
+                            .FirstOrDefault(s => s.subjectID == postIt.subjectID) ?? postIt.Subject;
 
-                        existingLog.PostItList.Add(postIt);
+                        // create new entity
+                        var newPostIt = new PostIt
+                        {
+                            Error = postIt.Error,
+                            Solution = postIt.Solution,
+                            Suggestion = postIt.Suggestion,
+                            Comment = postIt.Comment,
+                            ERCaptureTime = postIt.ERCaptureTime,
+                            SOCaptureTime = postIt.SOCaptureTime,
+
+                            Subject = trackedSubject,
+                            subjectID = trackedSubject.subjectID
+                        };
+
+                        existingLog.PostItList.Add(newPostIt);
                     }
                     else
                     {
-                        // Existing PostIt → update
-                        var trackedPostIt = existingLog.PostItList.First(p => p.postItID == postIt.postItID);
+                        var trackedPostIt = existingLog.PostItList
+                            .First(p => p.postItID == postIt.postItID);
 
-                        // Update scalar properties
-                        master.Entry(trackedPostIt).CurrentValues.SetValues(postIt);
+                        // explicit update
+                        trackedPostIt.Error = postIt.Error;
+                        trackedPostIt.Solution = postIt.Solution;
+                        trackedPostIt.Suggestion = postIt.Suggestion;
+                        trackedPostIt.Comment = postIt.Comment;
+                        trackedPostIt.ERCaptureTime = postIt.ERCaptureTime;
+                        trackedPostIt.SOCaptureTime = postIt.SOCaptureTime;
 
-                        // Update navigation property manually
                         if (postIt.Subject != null)
                         {
-                            // Reuse already-tracked Subject if possible
                             var trackedSubject = master.Subjects.Local
-                                .FirstOrDefault(s => s.subjectID == postIt.Subject.subjectID)
-                                ?? postIt.Subject;
+                                .FirstOrDefault(s => s.subjectID == postIt.Subject.subjectID) ?? postIt.Subject;
 
                             trackedPostIt.Subject = trackedSubject;
+                            trackedPostIt.subjectID = trackedSubject.subjectID;
                         }
-
                     }
                 }
 
-
-
                 await master.SaveChangesAsync();
             }
-            catch (InvalidOperationException invex)
+            catch (ArgumentNullException nullex)
             {
                 var writer = scope.ServiceProvider.GetRequiredService<ENTITYWRITER>();
-                await writer.HandleExceptionAsync(invex, "UpdateLogAsync(log)", "InvalidOperationException");
+                await writer.HandleExceptionAsync(nullex, "UpdateLogAsync(log)", "InvalidOperationException");
             }
             catch (Exception ex)
             {
