@@ -9,15 +9,15 @@ using static Data_Logger_1._3.Models.LOG;
 
 namespace Data_Logger_1._3.Services
 {
-    public class ENTITYREADER
+    public class EntityReader
     {
         private readonly IServiceProvider _serviceProvider;
 
 
         /// <summary>
-        /// The Entity Framework data reader for ENTITYMASTER.
+        /// The Entity Framework data reader for EntityMaster.
         /// </summary>
-        public ENTITYREADER(IServiceProvider serviceProvider)
+        public EntityReader(IServiceProvider serviceProvider)
         {
             _serviceProvider = serviceProvider;
         }
@@ -25,7 +25,7 @@ namespace Data_Logger_1._3.Services
         public async Task<AsyncServiceScope> SaveChangesAsync()
         {
             await using var scope = _serviceProvider.CreateAsyncScope();
-            var master = scope.ServiceProvider.GetRequiredService<ENTITYMASTER>();
+            var master = scope.ServiceProvider.GetRequiredService<EntityMaster>();
 
             await master.SaveChangesAsync();
 
@@ -35,7 +35,7 @@ namespace Data_Logger_1._3.Services
         public async Task<AsyncServiceScope> SaveChangesAsync(LOG log)
         {
             await using var scope = _serviceProvider.CreateAsyncScope();
-            var master = scope.ServiceProvider.GetRequiredService<ENTITYMASTER>();
+            var master = scope.ServiceProvider.GetRequiredService<EntityMaster>();
 
             if (!master.Logs.Local.Contains(log))
             {
@@ -49,7 +49,7 @@ namespace Data_Logger_1._3.Services
 
         public async Task SaveChangesAsync(AsyncServiceScope scope)
         {
-            var master = scope.ServiceProvider.GetRequiredService<ENTITYMASTER>();
+            var master = scope.ServiceProvider.GetRequiredService<EntityMaster>();
 
             await master.SaveChangesAsync();
         }
@@ -62,7 +62,7 @@ namespace Data_Logger_1._3.Services
         public async Task<string> RetrieveProfilePic(string emailAddress)
         {
             await using var scope = _serviceProvider.CreateAsyncScope();
-            var master = scope.ServiceProvider.GetRequiredService<ENTITYMASTER>();
+            var master = scope.ServiceProvider.GetRequiredService<EntityMaster>();
 
             return await master.Accounts
                 .Where(a => a.Email == emailAddress)
@@ -81,7 +81,7 @@ namespace Data_Logger_1._3.Services
         public async Task<LOG?> RetrieveLog(int id)
         {
             await using var scope = _serviceProvider.CreateAsyncScope();
-            var master = scope.ServiceProvider.GetRequiredService<ENTITYMASTER>();
+            var master = scope.ServiceProvider.GetRequiredService<EntityMaster>();
 
             var accountID = await GetOnlineAccountIDAsync();
 
@@ -94,7 +94,7 @@ namespace Data_Logger_1._3.Services
         public async Task<List<LOG>> RetrieveLogs()
         {
             await using var scope = _serviceProvider.CreateAsyncScope();
-            var master = scope.ServiceProvider.GetRequiredService<ENTITYMASTER>();
+            var master = scope.ServiceProvider.GetRequiredService<EntityMaster>();
 
             var accountID = await GetOnlineAccountIDAsync();
 
@@ -111,7 +111,7 @@ namespace Data_Logger_1._3.Services
         public async Task<List<CodingLOG>> RetrieveCodingLogs()
         {
             await using var scope = _serviceProvider.CreateAsyncScope();
-            var master = scope.ServiceProvider.GetRequiredService<ENTITYMASTER>();
+            var master = scope.ServiceProvider.GetRequiredService<EntityMaster>();
 
             var accountID = await GetOnlineAccountIDAsync();
 
@@ -131,7 +131,7 @@ namespace Data_Logger_1._3.Services
         public async Task<List<CodingLOG>> RetrieveQtCodingLogs()
         {
             await using var scope = _serviceProvider.CreateAsyncScope();
-            var master = scope.ServiceProvider.GetRequiredService<ENTITYMASTER>();
+            var master = scope.ServiceProvider.GetRequiredService<EntityMaster>();
 
             var accountID = await GetOnlineAccountIDAsync();
 
@@ -144,7 +144,7 @@ namespace Data_Logger_1._3.Services
         public async Task<List<AndroidCodingLOG>> RetrieveAndroidCodingLogs()
         {
             await using var scope = _serviceProvider.CreateAsyncScope();
-            var master = scope.ServiceProvider.GetRequiredService<ENTITYMASTER>();
+            var master = scope.ServiceProvider.GetRequiredService<EntityMaster>();
 
             var accountID = await GetOnlineAccountIDAsync();
 
@@ -157,7 +157,7 @@ namespace Data_Logger_1._3.Services
         public async Task<List<GraphicsLOG>> RetrieveGraphicsLogs()
         {
             await using var scope = _serviceProvider.CreateAsyncScope();
-            var master = scope.ServiceProvider.GetRequiredService<ENTITYMASTER>();
+            var master = scope.ServiceProvider.GetRequiredService<EntityMaster>();
 
             var accountID = await GetOnlineAccountIDAsync();
 
@@ -170,7 +170,7 @@ namespace Data_Logger_1._3.Services
         public async Task<List<FilmLOG>> RetrieveFilmLogs()
         {
             await using var scope = _serviceProvider.CreateAsyncScope();
-            var master = scope.ServiceProvider.GetRequiredService<ENTITYMASTER>();
+            var master = scope.ServiceProvider.GetRequiredService<EntityMaster>();
 
             var accountID = await GetOnlineAccountIDAsync();
 
@@ -183,7 +183,7 @@ namespace Data_Logger_1._3.Services
         public async Task<List<FlexiNotesLOG>> RetrieveFlexiNotesLogs()
         {
             await using var scope = _serviceProvider.CreateAsyncScope();
-            var master = scope.ServiceProvider.GetRequiredService<ENTITYMASTER>();
+            var master = scope.ServiceProvider.GetRequiredService<EntityMaster>();
 
             var accountID = await GetOnlineAccountIDAsync();
 
@@ -197,7 +197,7 @@ namespace Data_Logger_1._3.Services
         public async Task<List<NoteItem>> RetrieveGenericNotes(int id)
         {
             await using var scope = _serviceProvider.CreateAsyncScope();
-            var master = scope.ServiceProvider.GetRequiredService<ENTITYMASTER>();
+            var master = scope.ServiceProvider.GetRequiredService<EntityMaster>();
 
             return await master.NoteItems
                 .Where(n => n.accountID == id)
@@ -207,7 +207,7 @@ namespace Data_Logger_1._3.Services
         public async Task<List<CheckList>> RetrieveCheckList()
         {
             await using var scope = _serviceProvider.CreateAsyncScope();
-            var master = scope.ServiceProvider.GetRequiredService<ENTITYMASTER>();
+            var master = scope.ServiceProvider.GetRequiredService<EntityMaster>();
 
             var accountID = await GetOnlineAccountIDAsync();
 
@@ -223,8 +223,8 @@ namespace Data_Logger_1._3.Services
         public async Task<int> GetOnlineAccountIDAsync()
         {
             await using var scope = _serviceProvider.CreateAsyncScope();
-            var master = scope.ServiceProvider.GetRequiredService<ENTITYMASTER>();
-            var writer = scope.ServiceProvider.GetRequiredService<ENTITYWRITER>();
+            var master = scope.ServiceProvider.GetRequiredService<EntityMaster>();
+            var writer = scope.ServiceProvider.GetRequiredService<EntityWriter>();
 
             try
             {
@@ -245,9 +245,9 @@ namespace Data_Logger_1._3.Services
         /// Find the account ID of the user who's online.
         /// </summary>
         /// <returns>Returns a single account ID</returns>
-        public async Task<int?> GetOnlineAccountIDAsync(AsyncServiceScope scope, ENTITYMASTER master)
+        public async Task<int?> GetOnlineAccountIDAsync(AsyncServiceScope scope, EntityMaster master)
         {
-            var writer = scope.ServiceProvider.GetRequiredService<ENTITYWRITER>();
+            var writer = scope.ServiceProvider.GetRequiredService<EntityWriter>();
 
             try
             {
@@ -268,8 +268,8 @@ namespace Data_Logger_1._3.Services
         public async Task<ACCOUNT?> FindAccountByID(int id)
         {
             await using var scope = _serviceProvider.CreateAsyncScope();
-            var master = scope.ServiceProvider.GetRequiredService<ENTITYMASTER>();
-            var writer = scope.ServiceProvider.GetRequiredService<ENTITYWRITER>();
+            var master = scope.ServiceProvider.GetRequiredService<EntityMaster>();
+            var writer = scope.ServiceProvider.GetRequiredService<EntityWriter>();
 
             try
             {
@@ -287,9 +287,9 @@ namespace Data_Logger_1._3.Services
             }
         }
 
-        public async Task<ACCOUNT?> FindAccountByID(AsyncServiceScope scope, ENTITYMASTER master, int id)
+        public async Task<ACCOUNT?> FindAccountByID(AsyncServiceScope scope, EntityMaster master, int id)
         {
-            var writer = scope.ServiceProvider.GetRequiredService<ENTITYWRITER>();
+            var writer = scope.ServiceProvider.GetRequiredService<EntityWriter>();
 
             try
             {
@@ -310,8 +310,8 @@ namespace Data_Logger_1._3.Services
         public async Task<ACCOUNT?> FindAccountByEmail(string emailAddress, string password)
         {
             await using var scope = _serviceProvider.CreateAsyncScope();
-            var master = scope.ServiceProvider.GetRequiredService<ENTITYMASTER>();
-            var writer = scope.ServiceProvider.GetRequiredService<ENTITYWRITER>();
+            var master = scope.ServiceProvider.GetRequiredService<EntityMaster>();
+            var writer = scope.ServiceProvider.GetRequiredService<EntityWriter>();
 
             try
             {
@@ -339,8 +339,8 @@ namespace Data_Logger_1._3.Services
         public async Task<ApplicationClass?> FindApplication(string name)
         {
             await using var scope = _serviceProvider.CreateAsyncScope();
-            var master = scope.ServiceProvider.GetRequiredService<ENTITYMASTER>();
-            var writer = scope.ServiceProvider.GetRequiredService<ENTITYWRITER>();
+            var master = scope.ServiceProvider.GetRequiredService<EntityMaster>();
+            var writer = scope.ServiceProvider.GetRequiredService<EntityWriter>();
 
             try
             {
@@ -360,8 +360,8 @@ namespace Data_Logger_1._3.Services
         public async Task<ApplicationClass?> FindApplication(int? ID, string name)
         {
             await using var scope = _serviceProvider.CreateAsyncScope();
-            var master = scope.ServiceProvider.GetRequiredService<ENTITYMASTER>();
-            var writer = scope.ServiceProvider.GetRequiredService<ENTITYWRITER>();
+            var master = scope.ServiceProvider.GetRequiredService<EntityMaster>();
+            var writer = scope.ServiceProvider.GetRequiredService<EntityWriter>();
 
             try
             {
@@ -382,9 +382,9 @@ namespace Data_Logger_1._3.Services
             return null;
         }
 
-        public async Task<ApplicationClass?> FindApplication(AsyncServiceScope scope, ENTITYMASTER master, int? ID, string name)
+        public async Task<ApplicationClass?> FindApplication(AsyncServiceScope scope, EntityMaster master, int? ID, string name)
         {
-            var writer = scope.ServiceProvider.GetRequiredService<ENTITYWRITER>();
+            var writer = scope.ServiceProvider.GetRequiredService<EntityWriter>();
 
             try
             {
@@ -409,8 +409,8 @@ namespace Data_Logger_1._3.Services
         public async Task<ApplicationClass?> FindApplicationByID(int appID)
         {
             await using var scope = _serviceProvider.CreateAsyncScope();
-            var master = scope.ServiceProvider.GetRequiredService<ENTITYMASTER>();
-            var writer = scope.ServiceProvider.GetRequiredService<ENTITYWRITER>();
+            var master = scope.ServiceProvider.GetRequiredService<EntityMaster>();
+            var writer = scope.ServiceProvider.GetRequiredService<EntityWriter>();
 
             try
             {
@@ -430,8 +430,8 @@ namespace Data_Logger_1._3.Services
         public async Task<ProjectClass?> FindProject(int? userID, string projectName, int appID)
         {
             await using var scope = _serviceProvider.CreateAsyncScope();
-            var master = scope.ServiceProvider.GetRequiredService<ENTITYMASTER>();
-            var writer = scope.ServiceProvider.GetRequiredService<ENTITYWRITER>();
+            var master = scope.ServiceProvider.GetRequiredService<EntityMaster>();
+            var writer = scope.ServiceProvider.GetRequiredService<EntityWriter>();
 
             try
             {
@@ -454,9 +454,9 @@ namespace Data_Logger_1._3.Services
             return null;
         }
 
-        public async Task<ProjectClass?> FindProject(AsyncServiceScope scope, ENTITYMASTER master, int? userID, string projectName, int appID)
+        public async Task<ProjectClass?> FindProject(AsyncServiceScope scope, EntityMaster master, int? userID, string projectName, int appID)
         {
-            var writer = scope.ServiceProvider.GetRequiredService<ENTITYWRITER>();
+            var writer = scope.ServiceProvider.GetRequiredService<EntityWriter>();
 
             try
             {
@@ -483,8 +483,8 @@ namespace Data_Logger_1._3.Services
         public async Task<ProjectClass?> FindProjectByID(int projectID)
         {
             await using var scope = _serviceProvider.CreateAsyncScope();
-            var master = scope.ServiceProvider.GetRequiredService<ENTITYMASTER>();
-            var writer = scope.ServiceProvider.GetRequiredService<ENTITYWRITER>();
+            var master = scope.ServiceProvider.GetRequiredService<EntityMaster>();
+            var writer = scope.ServiceProvider.GetRequiredService<EntityWriter>();
 
             try
             {
@@ -504,8 +504,8 @@ namespace Data_Logger_1._3.Services
         public async Task<OutputClass?> FindOutput(string name)
         {
             await using var scope = _serviceProvider.CreateAsyncScope();
-            var master = scope.ServiceProvider.GetRequiredService<ENTITYMASTER>();
-            var writer = scope.ServiceProvider.GetRequiredService<ENTITYWRITER>();
+            var master = scope.ServiceProvider.GetRequiredService<EntityMaster>();
+            var writer = scope.ServiceProvider.GetRequiredService<EntityWriter>();
 
             try
             {
@@ -521,9 +521,9 @@ namespace Data_Logger_1._3.Services
             return null;
         }
 
-        public async Task<OutputClass?> FindOutput(AsyncServiceScope scope, ENTITYMASTER master, string name)
+        public async Task<OutputClass?> FindOutput(AsyncServiceScope scope, EntityMaster master, string name)
         {
-            var writer = scope.ServiceProvider.GetRequiredService<ENTITYWRITER>();
+            var writer = scope.ServiceProvider.GetRequiredService<EntityWriter>();
 
             try
             {
@@ -542,8 +542,8 @@ namespace Data_Logger_1._3.Services
         public async Task<OutputClass?> FindOutputByID(int outputID)
         {
             await using var scope = _serviceProvider.CreateAsyncScope();
-            var master = scope.ServiceProvider.GetRequiredService<ENTITYMASTER>();
-            var writer = scope.ServiceProvider.GetRequiredService<ENTITYWRITER>();
+            var master = scope.ServiceProvider.GetRequiredService<EntityMaster>();
+            var writer = scope.ServiceProvider.GetRequiredService<EntityWriter>();
 
             try
             {
@@ -563,8 +563,8 @@ namespace Data_Logger_1._3.Services
         public async Task<TypeClass?> FindType(string name)
         {
             await using var scope = _serviceProvider.CreateAsyncScope();
-            var master = scope.ServiceProvider.GetRequiredService<ENTITYMASTER>();
-            var writer = scope.ServiceProvider.GetRequiredService<ENTITYWRITER>();
+            var master = scope.ServiceProvider.GetRequiredService<EntityMaster>();
+            var writer = scope.ServiceProvider.GetRequiredService<EntityWriter>();
 
             try
             {
@@ -580,9 +580,9 @@ namespace Data_Logger_1._3.Services
             return null;
         }
 
-        public async Task<TypeClass?> FindType(AsyncServiceScope scope, ENTITYMASTER master, string name)
+        public async Task<TypeClass?> FindType(AsyncServiceScope scope, EntityMaster master, string name)
         {
-            var writer = scope.ServiceProvider.GetRequiredService<ENTITYWRITER>();
+            var writer = scope.ServiceProvider.GetRequiredService<EntityWriter>();
 
             try
             {
@@ -601,8 +601,8 @@ namespace Data_Logger_1._3.Services
         public async Task<TypeClass?> FindTypeByID(int typeID)
         {
             await using var scope = _serviceProvider.CreateAsyncScope();
-            var master = scope.ServiceProvider.GetRequiredService<ENTITYMASTER>();
-            var writer = scope.ServiceProvider.GetRequiredService<ENTITYWRITER>();
+            var master = scope.ServiceProvider.GetRequiredService<EntityMaster>();
+            var writer = scope.ServiceProvider.GetRequiredService<EntityWriter>();
 
             try
             {
@@ -627,7 +627,7 @@ namespace Data_Logger_1._3.Services
         {
             try
             {
-                string hashedPassword = ENTITYWRITER.SaltedSHA256Hash(password, account.accountID.ToString());
+                string hashedPassword = EntityWriter.SaltedSHA256Hash(password, account.accountID.ToString());
                 return hashedPassword == account.Password;
             }
             catch (Exception ex)
@@ -650,8 +650,8 @@ namespace Data_Logger_1._3.Services
         public async Task<bool> EmailExists(string email)
         {
             await using var scope = _serviceProvider.CreateAsyncScope();
-            var master = scope.ServiceProvider.GetRequiredService<ENTITYMASTER>();
-            var writer = scope.ServiceProvider.GetRequiredService<ENTITYWRITER>();
+            var master = scope.ServiceProvider.GetRequiredService<EntityMaster>();
+            var writer = scope.ServiceProvider.GetRequiredService<EntityWriter>();
 
             try
             {
@@ -688,8 +688,8 @@ namespace Data_Logger_1._3.Services
         /// <exception cref="EmailConflictException"></exception>
         public async Task<bool> EmailExists(AsyncServiceScope scope, string email)
         {
-            var master = scope.ServiceProvider.GetRequiredService<ENTITYMASTER>();
-            var writer = scope.ServiceProvider.GetRequiredService<ENTITYWRITER>();
+            var master = scope.ServiceProvider.GetRequiredService<EntityMaster>();
+            var writer = scope.ServiceProvider.GetRequiredService<EntityWriter>();
 
             try
             {
@@ -725,7 +725,7 @@ namespace Data_Logger_1._3.Services
         public async Task<bool> PostItsExists(int logID)
         {
             await using var scope = _serviceProvider.CreateAsyncScope();
-            var master = scope.ServiceProvider.GetRequiredService<ENTITYMASTER>();
+            var master = scope.ServiceProvider.GetRequiredService<EntityMaster>();
 
             return await master.PostIts.AnyAsync(p =>
                     p.logID == logID);
@@ -741,8 +741,8 @@ namespace Data_Logger_1._3.Services
         public async Task<int> FindAccountIDAsync(ACCOUNT account)
         {
             await using var scope = _serviceProvider.CreateAsyncScope();
-            var master = scope.ServiceProvider.GetRequiredService<ENTITYMASTER>();
-            var writer = scope.ServiceProvider.GetRequiredService<ENTITYWRITER>();
+            var master = scope.ServiceProvider.GetRequiredService<EntityMaster>();
+            var writer = scope.ServiceProvider.GetRequiredService<EntityWriter>();
 
             try
             {
@@ -774,8 +774,8 @@ namespace Data_Logger_1._3.Services
         public async Task<int> FindAppID(ApplicationClass app)
         {
             await using var scope = _serviceProvider.CreateAsyncScope();
-            var master = scope.ServiceProvider.GetRequiredService<ENTITYMASTER>();
-            var writer = scope.ServiceProvider.GetRequiredService<ENTITYWRITER>();
+            var master = scope.ServiceProvider.GetRequiredService<EntityMaster>();
+            var writer = scope.ServiceProvider.GetRequiredService<EntityWriter>();
 
             try
             {
@@ -809,8 +809,8 @@ namespace Data_Logger_1._3.Services
         public async Task<int> FindProjectID(ProjectClass project)
         {
             await using var scope = _serviceProvider.CreateAsyncScope();
-            var master = scope.ServiceProvider.GetRequiredService<ENTITYMASTER>();
-            var writer = scope.ServiceProvider.GetRequiredService<ENTITYWRITER>();
+            var master = scope.ServiceProvider.GetRequiredService<EntityMaster>();
+            var writer = scope.ServiceProvider.GetRequiredService<EntityWriter>();
 
             if (string.IsNullOrEmpty(project.Name) || project.Name == "Unknown")
                 return 1;
@@ -856,8 +856,8 @@ namespace Data_Logger_1._3.Services
         public async Task<SubjectClass?> FindSubject(string name, LOG.CATEGORY category)
         {
             await using var scope = _serviceProvider.CreateAsyncScope();
-            var master = scope.ServiceProvider.GetRequiredService<ENTITYMASTER>();
-            var writer = scope.ServiceProvider.GetRequiredService<ENTITYWRITER>();
+            var master = scope.ServiceProvider.GetRequiredService<EntityMaster>();
+            var writer = scope.ServiceProvider.GetRequiredService<EntityWriter>();
 
             try
             {
@@ -877,9 +877,9 @@ namespace Data_Logger_1._3.Services
             return null;
         }
 
-        public async Task<SubjectClass?> FindSubject(AsyncServiceScope scope, ENTITYMASTER master, string name, LOG.CATEGORY category)
+        public async Task<SubjectClass?> FindSubject(AsyncServiceScope scope, EntityMaster master, string name, LOG.CATEGORY category)
         {
-            var writer = scope.ServiceProvider.GetRequiredService<ENTITYWRITER>();
+            var writer = scope.ServiceProvider.GetRequiredService<EntityWriter>();
 
             try
             {
@@ -907,8 +907,8 @@ namespace Data_Logger_1._3.Services
         public async Task<int> FindSubjectID(SubjectClass subject)
         {
             await using var scope = _serviceProvider.CreateAsyncScope();
-            var master = scope.ServiceProvider.GetRequiredService<ENTITYMASTER>();
-            var writer = scope.ServiceProvider.GetRequiredService<ENTITYWRITER>();
+            var master = scope.ServiceProvider.GetRequiredService<EntityMaster>();
+            var writer = scope.ServiceProvider.GetRequiredService<EntityWriter>();
 
             int subjectKey = 1;
 
@@ -944,8 +944,8 @@ namespace Data_Logger_1._3.Services
         public async Task<int> LogCount()
         {
             await using var scope = _serviceProvider.CreateAsyncScope();
-            var master = scope.ServiceProvider.GetRequiredService<ENTITYMASTER>();
-            var writer = scope.ServiceProvider.GetRequiredService<ENTITYWRITER>();
+            var master = scope.ServiceProvider.GetRequiredService<EntityMaster>();
+            var writer = scope.ServiceProvider.GetRequiredService<EntityWriter>();
 
             try
             {
@@ -969,8 +969,8 @@ namespace Data_Logger_1._3.Services
         public async Task<int?> LogCount(CATEGORY category)
         {
             await using var scope = _serviceProvider.CreateAsyncScope();
-            var master = scope.ServiceProvider.GetRequiredService<ENTITYMASTER>();
-            var writer = scope.ServiceProvider.GetRequiredService<ENTITYWRITER>();
+            var master = scope.ServiceProvider.GetRequiredService<EntityMaster>();
+            var writer = scope.ServiceProvider.GetRequiredService<EntityWriter>();
 
             try
             {
@@ -1001,8 +1001,8 @@ namespace Data_Logger_1._3.Services
         public async Task<int> QtLogCount()
         {
             await using var scope = _serviceProvider.CreateAsyncScope();
-            var master = scope.ServiceProvider.GetRequiredService<ENTITYMASTER>();
-            var writer = scope.ServiceProvider.GetRequiredService<ENTITYWRITER>();
+            var master = scope.ServiceProvider.GetRequiredService<EntityMaster>();
+            var writer = scope.ServiceProvider.GetRequiredService<EntityWriter>();
 
             try
             {
@@ -1033,8 +1033,8 @@ namespace Data_Logger_1._3.Services
         public async Task<int> ASLogCount()
         {
             await using var scope = _serviceProvider.CreateAsyncScope();
-            var master = scope.ServiceProvider.GetRequiredService<ENTITYMASTER>();
-            var writer = scope.ServiceProvider.GetRequiredService<ENTITYWRITER>();
+            var master = scope.ServiceProvider.GetRequiredService<EntityMaster>();
+            var writer = scope.ServiceProvider.GetRequiredService<EntityWriter>();
 
             try
             {
@@ -1066,8 +1066,8 @@ namespace Data_Logger_1._3.Services
         public async Task<int> CodingLogCount()
         {
             await using var scope = _serviceProvider.CreateAsyncScope();
-            var master = scope.ServiceProvider.GetRequiredService<ENTITYMASTER>();
-            var writer = scope.ServiceProvider.GetRequiredService<ENTITYWRITER>();
+            var master = scope.ServiceProvider.GetRequiredService<EntityMaster>();
+            var writer = scope.ServiceProvider.GetRequiredService<EntityWriter>();
 
             try
             {
@@ -1099,8 +1099,8 @@ namespace Data_Logger_1._3.Services
         public async Task<int> GraphicsLogCount()
         {
             await using var scope = _serviceProvider.CreateAsyncScope();
-            var master = scope.ServiceProvider.GetRequiredService<ENTITYMASTER>();
-            var writer = scope.ServiceProvider.GetRequiredService<ENTITYWRITER>();
+            var master = scope.ServiceProvider.GetRequiredService<EntityMaster>();
+            var writer = scope.ServiceProvider.GetRequiredService<EntityWriter>();
 
             try
             {
@@ -1130,8 +1130,8 @@ namespace Data_Logger_1._3.Services
         public async Task<int> FilmLogCount()
         {
             await using var scope = _serviceProvider.CreateAsyncScope();
-            var master = scope.ServiceProvider.GetRequiredService<ENTITYMASTER>();
-            var writer = scope.ServiceProvider.GetRequiredService<ENTITYWRITER>();
+            var master = scope.ServiceProvider.GetRequiredService<EntityMaster>();
+            var writer = scope.ServiceProvider.GetRequiredService<EntityWriter>();
 
             try
             {
@@ -1160,8 +1160,8 @@ namespace Data_Logger_1._3.Services
         public async Task<int> NoteItemCount()
         {
             await using var scope = _serviceProvider.CreateAsyncScope();
-            var master = scope.ServiceProvider.GetRequiredService<ENTITYMASTER>();
-            var writer = scope.ServiceProvider.GetRequiredService<ENTITYWRITER>();
+            var master = scope.ServiceProvider.GetRequiredService<EntityMaster>();
+            var writer = scope.ServiceProvider.GetRequiredService<EntityWriter>();
 
             try
             {
@@ -1191,8 +1191,8 @@ namespace Data_Logger_1._3.Services
         public async Task<int> FlexiNotesLogCount()
         {
             await using var scope = _serviceProvider.CreateAsyncScope();
-            var master = scope.ServiceProvider.GetRequiredService<ENTITYMASTER>();
-            var writer = scope.ServiceProvider.GetRequiredService<ENTITYWRITER>();
+            var master = scope.ServiceProvider.GetRequiredService<EntityMaster>();
+            var writer = scope.ServiceProvider.GetRequiredService<EntityWriter>();
 
             try
             {
@@ -1225,8 +1225,8 @@ namespace Data_Logger_1._3.Services
         public async Task<List<ApplicationClass>> ListApplications()
         {
             await using var scope = _serviceProvider.CreateAsyncScope();
-            var master = scope.ServiceProvider.GetRequiredService<ENTITYMASTER>();
-            var writer = scope.ServiceProvider.GetRequiredService<ENTITYWRITER>();
+            var master = scope.ServiceProvider.GetRequiredService<EntityMaster>();
+            var writer = scope.ServiceProvider.GetRequiredService<EntityWriter>();
 
             try
             {
@@ -1258,8 +1258,8 @@ namespace Data_Logger_1._3.Services
         public async Task<List<ApplicationClass>> ListApplications(CATEGORY category)
         {
             await using var scope = _serviceProvider.CreateAsyncScope();
-            var master = scope.ServiceProvider.GetRequiredService<ENTITYMASTER>();
-            var writer = scope.ServiceProvider.GetRequiredService<ENTITYWRITER>();
+            var master = scope.ServiceProvider.GetRequiredService<EntityMaster>();
+            var writer = scope.ServiceProvider.GetRequiredService<EntityWriter>();
 
             try
             {
@@ -1292,8 +1292,8 @@ namespace Data_Logger_1._3.Services
         public async Task<List<ProjectClass>> ListProjects()
         {
             await using var scope = _serviceProvider.CreateAsyncScope();
-            var master = scope.ServiceProvider.GetRequiredService<ENTITYMASTER>();
-            var writer = scope.ServiceProvider.GetRequiredService<ENTITYWRITER>();
+            var master = scope.ServiceProvider.GetRequiredService<EntityMaster>();
+            var writer = scope.ServiceProvider.GetRequiredService<EntityWriter>();
 
             try
             {
@@ -1326,8 +1326,8 @@ namespace Data_Logger_1._3.Services
         public async Task<List<ProjectClass>> ListProjects(CATEGORY category)
         {
             await using var scope = _serviceProvider.CreateAsyncScope();
-            var master = scope.ServiceProvider.GetRequiredService<ENTITYMASTER>();
-            var writer = scope.ServiceProvider.GetRequiredService<ENTITYWRITER>();
+            var master = scope.ServiceProvider.GetRequiredService<EntityMaster>();
+            var writer = scope.ServiceProvider.GetRequiredService<EntityWriter>();
 
             try
             {
@@ -1363,8 +1363,8 @@ namespace Data_Logger_1._3.Services
         public async Task<List<ProjectClass>> ListProjects(ApplicationClass app)
         {
             await using var scope = _serviceProvider.CreateAsyncScope();
-            var master = scope.ServiceProvider.GetRequiredService<ENTITYMASTER>();
-            var writer = scope.ServiceProvider.GetRequiredService<ENTITYWRITER>();
+            var master = scope.ServiceProvider.GetRequiredService<EntityMaster>();
+            var writer = scope.ServiceProvider.GetRequiredService<EntityWriter>();
 
             try
             {
@@ -1399,8 +1399,8 @@ namespace Data_Logger_1._3.Services
         public async Task<List<SubjectClass>> ListSubjects(CATEGORY category)
         {
             await using var scope = _serviceProvider.CreateAsyncScope();
-            var master = scope.ServiceProvider.GetRequiredService<ENTITYMASTER>();
-            var writer = scope.ServiceProvider.GetRequiredService<ENTITYWRITER>();
+            var master = scope.ServiceProvider.GetRequiredService<EntityMaster>();
+            var writer = scope.ServiceProvider.GetRequiredService<EntityWriter>();
 
             try
             {
@@ -1434,8 +1434,8 @@ namespace Data_Logger_1._3.Services
         public async Task<List<SubjectClass>> ListSubjects(ProjectClass project)
         {
             await using var scope = _serviceProvider.CreateAsyncScope();
-            var master = scope.ServiceProvider.GetRequiredService<ENTITYMASTER>();
-            var writer = scope.ServiceProvider.GetRequiredService<ENTITYWRITER>();
+            var master = scope.ServiceProvider.GetRequiredService<EntityMaster>();
+            var writer = scope.ServiceProvider.GetRequiredService<EntityWriter>();
 
             try
             {
@@ -1471,8 +1471,8 @@ namespace Data_Logger_1._3.Services
         public async Task<List<OutputClass>> ListQtOutputs()
         {
             await using var scope = _serviceProvider.CreateAsyncScope();
-            var master = scope.ServiceProvider.GetRequiredService<ENTITYMASTER>();
-            var writer = scope.ServiceProvider.GetRequiredService<ENTITYWRITER>();
+            var master = scope.ServiceProvider.GetRequiredService<EntityMaster>();
+            var writer = scope.ServiceProvider.GetRequiredService<EntityWriter>();
 
             try
             {
@@ -1501,8 +1501,8 @@ namespace Data_Logger_1._3.Services
         public async Task<List<OutputClass>> ListASOutputs()
         {
             await using var scope = _serviceProvider.CreateAsyncScope();
-            var master = scope.ServiceProvider.GetRequiredService<ENTITYMASTER>();
-            var writer = scope.ServiceProvider.GetRequiredService<ENTITYWRITER>();
+            var master = scope.ServiceProvider.GetRequiredService<EntityMaster>();
+            var writer = scope.ServiceProvider.GetRequiredService<EntityWriter>();
 
             try
             {
@@ -1530,8 +1530,8 @@ namespace Data_Logger_1._3.Services
         public async Task<List<OutputClass>> ListOutputs(CATEGORY category)
         {
             await using var scope = _serviceProvider.CreateAsyncScope();
-            var master = scope.ServiceProvider.GetRequiredService<ENTITYMASTER>();
-            var writer = scope.ServiceProvider.GetRequiredService<ENTITYWRITER>();
+            var master = scope.ServiceProvider.GetRequiredService<EntityMaster>();
+            var writer = scope.ServiceProvider.GetRequiredService<EntityWriter>();
 
             try
             {
@@ -1565,8 +1565,8 @@ namespace Data_Logger_1._3.Services
         public async Task<List<TypeClass>> ListQtTypes()
         {
             await using var scope = _serviceProvider.CreateAsyncScope();
-            var master = scope.ServiceProvider.GetRequiredService<ENTITYMASTER>();
-            var writer = scope.ServiceProvider.GetRequiredService<ENTITYWRITER>();
+            var master = scope.ServiceProvider.GetRequiredService<EntityMaster>();
+            var writer = scope.ServiceProvider.GetRequiredService<EntityWriter>();
 
             try
             {
@@ -1593,8 +1593,8 @@ namespace Data_Logger_1._3.Services
         public async Task<List<TypeClass>> ListASTypes()
         {
             await using var scope = _serviceProvider.CreateAsyncScope();
-            var master = scope.ServiceProvider.GetRequiredService<ENTITYMASTER>();
-            var writer = scope.ServiceProvider.GetRequiredService<ENTITYWRITER>();
+            var master = scope.ServiceProvider.GetRequiredService<EntityMaster>();
+            var writer = scope.ServiceProvider.GetRequiredService<EntityWriter>();
 
             try
             {
@@ -1622,8 +1622,8 @@ namespace Data_Logger_1._3.Services
         public async Task<List<TypeClass>> ListTypes(CATEGORY category)
         {
             await using var scope = _serviceProvider.CreateAsyncScope();
-            var master = scope.ServiceProvider.GetRequiredService<ENTITYMASTER>();
-            var writer = scope.ServiceProvider.GetRequiredService<ENTITYWRITER>();
+            var master = scope.ServiceProvider.GetRequiredService<EntityMaster>();
+            var writer = scope.ServiceProvider.GetRequiredService<EntityWriter>();
 
             try
             {
@@ -1668,8 +1668,8 @@ namespace Data_Logger_1._3.Services
         public async Task<List<CodingLOG>?> SearchCodingLogs(string searchBarText)
         {
             await using var scope = _serviceProvider.CreateAsyncScope();
-            var master = scope.ServiceProvider.GetRequiredService<ENTITYMASTER>();
-            var writer = scope.ServiceProvider.GetRequiredService<ENTITYWRITER>();
+            var master = scope.ServiceProvider.GetRequiredService<EntityMaster>();
+            var writer = scope.ServiceProvider.GetRequiredService<EntityWriter>();
 
             try
             {
@@ -1732,8 +1732,8 @@ namespace Data_Logger_1._3.Services
         public async Task<List<CodingLOG>?> SearchCodingLogs(string searchBarText, int appID)
         {
             await using var scope = _serviceProvider.CreateAsyncScope();
-            var master = scope.ServiceProvider.GetRequiredService<ENTITYMASTER>();
-            var writer = scope.ServiceProvider.GetRequiredService<ENTITYWRITER>();
+            var master = scope.ServiceProvider.GetRequiredService<EntityMaster>();
+            var writer = scope.ServiceProvider.GetRequiredService<EntityWriter>();
 
             try
             {
@@ -1802,8 +1802,8 @@ namespace Data_Logger_1._3.Services
         public async Task<List<CodingLOG>?> SearchCodingLogs(string searchBarText, int projectID, int appID)
         {
             await using var scope = _serviceProvider.CreateAsyncScope();
-            var master = scope.ServiceProvider.GetRequiredService<ENTITYMASTER>();
-            var writer = scope.ServiceProvider.GetRequiredService<ENTITYWRITER>();
+            var master = scope.ServiceProvider.GetRequiredService<EntityMaster>();
+            var writer = scope.ServiceProvider.GetRequiredService<EntityWriter>();
 
             try
             {

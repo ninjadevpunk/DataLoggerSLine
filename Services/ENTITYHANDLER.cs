@@ -1,18 +1,19 @@
 ﻿using Data_Logger_1._3.Models;
+using Data_Logger_1._3.Models.App_Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Data_Logger_1._3.Services
 {
-    public class ENTITYHANDLER
+    public class EntityHandler
     {
         private readonly IServiceProvider _serviceProvider;
 
 
         /// <summary>
-        /// The Entity Framework updater and deleter for ENTITYMASTER.
+        /// The Entity Framework updater and deleter for EntityMaster.
         /// </summary>
-        public ENTITYHANDLER(IServiceProvider serviceProvider)
+        public EntityHandler(IServiceProvider serviceProvider)
         {
             _serviceProvider = serviceProvider;
         }
@@ -41,7 +42,7 @@ namespace Data_Logger_1._3.Services
 
             try
             {
-                var master = scope.ServiceProvider.GetRequiredService<ENTITYMASTER>();
+                var master = scope.ServiceProvider.GetRequiredService<EntityMaster>();
 
                 var existingLog = await master.Logs
                     .Include(l => l.Author)
@@ -141,12 +142,12 @@ namespace Data_Logger_1._3.Services
             }
             catch (ArgumentNullException nullex)
             {
-                var writer = scope.ServiceProvider.GetRequiredService<ENTITYWRITER>();
+                var writer = scope.ServiceProvider.GetRequiredService<EntityWriter>();
                 await writer.HandleExceptionAsync(nullex, "UpdateLogAsync(log)", "InvalidOperationException");
             }
             catch (Exception ex)
             {
-                var writer = scope.ServiceProvider.GetRequiredService<ENTITYWRITER>();
+                var writer = scope.ServiceProvider.GetRequiredService<EntityWriter>();
                 await writer.HandleExceptionAsync(ex, "UpdateLogAsync(log)");
             }
         }
@@ -159,7 +160,7 @@ namespace Data_Logger_1._3.Services
 
             try
             {
-                var master = scope.ServiceProvider.GetRequiredService<ENTITYMASTER>();
+                var master = scope.ServiceProvider.GetRequiredService<EntityMaster>();
                 master.NoteItems.Update(noteItem);
 
                 await master.SaveChangesAsync();
@@ -168,7 +169,7 @@ namespace Data_Logger_1._3.Services
             }
             catch (Exception ex)
             {
-                var writer = scope.ServiceProvider.GetRequiredService<ENTITYWRITER>();
+                var writer = scope.ServiceProvider.GetRequiredService<EntityWriter>();
                 await writer.HandleExceptionAsync(ex, "UpdateLogAsync(log)");
             }
 
@@ -203,7 +204,7 @@ namespace Data_Logger_1._3.Services
 
             try
             {
-                var master = scope.ServiceProvider.GetRequiredService<ENTITYMASTER>();
+                var master = scope.ServiceProvider.GetRequiredService<EntityMaster>();
 
                 if (log == null)
                     return false;
@@ -216,7 +217,7 @@ namespace Data_Logger_1._3.Services
             }
             catch (Exception ex)
             {
-                var writer = scope.ServiceProvider.GetRequiredService<ENTITYWRITER>();
+                var writer = scope.ServiceProvider.GetRequiredService<EntityWriter>();
                 await writer.HandleExceptionAsync(ex, "DeleteLOG(log)");
             }
 
@@ -229,7 +230,7 @@ namespace Data_Logger_1._3.Services
 
             try
             {
-                var master = scope.ServiceProvider.GetRequiredService<ENTITYMASTER>();
+                var master = scope.ServiceProvider.GetRequiredService<EntityMaster>();
 
                 var logDeletionCandidate = await master.Logs
                 .FirstOrDefaultAsync(log => log.ID == ID);
@@ -245,7 +246,7 @@ namespace Data_Logger_1._3.Services
             }
             catch (Exception ex)
             {
-                var writer = scope.ServiceProvider.GetRequiredService<ENTITYWRITER>();
+                var writer = scope.ServiceProvider.GetRequiredService<EntityWriter>();
                 await writer.HandleExceptionAsync(ex, "DeleteLOGByID(ID)");
             }
 
@@ -255,8 +256,8 @@ namespace Data_Logger_1._3.Services
         public async Task<bool> DeleteNote(int ID)
         {
             await using var scope = _serviceProvider.CreateAsyncScope();
-            var master = scope.ServiceProvider.GetRequiredService<ENTITYMASTER>();
-            var writer = scope.ServiceProvider.GetRequiredService<ENTITYWRITER>();
+            var master = scope.ServiceProvider.GetRequiredService<EntityMaster>();
+            var writer = scope.ServiceProvider.GetRequiredService<EntityWriter>();
 
             try
             {

@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Data_Logger_1._3.Migrations
 {
-    [DbContext(typeof(ENTITYMASTER))]
+    [DbContext(typeof(EntityMaster))]
     partial class ENTITYMASTERModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)
