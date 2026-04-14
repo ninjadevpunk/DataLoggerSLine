@@ -41,6 +41,13 @@ namespace Data_Logger_1._3.Models.App_Models
             Subject = subjectName;
         }
 
+        public SubjectClass(LOG.CATEGORY category, ACCOUNT user, string subject)
+        {
+            Category = category;
+            accountID = user.accountID;
+            Subject = subject;
+        }
+
         public SubjectClass(int subjectID, LOG.CATEGORY category, ACCOUNT user, string subject, ProjectClass project, ApplicationClass application)
         {
             this.subjectID = subjectID;

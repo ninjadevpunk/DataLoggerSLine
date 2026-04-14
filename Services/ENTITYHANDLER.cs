@@ -35,7 +35,7 @@ namespace Data_Logger_1._3.Services
         /// Updates a log in the database.
         /// </summary>
         /// <param name="log">The log needing updates.</param>
-        /// <returns>Returns a scope. (use of the scope is optional)</returns>
+        /// <returns></returns>
         public async Task UpdateLogAsync(LOG log)
         {
             await using var scope = _serviceProvider.CreateAsyncScope();
@@ -60,19 +60,35 @@ namespace Data_Logger_1._3.Services
                 master.Entry(existingLog).CurrentValues.SetValues(log);
 
                 if (log.Application != null)
-                    existingLog.Application = master.Applications.Local
-                        .FirstOrDefault(a => a.appID == log.Application.appID) ?? log.Application;
+                {
+                    if (log.Application.appID == 0)
+                    {
+                        // New App
+                        existingLog.Application = log.Application;
+                    }
+                }
 
-                if (log.Project != null)
-                    existingLog.Project = master.Projects.Local
-                        .FirstOrDefault(p => p.projectID == log.Project.projectID) ?? log.Project;
+
+                // PROJECT
+                if (log.projectID != 0 && log.projectID != existingLog.projectID)
+                {
+                    existingLog.projectID = log.projectID;
+                    existingLog.Project = null;
+                }
+                else if (log.Project != null && log.Project.projectID == 0)
+                {
+                    // If the application is existing, use the tracked app; 
+                    // if it's new, the reference is already set correctly in the command
+                    log.Project.Application = existingLog.Application!;
+                    existingLog.Project = log.Project;
+                }
 
                 if (log.Output != null)
-                    existingLog.Output = master.Outputs.Local
+                    existingLog.Output = master.Outputs
                         .FirstOrDefault(o => o.outputID == log.Output.outputID) ?? log.Output;
 
                 if (log.Type != null)
-                    existingLog.Type = master.Types.Local
+                    existingLog.Type = master.Types
                         .FirstOrDefault(t => t.typeID == log.Type.typeID) ?? log.Type;
 
                 var incomingIds = log.PostItList
@@ -92,48 +108,94 @@ namespace Data_Logger_1._3.Services
                 // ADD + UPDATE
                 foreach (var postIt in log.PostItList)
                 {
-                    if (postIt.postItID == 0)
+                    // resolve subject
+
+                    SubjectClass? trackedSubject = null;
+                    bool subjectIsNew = false;
+
+                    if (postIt.Subject != null)
                     {
-                        // resolve subject
-                        var trackedSubject = master.Subjects.Local
-                            .FirstOrDefault(s => s.subjectID == postIt.subjectID) ?? postIt.Subject;
+                        subjectIsNew = postIt.Subject.subjectID == 0;
 
-                        // create new entity
-                        var newPostIt = new PostIt
+                        if (subjectIsNew)
                         {
-                            Error = postIt.Error,
-                            Solution = postIt.Solution,
-                            Suggestion = postIt.Suggestion,
-                            Comment = postIt.Comment,
-                            ERCaptureTime = postIt.ERCaptureTime,
-                            SOCaptureTime = postIt.SOCaptureTime,
-
-                            Subject = trackedSubject,
-                            subjectID = trackedSubject.subjectID
-                        };
-
-                        existingLog.PostItList.Add(newPostIt);
+                            trackedSubject = postIt.Subject;
+                        }
+                        else
+                        {
+                            trackedSubject = await master.Subjects
+                                .FirstOrDefaultAsync(s => s.subjectID == postIt.Subject.subjectID) ?? postIt.Subject;
+                        }
                     }
                     else
                     {
-                        var trackedPostIt = existingLog.PostItList
-                            .First(p => p.postItID == postIt.postItID);
+                        // Subject Exists
+                        trackedSubject = master.Subjects
+                            .FirstOrDefault(s => s.subjectID == postIt.subjectID);
+                    }
 
-                        // explicit update
-                        trackedPostIt.Error = postIt.Error;
-                        trackedPostIt.Solution = postIt.Solution;
-                        trackedPostIt.Suggestion = postIt.Suggestion;
-                        trackedPostIt.Comment = postIt.Comment;
-                        trackedPostIt.ERCaptureTime = postIt.ERCaptureTime;
-                        trackedPostIt.SOCaptureTime = postIt.SOCaptureTime;
 
-                        if (postIt.Subject != null)
+
+
+                    if (trackedSubject != null)
+                    {
+                        // Subject is NEW
+                        if (subjectIsNew)
                         {
-                            var trackedSubject = master.Subjects.Local
-                                .FirstOrDefault(s => s.subjectID == postIt.Subject.subjectID) ?? postIt.Subject;
+                            var writer = scope.ServiceProvider.GetRequiredService<EntityWriter>();
+                            trackedSubject.appID = existingLog.appID;
+                            trackedSubject.projectID = existingLog.projectID;
 
-                            trackedPostIt.Subject = trackedSubject;
-                            trackedPostIt.subjectID = trackedSubject.subjectID;
+                            // trackedSubject will be tracked
+                            await writer.AddSubject(trackedSubject, scope);
+                        }
+
+
+
+                        // Resolve PostIts
+
+                        // PostIt is NEW
+                        if (postIt.postItID == 0)
+                        {
+
+                            // create new entity
+                            var newPostIt = new PostIt
+                            {
+                                accountID = existingLog.Author.accountID,
+                                logID = existingLog.ID,
+                                Error = postIt.Error,
+                                Solution = postIt.Solution,
+                                Suggestion = postIt.Suggestion,
+                                Comment = postIt.Comment,
+                                ERCaptureTime = postIt.ERCaptureTime,
+                                SOCaptureTime = postIt.SOCaptureTime,
+                            };
+
+                            if (!subjectIsNew)
+                                newPostIt.subjectID = trackedSubject.subjectID;
+                            else
+                                newPostIt.Subject = trackedSubject;
+
+                            existingLog.PostItList.Add(newPostIt);
+                        }
+                        else
+                        {
+                            var trackedPostIt = existingLog.PostItList
+                                .First(p => p.postItID == postIt.postItID);
+
+                            // explicit update
+                            trackedPostIt.Error = postIt.Error;
+                            trackedPostIt.Solution = postIt.Solution;
+                            trackedPostIt.Suggestion = postIt.Suggestion;
+                            trackedPostIt.Comment = postIt.Comment;
+                            trackedPostIt.ERCaptureTime = postIt.ERCaptureTime;
+                            trackedPostIt.SOCaptureTime = postIt.SOCaptureTime;
+
+                            if (subjectIsNew)
+                                trackedPostIt.Subject = trackedSubject;
+                            else
+                                trackedPostIt.subjectID = trackedSubject.subjectID;
+
                         }
                     }
                 }
