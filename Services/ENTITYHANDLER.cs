@@ -142,11 +142,13 @@ namespace Data_Logger_1._3.Services
                         // Subject is NEW
                         if (subjectIsNew)
                         {
-                            var writer = scope.ServiceProvider.GetRequiredService<EntityWriter>();
-                            trackedSubject.appID = existingLog.appID;
-                            trackedSubject.projectID = existingLog.projectID;
+                            if (existingLog.Application == null || existingLog.Project == null)
+                                throw new InvalidOperationException("Application and Project must be set before creating a new Subject.");
 
-                            // trackedSubject will be tracked
+                            var writer = scope.ServiceProvider.GetRequiredService<EntityWriter>();
+                            trackedSubject.Application = existingLog.Application;
+                            trackedSubject.Project = existingLog.Project;
+
                             await writer.AddSubject(trackedSubject, scope);
                         }
 
