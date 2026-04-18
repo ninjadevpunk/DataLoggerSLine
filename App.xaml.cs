@@ -72,7 +72,7 @@ namespace Data_Logger_1._3
                     //    Password = key
                     //}.ToString();
 
-                    service.AddDbContext<ENTITYMASTER>(options =>
+                    service.AddDbContext<EntityMaster>(options =>
                     {
                         options.UseSqlite(context.Configuration.GetConnectionString("DefaultConnection"))
                         .LogTo(Console.WriteLine, LogLevel.Information);
@@ -83,9 +83,9 @@ namespace Data_Logger_1._3
                     });
 
                     service.AddSingleton<Cachemaster>();
-                    service.AddScoped((services) => new ENTITYREADER(services));
-                    service.AddScoped((services) => new ENTITYWRITER(services));
-                    service.AddScoped((services) => new ENTITYHANDLER(services));
+                    service.AddScoped((services) => new EntityReader(services));
+                    service.AddScoped((services) => new EntityWriter(services));
+                    service.AddScoped((services) => new EntityHandler(services));
 
                     service.AddSingleton((services) => new AuthService(services));
 
@@ -227,7 +227,7 @@ namespace Data_Logger_1._3
             using (var scope = _serviceProvider.CreateScope())
             {
                 await AnimateProgressBar(splash.progressBar_splashscreen, 75, splash.text_progress);
-                var master = scope.ServiceProvider.GetRequiredService<ENTITYMASTER>();
+                var master = scope.ServiceProvider.GetRequiredService<EntityMaster>();
                 await AnimateProgressBar(splash.progressBar_splashscreen, 80, splash.text_progress);
 
                 // Ensure DB exists

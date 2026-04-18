@@ -44,7 +44,7 @@ namespace Data_Logger_1._3.Services
                 }
                 catch (Exception ex)
                 {
-                    var writer = scope.ServiceProvider.GetRequiredService<ENTITYWRITER>();
+                    var writer = scope.ServiceProvider.GetRequiredService<EntityWriter>();
                     await writer.HandleExceptionAsync(ex, "SignUp(dp,email,password,displayName,surname,isEmployee,companyName,companyAddress,companyLogo)");
                 }
 
@@ -54,7 +54,7 @@ namespace Data_Logger_1._3.Services
 
             try
             {
-                var writer = scope.ServiceProvider.GetRequiredService<ENTITYWRITER>();
+                var writer = scope.ServiceProvider.GetRequiredService<EntityWriter>();
                 await writer.UnsetCurrentUser();
 
                 var account = new ACCOUNT
@@ -82,7 +82,7 @@ namespace Data_Logger_1._3.Services
             }
             catch (Exception ex)
             {
-                var writer = scope.ServiceProvider.GetRequiredService<ENTITYWRITER>();
+                var writer = scope.ServiceProvider.GetRequiredService<EntityWriter>();
                 await writer.HandleExceptionAsync(ex, "SignUp(dp,email,password,displayName,surname,isEmployee,companyName,companyAddress,companyLogo)");
 
                 MessageBox.Show("A problem occurred on our end. We apologise for any inconvenience caused. Feedback will automatically be sent to us.",

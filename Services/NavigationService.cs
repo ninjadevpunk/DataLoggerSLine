@@ -263,7 +263,7 @@ namespace Data_Logger_1._3.Services
         public async Task NavigateToMainWindow()
         {
             await using var scope = _serviceProvider.CreateAsyncScope();
-            var master = scope.ServiceProvider.GetRequiredService<ENTITYMASTER>();
+            var master = scope.ServiceProvider.GetRequiredService<EntityMaster>();
             var dataService = _serviceProvider.GetRequiredService<IDataService>();
 
             try
@@ -328,7 +328,7 @@ namespace Data_Logger_1._3.Services
             where TViewModel : ViewModelBase
         {
             await using var scope = _serviceProvider.CreateAsyncScope();
-            var master = scope.ServiceProvider.GetRequiredService<ENTITYMASTER>();
+            var master = scope.ServiceProvider.GetRequiredService<EntityMaster>();
             var dataService = _serviceProvider.GetRequiredService<IDataService>();
 
             try
@@ -412,7 +412,7 @@ namespace Data_Logger_1._3.Services
         public async Task NavigateToPage(Page page, ViewModelBase viewModel, UserControl subPage = null)
         {
             await using var scope = _serviceProvider.CreateAsyncScope();
-            var master = scope.ServiceProvider.GetRequiredService<ENTITYMASTER>();
+            var master = scope.ServiceProvider.GetRequiredService<EntityMaster>();
             var dataService = _serviceProvider.GetRequiredService<IDataService>();
 
 
@@ -454,7 +454,7 @@ namespace Data_Logger_1._3.Services
             where TViewModel : ViewModelBase
         {
             await using var scope = _serviceProvider.CreateAsyncScope();
-            var master = scope.ServiceProvider.GetRequiredService<ENTITYMASTER>();
+            var master = scope.ServiceProvider.GetRequiredService<EntityMaster>();
             var dataService = _serviceProvider.GetRequiredService<IDataService>();
 
 
@@ -482,7 +482,7 @@ namespace Data_Logger_1._3.Services
         public async Task NavigateToPage(Page page)
         {
             await using var scope = _serviceProvider.CreateAsyncScope();
-            var master = scope.ServiceProvider.GetRequiredService<ENTITYMASTER>();
+            var master = scope.ServiceProvider.GetRequiredService<EntityMaster>();
             var dataService = _serviceProvider.GetRequiredService<IDataService>();
 
             try
@@ -629,7 +629,7 @@ namespace Data_Logger_1._3.Services
         public async Task NavigateToLoggerCreator()
         {
             await using var scope = _serviceProvider.CreateAsyncScope();
-            var master = scope.ServiceProvider.GetRequiredService<ENTITYMASTER>();
+            var master = scope.ServiceProvider.GetRequiredService<EntityMaster>();
             var dataService = _serviceProvider.GetRequiredService<IDataService>();
 
             try
@@ -719,7 +719,7 @@ namespace Data_Logger_1._3.Services
         public async Task NavigateToLoggerEditor(ViewModelBase viewModelBase)
         {
             await using var scope = _serviceProvider.CreateAsyncScope();
-            var master = scope.ServiceProvider.GetRequiredService<ENTITYMASTER>();
+            var master = scope.ServiceProvider.GetRequiredService<EntityMaster>();
             var dataService = _serviceProvider.GetRequiredService<IDataService>();
 
             try
@@ -806,7 +806,7 @@ namespace Data_Logger_1._3.Services
         public async Task NavigateToViewer(ViewModelBase viewModelBase)
         {
             await using var scope = _serviceProvider.CreateAsyncScope();
-            var master = scope.ServiceProvider.GetRequiredService<ENTITYMASTER>();
+            var master = scope.ServiceProvider.GetRequiredService<EntityMaster>();
             var dataService = _serviceProvider.GetRequiredService<IDataService>();
 
             try
@@ -874,7 +874,7 @@ namespace Data_Logger_1._3.Services
         public async Task NavigateToViewer(LOG log)
         {
             await using var scope = _serviceProvider.CreateAsyncScope();
-            var master = scope.ServiceProvider.GetRequiredService<ENTITYMASTER>();
+            var master = scope.ServiceProvider.GetRequiredService<EntityMaster>();
             var dataService = _serviceProvider.GetRequiredService<IDataService>();
 
             try
@@ -939,7 +939,7 @@ namespace Data_Logger_1._3.Services
         public async Task NavigateToLogViewer(LOG log)
         {
             await using var scope = _serviceProvider.CreateAsyncScope();
-            var master = scope.ServiceProvider.GetRequiredService<ENTITYMASTER>();
+            var master = scope.ServiceProvider.GetRequiredService<EntityMaster>();
             var dataService = _serviceProvider.GetRequiredService<IDataService>();
 
             try
@@ -1002,7 +1002,7 @@ namespace Data_Logger_1._3.Services
         public async Task NavigateToUpdater(LOG log, ReportDeskViewModel reportDeskViewModel)
         {
             await using var scope = _serviceProvider.CreateAsyncScope();
-            var master = scope.ServiceProvider.GetRequiredService<ENTITYMASTER>();
+            var master = scope.ServiceProvider.GetRequiredService<EntityMaster>();
 
             try
             {

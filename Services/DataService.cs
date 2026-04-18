@@ -291,12 +291,12 @@ namespace Data_Logger_1._3.Services
         public async Task<List<SubjectClass>?> ListSubjects(ProjectClass project)
         {
             await using var scope = _serviceProvider.CreateAsyncScope();
-            var writer = scope.ServiceProvider.GetRequiredService<ENTITYWRITER>();
+            var writer = scope.ServiceProvider.GetRequiredService<EntityWriter>();
 
 
             try
             {
-                var reader = scope.ServiceProvider.GetRequiredService<ENTITYREADER>();
+                var reader = scope.ServiceProvider.GetRequiredService<EntityReader>();
                 return await reader.ListSubjects(project);
             }
             catch (InvalidOperationException invex)
@@ -318,12 +318,12 @@ namespace Data_Logger_1._3.Services
         public async Task<List<OutputClass>?> ListQtOutputs()
         {
             await using var scope = _serviceProvider.CreateAsyncScope();
-            var writer = scope.ServiceProvider.GetRequiredService<ENTITYWRITER>();
+            var writer = scope.ServiceProvider.GetRequiredService<EntityWriter>();
 
 
             try
             {
-                var reader = scope.ServiceProvider.GetRequiredService<ENTITYREADER>();
+                var reader = scope.ServiceProvider.GetRequiredService<EntityReader>();
                 return await reader.ListQtOutputs();
             }
             catch (InvalidOperationException invex)
@@ -345,12 +345,12 @@ namespace Data_Logger_1._3.Services
         public async Task<List<OutputClass>?> ListASOutputs()
         {
             await using var scope = _serviceProvider.CreateAsyncScope();
-            var writer = scope.ServiceProvider.GetRequiredService<ENTITYWRITER>();
+            var writer = scope.ServiceProvider.GetRequiredService<EntityWriter>();
 
 
             try
             {
-                var reader = scope.ServiceProvider.GetRequiredService<ENTITYREADER>();
+                var reader = scope.ServiceProvider.GetRequiredService<EntityReader>();
                 return await reader.ListASOutputs();
             }
             catch (InvalidOperationException invex)
@@ -373,12 +373,12 @@ namespace Data_Logger_1._3.Services
         public async Task<List<OutputClass>?> ListOutputs(CATEGORY category)
         {
             await using var scope = _serviceProvider.CreateAsyncScope();
-            var writer = scope.ServiceProvider.GetRequiredService<ENTITYWRITER>();
+            var writer = scope.ServiceProvider.GetRequiredService<EntityWriter>();
 
 
             try
             {
-                var reader = scope.ServiceProvider.GetRequiredService<ENTITYREADER>();
+                var reader = scope.ServiceProvider.GetRequiredService<EntityReader>();
                 return await reader.ListOutputs(category);
             }
             catch (InvalidOperationException invex)
@@ -402,12 +402,12 @@ namespace Data_Logger_1._3.Services
         public async Task<List<TypeClass>?> ListQtTypes()
         {
             await using var scope = _serviceProvider.CreateAsyncScope();
-            var writer = scope.ServiceProvider.GetRequiredService<ENTITYWRITER>();
+            var writer = scope.ServiceProvider.GetRequiredService<EntityWriter>();
 
 
             try
             {
-                var reader = scope.ServiceProvider.GetRequiredService<ENTITYREADER>();
+                var reader = scope.ServiceProvider.GetRequiredService<EntityReader>();
                 return await reader.ListQtTypes();
             }
             catch (InvalidOperationException invex)
@@ -429,12 +429,12 @@ namespace Data_Logger_1._3.Services
         public async Task<List<TypeClass>?> ListASTypes()
         {
             await using var scope = _serviceProvider.CreateAsyncScope();
-            var writer = scope.ServiceProvider.GetRequiredService<ENTITYWRITER>();
+            var writer = scope.ServiceProvider.GetRequiredService<EntityWriter>();
 
 
             try
             {
-                var reader = scope.ServiceProvider.GetRequiredService<ENTITYREADER>();
+                var reader = scope.ServiceProvider.GetRequiredService<EntityReader>();
                 return await reader.ListASTypes();
             }
             catch (InvalidOperationException invex)
@@ -457,12 +457,12 @@ namespace Data_Logger_1._3.Services
         public async Task<List<TypeClass>?> ListTypes(CATEGORY category)
         {
             await using var scope = _serviceProvider.CreateAsyncScope();
-            var writer = scope.ServiceProvider.GetRequiredService<ENTITYWRITER>();
+            var writer = scope.ServiceProvider.GetRequiredService<EntityWriter>();
 
 
             try
             {
-                var reader = scope.ServiceProvider.GetRequiredService<ENTITYREADER>();
+                var reader = scope.ServiceProvider.GetRequiredService<EntityReader>();
                 return await reader.ListTypes(category);
             }
             catch (InvalidOperationException invex)
@@ -487,13 +487,13 @@ namespace Data_Logger_1._3.Services
 
 
         /// <summary>
-        /// Executes a function with an ENTITYREADER instance, managing scope and exceptions.
+        /// Executes a function with an EntityReader instance, managing scope and exceptions.
         /// </summary>
-        private async Task<T> UseReaderAsync<T>(Func<ENTITYREADER, Task<T>> func)
+        private async Task<T> UseReaderAsync<T>(Func<EntityReader, Task<T>> func)
         {
             await using var scope = _serviceProvider.CreateAsyncScope();
-            var reader = scope.ServiceProvider.GetRequiredService<ENTITYREADER>();
-            var writer = scope.ServiceProvider.GetRequiredService<ENTITYWRITER>();
+            var reader = scope.ServiceProvider.GetRequiredService<EntityReader>();
+            var writer = scope.ServiceProvider.GetRequiredService<EntityWriter>();
 
             try
             {
@@ -512,12 +512,12 @@ namespace Data_Logger_1._3.Services
         }
 
         /// <summary>
-        /// Executes a function with an ENTITYWRITER instance, managing scope and exceptions.
+        /// Executes a function with an EntityWriter instance, managing scope and exceptions.
         /// </summary>
-        private async Task<T> UseWriterAsync<T>(Func<ENTITYWRITER, Task<T>> func)
+        private async Task<T> UseWriterAsync<T>(Func<EntityWriter, Task<T>> func)
         {
             await using var scope = _serviceProvider.CreateAsyncScope();
-            var writer = scope.ServiceProvider.GetRequiredService<ENTITYWRITER>();
+            var writer = scope.ServiceProvider.GetRequiredService<EntityWriter>();
 
             try
             {
@@ -536,13 +536,13 @@ namespace Data_Logger_1._3.Services
         }
 
         /// <summary>
-        /// Executes a function with an ENTITYHANDLER instance, managing scope and exceptions.
+        /// Executes a function with an EntityHandler instance, managing scope and exceptions.
         /// </summary>
-        private async Task<T> UseHandlerAsync<T>(Func<ENTITYHANDLER, Task<T>> func)
+        private async Task<T> UseHandlerAsync<T>(Func<EntityHandler, Task<T>> func)
         {
             await using var scope = _serviceProvider.CreateAsyncScope();
-            var handler = scope.ServiceProvider.GetRequiredService<ENTITYHANDLER>();
-            var writer = scope.ServiceProvider.GetRequiredService<ENTITYWRITER>();
+            var handler = scope.ServiceProvider.GetRequiredService<EntityHandler>();
+            var writer = scope.ServiceProvider.GetRequiredService<EntityWriter>();
 
             try
             {
@@ -1058,7 +1058,7 @@ namespace Data_Logger_1._3.Services
         public async Task HandleExceptionAsync(Exception exception, string methodName, string exceptionType = "Exception")
         {
             await using var scope = _serviceProvider.CreateAsyncScope();
-            var writer = scope.ServiceProvider.GetRequiredService<ENTITYWRITER>();
+            var writer = scope.ServiceProvider.GetRequiredService<EntityWriter>();
 
 
             await writer.HandleExceptionAsync(exception, methodName, exceptionType);

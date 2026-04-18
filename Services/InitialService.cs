@@ -195,7 +195,7 @@ namespace Data_Logger_1._3.Services
         private async Task LoadNotes(int id)
         {
             using var scope = _serviceProvider.CreateScope();
-            var reader = scope.ServiceProvider.GetRequiredService<ENTITYREADER>();
+            var reader = scope.ServiceProvider.GetRequiredService<EntityReader>();
 
             foreach (var note in await reader.RetrieveGenericNotes(id))
             {

@@ -59,36 +59,75 @@ namespace Data_Logger_1._3.Commands.ReporterCommands.UpdateCommands
 
                 bool appIsNew = false;
 
+                // APPLICATION
+
                 if (string.IsNullOrEmpty(_editor.ApplicationName))
                 {
-                    _log.Application = await _dataService.FindApplication(userID, "Unknown") ?? new(1, "Unknown");
+                    // Set to "Unknown" default
+                    _log.appID = 3;
+                    _log.Application = null;
                 }
                 else if (_log.Application.Name != _editor.ApplicationName)
                 {
-                    var app = await _dataService.FindApplication(userID, _editor.ApplicationName) ?? new(account, _editor.ApplicationName);
+                    // App may be the same or changed. Changed app may be new or existing
+                    var app = await _dataService.FindApplication(userID, _editor.ApplicationName);
+
+                    if(app == null)
+                    {
+                        app = new ApplicationClass(_editor.ApplicationName);
+                        app.accountID = _log.accountID;                    
+                    }
+                        
                     appIsNew = app.appID == 0;
 
-                    _log.Application = app;
+                    if (appIsNew)
+                        _log.Application = app;
+                    else
+                    {
+                        _log.appID = app.appID;
+                        _log.Application = null;
+                    }
                 }
+
+
+
+                // PROJECT
 
                 if (!appIsNew)
                 {
+                    bool projectBelongsToNewApp = _log.Project.appID == _log.appID;
+
                     if (string.IsNullOrEmpty(_editor.ProjectName))
                     {
-                        _log.Project = await _dataService.FindProject(userID, "Unnamed Project", 3) ?? new("Unnamed Project");
+                        // Set to "Unnamed Project" default
+                        _log.projectID = 1;
+                        _log.Project = null;
                     }
-                    else if (_log.Project.Name != _editor.ProjectName)
+                    else if (_log.Project.Name != _editor.ProjectName || !projectBelongsToNewApp)
                     {
-                        var project = await _dataService.FindProject(account.accountID, _editor.ProjectName, _log.Application.appID)
-                            ?? new(account, _editor.ProjectName, _log.Application);
-                        _log.Project = project;
+                        var project = await _dataService.FindProject(account.accountID, _editor.ProjectName, _log.appID);
+
+                        if (project == null)
+                        {
+                            project = new ProjectClass(_editor.ProjectName);
+                            project.accountID = account.accountID;
+                            project.appID = _log.appID;
+                        }
+
+                        if (project.projectID == 0)
+                            _log.Project = project;
+                        else
+                        {
+                            _log.projectID = project.projectID;
+                            _log.Project = null;
+                        }
                     }
                 }
                 else
                 {
-                    var project = new ProjectClass(account, _editor.ProjectName, _log.Application);
-                    _log.Project = project;
+                    _log.Project = new ProjectClass(account, _editor.ProjectName, _log.Application!);
                 }
+
 
                 _log.Start = _editor.StartDate;
                 _log.End = _editor.EndDate;
@@ -114,9 +153,7 @@ namespace Data_Logger_1._3.Commands.ReporterCommands.UpdateCommands
                         subject = new(
                                       _log.Category,
                                       account,
-                                      editorPostIt.Subject,
-                                      _log.Project,
-                                      _log.Application);
+                                      editorPostIt.Subject);
                     }
 
 
@@ -128,6 +165,7 @@ namespace Data_Logger_1._3.Commands.ReporterCommands.UpdateCommands
                         {
                             newPostIt = new PostIt
                             {
+                                // Both PostIt and Subject is NEW
                                 Subject = subject,
                                 Error = editorPostIt.Error,
                                 ERCaptureTime = editorPostIt.DateFound,
@@ -141,6 +179,7 @@ namespace Data_Logger_1._3.Commands.ReporterCommands.UpdateCommands
                         }
                         else
                         {
+                            // PostIt is NEW, Subject EXISTS
                             newPostIt = new PostIt
                             {
                                 subjectID = subject.subjectID,
@@ -161,9 +200,18 @@ namespace Data_Logger_1._3.Commands.ReporterCommands.UpdateCommands
                     {
                         var existingPostIt = _log.PostItList.First(p => p.postItID == editorPostIt.ID);
 
+                        // existingPostIt.Subject is NOT null here
 
-                        existingPostIt.subjectID = subject.subjectID;
-                        existingPostIt.Subject = subject;
+                        if (subjectIsNew)
+                        {
+                            // PostIt Exists, Subject is NEW
+                            existingPostIt.Subject = subject;
+                        }
+                        else
+                        {
+                            // PostIt Exists, Subject Exists
+                            existingPostIt.subjectID = subject.subjectID;
+                        }
 
                         existingPostIt.Error = editorPostIt.Error;
                         existingPostIt.ERCaptureTime = editorPostIt.DateFound;
