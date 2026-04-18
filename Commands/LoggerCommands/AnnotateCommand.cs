@@ -136,6 +136,7 @@ namespace Data_Logger_1._3.Commands.LoggerCommands
                 {
                     application = new();
                     application.appID = 3;
+                    application.Name = "Unknown";
                 }
                 else
                     application = ActionType == ActionType.Add ? new(account,
