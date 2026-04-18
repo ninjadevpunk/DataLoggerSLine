@@ -148,8 +148,6 @@ namespace Data_Logger_1._3.Services
                             var writer = scope.ServiceProvider.GetRequiredService<EntityWriter>();
                             trackedSubject.Application = existingLog.Application;
                             trackedSubject.Project = existingLog.Project;
-
-                            await writer.AddSubject(trackedSubject, scope);
                         }
 
 
