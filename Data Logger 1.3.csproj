@@ -20,12 +20,16 @@
 
   <ItemGroup>
     <Compile Remove="Converters\**" />
+    <Compile Remove="DLSTests\**" />
     <Compile Remove="Resources\Converters\**" />
     <EmbeddedResource Remove="Converters\**" />
+    <EmbeddedResource Remove="DLSTests\**" />
     <EmbeddedResource Remove="Resources\Converters\**" />
     <None Remove="Converters\**" />
+    <None Remove="DLSTests\**" />
     <None Remove="Resources\Converters\**" />
     <Page Remove="Converters\**" />
+    <Page Remove="DLSTests\**" />
     <Page Remove="Resources\Converters\**" />
   </ItemGroup>
 
