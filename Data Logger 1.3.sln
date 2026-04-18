@@ -5,7 +5,7 @@ VisualStudioVersion = 18.0.11217.181
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Data Logger 1.3", "Data Logger 1.3.csproj", "{13D22E86-4C3F-47CC-AB4A-CDF50A92B4CA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataLoggerTest", "..\DataLoggerTest\DataLoggerTest.csproj", "{4E0BCAA3-EFBD-4F70-8AC9-93774A13CA9B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DLSTests", "DLSTests\DLSTests.csproj", "{030B8E8F-421F-4E4F-8CF6-AD78D6866EDE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -17,10 +17,10 @@ Global
 		{13D22E86-4C3F-47CC-AB4A-CDF50A92B4CA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{13D22E86-4C3F-47CC-AB4A-CDF50A92B4CA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{13D22E86-4C3F-47CC-AB4A-CDF50A92B4CA}.Release|Any CPU.Build.0 = Release|Any CPU
-		{4E0BCAA3-EFBD-4F70-8AC9-93774A13CA9B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{4E0BCAA3-EFBD-4F70-8AC9-93774A13CA9B}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{4E0BCAA3-EFBD-4F70-8AC9-93774A13CA9B}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{4E0BCAA3-EFBD-4F70-8AC9-93774A13CA9B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{030B8E8F-421F-4E4F-8CF6-AD78D6866EDE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{030B8E8F-421F-4E4F-8CF6-AD78D6866EDE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{030B8E8F-421F-4E4F-8CF6-AD78D6866EDE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{030B8E8F-421F-4E4F-8CF6-AD78D6866EDE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
