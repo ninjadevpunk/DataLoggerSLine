@@ -907,7 +907,7 @@ namespace Data_Logger_1._3.Services
 
                             codeViewerViewModel.ProjectName = codingLOG.Project.Name;
                             codeViewerViewModel.ApplicationName = codingLOG.Application.Name;
-                            codeViewerViewModel.Date = codingLOG.Start.ToString("d MMMM yyyy HH:ss");
+                            codeViewerViewModel.Date = codingLOG.Start.ToString("d MMMM yyyy HH:mm");
 
                             codeViewerViewModel.Output = codingLOG.Output.Name;
                             codeViewerViewModel.Type = codingLOG.Type.Name;
@@ -971,7 +971,7 @@ namespace Data_Logger_1._3.Services
 
                             codeViewerViewModel.ProjectName = codingLOG.Project.Name;
                             codeViewerViewModel.ApplicationName = codingLOG.Application.Name;
-                            codeViewerViewModel.Date = codingLOG.Start.ToString("d MMMM yyyy HH:ss");
+                            codeViewerViewModel.Date = codingLOG.Start.ToString("d MMMM yyyy HH:mm");
 
                             codeViewerViewModel.Output = codingLOG.Output.Name;
                             codeViewerViewModel.Type = codingLOG.Type.Name;
