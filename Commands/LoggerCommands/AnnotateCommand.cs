@@ -125,18 +125,25 @@ namespace Data_Logger_1._3.Commands.LoggerCommands
 
                 List<PostIt> posts = new();
 
+                // Add: Create a new application using the form's application name.
+                // Edit: Don't create a new appliccation. The application is handled later on in the switch statement.
+                ApplicationClass? application;
+
                 // Manage Application name if it is empty.
                 if (string.IsNullOrEmpty(_viewModel.ApplicationName) ||
                     _viewModel.ApplicationName.Equals("Unknown", StringComparison.OrdinalIgnoreCase) ||
                     _viewModel.ApplicationName.Equals("Unknown Application", StringComparison.OrdinalIgnoreCase))
                 {
-                    _viewModel.ApplicationName = "Unknown";
+                    application = new();
+                    application.appID = 3;
                 }
-
-                // Add: Create a new application using the form's application name.
-                // Edit: Don't create a new appliccation. The application is handled later on in the switch statement.
-                ApplicationClass? application = ActionType == ActionType.Add ? new(account,
+                else
+                    application = ActionType == ActionType.Add ? new(account,
                         _viewModel.ApplicationName, _viewModel.Category, false) : null;
+
+
+                // Add:
+                ProjectClass? project;
 
                 // Manage Project name if it is empty.
                 if (string.IsNullOrEmpty(_viewModel.ProjectName) ||
@@ -144,11 +151,23 @@ namespace Data_Logger_1._3.Commands.LoggerCommands
                     _viewModel.ProjectName.Equals("Unknown", StringComparison.OrdinalIgnoreCase) ||
                     _viewModel.ProjectName.Equals("Unknown Project", StringComparison.OrdinalIgnoreCase))
                 {
-                    _viewModel.ProjectName = "Unnamed Project";
+                    project = new();
+                    project.projectID = 1;
+                    project.Name = "Unnamed Project";
+                }
+                else
+                {
+                    project = new(account, _viewModel.ProjectName, application, _viewModel.Category, false);
+
+                    if (application == null)
+                        project.appID = 3;
                 }
 
-                // Add:
-                ProjectClass? project = new(account, _viewModel.ProjectName, application, _viewModel.Category, false);
+                if (application?.appID == 3)
+                {
+                    project.appID = 3;
+                    project.Application = null;
+                }
 
                 OutputClass? output = new(account, _viewModel.Output, application, _viewModel.Category);
                 TypeClass? type = new(account, _viewModel.Type, application, _viewModel.Category);
