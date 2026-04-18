@@ -188,10 +188,11 @@ namespace Data_Logger_1._3.Services
             await using var scope = _serviceProvider.CreateAsyncScope();
             var master = scope.ServiceProvider.GetRequiredService<ENTITYMASTER>();
 
-            await using var transaction = await master.Database.BeginTransactionAsync();
 
             try
             {
+                await using var transaction = await master.Database.BeginTransactionAsync();
+                
                 await PrepareLogDetails(log, scope, master);
                 await PreparePostItDetails(log, scope, master);
 
@@ -214,14 +215,6 @@ namespace Data_Logger_1._3.Services
             catch (Exception ex)
             {
                 await HandleExceptionAsync(ex, "CreateLOG(log)");
-            }
-            finally
-            {
-                var dbConnection = transaction.GetDbTransaction().Connection;
-                if (transaction != null && master.Database.CurrentTransaction != null)
-                {
-                    await transaction.RollbackAsync();
-                }
             }
 
             return false;
