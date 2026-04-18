@@ -1,18 +1,19 @@
 ﻿using Data_Logger_1._3.Models;
+using Data_Logger_1._3.Models.App_Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Data_Logger_1._3.Services
 {
-    public class ENTITYHANDLER
+    public class EntityHandler
     {
         private readonly IServiceProvider _serviceProvider;
 
 
         /// <summary>
-        /// The Entity Framework updater and deleter for ENTITYMASTER.
+        /// The Entity Framework updater and deleter for EntityMaster.
         /// </summary>
-        public ENTITYHANDLER(IServiceProvider serviceProvider)
+        public EntityHandler(IServiceProvider serviceProvider)
         {
             _serviceProvider = serviceProvider;
         }
@@ -34,14 +35,14 @@ namespace Data_Logger_1._3.Services
         /// Updates a log in the database.
         /// </summary>
         /// <param name="log">The log needing updates.</param>
-        /// <returns>Returns a scope. (use of the scope is optional)</returns>
+        /// <returns></returns>
         public async Task UpdateLogAsync(LOG log)
         {
             await using var scope = _serviceProvider.CreateAsyncScope();
 
             try
             {
-                var master = scope.ServiceProvider.GetRequiredService<ENTITYMASTER>();
+                var master = scope.ServiceProvider.GetRequiredService<EntityMaster>();
 
                 var existingLog = await master.Logs
                     .Include(l => l.Author)
@@ -51,92 +52,166 @@ namespace Data_Logger_1._3.Services
                     .Include(l => l.Type)
                     .Include(l => l.PostItList)
                         .ThenInclude(p => p.Subject)
-                        .FirstOrDefaultAsync(l => l.ID == log.ID);
+                    .FirstOrDefaultAsync(l => l.ID == log.ID);
 
                 if (existingLog == null)
-                    throw new InvalidOperationException("Cannot update a log that doesn't exist.");
+                    throw new ArgumentNullException("Cannot update a log that doesn't exist.");
 
-                // 2️ Update scalar/primitive properties
                 master.Entry(existingLog).CurrentValues.SetValues(log);
 
-                // 3️ Update navigation properties safely
                 if (log.Application != null)
-                    existingLog.Application = master.Applications.Local
-                        .FirstOrDefault(a => a.appID == log.Application.appID) ?? log.Application;
+                {
+                    if (log.Application.appID == 0)
+                    {
+                        // New App
+                        existingLog.Application = log.Application;
+                    }
+                }
 
-                if (log.Project != null)
-                    existingLog.Project = master.Projects.Local
-                        .FirstOrDefault(p => p.projectID == log.Project.projectID) ?? log.Project;
+
+                // PROJECT
+                if (log.projectID != 0 && log.projectID != existingLog.projectID)
+                {
+                    existingLog.projectID = log.projectID;
+                    existingLog.Project = null;
+                }
+                else if (log.Project != null && log.Project.projectID == 0)
+                {
+                    // If the application is existing, use the tracked app; 
+                    // if it's new, the reference is already set correctly in the command
+                    log.Project.Application = existingLog.Application!;
+                    existingLog.Project = log.Project;
+                }
 
                 if (log.Output != null)
-                    existingLog.Output = master.Outputs.Local
+                    existingLog.Output = master.Outputs
                         .FirstOrDefault(o => o.outputID == log.Output.outputID) ?? log.Output;
 
-                if(log.Type != null)
-                    existingLog.Type = master.Types.Local
+                if (log.Type != null)
+                    existingLog.Type = master.Types
                         .FirstOrDefault(t => t.typeID == log.Type.typeID) ?? log.Type;
 
-                var incomingIds = log.PostItList.Where(p => p.postItID != 0).Select(p => p.postItID).ToHashSet();
+                var incomingIds = log.PostItList
+                    .Where(p => p.postItID != 0)
+                    .Select(p => p.postItID)
+                    .ToHashSet();
 
-                // Remove PostIts that were deleted
+                // REMOVE
                 foreach (var postIt in existingLog.PostItList.ToList())
                 {
                     if (!incomingIds.Contains(postIt.postItID))
                     {
                         master.PostIts.Remove(postIt);
-                        await master.SaveChangesAsync();
                     }
                 }
 
-                // Add or update incoming PostIts
+                // ADD + UPDATE
                 foreach (var postIt in log.PostItList)
                 {
-                    if (postIt.postItID == 0)
-                    {
-                        // New PostIt added to the log
-                        if(postIt.Subject != null)
-                        {
-                            postIt.Subject.Application = existingLog.Application;
-                            postIt.Subject.Project = existingLog.Project;
-                        }
-                        
+                    // resolve subject
 
-                        existingLog.PostItList.Add(postIt);
+                    SubjectClass? trackedSubject = null;
+                    bool subjectIsNew = false;
+
+                    if (postIt.Subject != null)
+                    {
+                        subjectIsNew = postIt.Subject.subjectID == 0;
+
+                        if (subjectIsNew)
+                        {
+                            trackedSubject = postIt.Subject;
+                        }
+                        else
+                        {
+                            trackedSubject = await master.Subjects
+                                .FirstOrDefaultAsync(s => s.subjectID == postIt.Subject.subjectID) ?? postIt.Subject;
+                        }
                     }
                     else
                     {
-                        // Existing PostIt → update
-                        var trackedPostIt = existingLog.PostItList.First(p => p.postItID == postIt.postItID);
+                        // Subject Exists
+                        trackedSubject = master.Subjects
+                            .FirstOrDefault(s => s.subjectID == postIt.subjectID);
+                    }
 
-                        // Update scalar properties
-                        master.Entry(trackedPostIt).CurrentValues.SetValues(postIt);
 
-                        // Update navigation property manually
-                        if (postIt.Subject != null)
+
+
+                    if (trackedSubject != null)
+                    {
+                        // Subject is NEW
+                        if (subjectIsNew)
                         {
-                            // Reuse already-tracked Subject if possible
-                            var trackedSubject = master.Subjects.Local
-                                .FirstOrDefault(s => s.subjectID == postIt.Subject.subjectID)
-                                ?? postIt.Subject;
+                            if (existingLog.Application == null || existingLog.Project == null)
+                                throw new InvalidOperationException("Application and Project must be set before creating a new Subject.");
 
-                            trackedPostIt.Subject = trackedSubject;
+                            var writer = scope.ServiceProvider.GetRequiredService<EntityWriter>();
+                            trackedSubject.Application = existingLog.Application;
+                            trackedSubject.Project = existingLog.Project;
+
+                            await writer.AddSubject(trackedSubject, scope);
                         }
 
+
+
+                        // Resolve PostIts
+
+                        // PostIt is NEW
+                        if (postIt.postItID == 0)
+                        {
+
+                            // create new entity
+                            var newPostIt = new PostIt
+                            {
+                                accountID = existingLog.Author.accountID,
+                                logID = existingLog.ID,
+                                Error = postIt.Error,
+                                Solution = postIt.Solution,
+                                Suggestion = postIt.Suggestion,
+                                Comment = postIt.Comment,
+                                ERCaptureTime = postIt.ERCaptureTime,
+                                SOCaptureTime = postIt.SOCaptureTime,
+                            };
+
+                            if (!subjectIsNew)
+                                newPostIt.subjectID = trackedSubject.subjectID;
+                            else
+                                newPostIt.Subject = trackedSubject;
+
+                            existingLog.PostItList.Add(newPostIt);
+                        }
+                        else
+                        {
+                            var trackedPostIt = existingLog.PostItList
+                                .First(p => p.postItID == postIt.postItID);
+
+                            // explicit update
+                            trackedPostIt.Error = postIt.Error;
+                            trackedPostIt.Solution = postIt.Solution;
+                            trackedPostIt.Suggestion = postIt.Suggestion;
+                            trackedPostIt.Comment = postIt.Comment;
+                            trackedPostIt.ERCaptureTime = postIt.ERCaptureTime;
+                            trackedPostIt.SOCaptureTime = postIt.SOCaptureTime;
+
+                            if (subjectIsNew)
+                                trackedPostIt.Subject = trackedSubject;
+                            else
+                                trackedPostIt.subjectID = trackedSubject.subjectID;
+
+                        }
                     }
                 }
 
-
-
                 await master.SaveChangesAsync();
             }
-            catch (InvalidOperationException invex)
+            catch (ArgumentNullException nullex)
             {
-                var writer = scope.ServiceProvider.GetRequiredService<ENTITYWRITER>();
-                await writer.HandleExceptionAsync(invex, "UpdateLogAsync(log)", "InvalidOperationException");
+                var writer = scope.ServiceProvider.GetRequiredService<EntityWriter>();
+                await writer.HandleExceptionAsync(nullex, "UpdateLogAsync(log)", "InvalidOperationException");
             }
             catch (Exception ex)
             {
-                var writer = scope.ServiceProvider.GetRequiredService<ENTITYWRITER>();
+                var writer = scope.ServiceProvider.GetRequiredService<EntityWriter>();
                 await writer.HandleExceptionAsync(ex, "UpdateLogAsync(log)");
             }
         }
@@ -149,7 +224,7 @@ namespace Data_Logger_1._3.Services
 
             try
             {
-                var master = scope.ServiceProvider.GetRequiredService<ENTITYMASTER>();
+                var master = scope.ServiceProvider.GetRequiredService<EntityMaster>();
                 master.NoteItems.Update(noteItem);
 
                 await master.SaveChangesAsync();
@@ -158,7 +233,7 @@ namespace Data_Logger_1._3.Services
             }
             catch (Exception ex)
             {
-                var writer = scope.ServiceProvider.GetRequiredService<ENTITYWRITER>();
+                var writer = scope.ServiceProvider.GetRequiredService<EntityWriter>();
                 await writer.HandleExceptionAsync(ex, "UpdateLogAsync(log)");
             }
 
@@ -193,7 +268,7 @@ namespace Data_Logger_1._3.Services
 
             try
             {
-                var master = scope.ServiceProvider.GetRequiredService<ENTITYMASTER>();
+                var master = scope.ServiceProvider.GetRequiredService<EntityMaster>();
 
                 if (log == null)
                     return false;
@@ -206,7 +281,7 @@ namespace Data_Logger_1._3.Services
             }
             catch (Exception ex)
             {
-                var writer = scope.ServiceProvider.GetRequiredService<ENTITYWRITER>();
+                var writer = scope.ServiceProvider.GetRequiredService<EntityWriter>();
                 await writer.HandleExceptionAsync(ex, "DeleteLOG(log)");
             }
 
@@ -219,7 +294,7 @@ namespace Data_Logger_1._3.Services
 
             try
             {
-                var master = scope.ServiceProvider.GetRequiredService<ENTITYMASTER>();
+                var master = scope.ServiceProvider.GetRequiredService<EntityMaster>();
 
                 var logDeletionCandidate = await master.Logs
                 .FirstOrDefaultAsync(log => log.ID == ID);
@@ -235,7 +310,7 @@ namespace Data_Logger_1._3.Services
             }
             catch (Exception ex)
             {
-                var writer = scope.ServiceProvider.GetRequiredService<ENTITYWRITER>();
+                var writer = scope.ServiceProvider.GetRequiredService<EntityWriter>();
                 await writer.HandleExceptionAsync(ex, "DeleteLOGByID(ID)");
             }
 
@@ -245,8 +320,8 @@ namespace Data_Logger_1._3.Services
         public async Task<bool> DeleteNote(int ID)
         {
             await using var scope = _serviceProvider.CreateAsyncScope();
-            var master = scope.ServiceProvider.GetRequiredService<ENTITYMASTER>();
-            var writer = scope.ServiceProvider.GetRequiredService<ENTITYWRITER>();
+            var master = scope.ServiceProvider.GetRequiredService<EntityMaster>();
+            var writer = scope.ServiceProvider.GetRequiredService<EntityWriter>();
 
             try
             {

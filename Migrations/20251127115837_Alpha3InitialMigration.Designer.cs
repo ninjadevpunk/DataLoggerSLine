@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Data_Logger_1._3.Migrations
 {
-    [DbContext(typeof(ENTITYMASTER))]
+    [DbContext(typeof(EntityMaster))]
     [Migration("20251127115837_Alpha3InitialMigration")]
     partial class Alpha3InitialMigration
     {

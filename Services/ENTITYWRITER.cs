@@ -1,4 +1,5 @@
 ﻿using Data_Logger_1._3.Models;
+using Data_Logger_1._3.Models.App_Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.Extensions.DependencyInjection;
@@ -10,18 +11,18 @@ using System.Text.RegularExpressions;
 using System.Windows;
 using static Data_Logger_1._3.Models.FeedbackMessage;
 using static Data_Logger_1._3.Models.NotesLOG;
-using static Data_Logger_1._3.Services.ENTITYREADER;
+using static Data_Logger_1._3.Services.EntityReader;
 
 namespace Data_Logger_1._3.Services
 {
-    public class ENTITYWRITER
+    public class EntityWriter
     {
         private readonly IServiceProvider _serviceProvider;
 
         /// <summary>
         /// Official Entity Framework data writer.
         /// </summary>
-        public ENTITYWRITER(IServiceProvider serviceProvider)
+        public EntityWriter(IServiceProvider serviceProvider)
         {
             _serviceProvider = serviceProvider;
         }
@@ -48,8 +49,8 @@ namespace Data_Logger_1._3.Services
         public async Task<bool> SetCurrentUser(ACCOUNT account)
         {
             await using var scope = _serviceProvider.CreateAsyncScope();
-            var master = scope.ServiceProvider.GetRequiredService<ENTITYMASTER>();
-            var reader = scope.ServiceProvider.GetRequiredService<ENTITYREADER>();
+            var master = scope.ServiceProvider.GetRequiredService<EntityMaster>();
+            var reader = scope.ServiceProvider.GetRequiredService<EntityReader>();
 
             try
             {
@@ -79,7 +80,7 @@ namespace Data_Logger_1._3.Services
         public async Task<bool> UnsetCurrentUser()
         {
             await using var scope = _serviceProvider.CreateAsyncScope();
-            var master = scope.ServiceProvider.GetRequiredService<ENTITYMASTER>();
+            var master = scope.ServiceProvider.GetRequiredService<EntityMaster>();
 
             try
             {
@@ -114,8 +115,8 @@ namespace Data_Logger_1._3.Services
         public async Task<bool> AddAccount(ACCOUNT account)
         {
             await using var scope = _serviceProvider.CreateAsyncScope();
-            var master = scope.ServiceProvider.GetRequiredService<ENTITYMASTER>();
-            var reader = scope.ServiceProvider.GetRequiredService<ENTITYREADER>();
+            var master = scope.ServiceProvider.GetRequiredService<EntityMaster>();
+            var reader = scope.ServiceProvider.GetRequiredService<EntityReader>();
 
             bool accountCreated = false;
 
@@ -186,7 +187,7 @@ namespace Data_Logger_1._3.Services
         public async Task<bool> CreateLOG(LOG log)
         {
             await using var scope = _serviceProvider.CreateAsyncScope();
-            var master = scope.ServiceProvider.GetRequiredService<ENTITYMASTER>();
+            var master = scope.ServiceProvider.GetRequiredService<EntityMaster>();
 
 
             try
@@ -221,9 +222,9 @@ namespace Data_Logger_1._3.Services
         }
 
 
-        private async Task PrepareLogDetails(LOG log, AsyncServiceScope scope, ENTITYMASTER master)
+        private async Task PrepareLogDetails(LOG log, AsyncServiceScope scope, EntityMaster master)
         {
-            var reader = scope.ServiceProvider.GetRequiredService<ENTITYREADER>();
+            var reader = scope.ServiceProvider.GetRequiredService<EntityReader>();
 
             var onlineUser = await reader.FindAccountByID(scope, master, (int)await reader.GetOnlineAccountIDAsync(scope, master));
             if (onlineUser == null)
@@ -277,9 +278,9 @@ namespace Data_Logger_1._3.Services
             return regex.IsMatch(input) ? input : string.Empty;
         }
 
-        private async Task PreparePostItDetails(LOG log, AsyncServiceScope scope, ENTITYMASTER master)
+        private async Task PreparePostItDetails(LOG log, AsyncServiceScope scope, EntityMaster master)
         {
-            var reader = scope.ServiceProvider.GetRequiredService<ENTITYREADER>();
+            var reader = scope.ServiceProvider.GetRequiredService<EntityReader>();
 
             var onlineUser = await reader.FindAccountByID(scope, master, (int)await reader.GetOnlineAccountIDAsync(scope, master));
 
@@ -307,7 +308,7 @@ namespace Data_Logger_1._3.Services
             }
         }
 
-        private async Task InsertSubLogDetails(LOG log, AsyncServiceScope scope, ENTITYMASTER master)
+        private async Task InsertSubLogDetails(LOG log, AsyncServiceScope scope, EntityMaster master)
         {
 
             switch (log.Category)
@@ -413,7 +414,7 @@ namespace Data_Logger_1._3.Services
         public async Task<int> CreateFeedback(int accountID, string description, bool canContact, bool isAutoFeed = true, FeedbackType category = FeedbackType.Bug)
         {
             await using var scope = _serviceProvider.CreateAsyncScope();
-            var master = scope.ServiceProvider.GetRequiredService<ENTITYMASTER>();
+            var master = scope.ServiceProvider.GetRequiredService<EntityMaster>();
 
             try
             {

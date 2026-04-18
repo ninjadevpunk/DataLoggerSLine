@@ -5,7 +5,7 @@ using SQLitePCL;
 
 namespace Data_Logger_1._3.Services
 {
-    public class ENTITYMASTER : DbContext
+    public class EntityMaster : DbContext
     {
 
         public DbSet<ApplicationClass> Applications { get; set; }
@@ -31,7 +31,7 @@ namespace Data_Logger_1._3.Services
         public DbSet<FeedbackMessage> AllFeedback { get; set; }
 
 
-        public ENTITYMASTER(DbContextOptions<ENTITYMASTER> options)
+        public EntityMaster(DbContextOptions<EntityMaster> options)
         : base(options)
         {
             Batteries_V2.Init();
