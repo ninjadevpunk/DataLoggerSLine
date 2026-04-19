@@ -93,7 +93,7 @@ namespace Data_Logger_1._3.Commands.ReporterCommands.UpdateCommands
 
                 // PROJECT
 
-                if (!appIsNew)
+                if (!appIsNew && _log.Project != null)
                 {
                     bool projectBelongsToNewApp = _log.Project.appID == _log.appID;
 
@@ -125,7 +125,14 @@ namespace Data_Logger_1._3.Commands.ReporterCommands.UpdateCommands
                 }
                 else
                 {
-                    _log.Project = new ProjectClass(account, _editor.ProjectName, _log.Application!);
+                    if (string.IsNullOrEmpty(_editor.ProjectName))
+                    {
+                        // Set to "Unnamed Project" default
+                        _log.projectID = 1;
+                        _log.Project = null;
+                    }
+                    else
+                        _log.Project = new ProjectClass(account, _editor.ProjectName, _log.Application!);
                 }
 
 
