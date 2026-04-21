@@ -25,11 +25,11 @@ namespace Data_Logger_1._3.Models.App_Models
 
         public string Subject { get; set; } = "";
 
-        public int projectID { get; set; } = 1;
+        public int projectID { get; set; }
         public ProjectClass Project { get; set; }
 
 
-        public int appID { get; set; } = 3;
+        public int appID { get; set; }
         public ApplicationClass Application { get; set; }
 
         public SubjectClass()

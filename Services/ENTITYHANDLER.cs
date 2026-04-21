@@ -86,7 +86,7 @@ namespace Data_Logger_1._3.Services
                 if (log.Output != null)
                     existingLog.Output = master.Outputs
                         .FirstOrDefault(o => o.outputID == log.Output.outputID) ?? log.Output;
-
+                
                 if (log.Type != null)
                     existingLog.Type = master.Types
                         .FirstOrDefault(t => t.typeID == log.Type.typeID) ?? log.Type;
