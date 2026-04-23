@@ -58,6 +58,7 @@ namespace Data_Logger_1._3.Commands.ReporterCommands.UpdateCommands
 
 
                 bool appIsNew = false;
+                bool projectIsNew = false;
 
                 // APPLICATION
 
@@ -72,12 +73,12 @@ namespace Data_Logger_1._3.Commands.ReporterCommands.UpdateCommands
                     // App may be the same or changed. Changed app may be new or existing
                     var app = await _dataService.FindApplication(userID, _editor.ApplicationName);
 
-                    if(app == null)
+                    if (app == null)
                     {
                         app = new ApplicationClass(_editor.ApplicationName);
-                        app.accountID = _log.accountID;                    
+                        app.accountID = _log.accountID;
                     }
-                        
+
                     appIsNew = app.appID == 0;
 
                     if (appIsNew)
@@ -114,6 +115,8 @@ namespace Data_Logger_1._3.Commands.ReporterCommands.UpdateCommands
                             project.appID = _log.appID;
                         }
 
+                        projectIsNew = project.projectID == 0;
+
                         if (project.projectID == 0)
                             _log.Project = project;
                         else
@@ -132,7 +135,10 @@ namespace Data_Logger_1._3.Commands.ReporterCommands.UpdateCommands
                         _log.Project = null;
                     }
                     else
+                    {
                         _log.Project = new ProjectClass(account, _editor.ProjectName, _log.Application!);
+                        projectIsNew = true;
+                    }
                 }
 
 
@@ -152,9 +158,9 @@ namespace Data_Logger_1._3.Commands.ReporterCommands.UpdateCommands
                 foreach (var editorPostIt in _editor.PostIts)
                 {
                     var subjectIsNew = false;
-                    var subject = await _dataService.FindSubject(editorPostIt.Subject, _log.Category);
+                    var subject = await _dataService.FindSubject(editorPostIt.Subject, _log.Category, _log.appID, _log.projectID);
 
-                    if (subject == null)
+                    if (subject == null || appIsNew || projectIsNew)
                     {
                         subjectIsNew = true;
                         subject = new(
@@ -218,6 +224,7 @@ namespace Data_Logger_1._3.Commands.ReporterCommands.UpdateCommands
                         {
                             // PostIt Exists, Subject Exists
                             existingPostIt.subjectID = subject.subjectID;
+                            existingPostIt.Subject = null;
                         }
 
                         existingPostIt.Error = editorPostIt.Error;
