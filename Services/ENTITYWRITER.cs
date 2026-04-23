@@ -1,7 +1,5 @@
 ﻿using Data_Logger_1._3.Models;
-using Data_Logger_1._3.Models.App_Models;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.Extensions.DependencyInjection;
 using System.Data;
 using System.Diagnostics;
@@ -296,7 +294,7 @@ namespace Data_Logger_1._3.Services
                     postIt.Subject.Application = log.Application;
                     postIt.Subject.Project = log.Project;
 
-                    var existingSubject = await reader.FindSubject(scope, master, postIt.Subject.Subject, log.Category);
+                    var existingSubject = await reader.FindSubject(scope, master, postIt.Subject.Subject, log.Category, log.appID, log.projectID);
 
                     if (existingSubject != null)
                     {

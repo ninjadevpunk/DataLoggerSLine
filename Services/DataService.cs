@@ -642,9 +642,9 @@ namespace Data_Logger_1._3.Services
         /// <summary>
         /// Finds a subject by its name and category.
         /// </summary>
-        public Task<SubjectClass?> FindSubject(string subject, LOG.CATEGORY category)
+        public Task<SubjectClass?> FindSubject(string subject, LOG.CATEGORY category, int appID, int projectID)
         {
-            return UseReaderAsync(reader => reader.FindSubject(subject, category));
+            return UseReaderAsync(reader => reader.FindSubject(subject, category, appID, projectID));
         }
 
         /// <summary>

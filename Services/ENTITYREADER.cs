@@ -853,7 +853,7 @@ namespace Data_Logger_1._3.Services
 
 
 
-        public async Task<SubjectClass?> FindSubject(string name, LOG.CATEGORY category)
+        public async Task<SubjectClass?> FindSubject(string name, LOG.CATEGORY category, int appID, int projectID)
         {
             await using var scope = _serviceProvider.CreateAsyncScope();
             var master = scope.ServiceProvider.GetRequiredService<EntityMaster>();
@@ -867,6 +867,8 @@ namespace Data_Logger_1._3.Services
                     .Where(s => new[] { 1, onlineUserID }.Contains(s.accountID))
                     .Where(s => s.Subject == name)
                     .Where(s => s.Category == category)
+                    .Where(s => s.projectID == projectID)
+                    .Where(s => s.appID == appID)
                     .FirstOrDefaultAsync();
             }
             catch (Exception ex)
@@ -877,7 +879,8 @@ namespace Data_Logger_1._3.Services
             return null;
         }
 
-        public async Task<SubjectClass?> FindSubject(AsyncServiceScope scope, EntityMaster master, string name, LOG.CATEGORY category)
+        public async Task<SubjectClass?> FindSubject(AsyncServiceScope scope, EntityMaster master, string name, LOG.CATEGORY category,
+            int appID, int projectID)
         {
             var writer = scope.ServiceProvider.GetRequiredService<EntityWriter>();
 
@@ -889,6 +892,8 @@ namespace Data_Logger_1._3.Services
                     .Where(s => new[] { 1, onlineUserID }.Contains(s.accountID))
                     .Where(s => s.Subject == name)
                     .Where(s => s.Category == category)
+                    .Where(s => s.projectID == projectID)
+                    .Where(s => s.appID == appID)
                     .FirstOrDefaultAsync();
             }
             catch (Exception ex)
@@ -898,6 +903,8 @@ namespace Data_Logger_1._3.Services
 
             return null;
         }
+
+
 
         /// <summary>
         /// Looks for a subject ID for the given SubjectClass.

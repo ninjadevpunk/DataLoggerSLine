@@ -67,6 +67,10 @@ namespace Data_Logger_1._3.Services
                         existingLog.Application = log.Application;
                     }
                 }
+                else
+                {
+                    existingLog.Application = await master.Applications.FirstOrDefaultAsync(a => a.appID == existingLog.appID);
+                }
 
 
                 // PROJECT
@@ -82,11 +86,15 @@ namespace Data_Logger_1._3.Services
                     log.Project.Application = existingLog.Application!;
                     existingLog.Project = log.Project;
                 }
+                else
+                {
+                    existingLog.Project = await master.Projects.FirstOrDefaultAsync(p => p.projectID == existingLog.projectID);
+                }
 
                 if (log.Output != null)
                     existingLog.Output = master.Outputs
                         .FirstOrDefault(o => o.outputID == log.Output.outputID) ?? log.Output;
-                
+
                 if (log.Type != null)
                     existingLog.Type = master.Types
                         .FirstOrDefault(t => t.typeID == log.Type.typeID) ?? log.Type;
@@ -130,8 +138,7 @@ namespace Data_Logger_1._3.Services
                     else
                     {
                         // Subject Exists
-                        trackedSubject = master.Subjects
-                            .FirstOrDefault(s => s.subjectID == postIt.subjectID);
+                        trackedSubject = master.Subjects.FirstOrDefault(s => s.subjectID == postIt.subjectID);
                     }
 
 

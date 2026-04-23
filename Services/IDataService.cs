@@ -57,7 +57,7 @@ namespace Data_Logger_1._3.Services
         Task<OutputClass?> FindOutputByID(int outputID);
         Task<TypeClass?> FindType(string name);
         Task<TypeClass?> FindTypeByID(int typeID);
-        Task<SubjectClass?> FindSubject(string subject, LOG.CATEGORY category);
+        Task<SubjectClass?> FindSubject(string subject, LOG.CATEGORY category, int appID, int projectID);
         Task<int> FindSubjectID(SubjectClass subject);
 
         Task<List<OutputClass>?> ListQtOutputs();
