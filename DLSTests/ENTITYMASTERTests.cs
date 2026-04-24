@@ -3,7 +3,7 @@ using Data_Logger_1._3.Services;
 using Microsoft.EntityFrameworkCore;
 using System.Runtime.CompilerServices;
 
-namespace DataLoggerTest
+namespace DLSTests
 {
     public class ENTITYMASTERTests
     {
