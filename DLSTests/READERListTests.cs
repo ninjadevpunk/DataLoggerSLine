@@ -2,7 +2,7 @@
 using Data_Logger_1._3.Services;
 using Microsoft.EntityFrameworkCore;
 
-namespace DataLoggerTest
+namespace DLSTests
 {
     public class READERListTests
     {

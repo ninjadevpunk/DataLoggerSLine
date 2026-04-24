@@ -67,6 +67,10 @@ namespace Data_Logger_1._3.Services
                         existingLog.Application = log.Application;
                     }
                 }
+                else
+                {
+                    existingLog.Application = await master.Applications.FirstOrDefaultAsync(a => a.appID == existingLog.appID);
+                }
 
 
                 // PROJECT
@@ -81,6 +85,10 @@ namespace Data_Logger_1._3.Services
                     // if it's new, the reference is already set correctly in the command
                     log.Project.Application = existingLog.Application!;
                     existingLog.Project = log.Project;
+                }
+                else
+                {
+                    existingLog.Project = await master.Projects.FirstOrDefaultAsync(p => p.projectID == existingLog.projectID);
                 }
 
                 if (log.Output != null)
@@ -130,8 +138,7 @@ namespace Data_Logger_1._3.Services
                     else
                     {
                         // Subject Exists
-                        trackedSubject = master.Subjects
-                            .FirstOrDefault(s => s.subjectID == postIt.subjectID);
+                        trackedSubject = master.Subjects.FirstOrDefault(s => s.subjectID == postIt.subjectID);
                     }
 
 
