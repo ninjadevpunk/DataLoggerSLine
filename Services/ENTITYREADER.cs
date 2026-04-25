@@ -892,8 +892,8 @@ namespace Data_Logger_1._3.Services
                     .Where(s => new[] { 1, onlineUserID }.Contains(s.accountID))
                     .Where(s => s.Subject == name)
                     .Where(s => s.Category == category)
-                    .Where(s => s.projectID == projectID)
                     .Where(s => s.appID == appID)
+                    .Where(s => s.projectID == projectID)
                     .FirstOrDefaultAsync();
             }
             catch (Exception ex)

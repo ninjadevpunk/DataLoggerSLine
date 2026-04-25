@@ -290,15 +290,20 @@ namespace Data_Logger_1._3.Services
 
                 if (postIt.Subject != null)
                 {
-                    postIt.Subject.User = onlineUser;
-                    postIt.Subject.Application = log.Application;
-                    postIt.Subject.Project = log.Project;
+                    var appID = log.Application.appID;
+                    var projectID = log.Project.projectID;
 
-                    var existingSubject = await reader.FindSubject(scope, master, postIt.Subject.Subject, log.Category, log.appID, log.projectID);
+                    var existingSubject = await reader.FindSubject(scope, master, postIt.Subject.Subject, log.Category, appID, projectID);
 
                     if (existingSubject != null)
                     {
                         postIt.Subject = existingSubject;
+                    }
+                    else
+                    {
+                        postIt.Subject.User = onlineUser;
+                        postIt.Subject.Application = log.Application;
+                        postIt.Subject.Project = log.Project;
                     }
 
                     postIt.Author = onlineUser;
