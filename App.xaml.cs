@@ -11,6 +11,7 @@ using Data_Logger_1._3.Views.Dialogs;
 using Data_Logger_1._3.Views.LogPages;
 using Data_Logger_1._3.Views.ReportPages;
 using DotNetEnv;
+using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -34,7 +35,11 @@ namespace Data_Logger_1._3
 
         public App()
         {
-            Env.Load();
+            #if DEBUG
+                Env.Load();
+            #endif
+
+            SQLitePCL.Batteries_V2.Init();
             var host = Host.CreateDefaultBuilder()
                 .ConfigureAppConfiguration((hostingContext, config) =>
                 {
@@ -54,27 +59,23 @@ namespace Data_Logger_1._3
 
 
                     var env = context.HostingEnvironment.EnvironmentName;
-                    //string key;
 
-                    //if (env == "DevMode")
-                    //{
-                    //    key = Environment.GetEnvironmentVariable("SQLITE_KEY");
-                    //}
-                    //else
-                    //{
-                    //    key = context.Configuration["Database:EncryptionKey"];
-                    //}
+                    var key = Environment.GetEnvironmentVariable("DevMode_SQLCipher_Key");
 
-                    //var connectionString = new SqliteConnectionStringBuilder
-                    //{
-                    //    DataSource = context.Configuration.GetConnectionString("DefaultConnection"),
-                    //    Mode = SqliteOpenMode.ReadWriteCreate,
-                    //    Password = key
-                    //}.ToString();
+                    if (string.IsNullOrWhiteSpace(key))
+                        throw new Exception("SQLCipher key is missing!");
+
+
+                    var connectionString = new SqliteConnectionStringBuilder
+                    {
+                        DataSource = context.Configuration.GetConnectionString("DefaultConnection"),
+                        Mode = SqliteOpenMode.ReadWriteCreate,
+                        Password = key
+                    }.ToString();
 
                     service.AddDbContext<EntityMaster>(options =>
                     {
-                        options.UseSqlite(context.Configuration.GetConnectionString("DefaultConnection"))
+                        options.UseSqlite(connectionString)
                         .LogTo(Console.WriteLine, LogLevel.Information);
 
 
@@ -233,12 +234,12 @@ namespace Data_Logger_1._3
                 // Ensure DB exists
                 await master.Database.EnsureCreatedAsync();
 
-                // Enable WAL Mode
                 var connection = master.Database.GetDbConnection();
 
                 await connection.OpenAsync();
                 using (var command = connection.CreateCommand())
                 {
+                    // Enable WAL Mode
                     command.CommandText = "PRAGMA journal_mode=WAL;";
                     await command.ExecuteNonQueryAsync();
                 }
