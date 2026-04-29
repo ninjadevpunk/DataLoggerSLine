@@ -38,9 +38,9 @@ namespace Data_Logger_1._3
 
         public App()
         {
-            #if DEBUG
-                Env.Load();
-            #endif
+#if DEBUG
+            Env.Load();
+#endif
 
             SQLitePCL.Batteries_V2.Init();
             var host = Host.CreateDefaultBuilder()
@@ -280,6 +280,39 @@ namespace Data_Logger_1._3
 
 
 
+
+
+
+
+
+
+        private string RetrieveEncryptionKey()
+        {
+            string folder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData), "Data Logger");
+            string keyFilePath = Path.Combine(folder, "secret.bin");
+
+            try
+            {
+                if (!File.Exists(keyFilePath))
+                {
+                    var newKey = Guid.NewGuid().ToString("N");
+                    var encrypted = ProtectedData.Protect(Encoding.UTF8.GetBytes(newKey), null, DataProtectionScope.LocalMachine);
+
+                    File.WriteAllBytes(keyFilePath, encrypted);
+                    return newKey;
+                }
+
+                var protectedData = File.ReadAllBytes(keyFilePath);
+                var decryptedBytes = ProtectedData.Unprotect(protectedData, null, DataProtectionScope.LocalMachine);
+
+                return Encoding.UTF8.GetString(decryptedBytes);
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"An exception occurred in RetrieveEncryptionKey(): {ex.Message}");
+                throw;
+            }
+        }
 
 
 
