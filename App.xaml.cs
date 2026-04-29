@@ -248,11 +248,11 @@ namespace Data_Logger_1._3
                 await AnimateProgressBar(splash.progressBar_splashscreen, 80, splash.text_progress);
 
                 // Ensure DB exists
-                await master.Database.EnsureCreatedAsync();
+                await master.Database.MigrateAsync();
 
                 var connection = master.Database.GetDbConnection();
-
                 await connection.OpenAsync();
+
                 using (var command = connection.CreateCommand())
                 {
                     // Enable WAL Mode
