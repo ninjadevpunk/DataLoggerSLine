@@ -17,7 +17,10 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using System.Diagnostics;
 using System.IO;
+using System.Security.Cryptography;
+using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media.Animation;
@@ -59,8 +62,17 @@ namespace Data_Logger_1._3
 
 
                     var env = context.HostingEnvironment.EnvironmentName;
+                    string key = string.Empty;
 
-                    var key = Environment.GetEnvironmentVariable("DevMode_SQLCipher_Key");
+                    if (env == "DevMode")
+                    {
+                        key = Environment.GetEnvironmentVariable("DevMode_SQLCipher_Key");
+                    }
+                    else
+                    {
+                        // Live DB Key Retrieval
+                        key = RetrieveEncryptionKey();
+                    }
 
                     if (string.IsNullOrWhiteSpace(key))
                         throw new Exception("SQLCipher key is missing!");
@@ -159,6 +171,9 @@ namespace Data_Logger_1._3
                     });
 
 
+                    // LOGGER
+
+
                     service.AddTransient<codeCreateViewModel>();
                     service.AddTransient((services) => new AScodeCreateViewModel(services.GetRequiredService<NavigationService>(), services.GetRequiredService<CodingAndroidViewModel>(),
                         services.GetRequiredService<IDataService>()));
@@ -171,6 +186,7 @@ namespace Data_Logger_1._3
 
                     service.AddTransient<codeEditViewModel>();
                     service.AddTransient((services) => new codeViewerViewModel(services.GetRequiredService<NavigationService>()));
+
 
                     // REPORTER
 
