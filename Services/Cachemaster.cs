@@ -30,8 +30,8 @@ namespace Data_Logger_1._3.Services
             Flexi
         }
 
-        
-        
+
+
         public List<string>? Identifiers { get; set; } = new();
         public StreamWriter Writer { get; set; }
 
@@ -42,6 +42,7 @@ namespace Data_Logger_1._3.Services
 
         public readonly string MainFolder;
         public readonly string DepositoryPath;
+        public readonly string ProgramDataPath;
 
         public readonly string ResourceDirectory;
         public readonly string IdentifiersPath;
@@ -52,6 +53,7 @@ namespace Data_Logger_1._3.Services
         {
 
             MainFolder = App.Configuration["Paths:Root"];
+            ProgramDataPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData), "Data Logger");
 
             DepositoryPath = Path.Combine(MainFolder, "Depository");
 
@@ -86,6 +88,13 @@ namespace Data_Logger_1._3.Services
                     GrantFolderPermissions(MainFolder);
                 }
 
+                // ProgramData
+                if (!Directory.Exists(ProgramDataPath))
+                {
+                    Directory.CreateDirectory(ProgramDataPath);
+                    GrantFolderPermissions(ProgramDataPath);
+                }
+
                 // Depository
                 if (!Directory.Exists(DepositoryPath))
                 {
@@ -114,9 +123,7 @@ namespace Data_Logger_1._3.Services
             catch (UnauthorizedAccessException unex)
             {
                 Debug.WriteLine($"An UnauthorizedAccessException error occurred in ResourcesCreated(): {unex.Message}");
-
-                // Handle permissions issue gracefully
-                //RequestAdminPrivileges();
+                RequestAdminPrivileges();
 
                 return false;
             }
@@ -137,15 +144,15 @@ namespace Data_Logger_1._3.Services
             DirectoryInfo dirInfo = new DirectoryInfo(folderPath);
             DirectorySecurity dirSecurity = dirInfo.GetAccessControl();
 
-            SecurityIdentifier sid = WindowsIdentity.GetCurrent().User;
+            SecurityIdentifier sid = new SecurityIdentifier(WellKnownSidType.BuiltinUsersSid, null);
 
             FileSystemAccessRule accessRule = new FileSystemAccessRule(
                 sid,
-                FileSystemRights.FullControl,
+                FileSystemRights.Modify | FileSystemRights.ReadAndExecute | FileSystemRights.Synchronize,
                 InheritanceFlags.ContainerInherit | InheritanceFlags.ObjectInherit,
                 PropagationFlags.None,
                 AccessControlType.Allow
-            );
+                );
 
             dirSecurity.AddAccessRule(accessRule);
             dirInfo.SetAccessControl(dirSecurity);

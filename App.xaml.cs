@@ -11,12 +11,16 @@ using Data_Logger_1._3.Views.Dialogs;
 using Data_Logger_1._3.Views.LogPages;
 using Data_Logger_1._3.Views.ReportPages;
 using DotNetEnv;
+using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using System.Diagnostics;
 using System.IO;
+using System.Security.Cryptography;
+using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media.Animation;
@@ -34,7 +38,11 @@ namespace Data_Logger_1._3
 
         public App()
         {
+#if DEBUG
             Env.Load();
+#endif
+
+            SQLitePCL.Batteries_V2.Init();
             var host = Host.CreateDefaultBuilder()
                 .ConfigureAppConfiguration((hostingContext, config) =>
                 {
@@ -54,27 +62,32 @@ namespace Data_Logger_1._3
 
 
                     var env = context.HostingEnvironment.EnvironmentName;
-                    //string key;
+                    string key = string.Empty;
 
-                    //if (env == "DevMode")
-                    //{
-                    //    key = Environment.GetEnvironmentVariable("SQLITE_KEY");
-                    //}
-                    //else
-                    //{
-                    //    key = context.Configuration["Database:EncryptionKey"];
-                    //}
+                    if (env == "DevMode")
+                    {
+                        key = Environment.GetEnvironmentVariable("DevMode_SQLCipher_Key");
+                    }
+                    else
+                    {
+                        // Live DB Key Retrieval
+                        key = RetrieveEncryptionKey();
+                    }
 
-                    //var connectionString = new SqliteConnectionStringBuilder
-                    //{
-                    //    DataSource = context.Configuration.GetConnectionString("DefaultConnection"),
-                    //    Mode = SqliteOpenMode.ReadWriteCreate,
-                    //    Password = key
-                    //}.ToString();
+                    if (string.IsNullOrWhiteSpace(key))
+                        throw new Exception("SQLCipher key is missing!");
+
+
+                    var connectionString = new SqliteConnectionStringBuilder
+                    {
+                        DataSource = context.Configuration.GetConnectionString("DefaultConnection"),
+                        Mode = SqliteOpenMode.ReadWriteCreate,
+                        Password = key
+                    }.ToString();
 
                     service.AddDbContext<EntityMaster>(options =>
                     {
-                        options.UseSqlite(context.Configuration.GetConnectionString("DefaultConnection"))
+                        options.UseSqlite(connectionString)
                         .LogTo(Console.WriteLine, LogLevel.Information);
 
 
@@ -158,6 +171,9 @@ namespace Data_Logger_1._3
                     });
 
 
+                    // LOGGER
+
+
                     service.AddTransient<codeCreateViewModel>();
                     service.AddTransient((services) => new AScodeCreateViewModel(services.GetRequiredService<NavigationService>(), services.GetRequiredService<CodingAndroidViewModel>(),
                         services.GetRequiredService<IDataService>()));
@@ -170,6 +186,7 @@ namespace Data_Logger_1._3
 
                     service.AddTransient<codeEditViewModel>();
                     service.AddTransient((services) => new codeViewerViewModel(services.GetRequiredService<NavigationService>()));
+
 
                     // REPORTER
 
@@ -227,20 +244,36 @@ namespace Data_Logger_1._3
             using (var scope = _serviceProvider.CreateScope())
             {
                 await AnimateProgressBar(splash.progressBar_splashscreen, 75, splash.text_progress);
-                var master = scope.ServiceProvider.GetRequiredService<EntityMaster>();
-                await AnimateProgressBar(splash.progressBar_splashscreen, 80, splash.text_progress);
 
-                // Ensure DB exists
-                await master.Database.EnsureCreatedAsync();
-
-                // Enable WAL Mode
-                var connection = master.Database.GetDbConnection();
-
-                await connection.OpenAsync();
-                using (var command = connection.CreateCommand())
+                try
                 {
-                    command.CommandText = "PRAGMA journal_mode=WAL;";
-                    await command.ExecuteNonQueryAsync();
+                    var master = scope.ServiceProvider.GetRequiredService<EntityMaster>();
+
+                    await AnimateProgressBar(splash.progressBar_splashscreen, 80, splash.text_progress);
+
+                    // Ensure DB exists
+                    await master.Database.MigrateAsync();
+
+                    var connection = master.Database.GetDbConnection();
+                    await connection.OpenAsync();
+
+                    using (var command = connection.CreateCommand())
+                    {
+                        // Enable WAL Mode
+                        command.CommandText = "PRAGMA journal_mode=WAL;";
+                        await command.ExecuteNonQueryAsync();
+                    }
+                }
+                catch (Exception ex)
+                {
+                    try
+                    {
+                        File.WriteAllText("error.txt", $"An error occurred in OnStartUp: {ex.ToString()}");
+                    }
+                    catch
+                    {
+                        MessageBox.Show("An error occurred", "Error", MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK);
+                    }
                 }
             }
 
@@ -263,6 +296,42 @@ namespace Data_Logger_1._3
 
 
 
+
+
+
+
+
+
+        private string RetrieveEncryptionKey()
+        {
+            string folder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData), "Data Logger");
+            string keyFilePath = Path.Combine(folder, "secret.bin");
+
+            try
+            {
+                if (!File.Exists(keyFilePath))
+                {
+                    var newKey = Guid.NewGuid().ToString("N");
+
+                    var encrypted = ProtectedData.Protect(Encoding.UTF8.GetBytes(newKey), null, DataProtectionScope.LocalMachine);
+
+                    File.WriteAllBytes(keyFilePath, encrypted);
+                    return newKey;
+                }
+
+                var protectedData = File.ReadAllBytes(keyFilePath);
+                var decryptedBytes = ProtectedData.Unprotect(protectedData, null, DataProtectionScope.LocalMachine);
+
+                return Encoding.UTF8.GetString(decryptedBytes);
+            }
+            catch (Exception ex)
+            {
+#if DEBUG
+                Debug.WriteLine($"An exception occurred in RetrieveEncryptionKey(): {ex.Message}");
+#endif
+                throw;
+            }
+        }
 
 
 
@@ -300,11 +369,16 @@ namespace Data_Logger_1._3
                 try
                 {
                     File.Delete(devIconPath);
-                    Console.WriteLine("DevIcon.ico deleted.");
+
+#if DEBUG
+                    Debug.WriteLine("DevIcon.ico deleted.");
+#endif
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine($"Failed to delete DevIcon.ico: {ex.Message}");
+#if DEBUG
+                    Debug.WriteLine($"Failed to delete DevIcon.ico: {ex.Message}");
+#endif
                 }
             }
         }
