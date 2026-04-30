@@ -244,20 +244,36 @@ namespace Data_Logger_1._3
             using (var scope = _serviceProvider.CreateScope())
             {
                 await AnimateProgressBar(splash.progressBar_splashscreen, 75, splash.text_progress);
-                var master = scope.ServiceProvider.GetRequiredService<EntityMaster>();
-                await AnimateProgressBar(splash.progressBar_splashscreen, 80, splash.text_progress);
 
-                // Ensure DB exists
-                await master.Database.MigrateAsync();
-
-                var connection = master.Database.GetDbConnection();
-                await connection.OpenAsync();
-
-                using (var command = connection.CreateCommand())
+                try
                 {
-                    // Enable WAL Mode
-                    command.CommandText = "PRAGMA journal_mode=WAL;";
-                    await command.ExecuteNonQueryAsync();
+                    var master = scope.ServiceProvider.GetRequiredService<EntityMaster>();
+
+                    await AnimateProgressBar(splash.progressBar_splashscreen, 80, splash.text_progress);
+
+                    // Ensure DB exists
+                    await master.Database.MigrateAsync();
+
+                    var connection = master.Database.GetDbConnection();
+                    await connection.OpenAsync();
+
+                    using (var command = connection.CreateCommand())
+                    {
+                        // Enable WAL Mode
+                        command.CommandText = "PRAGMA journal_mode=WAL;";
+                        await command.ExecuteNonQueryAsync();
+                    }
+                }
+                catch (Exception ex)
+                {
+                    try
+                    {
+                        File.WriteAllText("error.txt", $"An error occurred in OnStartUp: {ex.ToString()}");
+                    }
+                    catch
+                    {
+                        MessageBox.Show("An error occurred", "Error", MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK);
+                    }
                 }
             }
 
@@ -296,6 +312,7 @@ namespace Data_Logger_1._3
                 if (!File.Exists(keyFilePath))
                 {
                     var newKey = Guid.NewGuid().ToString("N");
+
                     var encrypted = ProtectedData.Protect(Encoding.UTF8.GetBytes(newKey), null, DataProtectionScope.LocalMachine);
 
                     File.WriteAllBytes(keyFilePath, encrypted);
@@ -309,7 +326,9 @@ namespace Data_Logger_1._3
             }
             catch (Exception ex)
             {
+#if DEBUG
                 Debug.WriteLine($"An exception occurred in RetrieveEncryptionKey(): {ex.Message}");
+#endif
                 throw;
             }
         }
@@ -350,11 +369,16 @@ namespace Data_Logger_1._3
                 try
                 {
                     File.Delete(devIconPath);
-                    Console.WriteLine("DevIcon.ico deleted.");
+
+#if DEBUG
+                    Debug.WriteLine("DevIcon.ico deleted.");
+#endif
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine($"Failed to delete DevIcon.ico: {ex.Message}");
+#if DEBUG
+                    Debug.WriteLine($"Failed to delete DevIcon.ico: {ex.Message}");
+#endif
                 }
             }
         }
