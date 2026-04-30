@@ -1,6 +1,6 @@
 ﻿using Data_Logger_1._3.Commands.ReporterCommands;
 using Data_Logger_1._3.Services;
-using static Data_Logger_1._3.Services.Cachemaster;
+using static Data_Logger_1._3.Services.CacheMaster;
 
 namespace Data_Logger_1._3.ViewModels.Reporter.Desk
 {

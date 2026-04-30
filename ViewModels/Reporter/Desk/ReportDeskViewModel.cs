@@ -3,7 +3,7 @@ using MVVMEssentials.ViewModels;
 using System.Collections.ObjectModel;
 using System.Windows;
 using System.Windows.Input;
-using static Data_Logger_1._3.Services.Cachemaster;
+using static Data_Logger_1._3.Services.CacheMaster;
 
 namespace Data_Logger_1._3.ViewModels.Reporter.Desk
 {

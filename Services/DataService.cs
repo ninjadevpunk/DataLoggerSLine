@@ -6,14 +6,14 @@ using Microsoft.Extensions.DependencyInjection;
 using System.Collections.ObjectModel;
 using System.Text.RegularExpressions;
 using static Data_Logger_1._3.Models.LOG;
-using static Data_Logger_1._3.Services.Cachemaster;
+using static Data_Logger_1._3.Services.CacheMaster;
 
 namespace Data_Logger_1._3.Services
 {
 
     public class DataService : IDataService
     {
-        private readonly Cachemaster _cachemaster;
+        private readonly CacheMaster _cachemaster;
         private readonly IServiceProvider _serviceProvider;
 
         private readonly AuthService _authService;
@@ -30,7 +30,7 @@ namespace Data_Logger_1._3.Services
         IReadOnlyList<SubjectClass> IDataService.SQLITE_SUBJECTS => SQLITE_SUBJECTS;
 
 
-        public DataService(Cachemaster cachemaster, AuthService authService, IServiceProvider serviceProvider)
+        public DataService(CacheMaster cachemaster, AuthService authService, IServiceProvider serviceProvider)
         {
             _cachemaster = cachemaster;
 
@@ -118,7 +118,7 @@ namespace Data_Logger_1._3.Services
             return _authService.Account.FirstName + " " + _authService.Account.LastName;
         }
 
-        public Cachemaster GetCachemaster()
+        public CacheMaster GetCachemaster()
         {
             return _cachemaster;
         }

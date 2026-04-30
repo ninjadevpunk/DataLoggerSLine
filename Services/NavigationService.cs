@@ -21,7 +21,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Markup;
 using System.Windows.Media.Imaging;
-using static Data_Logger_1._3.Services.Cachemaster;
+using static Data_Logger_1._3.Services.CacheMaster;
 
 namespace Data_Logger_1._3.Services
 {

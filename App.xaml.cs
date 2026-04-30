@@ -95,7 +95,7 @@ namespace Data_Logger_1._3
                             options.EnableSensitiveDataLogging();
                     });
 
-                    service.AddSingleton<Cachemaster>();
+                    service.AddSingleton<CacheMaster>();
                     service.AddScoped((services) => new EntityReader(services));
                     service.AddScoped((services) => new EntityWriter(services));
                     service.AddScoped((services) => new EntityHandler(services));
@@ -103,7 +103,7 @@ namespace Data_Logger_1._3
                     service.AddSingleton((services) => new AuthService(services));
 
                     service.AddSingleton<IDataService>(services => new DataService(
-                        services.GetRequiredService<Cachemaster>(),
+                        services.GetRequiredService<CacheMaster>(),
                         services.GetRequiredService<AuthService>(),
                         services
                     ));
@@ -213,7 +213,7 @@ namespace Data_Logger_1._3
         {
             Configuration = _serviceProvider.GetRequiredService<IConfiguration>();
 
-            var cachemaster = _serviceProvider.GetRequiredService<Cachemaster>();
+            var cachemaster = _serviceProvider.GetRequiredService<CacheMaster>();
 
 
 

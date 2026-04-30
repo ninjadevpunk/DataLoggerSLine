@@ -9,7 +9,7 @@ using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using static Data_Logger_1._3.Services.Cachemaster;
+using static Data_Logger_1._3.Services.CacheMaster;
 
 namespace Data_Logger_1._3.ViewModels.Dialogs.Create
 {

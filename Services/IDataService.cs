@@ -4,7 +4,7 @@ using Data_Logger_1._3.ViewModels.Dashboard;
 using Data_Logger_1._3.ViewModels.LogViewModels;
 using System.Collections.ObjectModel;
 using static Data_Logger_1._3.Models.LOG;
-using static Data_Logger_1._3.Services.Cachemaster;
+using static Data_Logger_1._3.Services.CacheMaster;
 
 namespace Data_Logger_1._3.Services
 {
@@ -29,8 +29,8 @@ namespace Data_Logger_1._3.Services
         string GetDisplayPic();
         Task<string> UpdateProfilePic(string emailAddress);
 
-        // --- Cachemaster access ---
-        Cachemaster GetCachemaster();
+        // --- CacheMaster access ---
+        CacheMaster GetCachemaster();
 
         // --- Initialise methods ---
         Task InitialiseProjectsLISTAsync();

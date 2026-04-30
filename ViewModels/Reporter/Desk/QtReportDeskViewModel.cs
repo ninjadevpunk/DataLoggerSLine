@@ -5,7 +5,7 @@ using Data_Logger_1._3.Services;
 using Data_Logger_1._3.ViewModels.Reporter.Logs;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
-using static Data_Logger_1._3.Services.Cachemaster;
+using static Data_Logger_1._3.Services.CacheMaster;
 
 namespace Data_Logger_1._3.ViewModels.Reporter.Desk
 {
