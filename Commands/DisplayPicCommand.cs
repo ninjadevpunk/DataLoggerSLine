@@ -56,6 +56,9 @@ namespace Data_Logger_1._3.Commands
 
                     if (_authService?.Account != null)
                         _authService.Account.ProfilePic = optimized;
+
+                    // TODO - Delete old profile picture
+
                 }
 
 
