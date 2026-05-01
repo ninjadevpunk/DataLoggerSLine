@@ -100,6 +100,9 @@ namespace Data_Logger_1._3.Services
         ObservableCollection<FilmLOGViewModel> RetrieveFilmCache(LogCacheViewModel logCacheViewModel);
         ObservableCollection<FlexiLOGViewModel> RetrieveFlexibleCache(LogCacheViewModel logCacheViewModel);
 
+        // Settings
+
+
         // Feedback
         Task HandleExceptionAsync(Exception exception, string methodName, string exceptionType = "Exception");
 
