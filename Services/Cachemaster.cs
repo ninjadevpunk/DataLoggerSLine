@@ -69,6 +69,33 @@ namespace Data_Logger_1._3.Services
             }
         }
 
+        public bool CreateSettingsFile(int userId)
+        {
+            try
+            {
+                var userFolder = Path.Combine(SettingsService.BasePath, userId.ToString());
+
+                if (!Directory.Exists(userFolder))
+                {
+                    Directory.CreateDirectory(userFolder);
+                }
+
+                return true;
+            }
+            catch (UnauthorizedAccessException unex)
+            {
+                Debug.WriteLine($"UnauthorizedAccessException error occurred in CreateSettingsFile(userId): {unex.Message}");
+                RequestAdminPrivileges();
+
+                return false;
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"Exception occurred in CreateSettingsFile(userId): {ex.Message}");
+                return false;
+            }
+        }
+
         /// <summary>
         /// Creates vital resources for the CacheMaster so the class can function correctly.
         /// </summary>
