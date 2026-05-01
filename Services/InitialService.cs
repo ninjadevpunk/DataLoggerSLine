@@ -5,7 +5,6 @@ using Data_Logger_1._3.ViewModels.LogViewModels;
 using Microsoft.Extensions.DependencyInjection;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
-using System.Windows;
 
 namespace Data_Logger_1._3.Services
 {
@@ -17,7 +16,8 @@ namespace Data_Logger_1._3.Services
         private readonly IServiceProvider _serviceProvider;
         private readonly AuthService _authService;
         private readonly IDataService _dataService;
-
+        private readonly SettingsService _settingsService;
+        private readonly CacheMaster _cacheMaster;
 
         #endregion
 
@@ -125,7 +125,8 @@ namespace Data_Logger_1._3.Services
 
             _authService = serviceProvider.GetRequiredService<AuthService>();
             _dataService = serviceProvider.GetRequiredService<IDataService>();
-
+            _settingsService = serviceProvider.GetRequiredService<SettingsService>();
+            _cacheMaster = serviceProvider.GetRequiredService<CacheMaster>();
 
             _codingQtDashboard = serviceProvider.GetRequiredService<CodingQtViewModel>();
             _codingAndroidDashboard = serviceProvider.GetRequiredService<CodingAndroidViewModel>();
@@ -158,6 +159,7 @@ namespace Data_Logger_1._3.Services
 
             LoadCachedLogs();
             await LoadNotes(id);
+            SetUpSettings();
             SetupUserProfile();
         }
 
@@ -211,6 +213,50 @@ namespace Data_Logger_1._3.Services
             if (_authService.Account != null)
                 _mainWindowViewModel.SignUpImage =  string.IsNullOrEmpty(_authService.Account.ProfilePic) ? null : BitmapService.LoadImage(_authService.Account.ProfilePic);
         }
+
+        private void SetUpSettings()
+        {
+            try
+            {
+                var user = _dataService.GetUser();
+
+                if (user == null)
+                    throw new ArgumentNullException("User cannot be null!");
+
+                var id = user.accountID;
+
+                if (_cacheMaster.CreateSettingsFile(id))
+                {
+                    var settings = _settingsService.Load(id);
+
+                    if (string.IsNullOrWhiteSpace(settings?.User.Email))
+                    {
+                        settings.User.Id = user.accountID;
+                        settings.User.Name = user.FirstName;
+                        settings.User.Surname = user.LastName;
+                        settings.User.Email = user.Email;
+                        settings.User.IsCompanyEmployee = user.IsEmployee;
+                        settings.User.CompanyName = user.CompanyName;
+                        settings.User.CompanyAddress = user.CompanyAddress;
+                        settings.User.ProfilePic = user.ProfilePic;
+
+                        _settingsService.Save(id, settings);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"ArgumentNullException in SetUpSettings(): {ex.Message}");
+            }
+            
+        }
+
+
+
+
+
+
+
 
     }
 }
