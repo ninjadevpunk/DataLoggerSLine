@@ -74,19 +74,19 @@
                             <Border x:Name="image_PROFILE_PIC" Style="{DynamicResource image_displayPic}"
                                     >
                                 <Path Style="{DynamicResource path_USER}"
-                                      Visibility="{Binding}" />
+                                      Visibility="{Binding DefaultPicVisibility, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                             </Border>
                             
                             <!-- Browse Button -->
                             <Button Grid.Column="2"  x:Name="button_BROWSE_PICTURE" Style="{DynamicResource ACTIONBrowse}"
-                                    Command="{Binding}">
+                                    Command="{Binding OpenImageCommand}">
                                 <TextBlock Style="{DynamicResource text_button01}"
                                            Text="Browse"/>
                             </Button>
 
 
                             <TextBlock Grid.Column="4" Style="{DynamicResource text_LABEL02}"
-                                       Text="{Binding}"
+                                       Text="{Binding DisplayPicPath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                        TextAlignment="Left"
                                        TextTrimming="CharacterEllipsis"
                                        HorizontalAlignment="Stretch"/>
@@ -105,22 +105,22 @@
                         <components:PlainInputField x:Name="inputText_FIRSTNAME" Grid.Column="0"
                                 HorizontalAlignment="Stretch"
                                 VerticalAlignment="Center"
-                                PlaceholderText=""
-                                DynamicPlaceholderText=""
+                                PlaceholderText="Name"
+                                DynamicPlaceholderText="Name"
                                 UserTextBoxStyle="{DynamicResource inputText_LOGIN}"
                                 UserTextBlockStyle="{DynamicResource text_login_PLACEHOLDER}"
-                                UserInput="{Binding}"
+                                UserInput="{Binding Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                 />
 
                         <!-- LAST NAME -->
                         <components:PlainInputField x:Name="inputText_SURNAME" Grid.Column="2"
                                 HorizontalAlignment="Stretch"
                                 VerticalAlignment="Center"
-                                PlaceholderText=""
-                                DynamicPlaceholderText=""
+                                PlaceholderText="Surname"
+                                DynamicPlaceholderText="Surname"
                                 UserTextBoxStyle="{DynamicResource inputText_LOGIN}"
                                 UserTextBlockStyle="{DynamicResource text_login_PLACEHOLDER}"
-                                UserInput="{Binding}"
+                                UserInput="{Binding Surname, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                 />
 
 
@@ -131,11 +131,11 @@
                         <components:PlainInputField x:Name="inputText_EMAIL"
                                                     HorizontalAlignment="Stretch"
                                                     VerticalAlignment="Center"
-                                                    PlaceholderText=""
-                                                    DynamicPlaceholderText=""
+                                                    PlaceholderText="Email*"
+                                                    DynamicPlaceholderText="Email*"
                                                     UserTextBoxStyle="{DynamicResource inputText_LOGIN}"
                                                     UserTextBlockStyle="{DynamicResource text_login_PLACEHOLDER}"
-                                                    UserInput="{Binding}"/>
+                                                    UserInput="{Binding Email, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                     </Grid>
 
 
@@ -171,7 +171,7 @@
                                        Margin="5 0"/>
                             
                             <CheckBox Grid.Column="1" Style="{DynamicResource check_SIGNUP}" x:Name="checkBox_YES"
-                                      IsChecked="True"
+                                      IsChecked="{Binding IsCompanyEmployee, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                       Margin="0 0 10 0"/>
 
 
@@ -181,10 +181,9 @@
                                        Margin="5 0"/>
                             
                             <CheckBox Grid.Column="3" Style="{DynamicResource check_SIGNUP}" x:Name="checkBox_NO"
-                                      
                                       Background="{DynamicResource iconCOLOURAccent01}"
                                       Foreground="{DynamicResource WHITE}"
-                                      IsChecked="False"/>
+                                      IsChecked="{Binding IsNotCompanyEmployee, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                             
                         </Grid>
                     </Grid>
@@ -194,11 +193,12 @@
                         <components:PlainInputField x:Name="inputText_COMPANY"
                                                     HorizontalAlignment="Stretch"
                                                     VerticalAlignment="Center"
-                                                    PlaceholderText=""
-                                                    DynamicPlaceholderText=""
+                                                    PlaceholderText="Company Name*"
+                                                    DynamicPlaceholderText="Company Name*"
+                                                    IsEnabled="{Binding IsCompanyEmployee, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                                     UserTextBoxStyle="{DynamicResource inputText_LOGIN}"
                                                     UserTextBlockStyle="{DynamicResource text_login_PLACEHOLDER}"
-                                                    UserInput="{Binding}"/>
+                                                    UserInput="{Binding CompanyName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                     </Grid>
 
                     <!-- COMPANY ADDRESS -->
@@ -206,11 +206,12 @@
                         <components:PlainInputField x:Name="inputText_COMPANY_ADDRESS"
                                                     HorizontalAlignment="Stretch"
                                                     VerticalAlignment="Center"
-                                                    PlaceholderText=""
-                                                    DynamicPlaceholderText=""
+                                                    PlaceholderText="Company Address"
+                                                    DynamicPlaceholderText="Company Address"
+                                                    IsEnabled="{Binding IsCompanyEmployee, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                                     UserTextBoxStyle="{DynamicResource inputText_LOGIN}"
                                                     UserTextBlockStyle="{DynamicResource text_login_PLACEHOLDER}"
-                                                    UserInput="{Binding}"/>
+                                                    UserInput="{Binding CompanyAddress, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                     </Grid>
 
                 </StackPanel>
@@ -228,7 +229,7 @@
                     <Button x:Name="button_PASSWORD_RESET_LINK" Style="{DynamicResource ACTION}"
                             HorizontalAlignment="Right"
                             Width="auto"
-                            Command="{Binding}">
+                            Command="{Binding PasswordResetCommand}">
 
                         <TextBlock Style="{DynamicResource text_button01}"
                                    Text="Request Password Reset"/>
@@ -243,7 +244,7 @@
 
                     <Button x:Name="button_DELETE_ACCOUNT" Style="{DynamicResource ACTION}"
                             HorizontalAlignment="Right"
-                            Command="{Binding}">
+                            Command="{Binding DeleteAccountCommand}">
 
                         <TextBlock Style="{DynamicResource text_button01}"
                                    Text="Delete Account"/>
@@ -258,10 +259,9 @@
                 
                 
                 <!-- #region THEME FIELDS -->
-                <StackPanel Grid.Row="6" VerticalAlignment="Stretch"
-                            Visibility="Collapsed">
+                <StackPanel Grid.Row="6" VerticalAlignment="Stretch" >
 
-                    <!-- ACCOUNT -->
+                    <!-- THEME -->
                     <Border Padding="10 30">
                         <TextBlock Text="Theme" Style="{DynamicResource text_minorHEADING1}" />
                     </Border>
@@ -271,7 +271,7 @@
                     <components:ComboBoxInputField x:Name="theme_CHOICE"
                                                    UserTextBoxStyle="{DynamicResource inputText}"
                                                    Enabled="False"
-                                                   UserComboInput="Default"
+                                                   UserComboInput="Grey"
                                                    IsEnabled="False"
                                                    />
 
@@ -287,9 +287,9 @@
 
 
 
-            <!-- #region CONTACT -->
+            <!-- #region SUBMIT -->
 
-
+            
 
 
 
