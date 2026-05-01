@@ -7,6 +7,7 @@ using Data_Logger_1._3.ViewModels.Dialogs.Edit;
 using Data_Logger_1._3.ViewModels.Reporter.Desk;
 using Data_Logger_1._3.ViewModels.ViewerViewModels;
 using Data_Logger_1._3.Views;
+using Data_Logger_1._3.Views.Account;
 using Data_Logger_1._3.Views.Dialogs;
 using Data_Logger_1._3.Views.LogPages;
 using Data_Logger_1._3.Views.ReportPages;
@@ -107,6 +108,8 @@ namespace Data_Logger_1._3
                         services.GetRequiredService<AuthService>(),
                         services
                     ));
+                    service.AddTransient<BitmapService>();
+                    service.AddTransient<SettingsService>();
 
 
                     service.AddSingleton((services) => new NavigationService(services));
@@ -121,6 +124,7 @@ namespace Data_Logger_1._3
                     service.AddTransient<CreateCheckListPage>();
                     service.AddTransient<LoggerEditPage>();
                     service.AddTransient<LoggerViewPage>();
+                    service.AddTransient<SettingsPage>();
 
 
                     service.AddTransient<ReporterEditPage>();
@@ -130,7 +134,8 @@ namespace Data_Logger_1._3
                     service.AddSingleton((services) => new ForgotPasswordViewModel(services.GetRequiredService<AuthService>(), services.GetRequiredService<NavigationService>()));
                     service.AddSingleton((services) => new SignUpViewModel(services.GetRequiredService<AuthService>(), services.GetRequiredService<NavigationService>(),
                         services.GetRequiredService<UIFactory>()));
-                    service.AddSingleton((services) => new MainWindowViewModel(services.GetRequiredService<NavigationService>()));
+                    service.AddSingleton((services) => new MainWindowViewModel(services.GetRequiredService<NavigationService>(),
+                        services.GetRequiredService<IDataService>()));
 
                     service.AddSingleton((services) => new CodingQtViewModel(services.GetRequiredService<NavigationService>(), services.GetRequiredService<IDataService>()));
                     service.AddSingleton((services) => new CodingAndroidViewModel(services.GetRequiredService<NavigationService>(), services.GetRequiredService<IDataService>()));
@@ -203,6 +208,13 @@ namespace Data_Logger_1._3
                     service.AddTransient<loginPage02>();
                     service.AddTransient((services) => new SignUp(services.GetRequiredService<NavigationService>(), services.GetRequiredService<SignUpViewModel>()));
                     service.AddTransient((services) => new MainWindow(services.GetRequiredService<MainWindowViewModel>(), services.GetRequiredService<NavigationService>()));
+
+
+                    // Account
+                    service.AddTransient((services) => new SettingsViewModel(services.GetRequiredService<AuthService>(), services.GetRequiredService<IDataService>(),
+                        services.GetRequiredService<SettingsService>(), services.GetRequiredService<BitmapService>(),
+                        services.GetRequiredService<MainWindowViewModel>()));
+                
                 })
                 .Build();
 
