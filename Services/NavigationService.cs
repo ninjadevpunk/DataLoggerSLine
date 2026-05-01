@@ -13,6 +13,7 @@ using Data_Logger_1._3.ViewModels.Reporter.Desk;
 using Data_Logger_1._3.ViewModels.Reporter.Updater;
 using Data_Logger_1._3.ViewModels.ViewerViewModels;
 using Data_Logger_1._3.Views;
+using Data_Logger_1._3.Views.Account;
 using Data_Logger_1._3.Views.Dialogs;
 using Data_Logger_1._3.Views.LogPages;
 using Microsoft.Extensions.DependencyInjection;
@@ -20,7 +21,6 @@ using MVVMEssentials.ViewModels;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Markup;
-using System.Windows.Media.Imaging;
 using static Data_Logger_1._3.Services.CacheMaster;
 
 namespace Data_Logger_1._3.Services
@@ -1330,6 +1330,14 @@ namespace Data_Logger_1._3.Services
         {
             var mainwindowViewModel = _serviceProvider.GetRequiredService<MainWindowViewModel>();
             mainwindowViewModel.SetChecklistNotesChecked(isChecked);
+        }
+
+        public async Task NavigateToSettings()
+        {
+            await NavigateToPage<SettingsPage, SettingsViewModel>();
+
+            var mainwindowViewModel = _serviceProvider.GetRequiredService<MainWindowViewModel>();
+            CheckBackNavigationButton(mainwindowViewModel);
         }
 
         /// <summary>
