@@ -1,5 +1,4 @@
 # Data Logger
-[Official site](https://datalogger.andambambo.com/downloads)<br><br>
 ![.NET](https://img.shields.io/badge/.NET-8.0-blue)![C#](https://img.shields.io/badge/C%23-10.0-green)
 
 ## Description
