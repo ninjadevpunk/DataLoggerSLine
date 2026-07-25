@@ -64,7 +64,7 @@
 
 
             <StackPanel>
-                <TextBlock Style="{DynamicResource text_LABEL03}" Text="Please enter your email below. A password reset link will be sent to you as well as reset link instructions."
+                <TextBlock Style="{DynamicResource text_LABEL03}" Text="Please enter your email below. A verification code will be sent to your email alongside following instructions."
                            TextWrapping="Wrap"
                            TextAlignment="Right"
                            Margin="0 0 0 30"
