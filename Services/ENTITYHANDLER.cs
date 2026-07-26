@@ -246,6 +246,92 @@ namespace Data_Logger_1._3.Services
         }
 
 
+        /// <summary>
+        /// Updates the profile picture for a user based on their email address and the provided file path.
+        /// </summary>
+        /// <param name="id">The user's email</param>
+        /// <param name="filePath">The file path of the current profile picture</param>
+        /// <returns>Returns true if the profile pic change succeeded, false otherwise.</returns>
+        public async Task<bool> UpdateProfilePicAsync(int id, string filePath)
+        {
+            await using var scope = _serviceProvider.CreateAsyncScope();
+
+            bool isUpdated = false;
+
+            try
+            {
+                var master = scope.ServiceProvider.GetRequiredService<EntityMaster>();
+
+                var account = await master.Accounts
+                    .FirstOrDefaultAsync(a => a.accountID == id);
+
+                if (account == null)
+                    throw new ArgumentNullException("Cannot update profile picture for an account that doesn't exist.");
+
+
+                account.ProfilePic = filePath;
+
+                await master.SaveChangesAsync();
+
+                isUpdated = true;
+            }
+            catch (ArgumentNullException nullex)
+            {
+                var writer = scope.ServiceProvider.GetRequiredService<EntityWriter>();
+                await writer.HandleExceptionAsync(nullex, "UpdateProfilePicAsync(email, filePath)", "ArgumentNullException");
+            }
+            catch (Exception ex)
+            {
+                var writer = scope.ServiceProvider.GetRequiredService<EntityWriter>();
+                await writer.HandleExceptionAsync(ex, "UpdateProfilePicAsync(email, filePath)");
+            }
+
+            return isUpdated;
+        }
+
+
+        /// <summary>
+        /// Updates a user's information in the database based on the provided UserSettings object.
+        /// </summary>
+        /// <param name="user">The user settings to update</param>
+        /// <returns>Returns true if the user information was updated successfully, false otherwise.</returns>
+        public async Task<bool> UpdateUserAsync(UserSettings user)
+        {
+            await using var scope = _serviceProvider.CreateAsyncScope();
+            bool isUpdated = false;
+            try
+            {
+                var master = scope.ServiceProvider.GetRequiredService<EntityMaster>();
+                var existingUser = await master.Accounts
+                    .FirstOrDefaultAsync(a => a.accountID == user.Id);
+
+
+                if (existingUser == null)
+                    throw new ArgumentNullException("Cannot update a user that doesn't exist.");
+
+                existingUser.FirstName = user.Name;
+                existingUser.LastName = user.Surname;
+                existingUser.Email = user.Email;
+                existingUser.IsEmployee = user.IsCompanyEmployee;
+                existingUser.CompanyName = user.CompanyName;
+                existingUser.CompanyAddress = user.CompanyAddress;
+                await master.SaveChangesAsync();
+                isUpdated = true;
+            }
+            catch (ArgumentNullException nullex)
+            {
+                var writer = scope.ServiceProvider.GetRequiredService<EntityWriter>();
+                await writer.HandleExceptionAsync(nullex, "UpdateUser(user)", "ArgumentNullException");
+            }
+            catch (Exception ex)
+            {
+                var writer = scope.ServiceProvider.GetRequiredService<EntityWriter>();
+                await writer.HandleExceptionAsync(ex, "UpdateUser(user)");
+            }
+            return isUpdated;
+        }
+
+
 
 
 
