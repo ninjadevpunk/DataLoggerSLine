@@ -225,11 +225,11 @@ namespace Data_Logger_1._3.Services
 
                 var id = user.accountID;
 
-                if (_cacheMaster.CreateSettingsFile(id))
+                if (CacheMaster.CreateSettingsFile(id))
                 {
                     var settings = _settingsService.Load(id);
 
-                    if (string.IsNullOrWhiteSpace(settings?.User.Email))
+                    if (settings != null && string.IsNullOrWhiteSpace(settings.User.Email))
                     {
                         settings.User.Id = user.accountID;
                         settings.User.Name = user.FirstName;
