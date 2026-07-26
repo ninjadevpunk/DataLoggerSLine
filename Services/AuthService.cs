@@ -1,6 +1,7 @@
 ﻿using Data_Logger_1._3.Models;
 using System.Windows;
 using Microsoft.Extensions.DependencyInjection;
+using System.IO;
 
 namespace Data_Logger_1._3.Services
 {
@@ -10,11 +11,6 @@ namespace Data_Logger_1._3.Services
 
         public ACCOUNT? Account { get; set; }
 
-        public AuthService()
-        {
-
-
-        }
 
         public AuthService(IServiceProvider serviceProvider)
         {
@@ -25,6 +21,7 @@ namespace Data_Logger_1._3.Services
             bool isEmployee, string companyName, string companyAddress, string companyLogo)
         {
             await using var scope = _serviceProvider.CreateAsyncScope();
+            string currentProfilePicPath = string.Empty;
 
             // Validate input
             // TODO
@@ -56,10 +53,12 @@ namespace Data_Logger_1._3.Services
             {
                 var writer = scope.ServiceProvider.GetRequiredService<EntityWriter>();
                 await writer.UnsetCurrentUser();
+                currentProfilePicPath = BitmapService.SaveProfilePicture(dp);
+                BitmapService.DeleteTempProfilePics();
 
                 var account = new ACCOUNT
                 {
-                    ProfilePic = dp,
+                    ProfilePic = currentProfilePicPath,
                     FirstName = displayName,
                     LastName = surname,
                     Email = email,
@@ -76,6 +75,13 @@ namespace Data_Logger_1._3.Services
                 if (UserIsActive)
                 {
                     Account = account;
+
+                    if (string.IsNullOrEmpty(currentProfilePicPath))
+                    {
+                        MessageBox.Show("We couldn't save your profile picture due to a technical issue. Your account has been created and a default profile picture will be used instead.",
+                            "Profile Picture", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    }
+
                     return await writer.SetCurrentUser(account);
                 }
 
@@ -83,12 +89,24 @@ namespace Data_Logger_1._3.Services
             catch (Exception ex)
             {
                 var writer = scope.ServiceProvider.GetRequiredService<EntityWriter>();
+
+                if (!string.IsNullOrEmpty(currentProfilePicPath) && File.Exists(currentProfilePicPath))
+                {
+                    try
+                    {
+                        File.Delete(currentProfilePicPath);
+                    }
+                    catch (Exception delex)
+                    {
+                        await writer.HandleExceptionAsync(delex, "SignUp(dp,email,password,displayName,surname,isEmployee,companyName,companyAddress,companyLogo)");
+                    }
+                }
+                BitmapService.DeleteTempProfilePics();
+
                 await writer.HandleExceptionAsync(ex, "SignUp(dp,email,password,displayName,surname,isEmployee,companyName,companyAddress,companyLogo)");
 
                 MessageBox.Show("A problem occurred on our end. We apologise for any inconvenience caused. Feedback will automatically be sent to us.",
                     "Error", MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK);
-
-
             }
 
             return false;

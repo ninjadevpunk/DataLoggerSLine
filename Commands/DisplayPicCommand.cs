@@ -47,17 +47,15 @@ namespace Data_Logger_1._3.Commands
                         return;
                     }
 
-                    // Save resized image to AppData
-                    string optimized = BitmapService.SaveResizedImage(dialog.FileName);
+                    // Save resized image to Temp
+                    string tempProfilePicPath = BitmapService.TempSaveResizedImage(dialog.FileName);
 
                     _signUpViewModel.ShowDefault = Visibility.Collapsed;
-                    _signUpViewModel.ProfilePicPath = optimized;
-                    _signUpViewModel.SignUpImage = BitmapService.LoadImage(optimized);
+                    _signUpViewModel.ProfilePicPath = tempProfilePicPath;
+                    _signUpViewModel.SignUpImage = BitmapService.LoadImage(tempProfilePicPath);
 
                     if (_authService?.Account != null)
-                        _authService.Account.ProfilePic = optimized;
-
-                    // TODO - Delete old profile picture
+                        _authService.Account.ProfilePic = tempProfilePicPath;
 
                 }
 
@@ -72,6 +70,8 @@ namespace Data_Logger_1._3.Commands
 
                 if (_authService?.Account != null)
                     _authService.Account.ProfilePic = "";
+
+                BitmapService.DeleteTempProfilePics();
             }
 
         }
