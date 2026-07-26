@@ -69,7 +69,7 @@ namespace Data_Logger_1._3.Services
             }
         }
 
-        public bool CreateSettingsFile(int userId)
+        public static bool CreateSettingsFile(int userId)
         {
             try
             {
@@ -186,7 +186,7 @@ namespace Data_Logger_1._3.Services
         }
 
         // Requests admin privileges if access is denied
-        private void RequestAdminPrivileges()
+        private static void RequestAdminPrivileges()
         {
             System.Diagnostics.ProcessStartInfo procInfo = new System.Diagnostics.ProcessStartInfo
             {
