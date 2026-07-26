@@ -107,8 +107,7 @@ namespace Data_Logger_1._3.Services
 
         // Feedback
         Task HandleExceptionAsync(Exception exception, string methodName, string exceptionType = "Exception");
-        Task HandleExceptionAsync(string methodName, Exception ex, string messageBoxCaption,
-            string messageBoxMessage = "A problem occurred on our end. We apologise for any inconvenience caused. Feedback will automatically be sent to us.",
+        Task HandleExceptionAsync(string methodName, Exception ex, string messageBoxMessage = "A problem occurred on our end. We apologise for any inconvenience caused. Feedback will automatically be sent to us.",
             string exceptionType = "Exception");
 
     }

@@ -40,12 +40,12 @@ namespace Data_Logger_1._3.Services.CommandLogic
             }
             catch (HttpRequestException httpEx)
             {
-                await _dataService.HandleExceptionAsync("RequestResetAsync()", httpEx, "HTTP Request Error", httpEx.Message, "HttpRequestException");
+                await _dataService.HandleExceptionAsync(httpEx, "RequestPasswordResetAsync()");
                 return false;
             }
             catch (Exception ex)
             {
-                await _dataService.HandleExceptionAsync(ex, "RequestResetAsync()");
+                await _dataService.HandleExceptionAsync(ex, "RequestPasswordResetAsync()");
                 return false;
             }
 
