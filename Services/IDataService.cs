@@ -49,6 +49,7 @@ namespace Data_Logger_1._3.Services
         Task<List<LOG>> RetrieveLogs();
         Task<IEnumerable<LOG>?> RetrieveLogs(CacheContext context);
 
+        Task<bool> EmailExists(string email);
         Task<ApplicationClass?> FindApplication(int ID, string name);
         Task<ApplicationClass?> FindApplicationByID(int appID);
         Task<ProjectClass?> FindProject(int? userID, string projectName, int appID);
@@ -101,10 +102,13 @@ namespace Data_Logger_1._3.Services
         ObservableCollection<FlexiLOGViewModel> RetrieveFlexibleCache(LogCacheViewModel logCacheViewModel);
 
         // Settings
-
+        Task<bool> UpdateProfilePicAsync(int id, string filePath);
+        Task<bool> UpdateUserAsync(UserSettings user);
 
         // Feedback
         Task HandleExceptionAsync(Exception exception, string methodName, string exceptionType = "Exception");
+        Task HandleExceptionAsync(string methodName, Exception ex, string messageBoxMessage = "A problem occurred on our end. We apologise for any inconvenience caused. Feedback will automatically be sent to us.",
+            string exceptionType = "Exception");
 
     }
 }

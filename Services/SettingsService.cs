@@ -2,6 +2,7 @@
 using Newtonsoft.Json;
 using System.Diagnostics;
 using System.IO;
+using System.Windows;
 
 namespace Data_Logger_1._3.Services
 {
@@ -57,11 +58,14 @@ namespace Data_Logger_1._3.Services
                 var json = JsonConvert.SerializeObject(settings, Formatting.Indented);
                 File.WriteAllText(path, json);
 
+                MessageBox.Show("Settings saved.", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
+
                 return settings;
             }
             catch (Exception ex)
             {
                 Debug.WriteLine($"Exception occurred in Load(userId): {ex.Message}");
+                MessageBox.Show($"An unexpected error occurred. We apologise for any inconvenience caused.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 return null;
             }
         }

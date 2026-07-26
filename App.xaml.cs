@@ -1,4 +1,5 @@
 ﻿using Data_Logger_1._3.Services;
+using Data_Logger_1._3.Services.CommandLogic;
 using Data_Logger_1._3.ViewModels;
 using Data_Logger_1._3.ViewModels.Dashboard;
 using Data_Logger_1._3.ViewModels.Dialogs;
@@ -20,6 +21,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using System.Diagnostics;
 using System.IO;
+using System.Runtime.CompilerServices;
 using System.Security.Cryptography;
 using System.Text;
 using System.Windows;
@@ -110,6 +112,7 @@ namespace Data_Logger_1._3
                     ));
                     service.AddTransient<BitmapService>();
                     service.AddTransient<SettingsService>();
+                    service.AddTransient<PasswordResetService>();
 
 
                     service.AddSingleton((services) => new NavigationService(services));
@@ -212,9 +215,8 @@ namespace Data_Logger_1._3
 
                     // Account
                     service.AddTransient((services) => new SettingsViewModel(services.GetRequiredService<AuthService>(), services.GetRequiredService<IDataService>(),
-                        services.GetRequiredService<SettingsService>(), services.GetRequiredService<BitmapService>(),
-                        services.GetRequiredService<MainWindowViewModel>()));
-                
+                        services.GetRequiredService<SettingsService>(), services.GetRequiredService<MainWindowViewModel>(), services.GetRequiredService<PasswordResetService>()));
+
                 })
                 .Build();
 
@@ -402,6 +404,10 @@ namespace Data_Logger_1._3
 
 
 
+        public static void LogException(Exception ex, [CallerMemberName] string methodName = "")
+        {
+            Debug.WriteLine($"Exception occurred in {methodName}(): {ex.Message}");
+        }
 
 
         protected override async void OnExit(ExitEventArgs e)

@@ -646,7 +646,7 @@ namespace Data_Logger_1._3.Services
         /// </summary>
         /// <param name="email">The email provided by the user signing up.</param>
         /// <returns>Returns whether the email exists or not. Will throw an ExmailConflictException if the email exists.</returns>
-        /// <exception cref="EmailConflictException"></exception>
+        /// <exception cref="EmailConflictException">An exception thrown when the email already exists.</exception>
         public async Task<bool> EmailExists(string email)
         {
             await using var scope = _serviceProvider.CreateAsyncScope();

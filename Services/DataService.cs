@@ -278,7 +278,7 @@ namespace Data_Logger_1._3.Services
 
 
 
-        
+
 
 
 
@@ -558,6 +558,18 @@ namespace Data_Logger_1._3.Services
                 await writer.HandleExceptionAsync(ex, "UseHandlerAsync<T>(func)");
                 throw;
             }
+        }
+
+
+
+        /// <summary>
+        /// Checks if an email exists in the database.
+        /// </summary>
+        /// <param name="email">The email provided by the user signing up.</param>
+        /// <returns>Returns whether the email exists or not. Will throw an ExmailConflictException if the email exists.</returns>
+        public Task<bool> EmailExists(string email)
+        {
+            return UseReaderAsync(reader => reader.EmailExists(email));
         }
 
 
@@ -887,6 +899,23 @@ namespace Data_Logger_1._3.Services
         }
 
 
+        /// <summary>
+        /// Updates the profile picture of a user in the database.
+        /// </summary>
+        /// <param name="email">The user's email</param>
+        /// <param name="filePath">The file path of the current profile picture</param>
+        /// <returns>Returns true if the profile pic change succeeded, false otherwise.</returns>
+        public Task<bool> UpdateProfilePicAsync(int id, string filePath)
+        {
+            return UseHandlerAsync(handler => handler.UpdateProfilePicAsync(id, filePath));
+        }
+
+
+        public Task<bool> UpdateUserAsync(UserSettings user)
+        {
+            return UseHandlerAsync(handler => handler.UpdateUserAsync(user));
+        }
+
 
 
 
@@ -1064,9 +1093,17 @@ namespace Data_Logger_1._3.Services
             await writer.HandleExceptionAsync(exception, methodName, exceptionType);
         }
 
+        public async Task HandleExceptionAsync(string methodName, Exception ex, string messageBoxCaption, string exceptionType = "Exception")
+        {
+            await using var scope = _serviceProvider.CreateAsyncScope();
+            var writer = scope.ServiceProvider.GetRequiredService<EntityWriter>();
+
+            await writer.HandleExceptionAsync(methodName, ex, messageBoxCaption, exceptionType: exceptionType);
+        }
+
 
 
         #endregion
 
-    }
+        }
 }
