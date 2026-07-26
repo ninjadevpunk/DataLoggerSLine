@@ -47,8 +47,13 @@ namespace Data_Logger_1._3.Services
         {
             try
             {
-                var path = GetUserFilePath(userId);
+                if (!CacheMaster.CreateSettingsFile(userId))
+                {
+                    return null;
+                }
 
+                var path = GetUserFilePath(userId);
+                
                 var json = JsonConvert.SerializeObject(settings, Formatting.Indented);
                 File.WriteAllText(path, json);
 
