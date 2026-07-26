@@ -1,6 +1,7 @@
 ﻿using Data_Logger_1._3.Commands.SettingsCommands;
 using Data_Logger_1._3.Models;
 using Data_Logger_1._3.Services;
+using Data_Logger_1._3.Services.CommandLogic;
 using MVVMEssentials.ViewModels;
 using System.Windows;
 using System.Windows.Input;
@@ -10,16 +11,27 @@ namespace Data_Logger_1._3.ViewModels
 {
     public class SettingsViewModel : ViewModelBase
     {
+        public enum PasswordResetStage
+        {
+            RequestReset,
+            EnterVerificationCode,
+            ChangePassword,
+            PasswordChanged
+        }
+
         private readonly SettingsService _settingsService;
         private Settings _settings;
-        public ICommand SaveSettingsCommand;
         public ICommand OpenImageCommand { get; set; }
+        public ICommand ResetImageCommand { get; set; }
         public ICommand PasswordResetCommand { get; set; }
+        public ICommand SubmitVerificationCodeCommand { get; set; }
+        public ICommand ChangePasswordCommand { get; set; }
         public ICommand DeleteAccountCommand { get; set; }
+        public ICommand SaveSettingsCommand { get; set; }
         public ICommand ReturnToDashboardCommand { get; set; }
 
-        public SettingsViewModel(AuthService authService, IDataService dataService, SettingsService settingsService, BitmapService bitmapService,
-            MainWindowViewModel mainWindowViewModel)
+        public SettingsViewModel(AuthService authService, IDataService dataService, SettingsService settingsService,
+            MainWindowViewModel mainWindowViewModel, PasswordResetService passwordResetService)
         {
             var id = dataService.GetUser().accountID;
 
@@ -33,26 +45,27 @@ namespace Data_Logger_1._3.ViewModels
             DisplayPicPath = author.ProfilePic;
             DefaultPicVisibility = SignUpImage == null ? Visibility.Visible : Visibility.Collapsed;
 
+            BitmapService.DeleteTempProfilePics();
+
             Name = author.Name;
             Surname = author.Surname;
             Email = author.Email;
-            IsCompanyEmployee = author.IsCompanyEmployee;
+            YesBox = author.IsCompanyEmployee;
 
-            if (IsCompanyEmployee)
+            if (YesBox)
             {
                 CompanyName = author.CompanyName;
                 CompanyAddress = author.CompanyAddress;
             }
 
-            // AlphaBeta builds are Grey themed only
-            // TODO
-            Theme = "Grey";
+            Theme = _settings.AppTheme.ToString();
 
-            OpenImageCommand = new SaveSettingsProfilePicCommand(authService, dataService, this, mainWindowViewModel);
-            // Request password reset command here...
+            OpenImageCommand = new SaveSettingsProfilePicCommand(this);
+            ResetImageCommand = new ResetImageCommand(this, _settings);
+            PasswordResetCommand = new PasswordResetCommand(dataService, this, passwordResetService);
             // Delete account command here...
-            SaveSettingsCommand = new SaveSettingsCommand(dataService, settingsService, bitmapService, _settings);
-            SaveIsEnabled = SettingsService.FieldsAcceptable(Email, IsCompanyEmployee, CompanyName);
+            SaveSettingsCommand = new SaveSettingsCommand(authService, dataService, settingsService, _settings, mainWindowViewModel, this);
+            SaveIsEnabled = SettingsService.FieldsAcceptable(Email, YesBox, CompanyName);
             //Return to dashboard command here...
         }
 
@@ -142,43 +155,49 @@ namespace Data_Logger_1._3.ViewModels
             {
                 email = value;
                 _settings.User.Email = value;
-                SaveIsEnabled = SettingsService.FieldsAcceptable(Email, IsCompanyEmployee, CompanyName);
+                SaveIsEnabled = SettingsService.FieldsAcceptable(Email, YesBox, CompanyName);
                 OnPropertyChanged(nameof(Email));
             }
         }
 
-        private bool isCompanyEmployee;
-        public bool IsCompanyEmployee
+        private bool yesBox;
+        public bool YesBox
         {
             get
             {
-                return isCompanyEmployee;
+                return yesBox;
             }
             set
             {
-                isCompanyEmployee = value;
-                isNotCompanyEmployee = !value;
+                yesBox = value;
+
+
+                if (NoBox == YesBox)
+                    NoBox = !YesBox;
+
 
                 _settings.User.IsCompanyEmployee = value;
-                SaveIsEnabled = SettingsService.FieldsAcceptable(Email, IsCompanyEmployee, CompanyName);
-                OnPropertyChanged(nameof(IsCompanyEmployee));
+                SaveIsEnabled = SettingsService.FieldsAcceptable(Email, YesBox, CompanyName);
+                OnPropertyChanged(nameof(YesBox));
             }
         }
 
-        private bool isNotCompanyEmployee;
-        public bool IsNotCompanyEmployee
+        private bool noBox;
+        public bool NoBox
         {
             get
             {
-                return isNotCompanyEmployee;
+                return noBox;
             }
             set
             {
-                isNotCompanyEmployee = value;
-                isCompanyEmployee = !value;
+                noBox = value;
 
-                SaveIsEnabled = SettingsService.FieldsAcceptable(Email, IsCompanyEmployee, CompanyName);
-                OnPropertyChanged(nameof(IsNotCompanyEmployee));
+                if (YesBox == NoBox)
+                    YesBox = !NoBox;
+
+                SaveIsEnabled = SettingsService.FieldsAcceptable(Email, YesBox, CompanyName);
+                OnPropertyChanged(nameof(NoBox));
             }
         }
 
@@ -193,7 +212,7 @@ namespace Data_Logger_1._3.ViewModels
             {
                 companyName = value;
                 _settings.User.CompanyName = value;
-                SaveIsEnabled = SettingsService.FieldsAcceptable(Email, IsCompanyEmployee, CompanyName);
+                SaveIsEnabled = SettingsService.FieldsAcceptable(Email, YesBox, CompanyName);
                 OnPropertyChanged(nameof(CompanyName));
             }
         }
@@ -210,6 +229,50 @@ namespace Data_Logger_1._3.ViewModels
                 companyAddress = value;
                 _settings.User.CompanyAddress = value;
                 OnPropertyChanged(nameof(CompanyAddress));
+            }
+        }
+
+        // VERIFICATION CODE
+        private string? verificationCode;
+        public string? VerificationCode
+        {
+            get
+            {
+                return verificationCode;
+            }
+            set
+            {
+                verificationCode = value;
+                OnPropertyChanged(nameof(VerificationCode));
+            }
+        }
+
+        private PasswordResetStage resetStage = PasswordResetStage.RequestReset;
+        public PasswordResetStage ResetStage
+        {
+            get
+            {
+                return resetStage;
+            }
+            set
+            {
+                resetStage = value;
+                OnPropertyChanged(nameof(ResetStage));
+            }
+        }
+
+        private bool passwordChanged = false;
+        public bool PasswordChanged
+        {
+            get
+            {
+                return passwordChanged;
+            }
+            set
+            {
+                ResetStage = PasswordResetStage.PasswordChanged;
+                passwordChanged = value;
+                OnPropertyChanged(nameof(PasswordChanged));
             }
         }
 

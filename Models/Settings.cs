@@ -18,7 +18,9 @@ namespace Data_Logger_1._3.Models
             Grey
         }
 
-        public Theme AppTheme { get; set; } = Theme.Default;
+        // AlphaBeta builds are Grey themed only
+        // TODO
+        public Theme AppTheme { get; set; } = Theme.Grey;
 
         public UserSettings User { get; set; } = new UserSettings();
 

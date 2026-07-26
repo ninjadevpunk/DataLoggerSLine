@@ -8,77 +8,63 @@ namespace Data_Logger_1._3.Commands.SettingsCommands
 {
     public class SaveSettingsProfilePicCommand : AsyncCommandBase
     {
-        private readonly AuthService _authService;
-        private readonly IDataService _dataService;
         private readonly SettingsViewModel _settingsViewModel;
-        private readonly MainWindowViewModel _mainWindowViewModel;
 
-        public SaveSettingsProfilePicCommand(AuthService authService, IDataService dataService, SettingsViewModel settingsViewModel, 
-            MainWindowViewModel mainWindowViewModel)
+        public SaveSettingsProfilePicCommand(SettingsViewModel settingsViewModel)
         {
-            _authService = authService;
-            _dataService = dataService;
             _settingsViewModel = settingsViewModel;
-            _mainWindowViewModel = mainWindowViewModel;
         }
 
         protected override async Task ExecuteAsync(object parameter)
         {
+            string oldProfilePicPath = string.Empty;
+
             try
             {
-                try
+                var dialog = new Microsoft.Win32.OpenFileDialog
                 {
-                    var dialog = new Microsoft.Win32.OpenFileDialog();
-                    dialog.DefaultExt = ".png";
-                    dialog.Filter = "Portable Network Graphics (.png)|*.png|JPEG Images (.jpg)|*.jpg;";
+                    DefaultExt = ".png",
+                    Filter = "Portable Network Graphics (.png)|*.png|JPEG Images (.jpg)|*.jpg;"
+                };
 
-                    // Show open file dialog box
-                    bool? result = dialog.ShowDialog();
+                // Show open file dialog box
+                bool? result = dialog.ShowDialog();
 
-                    // Process open file dialog box results
-                    if (result == true)
+                // Process open file dialog box results
+                if (result == true)
+                {
+                    var fileInfo = new FileInfo(dialog.FileName);
+
+                    // Limit to 2MB
+                    if (fileInfo.Length > 2 * 1024 * 1024)
                     {
-                        var fileInfo = new FileInfo(dialog.FileName);
-
-                        // Limit to 2MB
-                        if (fileInfo.Length > 2 * 1024 * 1024)
-                        {
-                            MessageBox.Show("Image is too large.");
-                            return;
-                        }
-
-                        // Save resized image to AppData
-                        string optimized = BitmapService.SaveResizedImage(dialog.FileName);
-
-                        _settingsViewModel.DisplayPicPath = optimized;
-                        _settingsViewModel.SignUpImage = BitmapService.LoadImage(optimized);
-
-                        // Update MainWindow profile picture
-                        _mainWindowViewModel.SignUpImage = BitmapService.LoadImage(optimized);
-
-                        if (_authService?.Account != null)
-                            _authService.Account.ProfilePic = optimized;
-
-                        // Delete old profile pic
-
+                        MessageBox.Show("Image is too large.");
+                        return;
                     }
 
+                    // Save resized image to AppData
+                    string tempProfilePic = BitmapService.TempSaveResizedImage(dialog.FileName);
 
-                }
-                catch (Exception)
-                {
-                    _settingsViewModel.DefaultPicVisibility = Visibility.Visible;
+                    _settingsViewModel.DisplayPicPath = tempProfilePic;
+                    _settingsViewModel.SignUpImage = BitmapService.LoadImage(tempProfilePic);
 
-
-                    _settingsViewModel.SignUpImage = BitmapService.LoadImage("/Assets/login/user.png");
-
-                    if (_authService?.Account != null)
-                        _authService.Account.ProfilePic = "";
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                await _dataService.HandleExceptionAsync(ex, $"Exception occurred in SaveSettingsProfilePicCommand.ExecuteAsync(): {ex.Message}");
+
+                if (string.IsNullOrEmpty(oldProfilePicPath))
+                {
+                    _settingsViewModel.DisplayPicPath = string.Empty;
+                    _settingsViewModel.SignUpImage = null;
+                    oldProfilePicPath = "/Assets/login/user.png";
+                    _settingsViewModel.DefaultPicVisibility = Visibility.Visible;
+                }
+                else
+                {
+                    _settingsViewModel.DisplayPicPath = oldProfilePicPath;
+                    _settingsViewModel.SignUpImage = BitmapService.LoadImage(oldProfilePicPath);
+                }
             }
         }
     }
