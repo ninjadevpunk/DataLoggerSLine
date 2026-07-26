@@ -110,6 +110,7 @@ namespace Data_Logger_1._3
                     ));
                     service.AddTransient<BitmapService>();
                     service.AddTransient<SettingsService>();
+                    service.AddTransient<PasswordResetService>();
 
 
                     service.AddSingleton((services) => new NavigationService(services));
@@ -402,6 +403,10 @@ namespace Data_Logger_1._3
 
 
 
+        public static void LogException(Exception ex, [CallerMemberName] string methodName = "")
+        {
+            Debug.WriteLine($"Exception occurred in {methodName}(): {ex.Message}");
+        }
 
 
         protected override async void OnExit(ExitEventArgs e)
