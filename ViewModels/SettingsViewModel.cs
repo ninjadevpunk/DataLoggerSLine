@@ -64,6 +64,7 @@ namespace Data_Logger_1._3.ViewModels
             ResetImageCommand = new ResetImageCommand(this, _settings);
             PasswordResetCommand = new PasswordResetCommand(dataService, this, passwordResetService);
             SubmitVerificationCodeCommand = new SubmitVerificationCodeCommand(this, passwordResetService, dataService);
+            ChangePasswordCommand = new ChangePasswordCommand(this, authService);
             // Delete account command here...
             SaveSettingsCommand = new SaveSettingsCommand(authService, dataService, settingsService, _settings, mainWindowViewModel, this);
             SaveIsEnabled = SettingsService.FieldsAcceptable(Email, YesBox, CompanyName);
@@ -230,6 +231,34 @@ namespace Data_Logger_1._3.ViewModels
                 companyAddress = value;
                 _settings.User.CompanyAddress = value;
                 OnPropertyChanged(nameof(CompanyAddress));
+            }
+        }
+
+        private string newPassword;
+        public string NewPassword
+        {
+            get
+            {
+                return newPassword;
+            }
+            set
+            {
+                newPassword = value;
+                OnPropertyChanged(nameof(NewPassword));
+            }
+        }
+
+        private string confirmPassword;
+        public string ConfirmPassword
+        {
+            get
+            {
+                return confirmPassword;
+            }
+            set
+            {
+                confirmPassword = value;
+                OnPropertyChanged(nameof(ConfirmPassword));
             }
         }
 

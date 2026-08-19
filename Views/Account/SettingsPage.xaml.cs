@@ -12,14 +12,18 @@ namespace Data_Logger_1._3.Views.Account
     public partial class SettingsPage : Page
     {
         private readonly Storyboard _open;
+        private readonly Storyboard _passwordOpen;
         private readonly Storyboard _close;
+        private readonly Storyboard _passwordClose;
 
         public SettingsPage()
         {
             InitializeComponent();
 
-            _open = CreateHeightAnimation(0, 130, 200);
+            _open = CreateHeightAnimation(0, 280, 200);
+            _passwordOpen = CreateHeightAnimation(0, 500, 200);
             _close = CreateHeightAnimation(130, 0, 200);
+            _passwordClose = CreateHeightAnimation(500, 0, 200);
 
             Loaded += SettingsPage_Loaded;
         }
@@ -49,11 +53,11 @@ namespace Data_Logger_1._3.Views.Account
                     break;
 
                 case SettingsViewModel.PasswordResetStage.ChangePassword:
-                    _open.Begin(this.stackPanel_NEW_PASSWORD_SECTION);
+                    _passwordOpen.Begin(this.stackPanel_NEW_PASSWORD_SECTION);
                     break;
                     case SettingsViewModel.PasswordResetStage.PasswordChanged:
                     _close.Begin(this.stackPanel_PASSWORD_RESET_SECTION);
-                    _close.Begin(this.stackPanel_NEW_PASSWORD_SECTION);
+                    _passwordClose.Begin(this.stackPanel_NEW_PASSWORD_SECTION);
                     break;
             }
         }

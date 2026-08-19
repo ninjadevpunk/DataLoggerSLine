@@ -147,6 +147,33 @@ namespace Data_Logger_1._3.Services
             //
         }
 
+        public async Task<bool> ChangePassword(string newPassword, string email)
+        {
+            await using var scope = _serviceProvider.CreateAsyncScope();
+            var dataService = scope.ServiceProvider.GetRequiredService<IDataService>();
+            bool passwordChanged = false;
+
+
+            try
+            {
+                passwordChanged = await dataService.UpdateUserPasswordAsync(newPassword, email);
+
+                if(passwordChanged)
+                {
+                    MessageBox.Show("Your password has been changed successfully.", "Password Changed", MessageBoxButton.OK,
+                    MessageBoxImage.Information, MessageBoxResult.OK);
+                }
+            }
+            catch (Exception ex)
+            {
+                await dataService.HandleExceptionAsync(ex, "ChangePassword(email, oldPassword, newPassword)");
+                MessageBox.Show("A problem occurred on our end. We apologise for any inconvenience caused. Feedback will automatically be sent to us.",
+                    "Error Occurred", MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK);
+            }
+
+            return passwordChanged;
+        }
+
         public void SignOut()
         {
             Account = null;

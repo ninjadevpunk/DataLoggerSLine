@@ -104,6 +104,7 @@ namespace Data_Logger_1._3.Services
         // Settings
         Task<bool> UpdateProfilePicAsync(int id, string filePath);
         Task<bool> UpdateUserAsync(UserSettings user);
+        Task<bool> UpdateUserPasswordAsync(string newPassword, string email);
 
         // Feedback
         Task HandleExceptionAsync(Exception exception, string methodName, string exceptionType = "Exception");

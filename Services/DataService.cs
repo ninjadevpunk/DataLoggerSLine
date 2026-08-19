@@ -917,6 +917,18 @@ namespace Data_Logger_1._3.Services
         }
 
 
+        /// <summary>
+        /// Updates a user's password in the database based on the provided email and new password.
+        /// </summary>
+        /// <param name="newPassword">The user's new password</param>
+        /// <param name="email">The user's email address</param>
+        /// <returns>Returns true if the password was updated successfully, false otherwise.</returns>
+        public Task<bool> UpdateUserPasswordAsync(string newPassword, string email)
+        {
+            return UseHandlerAsync(handler => handler.ChangePasswordAsync(newPassword, email));
+        }
+
+
 
 
 

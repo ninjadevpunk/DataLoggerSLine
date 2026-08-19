@@ -333,6 +333,42 @@ namespace Data_Logger_1._3.Services
 
 
 
+        /// <summary>
+        /// Updates a user's password in the database based on the provided email and new password.
+        /// </summary>
+        /// <param name="newPassword">The user's new password</param>
+        /// <param name="email">The user's email address</param>
+        /// <returns>Returns true if the password was updated successfully, false otherwise.</returns>
+        public async Task<bool> ChangePasswordAsync(string newPassword, string email)
+        {
+            await using var scope = _serviceProvider.CreateAsyncScope();
+            bool isUpdated = false;
+            try
+            {
+                var master = scope.ServiceProvider.GetRequiredService<EntityMaster>();
+                var account = await master.Accounts
+                    .FirstOrDefaultAsync(a => a.Email == email);
+
+                if (account == null)
+                    throw new ArgumentNullException("Cannot change password for an account that doesn't exist.");
+
+                account.Password = EntityWriter.SaltedSHA256Hash(newPassword, account.accountID.ToString());
+                await master.SaveChangesAsync();
+
+                isUpdated = true;
+            }
+            catch (ArgumentNullException nullex)
+            {
+                var writer = scope.ServiceProvider.GetRequiredService<EntityWriter>();
+                await writer.HandleExceptionAsync(nullex, "ChangePasswordAsync(password, email)", "ArgumentNullException");
+            }
+            catch (Exception ex)
+            {
+                var writer = scope.ServiceProvider.GetRequiredService<EntityWriter>();
+                await writer.HandleExceptionAsync(ex, "ChangePasswordAsync(password, email)");
+            }
+            return isUpdated;
+        }
 
 
 
