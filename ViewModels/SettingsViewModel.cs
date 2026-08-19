@@ -63,6 +63,7 @@ namespace Data_Logger_1._3.ViewModels
             OpenImageCommand = new SaveSettingsProfilePicCommand(this);
             ResetImageCommand = new ResetImageCommand(this, _settings);
             PasswordResetCommand = new PasswordResetCommand(dataService, this, passwordResetService);
+            SubmitVerificationCodeCommand = new SubmitVerificationCodeCommand(this, passwordResetService, dataService);
             // Delete account command here...
             SaveSettingsCommand = new SaveSettingsCommand(authService, dataService, settingsService, _settings, mainWindowViewModel, this);
             SaveIsEnabled = SettingsService.FieldsAcceptable(Email, YesBox, CompanyName);

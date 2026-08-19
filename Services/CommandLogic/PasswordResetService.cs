@@ -1,8 +1,7 @@
-﻿using Newtonsoft.Json;
+﻿using Data_Logger_1._3.Models.DTOs;
+using Newtonsoft.Json;
 using System.Net.Http;
-using System.Net.Http.Json;
 using System.Text;
-using static Data_Logger_1._3.Services.EntityReader;
 
 namespace Data_Logger_1._3.Services.CommandLogic
 {
@@ -26,14 +25,14 @@ namespace Data_Logger_1._3.Services.CommandLogic
 
                     var payload = new
                     {
-                        Email = email
+                        action = "code-request",
+                        email
                     };
 
                     var json = JsonConvert.SerializeObject(payload);
-
                     using var content = new StringContent(json, Encoding.UTF8, "application/json");
 
-                    var response = await client.PostAsync("https://datalogger.space/api/password-reset", content);
+                    var response = await client.PostAsync("https://datalogger.space/api/verification", content);
 
                     response.EnsureSuccessStatusCode();
                 }
@@ -50,6 +49,48 @@ namespace Data_Logger_1._3.Services.CommandLogic
             }
 
             return true;
+        }
+
+        public async Task<bool> VerifyCodeAsync(string email, string? code)
+        {
+            try
+            {
+                if (!string.IsNullOrEmpty(code))
+                {
+                    using var client = new HttpClient();
+
+                    var payload = new
+                    {
+                        action = "verify",
+                        email,
+                        code
+                    };
+
+                    var json = JsonConvert.SerializeObject(payload);
+                    using var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+                    var response = await client.PostAsync("https://datalogger.space/api/verification", content);
+
+                    response.EnsureSuccessStatusCode();
+
+                    // Deserialize the response to check if the verification was successful
+                    var responseBody = await response.Content.ReadAsStringAsync();
+
+                    var result = JsonConvert.DeserializeObject<VerificationResponseDTO>(responseBody);
+
+                    return result?.Verified ?? false;
+                }
+            }
+            catch (HttpRequestException httpEx)
+            {
+                await _dataService.HandleExceptionAsync(httpEx, "VerifyCodeAsync()");
+            }
+            catch (Exception ex)
+            {
+                await _dataService.HandleExceptionAsync(ex, "VerifyCodeAsync()");
+            }
+
+            return false;
         }
     }
 }
