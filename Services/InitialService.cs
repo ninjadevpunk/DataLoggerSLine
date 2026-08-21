@@ -240,7 +240,7 @@ namespace Data_Logger_1._3.Services
                         settings.User.CompanyAddress = user.CompanyAddress;
                         settings.User.ProfilePic = user.ProfilePic;
 
-                        _settingsService.Save(id, settings);
+                        _settingsService.Save(id, settings, true);
                     }
                 }
             }

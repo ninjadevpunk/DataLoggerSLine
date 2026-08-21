@@ -70,6 +70,35 @@ namespace Data_Logger_1._3.Services
             }
         }
 
+        public Settings? Save(int userId, Settings settings, bool isNewAccount)
+        {
+            try
+            {
+                if (!CacheMaster.CreateSettingsFile(userId))
+                {
+                    return null;
+                }
+
+                var path = GetUserFilePath(userId);
+
+                var json = JsonConvert.SerializeObject(settings, Formatting.Indented);
+                File.WriteAllText(path, json);
+
+                if(!isNewAccount)
+                {
+                    MessageBox.Show("Settings saved.", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
+                }
+
+                return settings;
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"Exception occurred in Load(userId): {ex.Message}");
+                MessageBox.Show($"An unexpected error occurred. We apologise for any inconvenience caused.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                return null;
+            }
+        }
+
         public static bool FieldsAcceptable(string email, bool isCompanyEmployee, string? companyName)
         {
             if (string.IsNullOrEmpty(email))
