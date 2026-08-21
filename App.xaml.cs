@@ -214,8 +214,9 @@ namespace Data_Logger_1._3
 
 
                     // Account
-                    service.AddTransient((services) => new SettingsViewModel(services.GetRequiredService<AuthService>(), services.GetRequiredService<IDataService>(),
-                        services.GetRequiredService<SettingsService>(), services.GetRequiredService<MainWindowViewModel>(), services.GetRequiredService<PasswordResetService>()));
+                    service.AddTransient((services) => new SettingsViewModel(services.GetRequiredService<NavigationService>(), services.GetRequiredService<AuthService>(), 
+                        services.GetRequiredService<IDataService>(), services.GetRequiredService<SettingsService>(), services.GetRequiredService<MainWindowViewModel>(),
+                        services.GetRequiredService<PasswordResetService>()));
 
                 })
                 .Build();

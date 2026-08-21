@@ -30,7 +30,7 @@ namespace Data_Logger_1._3.ViewModels
         public ICommand SaveSettingsCommand { get; set; }
         public ICommand ReturnToDashboardCommand { get; set; }
 
-        public SettingsViewModel(AuthService authService, IDataService dataService, SettingsService settingsService,
+        public SettingsViewModel(NavigationService navigationService, AuthService authService, IDataService dataService, SettingsService settingsService,
             MainWindowViewModel mainWindowViewModel, PasswordResetService passwordResetService)
         {
             var id = dataService.GetUser().accountID;
@@ -68,7 +68,7 @@ namespace Data_Logger_1._3.ViewModels
             DeleteAccountCommand = new DeleteAccountCommand(authService, dataService);
             SaveSettingsCommand = new SaveSettingsCommand(authService, dataService, settingsService, _settings, mainWindowViewModel, this);
             SaveIsEnabled = SettingsService.FieldsAcceptable(Email, YesBox, CompanyName);
-            //Return to dashboard command here...
+            ReturnToDashboardCommand = new ReturnToDashboardCommand(navigationService, dataService);
         }
 
         private BitmapImage? signUpImage;

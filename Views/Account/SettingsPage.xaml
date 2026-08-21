@@ -15,7 +15,7 @@
 
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="650"/>
-                <ColumnDefinition Width="50"/>
+                <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="auto"/>
             </Grid.ColumnDefinitions>
 
@@ -397,7 +397,32 @@ Command="{Binding ChangePasswordCommand}">
 
 
             <!--#endregion-->
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            <!--#endregion-->
 
+
+
+            <!-- #region Return to Dashboard -->
+
+            <!-- RETURN TO DASHBOARD BUTTON -->
+            <Button x:Name="button_RETURN" Grid.Row="2" Grid.Column="2" Style="{DynamicResource ACTIONReturnToDashboard}"
+                    Margin="30 0 0 0"
+                    VerticalAlignment="Top"
+                    HorizontalAlignment="Right"
+                    Command="{Binding ReturnToDashboardCommand}" />
+
+            <!--#endregion-->
 
         </Grid>
     </Border>
