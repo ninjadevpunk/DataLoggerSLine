@@ -2,7 +2,7 @@
 using Data_Logger_1._3.Services;
 using MVVMEssentials.Commands;
 using System.Diagnostics;
-using static Data_Logger_1._3.Services.Cachemaster;
+using static Data_Logger_1._3.Services.CacheMaster;
 
 namespace Data_Logger_1._3.Commands.ReporterCommands
 {

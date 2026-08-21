@@ -15,7 +15,7 @@ namespace Data_Logger_1._3.Commands.ReporterCommands
         private readonly IDataService _dataService;
         private readonly ReportDeskViewModel _reportDeskViewModel;
         private readonly LOG _log;
-        private Cachemaster.CacheContext _cacheContext;
+        private CacheMaster.CacheContext _cacheContext;
 
         public DeleteLogCommand()
         {
@@ -32,14 +32,14 @@ namespace Data_Logger_1._3.Commands.ReporterCommands
             _dataService = dataService;
         }
 
-        public DeleteLogCommand(IDataService dataService, Cachemaster.CacheContext context, LOG log)
+        public DeleteLogCommand(IDataService dataService, CacheMaster.CacheContext context, LOG log)
         {
             _dataService = dataService;
             _cacheContext = context;
             _log = log;
         }
 
-        public DeleteLogCommand(IDataService dataService, ReportDeskViewModel reportDeskViewModel, Cachemaster.CacheContext context, LOG log)
+        public DeleteLogCommand(IDataService dataService, ReportDeskViewModel reportDeskViewModel, CacheMaster.CacheContext context, LOG log)
         {
             _dataService = dataService;
             _reportDeskViewModel = reportDeskViewModel;

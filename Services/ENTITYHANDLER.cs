@@ -246,7 +246,129 @@ namespace Data_Logger_1._3.Services
         }
 
 
+        /// <summary>
+        /// Updates the profile picture for a user based on their email address and the provided file path.
+        /// </summary>
+        /// <param name="id">The user's email</param>
+        /// <param name="filePath">The file path of the current profile picture</param>
+        /// <returns>Returns true if the profile pic change succeeded, false otherwise.</returns>
+        public async Task<bool> UpdateProfilePicAsync(int id, string filePath)
+        {
+            await using var scope = _serviceProvider.CreateAsyncScope();
 
+            bool isUpdated = false;
+
+            try
+            {
+                var master = scope.ServiceProvider.GetRequiredService<EntityMaster>();
+
+                var account = await master.Accounts
+                    .FirstOrDefaultAsync(a => a.accountID == id);
+
+                if (account == null)
+                    throw new ArgumentNullException("Cannot update profile picture for an account that doesn't exist.");
+
+
+                account.ProfilePic = filePath;
+
+                await master.SaveChangesAsync();
+
+                isUpdated = true;
+            }
+            catch (ArgumentNullException nullex)
+            {
+                var writer = scope.ServiceProvider.GetRequiredService<EntityWriter>();
+                await writer.HandleExceptionAsync(nullex, "UpdateProfilePicAsync(email, filePath)", "ArgumentNullException");
+            }
+            catch (Exception ex)
+            {
+                var writer = scope.ServiceProvider.GetRequiredService<EntityWriter>();
+                await writer.HandleExceptionAsync(ex, "UpdateProfilePicAsync(email, filePath)");
+            }
+
+            return isUpdated;
+        }
+
+
+        /// <summary>
+        /// Updates a user's information in the database based on the provided UserSettings object.
+        /// </summary>
+        /// <param name="user">The user settings to update</param>
+        /// <returns>Returns true if the user information was updated successfully, false otherwise.</returns>
+        public async Task<bool> UpdateUserAsync(UserSettings user)
+        {
+            await using var scope = _serviceProvider.CreateAsyncScope();
+            bool isUpdated = false;
+            try
+            {
+                var master = scope.ServiceProvider.GetRequiredService<EntityMaster>();
+                var existingUser = await master.Accounts
+                    .FirstOrDefaultAsync(a => a.accountID == user.Id);
+
+
+                if (existingUser == null)
+                    throw new ArgumentNullException("Cannot update a user that doesn't exist.");
+
+                existingUser.FirstName = user.Name;
+                existingUser.LastName = user.Surname;
+                existingUser.Email = user.Email;
+                existingUser.IsEmployee = user.IsCompanyEmployee;
+                existingUser.CompanyName = user.CompanyName;
+                existingUser.CompanyAddress = user.CompanyAddress;
+                await master.SaveChangesAsync();
+                isUpdated = true;
+            }
+            catch (ArgumentNullException nullex)
+            {
+                var writer = scope.ServiceProvider.GetRequiredService<EntityWriter>();
+                await writer.HandleExceptionAsync(nullex, "UpdateUser(user)", "ArgumentNullException");
+            }
+            catch (Exception ex)
+            {
+                var writer = scope.ServiceProvider.GetRequiredService<EntityWriter>();
+                await writer.HandleExceptionAsync(ex, "UpdateUser(user)");
+            }
+            return isUpdated;
+        }
+
+
+
+        /// <summary>
+        /// Updates a user's password in the database based on the provided email and new password.
+        /// </summary>
+        /// <param name="newPassword">The user's new password</param>
+        /// <param name="email">The user's email address</param>
+        /// <returns>Returns true if the password was updated successfully, false otherwise.</returns>
+        public async Task<bool> ChangePasswordAsync(string newPassword, string email)
+        {
+            await using var scope = _serviceProvider.CreateAsyncScope();
+            bool isUpdated = false;
+            try
+            {
+                var master = scope.ServiceProvider.GetRequiredService<EntityMaster>();
+                var account = await master.Accounts
+                    .FirstOrDefaultAsync(a => a.Email == email);
+
+                if (account == null)
+                    throw new ArgumentNullException("Cannot change password for an account that doesn't exist.");
+
+                account.Password = EntityWriter.SaltedSHA256Hash(newPassword, account.accountID.ToString());
+                await master.SaveChangesAsync();
+
+                isUpdated = true;
+            }
+            catch (ArgumentNullException nullex)
+            {
+                var writer = scope.ServiceProvider.GetRequiredService<EntityWriter>();
+                await writer.HandleExceptionAsync(nullex, "ChangePasswordAsync(password, email)", "ArgumentNullException");
+            }
+            catch (Exception ex)
+            {
+                var writer = scope.ServiceProvider.GetRequiredService<EntityWriter>();
+                await writer.HandleExceptionAsync(ex, "ChangePasswordAsync(password, email)");
+            }
+            return isUpdated;
+        }
 
 
 
@@ -352,6 +474,37 @@ namespace Data_Logger_1._3.Services
 
 
 
+        /// <summary>
+        /// Deletes a user's account from the database using the provided account ID.
+        /// </summary>
+        /// <param name="id">The ID of the account to delete.</param>
+        /// <returns>Returns true if the account was deleted successfully, false otherwise.</returns>
+        public async Task<bool> DeleteAccountAsync(int id)
+        {
+            await using var scope = _serviceProvider.CreateAsyncScope();
+            var master = scope.ServiceProvider.GetRequiredService<EntityMaster>();
+
+            try
+            {
+                var accountToDelete = await master.Accounts
+                    .FirstOrDefaultAsync(a => a.accountID == id);
+
+                if (accountToDelete == null)
+                    return false;
+
+                master.Accounts.Remove(accountToDelete);
+                await master.SaveChangesAsync();
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                var writer = scope.ServiceProvider.GetRequiredService<EntityWriter>();
+                await writer.HandleExceptionAsync(ex, "DeleteAccountAsync(id)");
+            }
+
+            return false;
+        }
 
 
 

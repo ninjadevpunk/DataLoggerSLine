@@ -1,4 +1,5 @@
 ﻿using Data_Logger_1._3.Services;
+using Data_Logger_1._3.Services.CommandLogic;
 using Data_Logger_1._3.ViewModels;
 using Data_Logger_1._3.ViewModels.Dashboard;
 using Data_Logger_1._3.ViewModels.Dialogs;
@@ -7,6 +8,7 @@ using Data_Logger_1._3.ViewModels.Dialogs.Edit;
 using Data_Logger_1._3.ViewModels.Reporter.Desk;
 using Data_Logger_1._3.ViewModels.ViewerViewModels;
 using Data_Logger_1._3.Views;
+using Data_Logger_1._3.Views.Account;
 using Data_Logger_1._3.Views.Dialogs;
 using Data_Logger_1._3.Views.LogPages;
 using Data_Logger_1._3.Views.ReportPages;
@@ -19,6 +21,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using System.Diagnostics;
 using System.IO;
+using System.Runtime.CompilerServices;
 using System.Security.Cryptography;
 using System.Text;
 using System.Windows;
@@ -95,7 +98,7 @@ namespace Data_Logger_1._3
                             options.EnableSensitiveDataLogging();
                     });
 
-                    service.AddSingleton<Cachemaster>();
+                    service.AddSingleton<CacheMaster>();
                     service.AddScoped((services) => new EntityReader(services));
                     service.AddScoped((services) => new EntityWriter(services));
                     service.AddScoped((services) => new EntityHandler(services));
@@ -103,10 +106,13 @@ namespace Data_Logger_1._3
                     service.AddSingleton((services) => new AuthService(services));
 
                     service.AddSingleton<IDataService>(services => new DataService(
-                        services.GetRequiredService<Cachemaster>(),
+                        services.GetRequiredService<CacheMaster>(),
                         services.GetRequiredService<AuthService>(),
                         services
                     ));
+                    service.AddTransient<BitmapService>();
+                    service.AddTransient<SettingsService>();
+                    service.AddTransient<PasswordResetService>();
 
 
                     service.AddSingleton((services) => new NavigationService(services));
@@ -121,6 +127,7 @@ namespace Data_Logger_1._3
                     service.AddTransient<CreateCheckListPage>();
                     service.AddTransient<LoggerEditPage>();
                     service.AddTransient<LoggerViewPage>();
+                    service.AddTransient<SettingsPage>();
 
 
                     service.AddTransient<ReporterEditPage>();
@@ -130,7 +137,8 @@ namespace Data_Logger_1._3
                     service.AddSingleton((services) => new ForgotPasswordViewModel(services.GetRequiredService<AuthService>(), services.GetRequiredService<NavigationService>()));
                     service.AddSingleton((services) => new SignUpViewModel(services.GetRequiredService<AuthService>(), services.GetRequiredService<NavigationService>(),
                         services.GetRequiredService<UIFactory>()));
-                    service.AddSingleton((services) => new MainWindowViewModel(services.GetRequiredService<NavigationService>()));
+                    service.AddSingleton((services) => new MainWindowViewModel(services.GetRequiredService<NavigationService>(),
+                        services.GetRequiredService<IDataService>()));
 
                     service.AddSingleton((services) => new CodingQtViewModel(services.GetRequiredService<NavigationService>(), services.GetRequiredService<IDataService>()));
                     service.AddSingleton((services) => new CodingAndroidViewModel(services.GetRequiredService<NavigationService>(), services.GetRequiredService<IDataService>()));
@@ -203,6 +211,13 @@ namespace Data_Logger_1._3
                     service.AddTransient<loginPage02>();
                     service.AddTransient((services) => new SignUp(services.GetRequiredService<NavigationService>(), services.GetRequiredService<SignUpViewModel>()));
                     service.AddTransient((services) => new MainWindow(services.GetRequiredService<MainWindowViewModel>(), services.GetRequiredService<NavigationService>()));
+
+
+                    // Account
+                    service.AddTransient((services) => new SettingsViewModel(services.GetRequiredService<NavigationService>(), services.GetRequiredService<AuthService>(), 
+                        services.GetRequiredService<IDataService>(), services.GetRequiredService<SettingsService>(), services.GetRequiredService<MainWindowViewModel>(),
+                        services.GetRequiredService<PasswordResetService>()));
+
                 })
                 .Build();
 
@@ -213,7 +228,7 @@ namespace Data_Logger_1._3
         {
             Configuration = _serviceProvider.GetRequiredService<IConfiguration>();
 
-            var cachemaster = _serviceProvider.GetRequiredService<Cachemaster>();
+            var cachemaster = _serviceProvider.GetRequiredService<CacheMaster>();
 
 
 
@@ -390,6 +405,10 @@ namespace Data_Logger_1._3
 
 
 
+        public static void LogException(Exception ex, [CallerMemberName] string methodName = "")
+        {
+            Debug.WriteLine($"Exception occurred in {methodName}(): {ex.Message}");
+        }
 
 
         protected override async void OnExit(ExitEventArgs e)

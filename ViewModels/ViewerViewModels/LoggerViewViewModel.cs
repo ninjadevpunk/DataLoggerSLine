@@ -4,7 +4,7 @@ using Data_Logger_1._3.ViewModels.Dialogs;
 using System.Windows.Input;
 using System.Windows;
 using MVVMEssentials.ViewModels;
-using static Data_Logger_1._3.Services.Cachemaster;
+using static Data_Logger_1._3.Services.CacheMaster;
 using System.Windows.Media.Imaging;
 
 namespace Data_Logger_1._3.ViewModels.ViewerViewModels

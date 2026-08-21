@@ -153,19 +153,19 @@ namespace Data_Logger_1._3
         private async void on_Qt_checked(object sender, RoutedEventArgs e)
         {
             if (_mainWindowViewModel.CodingQtChecked)
-                await _navigationService.NavigateToLogCachePage(Cachemaster.CacheContext.Qt);
+                await _navigationService.NavigateToLogCachePage(CacheMaster.CacheContext.Qt);
         }
 
         private async void on_AndroidStudio_checked(object sender, RoutedEventArgs e)
         {
             if (_mainWindowViewModel.CodingAndroidChecked)
-                await _navigationService.NavigateToLogCachePage(Cachemaster.CacheContext.AndroidStudio);
+                await _navigationService.NavigateToLogCachePage(CacheMaster.CacheContext.AndroidStudio);
         }
 
         private async void on_GenericCoding_checked(object sender, RoutedEventArgs e)
         {
             if (_mainWindowViewModel.CodingGenericChecked)
-                await _navigationService.NavigateToLogCachePage(Cachemaster.CacheContext.Coding);
+                await _navigationService.NavigateToLogCachePage(CacheMaster.CacheContext.Coding);
         }
 
         private async void on_NOTES_checked(object sender, RoutedEventArgs e)

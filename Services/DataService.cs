@@ -6,14 +6,14 @@ using Microsoft.Extensions.DependencyInjection;
 using System.Collections.ObjectModel;
 using System.Text.RegularExpressions;
 using static Data_Logger_1._3.Models.LOG;
-using static Data_Logger_1._3.Services.Cachemaster;
+using static Data_Logger_1._3.Services.CacheMaster;
 
 namespace Data_Logger_1._3.Services
 {
 
     public class DataService : IDataService
     {
-        private readonly Cachemaster _cachemaster;
+        private readonly CacheMaster _cachemaster;
         private readonly IServiceProvider _serviceProvider;
 
         private readonly AuthService _authService;
@@ -30,7 +30,7 @@ namespace Data_Logger_1._3.Services
         IReadOnlyList<SubjectClass> IDataService.SQLITE_SUBJECTS => SQLITE_SUBJECTS;
 
 
-        public DataService(Cachemaster cachemaster, AuthService authService, IServiceProvider serviceProvider)
+        public DataService(CacheMaster cachemaster, AuthService authService, IServiceProvider serviceProvider)
         {
             _cachemaster = cachemaster;
 
@@ -118,7 +118,7 @@ namespace Data_Logger_1._3.Services
             return _authService.Account.FirstName + " " + _authService.Account.LastName;
         }
 
-        public Cachemaster GetCachemaster()
+        public CacheMaster GetCachemaster()
         {
             return _cachemaster;
         }
@@ -278,7 +278,7 @@ namespace Data_Logger_1._3.Services
 
 
 
-        
+
 
 
 
@@ -558,6 +558,18 @@ namespace Data_Logger_1._3.Services
                 await writer.HandleExceptionAsync(ex, "UseHandlerAsync<T>(func)");
                 throw;
             }
+        }
+
+
+
+        /// <summary>
+        /// Checks if an email exists in the database.
+        /// </summary>
+        /// <param name="email">The email provided by the user signing up.</param>
+        /// <returns>Returns whether the email exists or not. Will throw an ExmailConflictException if the email exists.</returns>
+        public Task<bool> EmailExists(string email)
+        {
+            return UseReaderAsync(reader => reader.EmailExists(email));
         }
 
 
@@ -887,6 +899,35 @@ namespace Data_Logger_1._3.Services
         }
 
 
+        /// <summary>
+        /// Updates the profile picture of a user in the database.
+        /// </summary>
+        /// <param name="email">The user's email</param>
+        /// <param name="filePath">The file path of the current profile picture</param>
+        /// <returns>Returns true if the profile pic change succeeded, false otherwise.</returns>
+        public Task<bool> UpdateProfilePicAsync(int id, string filePath)
+        {
+            return UseHandlerAsync(handler => handler.UpdateProfilePicAsync(id, filePath));
+        }
+
+
+        public Task<bool> UpdateUserAsync(UserSettings user)
+        {
+            return UseHandlerAsync(handler => handler.UpdateUserAsync(user));
+        }
+
+
+        /// <summary>
+        /// Updates a user's password in the database based on the provided email and new password.
+        /// </summary>
+        /// <param name="newPassword">The user's new password</param>
+        /// <param name="email">The user's email address</param>
+        /// <returns>Returns true if the password was updated successfully, false otherwise.</returns>
+        public Task<bool> UpdateUserPasswordAsync(string newPassword, string email)
+        {
+            return UseHandlerAsync(handler => handler.ChangePasswordAsync(newPassword, email));
+        }
+
 
 
 
@@ -1064,9 +1105,17 @@ namespace Data_Logger_1._3.Services
             await writer.HandleExceptionAsync(exception, methodName, exceptionType);
         }
 
+        public async Task HandleExceptionAsync(string methodName, Exception ex, string messageBoxCaption, string exceptionType = "Exception")
+        {
+            await using var scope = _serviceProvider.CreateAsyncScope();
+            var writer = scope.ServiceProvider.GetRequiredService<EntityWriter>();
+
+            await writer.HandleExceptionAsync(methodName, ex, messageBoxCaption, exceptionType: exceptionType);
+        }
+
 
 
         #endregion
 
-    }
+        }
 }

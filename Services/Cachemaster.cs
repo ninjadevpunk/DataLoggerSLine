@@ -17,7 +17,7 @@ namespace Data_Logger_1._3.Services
     /// Class for temporary and permanent file storage. Related to the DATAMASTER class. This class creates files to permanently keep contents of LOGS for backup purposes. Files
     /// with a link in DATAMASTER will be deleted automatically. This class can also save incomplete logs in the Logger.
     /// </summary>
-    public class Cachemaster
+    public class CacheMaster
     {
         public enum CacheContext
         {
@@ -49,7 +49,7 @@ namespace Data_Logger_1._3.Services
         public readonly string SubjectIdsPath;
         public readonly string PostitIdsPath;
 
-        public Cachemaster()
+        public CacheMaster()
         {
 
             MainFolder = App.Configuration["Paths:Root"];
@@ -69,8 +69,35 @@ namespace Data_Logger_1._3.Services
             }
         }
 
+        public static bool CreateSettingsFile(int userId)
+        {
+            try
+            {
+                var userFolder = Path.Combine(SettingsService.BasePath, userId.ToString());
+
+                if (!Directory.Exists(userFolder))
+                {
+                    Directory.CreateDirectory(userFolder);
+                }
+
+                return true;
+            }
+            catch (UnauthorizedAccessException unex)
+            {
+                Debug.WriteLine($"UnauthorizedAccessException error occurred in CreateSettingsFile(userId): {unex.Message}");
+                RequestAdminPrivileges();
+
+                return false;
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"Exception occurred in CreateSettingsFile(userId): {ex.Message}");
+                return false;
+            }
+        }
+
         /// <summary>
-        /// Creates vital resources for the Cachemaster so the class can function correctly.
+        /// Creates vital resources for the CacheMaster so the class can function correctly.
         /// </summary>
         /// <returns>Returns whether or not the resources were successfully created if they had not existed.</returns>
         public bool ResourcesCreated()
@@ -159,7 +186,7 @@ namespace Data_Logger_1._3.Services
         }
 
         // Requests admin privileges if access is denied
-        private void RequestAdminPrivileges()
+        private static void RequestAdminPrivileges()
         {
             System.Diagnostics.ProcessStartInfo procInfo = new System.Diagnostics.ProcessStartInfo
             {

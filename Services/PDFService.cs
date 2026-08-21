@@ -10,7 +10,7 @@ using System.Drawing;
 using System.IO;
 using System.Net.Http;
 using System.Windows;
-using static Data_Logger_1._3.Services.Cachemaster;
+using static Data_Logger_1._3.Services.CacheMaster;
 
 namespace Data_Logger_1._3.Services
 {

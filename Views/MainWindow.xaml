@@ -441,7 +441,8 @@
 
                         <!-- SETTINGS -->
                         <Button Grid.Column="0" x:Name="button_SETTINGS" Style="{DynamicResource button_SUPPORT}"
-                                IsEnabled="False"
+                                IsEnabled="True"
+                                Command="{Binding SettingsCommand}"
                                 >
                             <Path Style="{DynamicResource path_SETTINGS}"
                                 />

@@ -9,7 +9,7 @@ using System.Diagnostics;
 using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Input;
-using static Data_Logger_1._3.Services.Cachemaster;
+using static Data_Logger_1._3.Services.CacheMaster;
 
 namespace Data_Logger_1._3.ViewModels.LogViewModels
 {
@@ -17,7 +17,7 @@ namespace Data_Logger_1._3.ViewModels.LogViewModels
     {
         protected readonly LOG _LOG;
         protected readonly LogCacheViewModel _vm;
-        protected readonly Cachemaster _cacheMaster;
+        protected readonly CacheMaster _cacheMaster;
         public abstract CacheContext LOGViewModelContext { get; }
 
 

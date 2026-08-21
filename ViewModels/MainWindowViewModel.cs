@@ -1,11 +1,12 @@
 ﻿using Data_Logger_1._3.Commands;
+using Data_Logger_1._3.Commands.SettingsCommands;
 using Data_Logger_1._3.Services;
 using MVVMEssentials.ViewModels;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using static Data_Logger_1._3.Services.Cachemaster;
+using static Data_Logger_1._3.Services.CacheMaster;
 using static Data_Logger_1._3.Services.NavigationService;
 
 namespace Data_Logger_1._3.ViewModels
@@ -15,7 +16,7 @@ namespace Data_Logger_1._3.ViewModels
         private readonly NavigationService _navigationService;
 
 
-        public MainWindowViewModel(NavigationService navigationService)
+        public MainWindowViewModel(NavigationService navigationService, IDataService dataService)
         {
             _navigationService = navigationService;
 
@@ -30,6 +31,7 @@ namespace Data_Logger_1._3.ViewModels
             GoBackCommand = new GoBackCommand(_navigationService, this);
             GoForwardCommand = new GoForwardCommand(_navigationService, this);
             LogOutCommand = new LogOutCommand(_navigationService);
+            SettingsCommand = new NavigateToSettingsCommand(_navigationService, dataService);
 
             IconBackFill = DisabledColor;
             IconForwardFill = DisabledColor;
@@ -384,7 +386,7 @@ namespace Data_Logger_1._3.ViewModels
 
         public ICommand HelpCommand { get; set; } = null!;
 
-        public ICommand SettingsCommand { get; set; } = null!;
+        public ICommand SettingsCommand { get; set; }
 
         public ICommand GoBackCommand { get; set; }
         public ICommand GoForwardCommand { get; set; }

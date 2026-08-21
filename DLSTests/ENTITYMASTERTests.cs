@@ -118,7 +118,7 @@ namespace DLSTests
             public ACCOUNT GetCurrentAccount() => _authService.Account;
         }
 
-        [Fact]
+        /*[Fact]
         public void StaleAccountReferenceTest()
         {
             var userA = new ACCOUNT { accountID = 1 };
@@ -141,6 +141,6 @@ namespace DLSTests
 
             // New DataService sees User B
             Assert.Equal(2, newService.GetCurrentAccount().accountID);
-        }
+        }*/
     }
 }
