@@ -474,6 +474,37 @@ namespace Data_Logger_1._3.Services
 
 
 
+        /// <summary>
+        /// Deletes a user's account from the database using the provided account ID.
+        /// </summary>
+        /// <param name="id">The ID of the account to delete.</param>
+        /// <returns>Returns true if the account was deleted successfully, false otherwise.</returns>
+        public async Task<bool> DeleteAccountAsync(int id)
+        {
+            await using var scope = _serviceProvider.CreateAsyncScope();
+            var master = scope.ServiceProvider.GetRequiredService<EntityMaster>();
+
+            try
+            {
+                var accountToDelete = await master.Accounts
+                    .FirstOrDefaultAsync(a => a.accountID == id);
+
+                if (accountToDelete == null)
+                    return false;
+
+                master.Accounts.Remove(accountToDelete);
+                await master.SaveChangesAsync();
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                var writer = scope.ServiceProvider.GetRequiredService<EntityWriter>();
+                await writer.HandleExceptionAsync(ex, "DeleteAccountAsync(id)");
+            }
+
+            return false;
+        }
 
 
 

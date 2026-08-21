@@ -64,8 +64,8 @@ namespace Data_Logger_1._3.ViewModels
             ResetImageCommand = new ResetImageCommand(this, _settings);
             PasswordResetCommand = new PasswordResetCommand(dataService, this, passwordResetService);
             SubmitVerificationCodeCommand = new SubmitVerificationCodeCommand(this, passwordResetService, dataService);
-            ChangePasswordCommand = new ChangePasswordCommand(this, authService);
-            // Delete account command here...
+            ChangePasswordCommand = new ChangePasswordCommand(this, authService, dataService);
+            DeleteAccountCommand = new DeleteAccountCommand(authService, dataService);
             SaveSettingsCommand = new SaveSettingsCommand(authService, dataService, settingsService, _settings, mainWindowViewModel, this);
             SaveIsEnabled = SettingsService.FieldsAcceptable(Email, YesBox, CompanyName);
             //Return to dashboard command here...

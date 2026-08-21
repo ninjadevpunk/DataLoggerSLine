@@ -174,6 +174,20 @@ namespace Data_Logger_1._3.Services
             return passwordChanged;
         }
 
+        public async Task<bool> DeleteAccountAsync()
+        {
+            bool accountDeleted = false;
+
+            if (Account != null)
+            {
+                var handler = _serviceProvider.GetRequiredService<EntityHandler>();
+                accountDeleted = await handler.DeleteAccountAsync(Account.accountID);
+                Account = null;
+            }
+
+            return accountDeleted;
+        }
+
         public void SignOut()
         {
             Account = null;
