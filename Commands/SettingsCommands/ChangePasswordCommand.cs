@@ -19,7 +19,13 @@ namespace Data_Logger_1._3.Commands.SettingsCommands
         protected override async Task ExecuteAsync(object? parameter)
         {
             // Implement the logic to change the password here.
-            await _authService.ChangePassword(_settingsViewModel.NewPassword, _settingsViewModel.Email);
+            var passwordChanged = await _authService.ChangePassword(_settingsViewModel.NewPassword, _settingsViewModel.Email);
+
+            if(passwordChanged)
+            {
+                _settingsViewModel.ResetStage = SettingsViewModel.PasswordResetStage.PasswordChanged;
+                _settingsViewModel.ResetStage = SettingsViewModel.PasswordResetStage.RequestReset;
+            }
         }
     }
 }

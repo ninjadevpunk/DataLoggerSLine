@@ -15,20 +15,24 @@ namespace Data_Logger_1._3.Views.Account
         private readonly Storyboard _passwordOpen;
         private readonly Storyboard _close;
         private readonly Storyboard _passwordClose;
+        public bool ResetLinkSectionOpen { get; set; } = false;
+        public bool ChangePasswordSectionOpen { get; set; } = false;
 
         public SettingsPage()
         {
             InitializeComponent();
 
-            _open = CreateHeightAnimation(0, 280, 200);
-            _passwordOpen = CreateHeightAnimation(0, 500, 200);
-            _close = CreateHeightAnimation(130, 0, 200);
-            _passwordClose = CreateHeightAnimation(500, 0, 200);
+            _open = CreateHeightAnimation(0, 100, 200);
+            _passwordOpen = CreateHeightAnimation(0, 260, 200);
+            _close = CreateHeightAnimation(100, 0, 200);
+            _close.Completed += ResetLinkClose_Completed;
+            _passwordClose = CreateHeightAnimation(260, 0, 200);
+            _passwordClose.Completed += PasswordClose_Completed;
 
             Loaded += SettingsPage_Loaded;
         }
 
-        private void SettingsPage_Loaded(object sender, RoutedEventArgs e)
+        private void SettingsPage_Loaded(object? sender, RoutedEventArgs e)
         {
             if (DataContext is SettingsViewModel vm)
             {
@@ -49,16 +53,49 @@ namespace Data_Logger_1._3.Views.Account
                     break;
 
                 case SettingsViewModel.PasswordResetStage.EnterVerificationCode:
-                    _open.Begin(this.stackPanel_PASSWORD_RESET_SECTION);
-                    break;
+                    {
+                        if (ChangePasswordSectionOpen)
+                            _passwordClose.Begin(this.stackPanel_NEW_PASSWORD_SECTION);
 
+                        if (!ResetLinkSectionOpen)
+                        {
+                            _open.Begin(this.stackPanel_PASSWORD_RESET_SECTION);
+                            ResetLinkSectionOpen = true;
+                        }
+
+                        break;
+                    }
                 case SettingsViewModel.PasswordResetStage.ChangePassword:
-                    _passwordOpen.Begin(this.stackPanel_NEW_PASSWORD_SECTION);
-                    break;
-                    case SettingsViewModel.PasswordResetStage.PasswordChanged:
-                    _close.Begin(this.stackPanel_PASSWORD_RESET_SECTION);
-                    _passwordClose.Begin(this.stackPanel_NEW_PASSWORD_SECTION);
-                    break;
+                    {
+                        if (ResetLinkSectionOpen)
+                            _close.Begin(this.stackPanel_PASSWORD_RESET_SECTION);
+
+                        break;
+                    }
+                case SettingsViewModel.PasswordResetStage.PasswordChanged:
+                    {
+                        if (ChangePasswordSectionOpen)
+                            _passwordClose.Begin(this.stackPanel_NEW_PASSWORD_SECTION);
+
+                        break;
+                    }
+            }
+        }
+
+
+        private void PasswordClose_Completed(object? sender, EventArgs e)
+        {
+            ChangePasswordSectionOpen = false;
+        }
+
+        private void ResetLinkClose_Completed(object? sender, EventArgs e)
+        {
+            ResetLinkSectionOpen = false;
+
+            if (!ChangePasswordSectionOpen)
+            {
+                _passwordOpen.Begin(this.stackPanel_NEW_PASSWORD_SECTION);
+                ChangePasswordSectionOpen = true;
             }
         }
 

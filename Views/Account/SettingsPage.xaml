@@ -287,39 +287,41 @@
 
                             </Grid>
 
-                            <StackPanel x:Name="stackPanel_NEW_PASSWORD_SECTION" Height="0">
-                                <Border Padding="10" HorizontalAlignment="Stretch">
-                                    <!-- NEW PASSWORD -->
-                                    <components:PasswordInputField x:Name="inputText_NEW_PASSWORD" Grid.Column="0"
-                                                HorizontalAlignment="Stretch"
-                                                VerticalAlignment="Center"
-                                                Placeholder="New Password"
-                                                UserInput="{Binding NewPassword, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                                />
-                                </Border>
+                            
+                        </StackPanel>
 
-                                <!-- CONFIRM PASSWORD -->
-                                <Border Padding="10" HorizontalAlignment="Stretch">
-                                    <components:PasswordInputField x:Name="inputText_CONFIRM_PASSWORD" Grid.Column="0"
-                                                HorizontalAlignment="Stretch"
-                                                VerticalAlignment="Center"
-                                                Placeholder="Confirm Password"
-                                                UserInput="{Binding ConfirmPassword, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                                />
-                                </Border>
+                        <StackPanel x:Name="stackPanel_NEW_PASSWORD_SECTION" Height="0">
+                            <Border Padding="10" HorizontalAlignment="Stretch">
+                                <!-- NEW PASSWORD -->
+                                <components:PasswordInputField x:Name="inputText_NEW_PASSWORD" Grid.Column="0"
+                    HorizontalAlignment="Stretch"
+                    VerticalAlignment="Center"
+                    Placeholder="New Password"
+                    UserInput="{Binding NewPassword, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                    />
+                            </Border>
 
-                                <Border Padding="10" HorizontalAlignment="Stretch">
-                                    <Button Grid.Column="2" x:Name="button_CHANGE_PASSWORD" Style="{DynamicResource ACTION}"
-                            HorizontalAlignment="Right"
-                            Width="auto"
-                            Command="{Binding ChangePasswordCommand}">
+                            <!-- CONFIRM PASSWORD -->
+                            <Border Padding="10" HorizontalAlignment="Stretch">
+                                <components:PasswordInputField x:Name="inputText_CONFIRM_PASSWORD" Grid.Column="0"
+                    HorizontalAlignment="Stretch"
+                    VerticalAlignment="Center"
+                    Placeholder="Confirm Password"
+                    UserInput="{Binding ConfirmPassword, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                    />
+                            </Border>
 
-                                        <TextBlock Style="{DynamicResource text_button01}"
-                                   Text="Change Password"/>
-                                    </Button>
-                                </Border>
+                            <Border Padding="10" HorizontalAlignment="Stretch">
+                                <Button Grid.Column="2" x:Name="button_CHANGE_PASSWORD" Style="{DynamicResource ACTION}"
+HorizontalAlignment="Right"
+Width="auto"
+Command="{Binding ChangePasswordCommand}">
 
-                            </StackPanel>
+                                    <TextBlock Style="{DynamicResource text_button01}"
+       Text="Change Password"/>
+                                </Button>
+                            </Border>
+
                         </StackPanel>
 
                     </StackPanel>
