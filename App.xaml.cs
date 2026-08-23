@@ -111,6 +111,7 @@ namespace Data_Logger_1._3
                         services
                     ));
                     service.AddTransient<BitmapService>();
+                    service.AddTransient(services => new AppSettingsService(services.GetRequiredService<IConfiguration>()));
                     service.AddTransient<SettingsService>();
                     service.AddTransient<PasswordResetService>();
 
