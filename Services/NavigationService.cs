@@ -279,9 +279,10 @@ namespace Data_Logger_1._3.Services
 
                 await _serviceProvider.GetRequiredService<InitialService>().Initialise(dataService.GetUser().accountID);
 
+                bool? isUpdating = null;
+#if RELEASE
                 var settingsService = _serviceProvider.GetRequiredService<SettingsService>();
                 var settings = settingsService.Load(dataService.GetUser().accountID) ?? new Settings();
-                bool? isUpdating = null;
 
                 if (settings.ShowUpdatePopup)
                 {
@@ -298,10 +299,11 @@ namespace Data_Logger_1._3.Services
                         isUpdating = updaterWindow.ShowDialog();
                     }
                 }
+#endif
 
-                if (!isUpdating ?? false)
+                if (isUpdating != true)
                 {
-                    // User clicked Cancel
+                    // User clicked Cancel or no update found
                     var mainWindowViewModel = _serviceProvider.GetRequiredService<MainWindowViewModel>();
 
                     mainWindow.DataContext = mainWindowViewModel;
