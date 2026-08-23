@@ -139,7 +139,7 @@ namespace Data_Logger_1._3.Services
                     ProfilePic = "",
                     FirstName = "admin",
                     LastName = "",
-                    Email = "support@datalogger.co.za",
+                    Email = "support@datalogger.space",
                     Password = "pcsx2024",
                     IsEmployee = false,
                     CompanyName = "",
