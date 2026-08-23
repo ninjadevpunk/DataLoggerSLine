@@ -68,7 +68,7 @@ namespace Data_Logger_1._3.ViewModels
             DeleteAccountCommand = new DeleteAccountCommand(authService, dataService);
             SaveSettingsCommand = new SaveSettingsCommand(authService, dataService, settingsService, _settings, mainWindowViewModel, this);
             SaveIsEnabled = SettingsService.FieldsAcceptable(Email, YesBox, CompanyName);
-            ReturnToDashboardCommand = new ReturnToDashboardCommand(navigationService, dataService);
+            ReturnToDashboardCommand = new ReturnToDashboardCommand(mainWindowViewModel, dataService);
         }
 
         private BitmapImage? signUpImage;
