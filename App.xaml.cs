@@ -1,4 +1,5 @@
-﻿using Data_Logger_1._3.Services;
+﻿using Data_Logger_1._3.Components;
+using Data_Logger_1._3.Services;
 using Data_Logger_1._3.Services.CommandLogic;
 using Data_Logger_1._3.ViewModels;
 using Data_Logger_1._3.ViewModels.Dashboard;
@@ -129,6 +130,7 @@ namespace Data_Logger_1._3
                     service.AddTransient<LoggerEditPage>();
                     service.AddTransient<LoggerViewPage>();
                     service.AddTransient<SettingsPage>();
+                    service.AddTransient<VelopackUpdaterWindow>();
 
 
                     service.AddTransient<ReporterEditPage>();
@@ -218,6 +220,7 @@ namespace Data_Logger_1._3
                     service.AddTransient((services) => new SettingsViewModel(services.GetRequiredService<NavigationService>(), services.GetRequiredService<AuthService>(), 
                         services.GetRequiredService<IDataService>(), services.GetRequiredService<SettingsService>(), services.GetRequiredService<MainWindowViewModel>(),
                         services.GetRequiredService<PasswordResetService>()));
+                    service.AddTransient<UpdaterViewModel>();
 
                 })
                 .Build();

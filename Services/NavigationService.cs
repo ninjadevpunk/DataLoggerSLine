@@ -1,6 +1,7 @@
 ﻿using Data_Logger_1._3.Commands.LogCacheCommands;
 using Data_Logger_1._3.Commands.PostItCommands;
 using Data_Logger_1._3.Commands.ReporterCommands.UpdateCommands;
+using Data_Logger_1._3.Components;
 using Data_Logger_1._3.Components.Subcontrols;
 using Data_Logger_1._3.Components.Subcontrols_View;
 using Data_Logger_1._3.Models;
@@ -278,23 +279,49 @@ namespace Data_Logger_1._3.Services
 
                 await _serviceProvider.GetRequiredService<InitialService>().Initialise(dataService.GetUser().accountID);
 
-                var mainWindowViewModel = _serviceProvider.GetRequiredService<MainWindowViewModel>();
+                var settingsService = _serviceProvider.GetRequiredService<SettingsService>();
+                var settings = settingsService.Load(dataService.GetUser().accountID) ?? new Settings();
+                bool? isUpdating = null;
 
-                mainWindow.DataContext = mainWindowViewModel;
-                mainWindowViewModel.CodingChecked = true;
-                mainWindowViewModel.CodingQtChecked = true;
+                if (settings.ShowUpdatePopup)
+                {
+                    
 
-                mainWindow.Show();
-                await NavigateToLogCachePage(CacheContext.Qt);
+                    var velopackService = _serviceProvider.GetRequiredService<VelopackService>();
+                    var updateInfo = await velopackService.CheckForUpdatesAsync();
 
-                _mainWindow = mainWindow;
+                    if (updateInfo != null)
+                    {
+                        // Show Updater window
+                        var updaterWindow = _serviceProvider.GetRequiredService<VelopackUpdaterWindow>();
+                        updaterWindow.DataContext = ActivatorUtilities.CreateInstance<UpdaterViewModel>(_serviceProvider, updateInfo);
+                        isUpdating = updaterWindow.ShowDialog();
+                    }
+                }
 
-                CheckBackNavigationButton(mainWindowViewModel);
+                if (!isUpdating ?? false)
+                {
+                    // User clicked Cancel
+                    var mainWindowViewModel = _serviceProvider.GetRequiredService<MainWindowViewModel>();
 
-                MessageBox.Show($"Click on \"Generic\" option in the menu panel please. In this alpha you will only be able to create coding logs.",
-                    "Data Logger Alpha Version", MessageBoxButton.OK, MessageBoxImage.Information);
+                    mainWindow.DataContext = mainWindowViewModel;
+                    mainWindowViewModel.CodingChecked = true;
+                    mainWindowViewModel.CodingQtChecked = true;
 
-                SetDashboardContext();
+                    mainWindow.Show();
+                    await NavigateToLogCachePage(CacheContext.Qt);
+
+                    _mainWindow = mainWindow;
+
+                    CheckBackNavigationButton(mainWindowViewModel);
+
+                    MessageBox.Show($"Click on \"Generic\" option in the menu panel please. In this alpha you will only be able to create coding logs.",
+                        "Data Logger Alpha Version", MessageBoxButton.OK, MessageBoxImage.Information);
+
+                    SetDashboardContext();
+                }
+
+
             }
             catch (InvalidOperationException invex)
             {

@@ -24,6 +24,8 @@ namespace Data_Logger_1._3.Models
 
         public UserSettings User { get; set; } = new UserSettings();
 
+        public bool ShowUpdatePopup { get; set; } = true;
+
         public void SelectedTheme(string theme)
         {
             switch (theme)
