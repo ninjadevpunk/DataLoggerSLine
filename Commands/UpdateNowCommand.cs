@@ -8,20 +8,26 @@ namespace Data_Logger_1._3.Commands
 {
     public class UpdateNowCommand : AsyncCommandBase
     {
-        private readonly SettingsService _settingsService;
-        private readonly Settings _settings;
         private readonly IDataService _dataService;
         private readonly VelopackService _velopackService;
         private readonly UpdateInfo _updateInfo;
+        private readonly Task _waitForUserRestartTask;
 
 
-        public UpdateNowCommand(IDataService dataService, SettingsService settingsService, Settings settings, VelopackService velopackService, UpdateInfo updateInfo)
+        public UpdateNowCommand(IDataService dataService, VelopackService velopackService, UpdateInfo updateInfo)
         {
             _dataService = dataService;
-            _settingsService = settingsService;
-            _settings = settings;
             _velopackService = velopackService;
             _updateInfo = updateInfo;
+            _waitForUserRestartTask = Task.CompletedTask;
+        }
+
+        public UpdateNowCommand(IDataService dataService, VelopackService velopackService, UpdateInfo updateInfo, Task waitForUserRestartTask)
+        {
+            _dataService = dataService;
+            _velopackService = velopackService;
+            _updateInfo = updateInfo;
+            _waitForUserRestartTask = waitForUserRestartTask;
         }
 
 
@@ -30,6 +36,14 @@ namespace Data_Logger_1._3.Commands
             try
             {
                 await _velopackService.DownloadUpdateAsync(_updateInfo);
+
+                if (parameter is bool isManualDownload)
+                {
+                    // Install Now Button
+                    if(isManualDownload)
+                        await _waitForUserRestartTask;
+                }
+
                 await _dataService.SignOutUser();
                 _velopackService.ApplyUpdateAndRestart(_updateInfo);
             }

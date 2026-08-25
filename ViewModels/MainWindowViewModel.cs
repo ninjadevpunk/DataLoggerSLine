@@ -32,6 +32,7 @@ namespace Data_Logger_1._3.ViewModels
             GoForwardCommand = new GoForwardCommand(_navigationService, this);
             LogOutCommand = new LogOutCommand(_navigationService);
             SettingsCommand = new NavigateToSettingsCommand(_navigationService, dataService);
+            // OpenUpdateCommand called here call
 
             IconBackFill = DisabledColor;
             IconForwardFill = DisabledColor;
@@ -392,6 +393,8 @@ namespace Data_Logger_1._3.ViewModels
         public ICommand GoForwardCommand { get; set; }
 
         public ICommand LogOutCommand { get; set; }
+
+        // OpenUpdaterCommand here
 
 
         private void UpdateByNavigationContext()

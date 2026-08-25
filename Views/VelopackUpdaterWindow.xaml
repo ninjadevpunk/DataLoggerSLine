@@ -7,20 +7,29 @@
         mc:Ignorable="d"
         AllowsTransparency="True"
         Background="Transparent"
-        Title="Updater" Height="360" Width="540">
+        WindowStyle="None"
+        WindowStartupLocation="CenterScreen"
+        Title="Updater" Height="400" Width="580" >
 
     <Window.Template>
         <ControlTemplate TargetType="Window">
-            <Border Background="{DynamicResource WHITE}" CornerRadius="3"
-                Margin="0"
-                Padding="0"
-                >
+            <Border x:Name="border_WINDOW" Background="{DynamicResource WHITE}" CornerRadius="3"
+                    Margin="20"
+                    Padding="0" >
+                <Border.Effect>
+                    <DropShadowEffect Color="Gray"
+                          Opacity="0.4"
+                          BlurRadius="25"
+                          ShadowDepth="0"/>
+                </Border.Effect>
+                
                 <ContentPresenter HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
             </Border>
         </ControlTemplate>
     </Window.Template>
-    
-    
+
+
+
     <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
 
         <Grid.RowDefinitions>
@@ -28,6 +37,15 @@
             <RowDefinition Height="auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
+
+        <Border x:Name="customTITLEBar_VELOPACKUPDATERWINDOW"
+                HorizontalAlignment="Stretch"
+                VerticalAlignment="Top"
+                Background="{DynamicResource WHITE}"
+                d:Background="Yellow"
+                CornerRadius="3 3 0 0"
+                Height="auto"
+                Padding="0 10" MouseLeftButtonDown="on_VelopackUpdaterWindow_Pressed" />
 
 
         <StackPanel Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center">
@@ -48,7 +66,7 @@
                 </Grid>
 
                 <TextBlock x:Name="textBlock_UPDATING" Grid.RowSpan="3" Style="{DynamicResource HEADING5}"
-                           Text="Updating..."
+                           Text="{Binding UpdateStatus, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
                            Opacity="0"
                            HorizontalAlignment="Center" 
                            VerticalAlignment="Center" />
@@ -58,7 +76,7 @@
                        Style="{DynamicResource text_LABEL03}" TextAlignment="Center"/>
 
 
-            <Grid Margin="0 30 0 0" HorizontalAlignment="Stretch" VerticalAlignment="Top">
+            <Grid x:Name="grid_BUTTONS_AND_CHECKBOX" Margin="0 30 0 0" HorizontalAlignment="Stretch" VerticalAlignment="Top">
                 <Grid x:Name="grid_UPDATE_BUTTONS">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"/>
@@ -69,7 +87,7 @@
                     <Button x:Name="button_UPDATE" Style="{DynamicResource PRIMARY}"
                             HorizontalAlignment="Right"
                             Command="{Binding UpdateNowCommand}"
-                            CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}">
+                            Click="on_UPDATE_NOW_Clicked">
                         <TextBlock Style="{DynamicResource text_button01}"
                                    Text="Update Now" />
                     </Button>
@@ -95,7 +113,17 @@
                              IsIndeterminate="True"
                              HorizontalAlignment="Stretch"
                              VerticalAlignment="Center"
+                             IsHitTestVisible="False"
+                             Visibility="{Binding BarVisible, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
                              Opacity="0"/>
+
+                <Button x:Name="button_MANUAL_UPDATE" Style="{DynamicResource PRIMARY}"
+                        HorizontalAlignment="Center"
+                        Command="{Binding ManualUpdateNowCommand}" 
+                        Visibility="{Binding InstallButtonVisible, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" >
+                    <TextBlock Style="{DynamicResource text_button01}"
+               Text="Install Update" />
+                </Button>
 
 
             </Grid>
@@ -112,15 +140,12 @@
 
 
                 <!-- Don't Show Again Message -->
-                <CheckBox Style="{DynamicResource check_SIGNUP}" x:Name="checkBox_YES"
+                <CheckBox x:Name="checkBox_SHOWUPDATEPOPUP" Style="{DynamicResource check_SIGNUP}"
                           IsChecked="{Binding ShowUpdatePopup, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
 />
                 
                 <TextBlock Grid.Column="2" Style="{DynamicResource text_LABEL02}"
                            Text="Don’t Show This Again" />
-               
-
-
 
             </Grid>
         </StackPanel>

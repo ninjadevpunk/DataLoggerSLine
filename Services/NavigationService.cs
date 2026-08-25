@@ -22,6 +22,7 @@ using MVVMEssentials.ViewModels;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Markup;
+using Velopack;
 using static Data_Logger_1._3.Services.CacheMaster;
 
 namespace Data_Logger_1._3.Services
@@ -280,14 +281,16 @@ namespace Data_Logger_1._3.Services
                 await _serviceProvider.GetRequiredService<InitialService>().Initialise(dataService.GetUser().accountID);
 
                 bool? isUpdating = null;
+#if DEBUG
+                var updaterWindow = _serviceProvider.GetRequiredService<VelopackUpdaterWindow>();
+                isUpdating = updaterWindow.ShowDialog();
+#endif
 #if RELEASE
                 var settingsService = _serviceProvider.GetRequiredService<SettingsService>();
                 var settings = settingsService.Load(dataService.GetUser().accountID) ?? new Settings();
 
                 if (settings.ShowUpdatePopup)
                 {
-                    
-
                     var velopackService = _serviceProvider.GetRequiredService<VelopackService>();
                     var updateInfo = await velopackService.CheckForUpdatesAsync();
 
@@ -311,6 +314,9 @@ namespace Data_Logger_1._3.Services
                     mainWindowViewModel.CodingQtChecked = true;
 
                     mainWindow.Show();
+                    mainWindow.Activate();
+                    mainWindow.Focus();
+
                     await NavigateToLogCachePage(CacheContext.Qt);
 
                     _mainWindow = mainWindow;
@@ -337,6 +343,16 @@ namespace Data_Logger_1._3.Services
 
                 CloseApp();
             }
+        }
+
+
+        public bool NavigateToUpdaterWindow(UpdateInfo updateInfo, bool startUpdatingImmediately)
+        {
+            var updaterWindow = ActivatorUtilities.CreateInstance<VelopackUpdaterWindow>(_serviceProvider, startUpdatingImmediately);
+
+            updaterWindow.DataContext = ActivatorUtilities.CreateInstance<UpdaterViewModel>(_serviceProvider, updateInfo);
+
+            return updaterWindow.ShowDialog() == true;
         }
 
 

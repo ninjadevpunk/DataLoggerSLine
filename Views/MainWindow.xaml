@@ -62,12 +62,10 @@
                 <!-- NAVIGATION ARROWS -->
                 <StackPanel Orientation="Horizontal" Grid.Column="0"
                             HorizontalAlignment="Left"
-                            Margin="30 0"
-                >
+                            Margin="30 0" >                    
                     <Button x:Name="button_BACK" Style="{DynamicResource button_TITLE_bar}"
                             IsEnabled="{Binding BackEnabled}"
-                            Command="{Binding GoBackCommand}"
-                    >
+                            Command="{Binding GoBackCommand}" >
                         <Path x:Name="icon_BACK" Style="{DynamicResource path_ARROW_BACK}"
                               Fill="{Binding IconBackFill}"
                         />
@@ -93,6 +91,13 @@
                             HorizontalAlignment="Right"
                             VerticalAlignment="Center"
                             Margin="10 5">
+
+
+
+                    <!-- Update Button -->
+                    <Grid Margin="0 0 10 0">
+                        <!-- TODO -->
+                    </Grid>
 
                     <!-- MINIMISE -->
                     <Button x:Name="button_MINIMISE" Style="{DynamicResource button_TITLE_bar}"
