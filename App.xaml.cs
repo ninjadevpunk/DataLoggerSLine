@@ -115,6 +115,7 @@ namespace Data_Logger_1._3
                     service.AddTransient(services => new AppSettingsService(services.GetRequiredService<IConfiguration>()));
                     service.AddTransient<SettingsService>();
                     service.AddTransient<PasswordResetService>();
+                    service.AddTransient<VelopackService>();
 
 
                     service.AddSingleton((services) => new NavigationService(services));
