@@ -279,10 +279,6 @@ namespace Data_Logger_1._3.Services
                 await _serviceProvider.GetRequiredService<InitialService>().Initialise(dataService.GetUser().accountID);
 
                 bool? isUpdating = null;
-#if DEBUG
-                var updaterWindow = _serviceProvider.GetRequiredService<VelopackUpdaterWindow>();
-                isUpdating = updaterWindow.ShowDialog();
-#endif
 #if RELEASE
                 var settingsService = _serviceProvider.GetRequiredService<SettingsService>();
                 var settings = settingsService.Load(dataService.GetUser().accountID) ?? new Settings();
