@@ -95,8 +95,23 @@
 
 
                     <!-- Update Button -->
-                    <Grid Margin="0 0 10 0">
-                        <!-- TODO -->
+                    <Grid x:Name="grid_UPDATE_AVAILABLE" Margin="0 0 10 0"
+                          Visibility="{Binding UpdaterButtonVisible, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}">
+                        <Button Style="{DynamicResource ACTION}"
+                                Height="auto"
+                                Width="auto"
+                                Background="Transparent"
+                                Command="">
+                            <StackPanel Orientation="Horizontal">
+                                <Path Style="{DynamicResource path_UPDATE_AVAILABLE}" Margin="0 0 12 0" />
+                                <TextBlock Text="Update Available!" Style="{DynamicResource text_LABEL02}"
+                                           FontSize="12"
+                                           FontWeight="Bold"
+                                           Foreground="{DynamicResource PrimaryColour}"
+                                           VerticalAlignment="Center"
+                                           />
+                            </StackPanel>
+                        </Button>
                     </Grid>
 
                     <!-- MINIMISE -->

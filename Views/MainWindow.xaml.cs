@@ -179,5 +179,6 @@ namespace Data_Logger_1._3
             if(_mainWindowViewModel.GenericNotesChecked)
                 await _navigationService.NavigateToCreateNotesPage();
         }
+
     }
 }
