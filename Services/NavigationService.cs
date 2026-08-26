@@ -22,7 +22,6 @@ using MVVMEssentials.ViewModels;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Markup;
-using Velopack;
 using static Data_Logger_1._3.Services.CacheMaster;
 
 namespace Data_Logger_1._3.Services
@@ -265,7 +264,6 @@ namespace Data_Logger_1._3.Services
         public async Task NavigateToMainWindow()
         {
             await using var scope = _serviceProvider.CreateAsyncScope();
-            var master = scope.ServiceProvider.GetRequiredService<EntityMaster>();
             var dataService = _serviceProvider.GetRequiredService<IDataService>();
 
             try
@@ -289,11 +287,12 @@ namespace Data_Logger_1._3.Services
                 var settingsService = _serviceProvider.GetRequiredService<SettingsService>();
                 var settings = settingsService.Load(dataService.GetUser().accountID) ?? new Settings();
 
+                var velopackService = _serviceProvider.GetRequiredService<VelopackService>();
+                var updateInfo = await velopackService.CheckForUpdatesAsync();
+
+                
                 if (settings.ShowUpdatePopup)
                 {
-                    var velopackService = _serviceProvider.GetRequiredService<VelopackService>();
-                    var updateInfo = await velopackService.CheckForUpdatesAsync();
-
                     if (updateInfo != null)
                     {
                         // Show Updater window
@@ -312,6 +311,10 @@ namespace Data_Logger_1._3.Services
                     mainWindow.DataContext = mainWindowViewModel;
                     mainWindowViewModel.CodingChecked = true;
                     mainWindowViewModel.CodingQtChecked = true;
+#if RELEASE
+                    if(updateInfo != null)
+                        mainWindowViewModel.UpdaterButtonVisible = Visibility.Visible;
+#endif
 
                     mainWindow.Show();
                     mainWindow.Activate();
@@ -346,13 +349,38 @@ namespace Data_Logger_1._3.Services
         }
 
 
-        public bool NavigateToUpdaterWindow(UpdateInfo updateInfo, bool startUpdatingImmediately)
+        public async Task<bool> NavigateToUpdaterWindowAsync(bool startUpdatingImmediately = false)
         {
-            var updaterWindow = ActivatorUtilities.CreateInstance<VelopackUpdaterWindow>(_serviceProvider, startUpdatingImmediately);
+#if RELEASE
+            await using var scope = _serviceProvider.CreateAsyncScope();
+            var dataService = _serviceProvider.GetRequiredService<IDataService>();
 
-            updaterWindow.DataContext = ActivatorUtilities.CreateInstance<UpdaterViewModel>(_serviceProvider, updateInfo);
+            try
+            {
+                var velopackService = _serviceProvider.GetRequiredService<VelopackService>();
+                var updateInfo = await velopackService.CheckForUpdatesAsync();
 
-            return updaterWindow.ShowDialog() == true;
+                if (updateInfo == null)
+                {
+                    MessageBox.Show("Unable to check for updates. Please try again later.", "Update Check Failed", MessageBoxButton.OK, MessageBoxImage.Error);
+                    return false;
+                }
+
+                var updaterWindow = ActivatorUtilities.CreateInstance<VelopackUpdaterWindow>(_serviceProvider, startUpdatingImmediately);
+
+                updaterWindow.DataContext = ActivatorUtilities.CreateInstance<UpdaterViewModel>(_serviceProvider, updateInfo);
+
+                var mainWindowViewModel = _serviceProvider.GetRequiredService<MainWindowViewModel>();
+                mainWindowViewModel.UpdaterButtonVisible = Visibility.Collapsed;
+
+                return updaterWindow.ShowDialog() == true;
+            }
+            catch (Exception ex)
+            {
+                await dataService.HandleExceptionAsync(ex, "NavigateToUpdaterWindowAsync()");
+            }
+#endif
+            return false;
         }
 
 
