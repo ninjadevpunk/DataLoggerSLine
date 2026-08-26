@@ -19,7 +19,7 @@ namespace Data_Logger_1._3.Commands.SettingsCommands
         {
             try
             {
-                await _navigationService.NavigateToUpdaterWindowAsync(false);
+                await _navigationService.NavigateToUpdaterWindowAsync();
             }
             catch (Exception ex)
             {
