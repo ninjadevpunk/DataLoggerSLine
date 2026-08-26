@@ -1,6 +1,5 @@
 ﻿using Data_Logger_1._3.Commands;
 using Data_Logger_1._3.Models;
-using Data_Logger_1._3.Models.App_Models;
 using Data_Logger_1._3.Services;
 using MVVMEssentials.ViewModels;
 using System.Windows;
@@ -13,11 +12,11 @@ namespace Data_Logger_1._3.ViewModels
     {
         private readonly IDataService _dataService;
         private readonly SettingsService? _settingsService;
-        private Settings? _settings;
+        private readonly Settings? _settings;
         private readonly VelopackService? _velopackService;
         private readonly UpdateInfo _updateInfo;
         public ICommand? UpdateNowCommand { get; set; }
-        public ICommand CancelUpdateCommand { get; set; }
+        public ICommand? CancelUpdateCommand { get; set; }
         public ICommand? ManualUpdateNowCommand { get; set; }
 
         public UpdaterViewModel(IDataService dataService, SettingsService settingsService, VelopackService velopackService,
@@ -42,13 +41,8 @@ namespace Data_Logger_1._3.ViewModels
             _velopackService = velopackService;
             _updateInfo = updateInfo;
 
-            _settingsService = null;
-            _settings = null;
 
-
-            CancelUpdateCommand = new CancelUpdateCommand(dataService);
-
-            ManualUpdateNowCommand = new UpdateNowCommand(dataService, velopackService, updateInfo);
+            ManualUpdateNowCommand = new UpdateNowCommand(dataService, velopackService, updateInfo, true);
             BackgroundDownloadUpdateAsync();
         }
 
@@ -188,8 +182,8 @@ namespace Data_Logger_1._3.ViewModels
         {
             try
             {
-                if (_velopackService == null || ManualUpdateNowCommand == null)
-                    throw new InvalidOperationException("VelopackService and ManualUpdateNowCommand can't be null");
+                if (_velopackService == null)
+                    throw new InvalidOperationException("VelopackService cannot be null");
 
                 await _velopackService.DownloadUpdateAsync(_updateInfo);
                 IsDownloadComplete = true;
@@ -201,7 +195,8 @@ namespace Data_Logger_1._3.ViewModels
             catch (Exception ex)
             {
                 await _dataService.HandleExceptionAsync(ex, "Exception occurred in BackgroundDownloadUpdateAsync()");
-                // MessageBox or some message.
+                MessageBox.Show("An unexpected error occurred while trying to download the update. We apologise for any inconvenience caused. Please try again later.",
+                    "Update Failed", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
