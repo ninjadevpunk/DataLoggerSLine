@@ -550,8 +550,19 @@
     
     
     <!--#endregion-->
+
+
     
-    
+
+
+    <!-- UPDATE AVAILABLE PATH -->
+    <Style x:Key="path_UPDATE_AVAILABLE" TargetType="Path">
+        <Setter Property="Height" Value="18"/>
+        <Setter Property="Width" Value="18"/>
+        <Setter Property="Data" Value="M13.525 14.6517V15.7767H4.51123V14.6517H13.525ZM9.01798 13.5267L4.51123 9.02672H6.78879L6.77501 2.27672H11.268L11.2815 9.02672H13.525L9.01798 13.5267Z"/>
+        <Setter Property="Fill" Value="{DynamicResource PrimaryColour}"/>
+    </Style>
+
     <!-- CLOSE BUTTON Path -->
     <Style x:Key="path_CLOSE" TargetType="Path">
         <Setter Property="Fill" Value="{DynamicResource iconCOLOURAccent01}"/>
