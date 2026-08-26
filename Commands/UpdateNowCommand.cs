@@ -1,5 +1,4 @@
-﻿using Data_Logger_1._3.Models;
-using Data_Logger_1._3.Services;
+﻿using Data_Logger_1._3.Services;
 using MVVMEssentials.Commands;
 using System.Windows;
 using Velopack;
@@ -11,23 +10,15 @@ namespace Data_Logger_1._3.Commands
         private readonly IDataService _dataService;
         private readonly VelopackService _velopackService;
         private readonly UpdateInfo _updateInfo;
-        private readonly Task _waitForUserRestartTask;
+        private readonly bool _isManualDownload;
 
 
-        public UpdateNowCommand(IDataService dataService, VelopackService velopackService, UpdateInfo updateInfo)
+        public UpdateNowCommand(IDataService dataService, VelopackService velopackService, UpdateInfo updateInfo, bool isManualDownload = false)
         {
             _dataService = dataService;
             _velopackService = velopackService;
             _updateInfo = updateInfo;
-            _waitForUserRestartTask = Task.CompletedTask;
-        }
-
-        public UpdateNowCommand(IDataService dataService, VelopackService velopackService, UpdateInfo updateInfo, Task waitForUserRestartTask)
-        {
-            _dataService = dataService;
-            _velopackService = velopackService;
-            _updateInfo = updateInfo;
-            _waitForUserRestartTask = waitForUserRestartTask;
+            _isManualDownload = isManualDownload;
         }
 
 
@@ -35,13 +26,9 @@ namespace Data_Logger_1._3.Commands
         {
             try
             {
-                await _velopackService.DownloadUpdateAsync(_updateInfo);
-
-                if (parameter is bool isManualDownload)
+                if (!_isManualDownload)
                 {
-                    // Install Now Button
-                    if(isManualDownload)
-                        await _waitForUserRestartTask;
+                    await _velopackService.DownloadUpdateAsync(_updateInfo);
                 }
 
                 await _dataService.SignOutUser();
