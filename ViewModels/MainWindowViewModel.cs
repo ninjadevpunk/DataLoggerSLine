@@ -374,6 +374,20 @@ namespace Data_Logger_1._3.ViewModels
             }
         }
 
+        private Visibility updaterButtonVisible = Visibility.Hidden;
+        public Visibility UpdaterButtonVisible
+        {
+            get
+            {
+                return updaterButtonVisible;
+            }
+            set
+            {
+                updaterButtonVisible = value;
+                OnPropertyChanged(nameof(UpdaterButtonVisible));
+            }
+        }
+
 
 
         public void UncheckButtons()
