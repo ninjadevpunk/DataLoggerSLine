@@ -11,6 +11,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Assets\dls_icon.ico" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Content Include="installericon.ico" />
   </ItemGroup>
 
@@ -25,6 +29,12 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Design\Design.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Assets\dls_icon.ico">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 
 </Project>
