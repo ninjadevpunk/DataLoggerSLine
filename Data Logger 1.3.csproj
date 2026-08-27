@@ -34,11 +34,23 @@
 		<Page Remove="Converters\**" />
 		<Page Remove="DLSTests\**" />
 		<Page Remove="Resources\Converters\**" />
+		
+		<Compile Remove="Installer\**" />
+		<EmbeddedResource Remove="Installer\**" />
+		<None Remove="Installer\**" />
+		<Page Remove="Installer\**" />
+
+		<Compile Remove="Design\**" />
+		<EmbeddedResource Remove="Design\**" />
+		<None Remove="Design\**" />
+		<Page Remove="Design\**" />
 	</ItemGroup>
 
 	<ItemGroup>
 		<None Remove="AlphaBetaIcon.ico" />
 		<None Remove="Assets\Data Logger 1.3 logo icon.ico" />
+		<None Remove="Assets\icons\design_package_icon.png" />
+		<None Remove="Assets\icons\installericon.ico" />
 		<None Remove="Assets\login\altumcode-PNbDkQ2DDgM-unsplash.jpg" />
 		<None Remove="Assets\login\ayo-ogunseinde-sibVwORYqs0-unsplash.jpg" />
 		<None Remove="Assets\login\nubelson-fernandes-UcYBL5V0xWQ-unsplash.jpg" />
@@ -64,6 +76,12 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<Resource Include="Assets\icons\design_package_icon.png">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Resource>
+		<Resource Include="Assets\icons\installericon.ico">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Resource>
 		<Resource Include="DevIcon.ico">
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 		</Resource>
@@ -113,6 +131,10 @@
 
 	<ItemGroup>
 		<Page Include="App.xaml" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <ProjectReference Include="Design\Design.csproj" />
 	</ItemGroup>
 
 	<ItemGroup>
