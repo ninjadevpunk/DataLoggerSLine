@@ -8,22 +8,22 @@
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <!-- FONTS -->
-                <ResourceDictionary Source="Resources/Fonts/UI.xaml"/>
-                <ResourceDictionary Source="Resources/Fonts/Logo.xaml"/>
+                <ResourceDictionary Source="/Design;component/Fonts/UI.xaml"/>
+                <ResourceDictionary Source="/Design;component/Fonts/Logo.xaml"/>
 
                 <!-- BRUSHES -->
-                    <ResourceDictionary Source="Resources/Brushes/Colours.xaml"/>
+                    <ResourceDictionary Source="/Design;component/Brushes/Colours.xaml"/>
                 
                 <!-- STYLES -->
-                    <ResourceDictionary Source="Resources/Styles/Buttons.xaml"/>
-                    <ResourceDictionary Source="Resources/Styles/Text.xaml"/>
-                    <ResourceDictionary Source="Resources/Styles/InputText.xaml"/>
-                    <ResourceDictionary Source="Resources/Styles/Paths.xaml"/>
-                    <ResourceDictionary Source="Resources/Styles/Images.xaml"/>
-                    <ResourceDictionary Source="Resources/Styles/CheckBoxes.xaml"/>
-                    <ResourceDictionary Source="Resources/Styles/Lists.xaml"/>
-                    <ResourceDictionary Source="Resources/Styles/DatePickers.xaml"/>
-                    <ResourceDictionary Source="Resources/Styles/Toolbars.xaml"/>
+                    <ResourceDictionary Source="/Design;component/Styles/Buttons.xaml"/>
+                    <ResourceDictionary Source="/Design;component/Styles/Text.xaml"/>
+                    <ResourceDictionary Source="/Design;component/Styles/InputText.xaml"/>
+                    <ResourceDictionary Source="/Design;component/Styles/Paths.xaml"/>
+                    <ResourceDictionary Source="/Design;component/Styles/Images.xaml"/>
+                    <ResourceDictionary Source="/Design;component/Styles/CheckBoxes.xaml"/>
+                    <ResourceDictionary Source="/Design;component/Styles/Lists.xaml"/>
+                    <ResourceDictionary Source="/Design;component/Styles/DatePickers.xaml"/>
+                    <ResourceDictionary Source="/Design;component/Styles/Toolbars.xaml"/>
 
             </ResourceDictionary.MergedDictionaries>
             

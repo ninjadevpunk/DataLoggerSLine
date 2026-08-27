@@ -1,0 +1,21 @@
+﻿<Application x:Class="Installer.App"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="clr-namespace:Installer"
+             StartupUri="Views/MainWindow.xaml">
+    <Application.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/Design;component/Fonts/UI.xaml"/>
+                <ResourceDictionary Source="/Design;component/Fonts/Logo.xaml"/>
+                <ResourceDictionary Source="/Design;component/Brushes/Colours.xaml"/>
+                <ResourceDictionary Source="/Design;component/Styles/Buttons.xaml"/>
+                <ResourceDictionary Source="/Design;component/Styles/CheckBoxes.xaml"/>
+                <ResourceDictionary Source="/Design;component/Styles/DatePickers.xaml"/>
+                <ResourceDictionary Source="/Design;component/Styles/Images.xaml"/>
+                <ResourceDictionary Source="/Design;component/Styles/Paths.xaml"/>
+                <ResourceDictionary Source="/Design;component/Styles/Text.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Application.Resources>
+</Application>
