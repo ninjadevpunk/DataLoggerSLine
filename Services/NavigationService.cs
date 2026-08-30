@@ -1,7 +1,6 @@
 ﻿using Data_Logger_1._3.Commands.LogCacheCommands;
 using Data_Logger_1._3.Commands.PostItCommands;
 using Data_Logger_1._3.Commands.ReporterCommands.UpdateCommands;
-using Data_Logger_1._3.Components;
 using Data_Logger_1._3.Components.Subcontrols;
 using Data_Logger_1._3.Components.Subcontrols_View;
 using Data_Logger_1._3.Models;
