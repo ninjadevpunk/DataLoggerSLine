@@ -47,6 +47,16 @@
 		<EmbeddedResource Remove="Design\**" />
 		<None Remove="Design\**" />
 		<Page Remove="Design\**" />
+
+		<Compile Remove="FileSys\**" />
+		<EmbeddedResource Remove="FileSys\**" />
+		<None Remove="FileSys\**" />
+		<Page Remove="FileSys\**" />
+
+		<Compile Remove="Core\**" />
+		<EmbeddedResource Remove="Core\**" />
+		<None Remove="Core\**" />
+		<Page Remove="Core\**" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -60,6 +70,7 @@
 		<None Remove="Assets\login\user.png" />
 		<None Remove="Assets\viewer_wallpaper.png" />
 		<None Remove="Components\SplashScreen1.png" />
+		<None Remove="DevIcon.ico" />
 		<None Remove="Fonts\Red Hat Display.ttf" />
 		<None Remove="Fonts\Zekton Bold Italic.ttf" />
 		<None Remove="Fonts\Zekton Italic.ttf" />
@@ -71,6 +82,9 @@
 		<Content Include="AlphaBetaIcon.ico">
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 		</Content>
+		<Content Include="DevIcon.ico" Condition="'$(Configuration)' == 'Debug'">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
 	</ItemGroup>
 
 	<ItemGroup>
@@ -79,9 +93,6 @@
 		</Resource>
 		<Resource Include="Assets\icons\installericon.ico">
 		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-		</Resource>
-		<Resource Include="DevIcon.ico">
-			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 		</Resource>
 	</ItemGroup>
 
@@ -133,6 +144,7 @@
 
 	<ItemGroup>
 	  <ProjectReference Include="Design\Design.csproj" />
+	  <ProjectReference Include="FileSys\FileSys.csproj" />
 	</ItemGroup>
 
 	<ItemGroup>
