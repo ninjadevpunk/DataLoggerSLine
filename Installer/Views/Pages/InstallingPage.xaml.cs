@@ -7,12 +7,10 @@ namespace Installer.Views.Pages
     /// </summary>
     public partial class InstallingPage : UserControl
     {
-        private readonly MainWindow _mainWindow;
 
-        public InstallingPage(MainWindow mainWindow)
+        public InstallingPage()
         {
             InitializeComponent();
-            _mainWindow = mainWindow;
         }
     }
 }
