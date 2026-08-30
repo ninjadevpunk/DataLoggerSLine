@@ -14,7 +14,7 @@ namespace Data_Logger_1._3;
 
 public static class Program
 {
-
+#if RELEASE
     private static bool DeleteDesktopShortcut()
     {
         try
@@ -70,7 +70,7 @@ public static class Program
 
         SHChangeNotify(SHCNE_ASSOCCHANGED, SHCNF_IDLIST, IntPtr.Zero, IntPtr.Zero);
     }
-
+#endif
 
 
 
