@@ -1,4 +1,6 @@
-﻿using Microsoft.Win32;
+﻿using FileSys.Interfaces;
+using FileSys.Services;
+using Microsoft.Win32;
 using System.Diagnostics;
 using System.IO;
 using System.Runtime.InteropServices;
@@ -13,21 +15,32 @@ namespace Installer.Views.Pages
     public partial class SetupPage : UserControl
     {
         private readonly MainWindow _mainWindow;
+        private readonly ICacheService _cacheService;
+        private readonly IInstallationRegistry _installationRegistry;
+
+        public readonly string _programDataPath;
         string installPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
                 "Data Logger");
         const int APP_SIZE = 170;
         public bool ShortcutIsCreated { get; set; } = false;
         private readonly bool _isReinstall;
+
         public SetupPage(MainWindow mainWindow, bool isReinstall = false)
         {
             InitializeComponent();
+
             _mainWindow = mainWindow;
             _isReinstall = isReinstall;
 
+            _cacheService = new CacheMaster();
+            _installationRegistry = new InstallationRegistry();
+
+            _programDataPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData), "Data Logger");
 
             this.textBlock_INSTALL_LOCATION.Text = installPath;
             this.textBlock_APP_SIZE.Text = $"{APP_SIZE}MB";
         }
+
 
 
 
@@ -55,7 +68,7 @@ namespace Installer.Views.Pages
                 Marshal.FinalReleaseComObject(shortcut);
                 Marshal.FinalReleaseComObject(shell);
 
-                return File.Exists(shortcutPath);
+                return _cacheService.Exists(shortcutPath);
             }
             catch
             {
@@ -70,7 +83,7 @@ namespace Installer.Views.Pages
                 string desktopPath = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory);
                 string shortcutPath = Path.Combine(desktopPath, "Data Logger.lnk");
 
-                if (!File.Exists(shortcutPath))
+                if (!_cacheService.Exists(shortcutPath))
                     return false;
 
                 Type shellType = Type.GetTypeFromProgID("Shell.Application")!;
@@ -113,7 +126,7 @@ namespace Installer.Views.Pages
 
             try
             {
-                if (!File.Exists(exePath))
+                if (!_cacheService.Exists(exePath))
                     return false;
 
                 using RegistryKey extensionKey = Registry.CurrentUser.CreateSubKey(@"Software\Classes\.dls") ?? throw new InvalidOperationException("Failed to create .dls registry key.");
@@ -169,10 +182,6 @@ namespace Installer.Views.Pages
 
 
 
-
-
-
-
         private void on_CREATE_SHORTCUT_Checked(object sender, RoutedEventArgs e)
         {
             this.grid_SETUP_TASKBAR_PIN.Visibility = Visibility.Visible;
@@ -190,7 +199,7 @@ namespace Installer.Views.Pages
 
             try
             {
-                // Add system check for storage space on C: drive
+                // Ensure Disk Space is Sufficient
                 DriveInfo drive = new DriveInfo("C:");
                 if (drive.AvailableFreeSpace < APP_SIZE * 1024 * 1024)
                 {
@@ -198,6 +207,18 @@ namespace Installer.Views.Pages
                     return;
                 }
 
+                // Create ProgramData folder
+                if (!_cacheService.CreateDirectory(_programDataPath))
+                {
+                    if (!_isReinstall)
+                        _mainWindow.ShowFailedPage("Failed to create required folders.");
+                    else
+                        _mainWindow.ShowFailedPage(isSecondFailure: true);
+
+                    return;
+                }
+
+                // Run installer
                 ProcessStartInfo processInfo = new ProcessStartInfo
                 {
                     FileName = Path.Combine(AppContext.BaseDirectory, "Setup.exe"),
@@ -213,24 +234,24 @@ namespace Installer.Views.Pages
                 using (process)
                 {
                     await process.WaitForExitAsync();
+
+                    if (process.ExitCode != 0)
+                    {
+                        _mainWindow.ShowFailedPage(isSecondFailure: _isReinstall);
+                        return;
+                    }
                 }
 
-                if (process.ExitCode != 0)
-                {
-                    _mainWindow.ShowFailedPage(isSecondFailure: _isReinstall);
-                    return;
-                }
+                /* POST-INSTALLATION SETUP */
 
-                // ============================================================
-                // POST-INSTALLATION SETUP
-                // ============================================================
+                // Register Data Logger instance
+                _installationRegistry.RegisterCurrentUser();
 
                 // Desktop shortcut
                 if (this.checkBox_CREATE_SHORTCUT.IsChecked ?? false)
                 {
                     ShortcutIsCreated = CreateDesktopShortcut();
                 }
-
 
                 // Taskbar
                 if (this.checkBox_PIN_TASKBAR.IsChecked ?? false)
@@ -239,15 +260,11 @@ namespace Installer.Views.Pages
                         PinToTaskbar();
                 }
 
-
                 // .dls file association
                 if (this.checkBox_ASSOCIATE_DLS.IsChecked ?? false)
                 {
                     AssociateDlsFiles();
                 }
-
-                // Always associate .index and cache files here
-                // TODO: Implement association for .index and cache files if possible
 
                 _mainWindow.ShowLaunchPage();
                 return;
