@@ -16,6 +16,7 @@ namespace Data_Logger_1._3.Views
         {
             InitializeComponent();
             VersionText.Text = AppVersion;
+
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
@@ -77,7 +78,6 @@ namespace Data_Logger_1._3.Views
 
         private static Brush? TryParseBrush(string value)
         {
-#pragma warning disable CS8600 // Converting null literal or possible null value to non-nullable type.
             try
             {
                 return (Brush)Application.Current.FindResource(value);
@@ -86,7 +86,6 @@ namespace Data_Logger_1._3.Views
             {
                 return Brushes.Transparent;
             }
-#pragma warning restore CS8600 // Converting null literal or possible null value to non-nullable type.
         }
     }
 }
