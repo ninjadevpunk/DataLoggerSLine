@@ -52,7 +52,6 @@ namespace Data_Logger_1._3.Services
             try
             {
                 var writer = scope.ServiceProvider.GetRequiredService<EntityWriter>();
-                await writer.UnsetCurrentUser();
                 currentProfilePicPath = BitmapService.SaveProfilePicture(dp);
                 BitmapService.DeleteTempProfilePics();
 

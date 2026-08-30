@@ -89,7 +89,11 @@ namespace Data_Logger_1._3.Services
 
         public async Task SignOutUser()
         {
-            await UseWriterAsync(writer => writer.UnsetCurrentUser());
+            var account = _authService?.Account;
+            if (account == null)
+                return;
+
+            await UseWriterAsync(writer => writer.UnsetCurrentUser(account));
         }
 
 

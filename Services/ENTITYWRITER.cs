@@ -74,8 +74,9 @@ namespace Data_Logger_1._3.Services
         /// <summary>
         /// Sets the currently online user to offline.
         /// </summary>
+        /// <param name="account">The account to sign out</param>
         /// <returns>Returns whether the account is unset successfully.</returns>
-        public async Task<bool> UnsetCurrentUser()
+        public async Task<bool> UnsetCurrentUser(ACCOUNT account)
         {
             await using var scope = _serviceProvider.CreateAsyncScope();
             var master = scope.ServiceProvider.GetRequiredService<EntityMaster>();
@@ -89,6 +90,7 @@ namespace Data_Logger_1._3.Services
 
                 foreach (var u in onlineUsers)
                 {
+                    if(u.accountID == account.accountID)
                     u.IsOnline = false;
                 }
 
