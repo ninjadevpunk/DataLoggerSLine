@@ -19,7 +19,7 @@ namespace Data_Logger_1._3.Views
             InitializeComponent();
             DataContext = signUpViewModel;
 
-            signUpViewModel.RequestClose += () => this.Close();
+            signUpViewModel.RequestClose += () => Close();
             VersionText.Text = AppVersion;
         }
 
