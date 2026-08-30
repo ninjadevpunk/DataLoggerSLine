@@ -31,7 +31,6 @@ namespace Data_Logger_1._3.Commands
                     _login.StatusMessage = "Login Successful";
                     _login.StatusMessageColour = _login.MessageGood;
                     await _navigationService.NavigateToMainWindow();
-                    _login.CloseLogin();
                 }
                 else
                 {

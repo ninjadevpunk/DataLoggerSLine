@@ -45,6 +45,9 @@ namespace Data_Logger_1._3.Services
 
         private readonly IServiceProvider _serviceProvider;
 
+        // LOGIN
+        private Login? _login;
+
         // MAIN WINDOW
         private MainWindow _mainWindow;
 
@@ -222,9 +225,11 @@ namespace Data_Logger_1._3.Services
 
 
 
-        public async Task NavigateToLogin(bool isSignOut)
+        public async Task NavigateToLogin(bool isSignOut = false)
         {
             var loginWindow = _serviceProvider.GetRequiredService<Login>();
+            _login = loginWindow;
+
             var page01 = _serviceProvider.GetRequiredService<loginPage01>();
 
             if (isSignOut)
@@ -232,27 +237,15 @@ namespace Data_Logger_1._3.Services
                 var dataService = _serviceProvider.GetRequiredService<IDataService>();
                 await dataService.SignOutUser();
                 ClearSessionState();
-
-                var loginViewModel = _serviceProvider.GetRequiredService<LoginViewModel>();
-                loginViewModel.Username = "";
-                loginViewModel.Password = "";
-                loginViewModel.StatusMessage = "";
-
-
-                loginWindow.frame_LOGIN.Navigate(page01);
-                loginWindow.Show();
-
-                _mainWindow.Close();
-
-                return;
             }
 
-            loginWindow = _serviceProvider.GetRequiredService<Login>();
+            _login.frame_LOGIN.Navigate(page01);
+            _login.Show();
 
-            page01 = _serviceProvider.GetRequiredService<loginPage01>();
-
-            loginWindow.frame_LOGIN.Navigate(page01);
-            loginWindow.Show();
+            if (isSignOut)
+            {
+                _mainWindow.Close();
+            }
         }
 
         public void NavigateToSignUp()
@@ -264,11 +257,17 @@ namespace Data_Logger_1._3.Services
         public async Task NavigateToMainWindow()
         {
             await using var scope = _serviceProvider.CreateAsyncScope();
-            var dataService = _serviceProvider.GetRequiredService<IDataService>();
+            var dataService = scope.ServiceProvider.GetRequiredService<IDataService>();
 
             try
             {
                 var mainWindow = _serviceProvider.GetRequiredService<MainWindow>();
+
+                if(_login != null)
+                {
+                    _login.Close();
+                    _login = null;
+                }
 
                 // Store the main frame reference
                 SetMainFrame(mainWindow.frame_MAINWINDOW);
