@@ -42,7 +42,7 @@ namespace Installer
 
         internal void ShowInstallingPage()
         {
-            this.transit_TRANSITIONER.Content = new InstallingPage(this);
+            this.transit_TRANSITIONER.Content = new InstallingPage();
         }
 
         internal void ShowLaunchPage()
