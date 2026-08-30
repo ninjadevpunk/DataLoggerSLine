@@ -2,7 +2,7 @@
 using System.Windows.Controls;
 using System.Windows.Media.Animation;
 
-namespace Data_Logger_1._3.Components
+namespace Data_Logger_1._3.Views
 {
     /// <summary>
     /// Interaction logic for Updater.xaml
