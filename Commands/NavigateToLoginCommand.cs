@@ -21,7 +21,7 @@ public class NavigateToLoginCommand : AsyncCommandBase
     {
         try
         {
-            await _navigationService.NavigateToLogin(false);
+            await _navigationService.NavigateToLogin();
             _signUpViewModel.CloseSignUp();
         }
         catch (Exception e)

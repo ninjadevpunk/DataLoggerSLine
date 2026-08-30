@@ -46,7 +46,7 @@ namespace Data_Logger_1._3.Services
         Task<bool> CreateLOG(LOG log);
 
         // Reads
-        Task<List<LOG>> RetrieveLogs();
+        Task<List<LOG>> RetrieveLogs(int userId);
         Task<IEnumerable<LOG>?> RetrieveLogs(CacheContext context);
 
         Task<bool> EmailExists(string email);

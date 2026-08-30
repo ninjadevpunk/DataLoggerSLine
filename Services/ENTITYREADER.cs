@@ -78,28 +78,24 @@ namespace Data_Logger_1._3.Services
         /// </summary>
         /// <param name="id">The ID of the log.</param>
         /// <returns>Returns only 1 log with the specified ID.</returns>
-        public async Task<LOG?> RetrieveLog(int id)
+        public async Task<LOG?> RetrieveLog(int id, int userId)
         {
             await using var scope = _serviceProvider.CreateAsyncScope();
             var master = scope.ServiceProvider.GetRequiredService<EntityMaster>();
 
-            var accountID = await GetOnlineAccountIDAsync();
-
             return await master.Logs
-                .Where(l => l.accountID == accountID && l.ID == id)
+                .Where(l => l.accountID == userId && l.ID == id)
                 .SingleOrDefaultAsync();
         }
 
 
-        public async Task<List<LOG>> RetrieveLogs()
+        public async Task<List<LOG>> RetrieveLogs(int userId)
         {
             await using var scope = _serviceProvider.CreateAsyncScope();
             var master = scope.ServiceProvider.GetRequiredService<EntityMaster>();
 
-            var accountID = await GetOnlineAccountIDAsync();
-
             return await master.Logs
-                .Where(l => l.accountID == accountID)
+                .Where(l => l.accountID == userId)
                 .OrderBy(l => l.Start)
                 .ToListAsync();
         }
@@ -108,15 +104,13 @@ namespace Data_Logger_1._3.Services
         /// Retrieves Coding logs.
         /// </summary>
         /// <returns>Returns a list of CodingLOG objects.</returns>
-        public async Task<List<CodingLOG>> RetrieveCodingLogs()
+        public async Task<List<CodingLOG>> RetrieveCodingLogs(int userId)
         {
             await using var scope = _serviceProvider.CreateAsyncScope();
             var master = scope.ServiceProvider.GetRequiredService<EntityMaster>();
 
-            var accountID = await GetOnlineAccountIDAsync();
-
             return await master.CodingLogs
-                .Where(c => c.accountID == accountID && !new[] { 1, 2 }.Contains(c.Application.appID))
+                .Where(c => c.accountID == userId && !new[] { 1, 2 }.Contains(c.Application.appID))
                 .Include(l => l.Author)
                 .Include(l => l.Project)
                 .Include(l => l.Application)
@@ -128,67 +122,57 @@ namespace Data_Logger_1._3.Services
                 .ToListAsync();
         }
 
-        public async Task<List<CodingLOG>> RetrieveQtCodingLogs()
+        public async Task<List<CodingLOG>> RetrieveQtCodingLogs(int userId)
         {
             await using var scope = _serviceProvider.CreateAsyncScope();
             var master = scope.ServiceProvider.GetRequiredService<EntityMaster>();
 
-            var accountID = await GetOnlineAccountIDAsync();
-
             return await master.CodingLogs
-                .Where(qt => qt.accountID == accountID && qt.Application.appID == 1)
+                .Where(qt => qt.accountID == userId && qt.Application.appID == 1)
                 .OrderBy(qt => qt.Start)
                 .ToListAsync();
         }
 
-        public async Task<List<AndroidCodingLOG>> RetrieveAndroidCodingLogs()
+        public async Task<List<AndroidCodingLOG>> RetrieveAndroidCodingLogs(int userId)
         {
             await using var scope = _serviceProvider.CreateAsyncScope();
             var master = scope.ServiceProvider.GetRequiredService<EntityMaster>();
 
-            var accountID = await GetOnlineAccountIDAsync();
-
             return await master.AndroidCodingLogs
-                .Where(a => a.accountID == accountID && a.Application.appID == 2)
+                .Where(a => a.accountID == userId && a.Application.appID == 2)
                 .OrderBy(a => a.Start)
                 .ToListAsync();
         }
 
-        public async Task<List<GraphicsLOG>> RetrieveGraphicsLogs()
+        public async Task<List<GraphicsLOG>> RetrieveGraphicsLogs(int userId)
         {
             await using var scope = _serviceProvider.CreateAsyncScope();
             var master = scope.ServiceProvider.GetRequiredService<EntityMaster>();
 
-            var accountID = await GetOnlineAccountIDAsync();
-
             return await master.GraphicsLogs
-                .Where(g => g.accountID == accountID)
+                .Where(g => g.accountID == userId)
                 .OrderBy(g => g.Start)
                 .ToListAsync();
         }
 
-        public async Task<List<FilmLOG>> RetrieveFilmLogs()
+        public async Task<List<FilmLOG>> RetrieveFilmLogs(int userId)
         {
             await using var scope = _serviceProvider.CreateAsyncScope();
             var master = scope.ServiceProvider.GetRequiredService<EntityMaster>();
 
-            var accountID = await GetOnlineAccountIDAsync();
-
             return await master.FilmLogs
-                .Where(f => f.accountID == accountID)
+                .Where(f => f.accountID == userId)
                 .OrderBy(f => f.Start)
                 .ToListAsync();
         }
 
-        public async Task<List<FlexiNotesLOG>> RetrieveFlexiNotesLogs()
+        public async Task<List<FlexiNotesLOG>> RetrieveFlexiNotesLogs(int userId)
         {
             await using var scope = _serviceProvider.CreateAsyncScope();
             var master = scope.ServiceProvider.GetRequiredService<EntityMaster>();
 
-            var accountID = await GetOnlineAccountIDAsync();
-
             return await master.FlexiNotesLogs
-                .Where(fn => fn.accountID == accountID)
+                .Where(fn => fn.accountID == userId)
                 .OrderBy(fn => fn.Start)
                 .ToListAsync();
         }
@@ -204,15 +188,13 @@ namespace Data_Logger_1._3.Services
                 .ToListAsync();
         }
 
-        public async Task<List<CheckList>> RetrieveCheckList()
+        public async Task<List<CheckList>> RetrieveCheckList(int userId)
         {
             await using var scope = _serviceProvider.CreateAsyncScope();
             var master = scope.ServiceProvider.GetRequiredService<EntityMaster>();
 
-            var accountID = await GetOnlineAccountIDAsync();
-
             return await master.Checklists
-                .Where((cl => cl.accountID == accountID))
+                .Where((cl => cl.accountID == userId))
                 .ToListAsync();
         }
 
@@ -220,7 +202,7 @@ namespace Data_Logger_1._3.Services
         /// Find the account ID of the user who's online.
         /// </summary>
         /// <returns>Returns a single account ID</returns>
-        public async Task<int> GetOnlineAccountIDAsync()
+        public async Task<int> GetOnlineAccountIDAsync(int userId)
         {
             await using var scope = _serviceProvider.CreateAsyncScope();
             var master = scope.ServiceProvider.GetRequiredService<EntityMaster>();
@@ -229,7 +211,7 @@ namespace Data_Logger_1._3.Services
             try
             {
                 var onlineAccount = await master.Accounts
-                    .SingleAsync(a => a.IsOnline);
+                    .SingleAsync(a => a.accountID == userId);
 
                 return onlineAccount.accountID;
             }
@@ -245,14 +227,14 @@ namespace Data_Logger_1._3.Services
         /// Find the account ID of the user who's online.
         /// </summary>
         /// <returns>Returns a single account ID</returns>
-        public async Task<int?> GetOnlineAccountIDAsync(AsyncServiceScope scope, EntityMaster master)
+        public async Task<int?> GetOnlineAccountIDAsync(AsyncServiceScope scope, EntityMaster master, int userId)
         {
             var writer = scope.ServiceProvider.GetRequiredService<EntityWriter>();
 
             try
             {
                 var onlineAccount = await master.Accounts
-                    .SingleAsync(a => a.IsOnline);
+                    .SingleAsync(a => a.accountID == userId);
 
                 return onlineAccount?.accountID;
             }
@@ -806,7 +788,7 @@ namespace Data_Logger_1._3.Services
         /// </summary>
         /// <param name="project">The project being searched.</param>
         /// <returns>Returns an ID for the given project. Returns 1 (Unknown) if not found.</returns>
-        public async Task<int> FindProjectID(ProjectClass project)
+        public async Task<int> FindProjectID(ProjectClass project, int id)
         {
             await using var scope = _serviceProvider.CreateAsyncScope();
             var master = scope.ServiceProvider.GetRequiredService<EntityMaster>();
@@ -818,8 +800,6 @@ namespace Data_Logger_1._3.Services
 
             try
             {
-                var onlineUserID = await GetOnlineAccountIDAsync();
-
                 // Retrieve APPLICATION ID
                 int appID = await FindAppID(project.Application);
 
@@ -830,7 +810,7 @@ namespace Data_Logger_1._3.Services
                         .Where(p => p.Name == project.Name
                         && p.Category == project.Category
                         && p.Application.appID == project.Application.appID
-                        && (p.User.accountID == 1 || p.User.accountID == onlineUserID))
+                        && (p.User.accountID == 1 || p.User.accountID == id))
                         .Select(p => p.projectID)
                         .FirstOrDefaultAsync();
 
@@ -853,7 +833,7 @@ namespace Data_Logger_1._3.Services
 
 
 
-        public async Task<SubjectClass?> FindSubject(string name, LOG.CATEGORY category, int appID, int projectID)
+        public async Task<SubjectClass?> FindSubject(string name, LOG.CATEGORY category, int id, int appID, int projectID)
         {
             await using var scope = _serviceProvider.CreateAsyncScope();
             var master = scope.ServiceProvider.GetRequiredService<EntityMaster>();
@@ -861,10 +841,8 @@ namespace Data_Logger_1._3.Services
 
             try
             {
-                var onlineUserID = await GetOnlineAccountIDAsync();
-
                 return await master.Subjects
-                    .Where(s => new[] { 1, onlineUserID }.Contains(s.accountID))
+                    .Where(s => new[] { 1, id }.Contains(s.accountID))
                     .Where(s => s.Subject == name)
                     .Where(s => s.Category == category)
                     .Where(s => s.projectID == projectID)
@@ -880,16 +858,14 @@ namespace Data_Logger_1._3.Services
         }
 
         public async Task<SubjectClass?> FindSubject(AsyncServiceScope scope, EntityMaster master, string name, LOG.CATEGORY category,
-            int appID, int projectID)
+            int id, int appID, int projectID)
         {
             var writer = scope.ServiceProvider.GetRequiredService<EntityWriter>();
 
             try
             {
-                var onlineUserID = await GetOnlineAccountIDAsync();
-
                 return await master.Subjects
-                    .Where(s => new[] { 1, onlineUserID }.Contains(s.accountID))
+                    .Where(s => new[] { 1, id }.Contains(s.accountID))
                     .Where(s => s.Subject == name)
                     .Where(s => s.Category == category)
                     .Where(s => s.appID == appID)
@@ -911,7 +887,7 @@ namespace Data_Logger_1._3.Services
         /// </summary>
         /// <param name="subject">The SubjectClass being searched.</param>
         /// <returns>Returns an ID for the SubjectClass if it exists. 1 returned for nothing found.</returns>
-        public async Task<int> FindSubjectID(SubjectClass subject)
+        public async Task<int> FindSubjectID(SubjectClass subject, int id)
         {
             await using var scope = _serviceProvider.CreateAsyncScope();
             var master = scope.ServiceProvider.GetRequiredService<EntityMaster>();
@@ -921,11 +897,9 @@ namespace Data_Logger_1._3.Services
 
             try
             {
-                var onlineUserID = await GetOnlineAccountIDAsync();
-
                 subjectKey = await master.Subjects
                     .Where(s => s.Subject == subject.Subject
-                        && (s.accountID == 1 || s.accountID == onlineUserID)
+                        && (s.accountID == 1 || s.accountID == id)
                         && s.Category == subject.Category
                             && s.Application.appID == subject.Application.appID
                                 && s.Project.projectID == subject.Project.projectID)
@@ -973,7 +947,7 @@ namespace Data_Logger_1._3.Services
         /// Counts all logs in the database regardless of category.
         /// </summary>
         /// <returns>Returns the log count.</returns>
-        public async Task<int?> LogCount(CATEGORY category)
+        public async Task<int?> LogCount(CATEGORY category, int id)
         {
             await using var scope = _serviceProvider.CreateAsyncScope();
             var master = scope.ServiceProvider.GetRequiredService<EntityMaster>();
@@ -981,10 +955,9 @@ namespace Data_Logger_1._3.Services
 
             try
             {
-                var onlineUserID = await GetOnlineAccountIDAsync();
 
                 return await master.Logs
-                    .Where(l => l.accountID == onlineUserID)
+                    .Where(l => l.accountID == id)
                     .Where(l => l.Category == category)
                     .CountAsync();
             }
@@ -1005,7 +978,7 @@ namespace Data_Logger_1._3.Services
         /// Counts the number of Qt logs.
         /// </summary>
         /// <returns>The count of Qt logs ONLY.</returns>
-        public async Task<int> QtLogCount()
+        public async Task<int> QtLogCount(int id)
         {
             await using var scope = _serviceProvider.CreateAsyncScope();
             var master = scope.ServiceProvider.GetRequiredService<EntityMaster>();
@@ -1013,10 +986,8 @@ namespace Data_Logger_1._3.Services
 
             try
             {
-                var onlineUserID = await GetOnlineAccountIDAsync();
-
                 var qtLogs = master.Logs
-                    .Where(l => l.accountID == onlineUserID)
+                    .Where(l => l.accountID == id)
                     .Where(l => l.appID == 1)
                     .Where(l => l.Category == LOG.CATEGORY.CODING);
 
@@ -1037,7 +1008,7 @@ namespace Data_Logger_1._3.Services
         /// Counts the number of Android Studio logs.
         /// </summary>
         /// <returns>The count of Android Studio logs ONLY.</returns>
-        public async Task<int> ASLogCount()
+        public async Task<int> ASLogCount(int id)
         {
             await using var scope = _serviceProvider.CreateAsyncScope();
             var master = scope.ServiceProvider.GetRequiredService<EntityMaster>();
@@ -1045,10 +1016,8 @@ namespace Data_Logger_1._3.Services
 
             try
             {
-                var onlineUserID = await GetOnlineAccountIDAsync();
-
                 var androidLogs = master.Logs
-                    .Where(l => l.accountID == onlineUserID)
+                    .Where(l => l.accountID == id)
                     .Where(l => l.appID == 2)
                     .Where(l => l.Category == LOG.CATEGORY.CODING);
 
@@ -1070,7 +1039,7 @@ namespace Data_Logger_1._3.Services
         /// Counts the number of coding logs.
         /// </summary>
         /// <returns>Returns the count of coding logs.</returns>
-        public async Task<int> CodingLogCount()
+        public async Task<int> CodingLogCount(int id)
         {
             await using var scope = _serviceProvider.CreateAsyncScope();
             var master = scope.ServiceProvider.GetRequiredService<EntityMaster>();
@@ -1078,10 +1047,8 @@ namespace Data_Logger_1._3.Services
 
             try
             {
-                var accountID = await GetOnlineAccountIDAsync();
-
                 var codingLogs = master.Logs
-                    .Where(l => l.accountID == accountID)
+                    .Where(l => l.accountID == id)
                     .Where(l => l.Category == LOG.CATEGORY.CODING)
                     .Where(l => l.appID > 2);
 
@@ -1103,7 +1070,7 @@ namespace Data_Logger_1._3.Services
         /// Counts the number of gfx logs.
         /// </summary>
         /// <returns>Returns the count of gfx logs.</returns>
-        public async Task<int> GraphicsLogCount()
+        public async Task<int> GraphicsLogCount(int id)
         {
             await using var scope = _serviceProvider.CreateAsyncScope();
             var master = scope.ServiceProvider.GetRequiredService<EntityMaster>();
@@ -1111,9 +1078,7 @@ namespace Data_Logger_1._3.Services
 
             try
             {
-                var accountID = await GetOnlineAccountIDAsync();
-
-                var graphicsLogs = master.Logs.Where(l => l.accountID == accountID)
+                var graphicsLogs = master.Logs.Where(l => l.accountID == id)
                     .Where(l => l.Category == LOG.CATEGORY.GRAPHICS);
 
                 return await graphicsLogs.CountAsync();
@@ -1134,7 +1099,7 @@ namespace Data_Logger_1._3.Services
         /// Counts the number of film logs.
         /// </summary>
         /// <returns>Returns the count of film logs.</returns>
-        public async Task<int> FilmLogCount()
+        public async Task<int> FilmLogCount(int id)
         {
             await using var scope = _serviceProvider.CreateAsyncScope();
             var master = scope.ServiceProvider.GetRequiredService<EntityMaster>();
@@ -1142,10 +1107,8 @@ namespace Data_Logger_1._3.Services
 
             try
             {
-                var accountID = await GetOnlineAccountIDAsync();
-
                 return await master.Logs
-                    .Where(l => l.accountID == accountID)
+                    .Where(l => l.accountID == id)
                     .Where(l => l.Category == LOG.CATEGORY.FILM).CountAsync();
             }
             catch (Exception ex)
@@ -1164,7 +1127,7 @@ namespace Data_Logger_1._3.Services
         /// Counts the number of notes logs.
         /// </summary>
         /// <returns>Returns the count of notes logs.</returns>
-        public async Task<int> NoteItemCount()
+        public async Task<int> NoteItemCount(int id)
         {
             await using var scope = _serviceProvider.CreateAsyncScope();
             var master = scope.ServiceProvider.GetRequiredService<EntityMaster>();
@@ -1172,10 +1135,8 @@ namespace Data_Logger_1._3.Services
 
             try
             {
-                var accountID = await GetOnlineAccountIDAsync();
-
                 return await master.Logs
-                    .Where(l => l.accountID == accountID)
+                    .Where(l => l.accountID == id)
                     .Where(l => l.Category == LOG.CATEGORY.NOTES)
                     .Where(l => l.appID == 15 || l.appID == 16).CountAsync();
             }
@@ -1195,7 +1156,7 @@ namespace Data_Logger_1._3.Services
         /// Counts the number of flexible notes logs.
         /// </summary>
         /// <returns>Returns the count of flexible notes logs.</returns>
-        public async Task<int> FlexiNotesLogCount()
+        public async Task<int> FlexiNotesLogCount(int id)
         {
             await using var scope = _serviceProvider.CreateAsyncScope();
             var master = scope.ServiceProvider.GetRequiredService<EntityMaster>();
@@ -1203,10 +1164,8 @@ namespace Data_Logger_1._3.Services
 
             try
             {
-                var accountID = await GetOnlineAccountIDAsync();
-
                 return await master.Logs
-                    .Where(l => l.accountID == accountID)
+                    .Where(l => l.accountID == id)
                     .Where(l => l.Category == LOG.CATEGORY.NOTES)
                     .Where(l => l.appID != 15 && l.appID != 16).CountAsync();
             }
@@ -1229,7 +1188,7 @@ namespace Data_Logger_1._3.Services
         /// Retrieves applications from the database that belong to the currently online user.
         /// </summary>
         /// <returns>A List of ApplicationClass objects.</returns>
-        public async Task<List<ApplicationClass>> ListApplications()
+        public async Task<List<ApplicationClass>> ListApplications(int id)
         {
             await using var scope = _serviceProvider.CreateAsyncScope();
             var master = scope.ServiceProvider.GetRequiredService<EntityMaster>();
@@ -1237,10 +1196,8 @@ namespace Data_Logger_1._3.Services
 
             try
             {
-                var accountID = await GetOnlineAccountIDAsync();
-
                 return await master.Applications
-                    .Where(a => new[] { 1, accountID }.Contains(a.accountID))
+                    .Where(a => new[] { 1, id }.Contains(a.accountID))
                     .Where(a => a.Name != "Unknown")
                     .Include(a => a.User)
                     .ToListAsync();
@@ -1262,7 +1219,7 @@ namespace Data_Logger_1._3.Services
         /// </summary>
         /// <param name="category">The category in which the application falls under in terms of logs.</param>
         /// <returns>A List of ApplicationClass objects.</returns>
-        public async Task<List<ApplicationClass>> ListApplications(CATEGORY category)
+        public async Task<List<ApplicationClass>> ListApplications(CATEGORY category, int id)
         {
             await using var scope = _serviceProvider.CreateAsyncScope();
             var master = scope.ServiceProvider.GetRequiredService<EntityMaster>();
@@ -1270,10 +1227,8 @@ namespace Data_Logger_1._3.Services
 
             try
             {
-                var accountID = await GetOnlineAccountIDAsync();
-
                 return await master.Applications
-                    .Where(a => new[] { 1, accountID }.Contains(a.accountID))
+                    .Where(a => new[] { 1, id }.Contains(a.accountID))
                     .Where(a => !new[] { 1, 2 }.Contains(a.appID))
                     .Where(a => a.Category == category)
                     .Where(a => a.Name != "Unknown")
@@ -1296,7 +1251,7 @@ namespace Data_Logger_1._3.Services
         /// Retrieves projects from the database that belong to the currently online user.
         /// </summary>
         /// <returns>A List of ProjectClass objects.</returns>
-        public async Task<List<ProjectClass>> ListProjects()
+        public async Task<List<ProjectClass>> ListProjects(int id)
         {
             await using var scope = _serviceProvider.CreateAsyncScope();
             var master = scope.ServiceProvider.GetRequiredService<EntityMaster>();
@@ -1304,10 +1259,8 @@ namespace Data_Logger_1._3.Services
 
             try
             {
-                var accountID = await GetOnlineAccountIDAsync();
-
                 return await master.Projects
-                    .Where(p => new[] { 1, accountID }.Contains(p.accountID))
+                    .Where(p => new[] { 1, id }.Contains(p.accountID))
                     .Where(p => p.Name != "Unnamed Project")
                     .Include(p => p.User)
                     .Include(p => p.Application)
@@ -1330,7 +1283,7 @@ namespace Data_Logger_1._3.Services
         /// </summary>
         /// <param name="category">The category in which the project falls under in terms of logs.</param>
         /// <returns>A List of ProjectClass objects.</returns>
-        public async Task<List<ProjectClass>> ListProjects(CATEGORY category)
+        public async Task<List<ProjectClass>> ListProjects(CATEGORY category, int id)
         {
             await using var scope = _serviceProvider.CreateAsyncScope();
             var master = scope.ServiceProvider.GetRequiredService<EntityMaster>();
@@ -1338,10 +1291,8 @@ namespace Data_Logger_1._3.Services
 
             try
             {
-                var accountID = await GetOnlineAccountIDAsync();
-
                 return await master.Projects
-                    .Where(p => new[] { 1, accountID }.Contains(p.accountID))
+                    .Where(p => new[] { 1, id }.Contains(p.accountID))
                     .Where(p => p.Category == category)
                     .Where(p => p.Name != "Unnamed Project")
                     .Include(p => p.User)
@@ -1367,7 +1318,7 @@ namespace Data_Logger_1._3.Services
         /// </summary>
         /// <param name="app">The application to filter projects by.</param>
         /// <returns>A List of ProjectClass objects.</returns>
-        public async Task<List<ProjectClass>> ListProjects(ApplicationClass app)
+        public async Task<List<ProjectClass>> ListProjects(ApplicationClass app, int id)
         {
             await using var scope = _serviceProvider.CreateAsyncScope();
             var master = scope.ServiceProvider.GetRequiredService<EntityMaster>();
@@ -1375,10 +1326,8 @@ namespace Data_Logger_1._3.Services
 
             try
             {
-                var accountID = await GetOnlineAccountIDAsync();
-
                 return await master.Projects
-                    .Where(p => new[] { 1, accountID }.Contains(p.accountID))
+                    .Where(p => new[] { 1, id }.Contains(p.accountID))
                     .Where(p => p.Application == app)
                     .Where(p => p.Name != "Unnamed Project")
                     .Include(p => p.User)
@@ -1403,7 +1352,7 @@ namespace Data_Logger_1._3.Services
         /// </summary>
         /// <param name="project"></param>
         /// <returns></returns>
-        public async Task<List<SubjectClass>> ListSubjects(CATEGORY category)
+        public async Task<List<SubjectClass>> ListSubjects(CATEGORY category, int id)
         {
             await using var scope = _serviceProvider.CreateAsyncScope();
             var master = scope.ServiceProvider.GetRequiredService<EntityMaster>();
@@ -1411,10 +1360,8 @@ namespace Data_Logger_1._3.Services
 
             try
             {
-                var accountID = await GetOnlineAccountIDAsync();
-
                 return await master.Subjects
-                    .Where(s => new[] { 1, accountID }.Contains(s.accountID))
+                    .Where(s => new[] { 1, id }.Contains(s.accountID))
                     .Where(s => s.Category == category)
                     .Where(s => s.Subject != "No Subject")
                     .Include(s => s.User)
@@ -1438,7 +1385,7 @@ namespace Data_Logger_1._3.Services
         /// </summary>
         /// <param name="project">The project in which the subjects preside.</param>
         /// <returns>A List with SubjectClass objects.</returns>
-        public async Task<List<SubjectClass>> ListSubjects(ProjectClass project)
+        public async Task<List<SubjectClass>> ListSubjects(ProjectClass project, int id)
         {
             await using var scope = _serviceProvider.CreateAsyncScope();
             var master = scope.ServiceProvider.GetRequiredService<EntityMaster>();
@@ -1446,10 +1393,8 @@ namespace Data_Logger_1._3.Services
 
             try
             {
-                var accountID = await GetOnlineAccountIDAsync();
-
                 return await master.Subjects
-                    .Where(s => new[] { 1, accountID }.Contains(s.accountID))
+                    .Where(s => new[] { 1, id }.Contains(s.accountID))
                     .Where(s => s.Category == project.Category)
                     .Where(s => s.appID == project.appID)
                     .Where(s => s.projectID == project.projectID)
@@ -1483,8 +1428,6 @@ namespace Data_Logger_1._3.Services
 
             try
             {
-                var accountID = await GetOnlineAccountIDAsync();
-
                 return await master.Outputs
                     .Where(o => o.appID == 1)
                     .Include(o => o.Application)
@@ -1672,7 +1615,7 @@ namespace Data_Logger_1._3.Services
         /// </summary>
         /// <param name="searchBarText">The query for the database.</param>
         /// <returns>Returns a list of logs that match the search bar text.</returns>
-        public async Task<List<CodingLOG>?> SearchCodingLogs(string searchBarText)
+        public async Task<List<CodingLOG>?> SearchCodingLogs(string searchBarText, int id)
         {
             await using var scope = _serviceProvider.CreateAsyncScope();
             var master = scope.ServiceProvider.GetRequiredService<EntityMaster>();
@@ -1681,10 +1624,9 @@ namespace Data_Logger_1._3.Services
             try
             {
                 searchBarText = searchBarText.Trim();
-                var accountID = await GetOnlineAccountIDAsync();
 
                 var logs = await master.CodingLogs
-                    .Where(l => l.accountID == accountID)
+                    .Where(l => l.accountID == id)
                     .Include(l => l.Project)
                     .Include(l => l.Application)
                     .Include(l => l.Output)
@@ -1736,7 +1678,7 @@ namespace Data_Logger_1._3.Services
         /// <param name="searchBarText">The query for the database.</param>
         /// <param name="appID">The application that logs use.</param>
         /// <returns>A list of logs that match the search bar text that were created with the provided app filter.</returns>
-        public async Task<List<CodingLOG>?> SearchCodingLogs(string searchBarText, int appID)
+        public async Task<List<CodingLOG>?> SearchCodingLogs(string searchBarText, int appID, int id)
         {
             await using var scope = _serviceProvider.CreateAsyncScope();
             var master = scope.ServiceProvider.GetRequiredService<EntityMaster>();
@@ -1745,11 +1687,10 @@ namespace Data_Logger_1._3.Services
             try
             {
                 searchBarText = searchBarText.Trim();
-                var accountID = await GetOnlineAccountIDAsync();
 
                 // Fetch only logs for current user first
                 var logs = await master.CodingLogs
-                    .Where(l => l.accountID == accountID)
+                    .Where(l => l.accountID == id)
                     .Include(l => l.Project)
                     .Include(l => l.Application)
                     .Include(l => l.Output)
@@ -1806,7 +1747,7 @@ namespace Data_Logger_1._3.Services
         /// <param name="projectID">The project that the log was created for.</param>
         /// <param name="appID">The application that logs use.</param>
         /// <returns>A list of logs that match the search bar text that were created with the provided app and project filter.</returns>
-        public async Task<List<CodingLOG>?> SearchCodingLogs(string searchBarText, int projectID, int appID)
+        public async Task<List<CodingLOG>?> SearchCodingLogs(string searchBarText, int id, int projectID, int appID)
         {
             await using var scope = _serviceProvider.CreateAsyncScope();
             var master = scope.ServiceProvider.GetRequiredService<EntityMaster>();
@@ -1815,11 +1756,10 @@ namespace Data_Logger_1._3.Services
             try
             {
                 searchBarText = searchBarText.Trim();
-                var accountID = await GetOnlineAccountIDAsync();
 
                 // Fetch only logs for current user first
                 var logs = await master.CodingLogs
-                    .Where(l => l.accountID == accountID)
+                    .Where(l => l.accountID == id)
                     .Include(l => l.Project)
                     .Include(l => l.Application)
                     .Include(l => l.Output)

@@ -44,6 +44,9 @@ namespace Data_Logger_1._3.Services
 
         private readonly IServiceProvider _serviceProvider;
 
+        // LOGIN
+        private Login? _login;
+
         // MAIN WINDOW
         private MainWindow _mainWindow;
 
@@ -221,9 +224,11 @@ namespace Data_Logger_1._3.Services
 
 
 
-        public async Task NavigateToLogin(bool isSignOut)
+        public async Task NavigateToLogin(bool isSignOut = false)
         {
             var loginWindow = _serviceProvider.GetRequiredService<Login>();
+            _login = loginWindow;
+
             var page01 = _serviceProvider.GetRequiredService<loginPage01>();
 
             if (isSignOut)
@@ -231,27 +236,15 @@ namespace Data_Logger_1._3.Services
                 var dataService = _serviceProvider.GetRequiredService<IDataService>();
                 await dataService.SignOutUser();
                 ClearSessionState();
-
-                var loginViewModel = _serviceProvider.GetRequiredService<LoginViewModel>();
-                loginViewModel.Username = "";
-                loginViewModel.Password = "";
-                loginViewModel.StatusMessage = "";
-
-
-                loginWindow.frame_LOGIN.Navigate(page01);
-                loginWindow.Show();
-
-                _mainWindow.Close();
-
-                return;
             }
 
-            loginWindow = _serviceProvider.GetRequiredService<Login>();
+            _login.frame_LOGIN.Navigate(page01);
+            _login.Show();
 
-            page01 = _serviceProvider.GetRequiredService<loginPage01>();
-
-            loginWindow.frame_LOGIN.Navigate(page01);
-            loginWindow.Show();
+            if (isSignOut)
+            {
+                _mainWindow.Close();
+            }
         }
 
         public void NavigateToSignUp()
@@ -263,12 +256,17 @@ namespace Data_Logger_1._3.Services
         public async Task NavigateToMainWindow()
         {
             await using var scope = _serviceProvider.CreateAsyncScope();
-            var master = scope.ServiceProvider.GetRequiredService<EntityMaster>();
-            var dataService = _serviceProvider.GetRequiredService<IDataService>();
+            var dataService = scope.ServiceProvider.GetRequiredService<IDataService>();
 
             try
             {
                 var mainWindow = _serviceProvider.GetRequiredService<MainWindow>();
+
+                if(_login != null)
+                {
+                    _login.Close();
+                    _login = null;
+                }
 
                 // Store the main frame reference
                 SetMainFrame(mainWindow.frame_MAINWINDOW);
@@ -278,23 +276,57 @@ namespace Data_Logger_1._3.Services
 
                 await _serviceProvider.GetRequiredService<InitialService>().Initialise(dataService.GetUser().accountID);
 
-                var mainWindowViewModel = _serviceProvider.GetRequiredService<MainWindowViewModel>();
+                bool? isUpdating = null;
+#if RELEASE
+                var settingsService = _serviceProvider.GetRequiredService<SettingsService>();
+                var settings = settingsService.Load(dataService.GetUser().accountID) ?? new Settings();
 
-                mainWindow.DataContext = mainWindowViewModel;
-                mainWindowViewModel.CodingChecked = true;
-                mainWindowViewModel.CodingQtChecked = true;
+                var velopackService = _serviceProvider.GetRequiredService<VelopackService>();
+                var updateInfo = await velopackService.CheckForUpdatesAsync();
 
-                mainWindow.Show();
-                await NavigateToLogCachePage(CacheContext.Qt);
+                
+                if (settings.ShowUpdatePopup)
+                {
+                    if (updateInfo != null)
+                    {
+                        // Show Updater window
+                        var updaterWindow = _serviceProvider.GetRequiredService<VelopackUpdaterWindow>();
+                        updaterWindow.DataContext = ActivatorUtilities.CreateInstance<UpdaterViewModel>(_serviceProvider, updateInfo);
+                        isUpdating = updaterWindow.ShowDialog();
+                    }
+                }
+#endif
 
-                _mainWindow = mainWindow;
+                if (isUpdating != true)
+                {
+                    // User clicked Cancel or no update found
+                    var mainWindowViewModel = _serviceProvider.GetRequiredService<MainWindowViewModel>();
 
-                CheckBackNavigationButton(mainWindowViewModel);
+                    mainWindow.DataContext = mainWindowViewModel;
+                    mainWindowViewModel.CodingChecked = true;
+                    mainWindowViewModel.CodingQtChecked = true;
+#if RELEASE
+                    if(updateInfo != null)
+                        mainWindowViewModel.UpdaterButtonVisible = Visibility.Visible;
+#endif
 
-                MessageBox.Show($"Click on \"Generic\" option in the menu panel please. In this alpha you will only be able to create coding logs.",
-                    "Data Logger Alpha Version", MessageBoxButton.OK, MessageBoxImage.Information);
+                    mainWindow.Show();
+                    mainWindow.Activate();
+                    mainWindow.Focus();
 
-                SetDashboardContext();
+                    await NavigateToLogCachePage(CacheContext.Qt);
+
+                    _mainWindow = mainWindow;
+
+                    CheckBackNavigationButton(mainWindowViewModel);
+
+                    MessageBox.Show($"Click on \"Generic\" option in the menu panel please. In this alpha you will only be able to create coding logs.",
+                        "Data Logger Alpha Version", MessageBoxButton.OK, MessageBoxImage.Information);
+
+                    SetDashboardContext();
+                }
+
+
             }
             catch (InvalidOperationException invex)
             {
@@ -308,6 +340,41 @@ namespace Data_Logger_1._3.Services
 
                 CloseApp();
             }
+        }
+
+
+        public async Task<bool> NavigateToUpdaterWindowAsync(bool startUpdatingImmediately = false)
+        {
+#if RELEASE
+            await using var scope = _serviceProvider.CreateAsyncScope();
+            var dataService = _serviceProvider.GetRequiredService<IDataService>();
+
+            try
+            {
+                var velopackService = _serviceProvider.GetRequiredService<VelopackService>();
+                var updateInfo = await velopackService.CheckForUpdatesAsync();
+
+                if (updateInfo == null)
+                {
+                    MessageBox.Show("Unable to check for updates. Please try again later.", "Update Check Failed", MessageBoxButton.OK, MessageBoxImage.Error);
+                    return false;
+                }
+
+                var updaterWindow = ActivatorUtilities.CreateInstance<VelopackUpdaterWindow>(_serviceProvider, startUpdatingImmediately);
+
+                updaterWindow.DataContext = ActivatorUtilities.CreateInstance<UpdaterViewModel>(_serviceProvider, updateInfo);
+
+                var mainWindowViewModel = _serviceProvider.GetRequiredService<MainWindowViewModel>();
+                mainWindowViewModel.UpdaterButtonVisible = Visibility.Collapsed;
+
+                return updaterWindow.ShowDialog() == true;
+            }
+            catch (Exception ex)
+            {
+                await dataService.HandleExceptionAsync(ex, "NavigateToUpdaterWindowAsync()");
+            }
+#endif
+            return false;
         }
 
 

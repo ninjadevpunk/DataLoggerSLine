@@ -32,6 +32,7 @@ namespace Data_Logger_1._3.ViewModels
             GoForwardCommand = new GoForwardCommand(_navigationService, this);
             LogOutCommand = new LogOutCommand(_navigationService);
             SettingsCommand = new NavigateToSettingsCommand(_navigationService, dataService);
+            OpenUpdaterCommand = new OpenUpdaterCommand(_navigationService, dataService);
 
             IconBackFill = DisabledColor;
             IconForwardFill = DisabledColor;
@@ -373,6 +374,20 @@ namespace Data_Logger_1._3.ViewModels
             }
         }
 
+        private Visibility updaterButtonVisible = Visibility.Hidden;
+        public Visibility UpdaterButtonVisible
+        {
+            get
+            {
+                return updaterButtonVisible;
+            }
+            set
+            {
+                updaterButtonVisible = value;
+                OnPropertyChanged(nameof(UpdaterButtonVisible));
+            }
+        }
+
 
 
         public void UncheckButtons()
@@ -392,6 +407,8 @@ namespace Data_Logger_1._3.ViewModels
         public ICommand GoForwardCommand { get; set; }
 
         public ICommand LogOutCommand { get; set; }
+
+        public ICommand OpenUpdaterCommand { get; set; }
 
 
         private void UpdateByNavigationContext()

@@ -10,12 +10,10 @@ using System.Diagnostics;
 public class NavigateToSignUpCommand : CommandBase
 {
     private readonly NavigationService _navigationService;
-    private readonly LoginViewModel _loginViewModel;
 
     public NavigateToSignUpCommand(NavigationService navigationService, LoginViewModel loginViewModel)
     {
         _navigationService = navigationService;
-        _loginViewModel = loginViewModel;
     }
 
     public override void Execute(object parameter)
@@ -23,7 +21,6 @@ public class NavigateToSignUpCommand : CommandBase
         try
         {
             _navigationService.NavigateToSignUp();
-            _loginViewModel.CloseLogin();
         }
         catch (Exception e)
         {

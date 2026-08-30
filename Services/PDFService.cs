@@ -78,8 +78,10 @@ namespace Data_Logger_1._3.Services
                 else
                     return;
 
+                string syncfusionKey = Environment.GetEnvironmentVariable("SYNCFUSION_KEY") ?? throw new InvalidOperationException("SYNCFUSION_KEY is not set.");
+
                 // Register Syncfusion license
-                Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense("SYNCFUSION_KEY");
+                Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense(syncfusionKey);
 
                 // PDF Document Setup
                 PdfDocument document = new PdfDocument();

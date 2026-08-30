@@ -1,0 +1,100 @@
+﻿<Window x:Class="Installer.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Installer"
+        xmlns:ts_controls="clr-namespace:Transitionals.Controls;assembly=Transitionals"
+        xmlns:ts_transits="clr-namespace:Transitionals.Transitions;assembly=Transitionals"
+        mc:Ignorable="d"
+        Background="Transparent"
+        WindowStyle="None"
+        AllowsTransparency="True"
+        Title="Installation Wizard" Height="540" Width="720"
+        WindowStartupLocation="CenterScreen">
+    <Window.Template>
+        <ControlTemplate TargetType="Window">
+            <Border Background="White"
+                    CornerRadius="6"
+                    Margin="0"
+                    Padding="0" >
+                <ContentPresenter HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+            </Border>
+        </ControlTemplate>
+    </Window.Template>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+
+        <!-- TITLE BAR -->
+        <Border x:Name="customTITLEBar_MAINWINDOW" Grid.Row="0" Grid.ColumnSpan="2"
+                Background="{DynamicResource WHITE}"
+                d:Background="Yellow"
+                HorizontalAlignment="Stretch"
+                CornerRadius="6 6 0 0"
+                MouseLeftButtonDown="on_customTitleBar_pressed" >
+
+            <Grid HorizontalAlignment="Stretch">
+
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="auto" />
+                </Grid.ColumnDefinitions>
+
+
+
+                
+
+
+                <StackPanel Orientation="Horizontal"
+                    HorizontalAlignment="Right"
+                    VerticalAlignment="Center"
+                    Margin="10 5">
+
+
+
+
+                    <!-- MINIMISE -->
+                    <Button x:Name="button_MINIMISE" Style="{DynamicResource button_TITLE_bar}"
+                    Margin="0 5 10 5"
+                    Click="on_MINIMISE_clicked">
+
+                        <Path Style="{DynamicResource path_MINIMISE}" />
+                    </Button>
+
+
+                    <!-- CLOSE -->
+                    <Button x:Name="button_CLOSE" Style="{DynamicResource button_TITLE_bar}"
+                    Click="on_CLOSE_clicked">
+
+                        <Path Style="{DynamicResource path_CLOSE}" />
+                    </Button>
+
+
+                </StackPanel>
+            </Grid>
+        </Border>
+
+        
+        <!-- PAGES -->
+        <ts_controls:TransitionElement x:Name="transit_TRANSITIONER" Grid.RowSpan="2"
+                                       Margin="90 60">
+            <ts_controls:TransitionElement.Transition>
+                <ts_transits:FadeTransition Duration="0:0:0.2"/>
+            </ts_controls:TransitionElement.Transition>
+        </ts_controls:TransitionElement>
+        
+    </Grid>
+</Window>

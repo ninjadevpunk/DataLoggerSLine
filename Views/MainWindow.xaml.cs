@@ -1,10 +1,10 @@
 ﻿using Data_Logger_1._3.Components;
+using Data_Logger_1._3.Services;
+using Data_Logger_1._3.ViewModels;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media.Animation;
-using Data_Logger_1._3.Services;
-using Data_Logger_1._3.ViewModels;
 
 namespace Data_Logger_1._3
 {

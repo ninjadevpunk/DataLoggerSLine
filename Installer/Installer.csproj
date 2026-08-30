@@ -1,0 +1,56 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<OutputType>WinExe</OutputType>
+		<TargetFramework>net8.0-windows</TargetFramework>
+		<Nullable>enable</Nullable>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<UseWPF>true</UseWPF>
+		<AssemblyName>DataLoggerSetup</AssemblyName>
+		<ApplicationIcon>installericon.ico</ApplicationIcon>
+		<ApplicationManifest>app.manifest</ApplicationManifest>
+		<Authors>ninjadevpunk</Authors>
+		<Version>$(VersionPrefix)</Version>
+		<Company>Data Logger</Company>
+		<Product>Data Logger Installer</Product>
+		<AssemblyVersion>1.3.0</AssemblyVersion>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<None Remove="Assets\dls_icon.ico" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<Content Include="installericon.ico" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<Folder Include="Commands\" />
+		<Folder Include="Services\" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="WPFTransitionals" Version="1.1.0" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\Design\Design.csproj" />
+		<ProjectReference Include="..\FileSys\FileSys.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<Content Include="Assets\dls_icon.ico">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
+	</ItemGroup>
+
+	<ItemGroup>
+	  <None Update="appsettings.DevMode.json" Condition="'$(Configuration)' == 'Debug'">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </None>
+	  <None Update="appsettings.json">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </None>
+	</ItemGroup>
+
+</Project>

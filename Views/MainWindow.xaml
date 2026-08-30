@@ -9,7 +9,7 @@
                  Background="Transparent"
                  WindowStyle="None"
                  Title="Data Logger 1.3" Height="899" Width="1394"
-                 Loaded="on_MainWindow_Loaded" >
+                 Loaded="on_MainWindow_Loaded">
 
     <local:DLSWindow.Template>
         <ControlTemplate TargetType="Window">
@@ -62,12 +62,10 @@
                 <!-- NAVIGATION ARROWS -->
                 <StackPanel Orientation="Horizontal" Grid.Column="0"
                             HorizontalAlignment="Left"
-                            Margin="30 0"
-                >
+                            Margin="30 0" >                    
                     <Button x:Name="button_BACK" Style="{DynamicResource button_TITLE_bar}"
                             IsEnabled="{Binding BackEnabled}"
-                            Command="{Binding GoBackCommand}"
-                    >
+                            Command="{Binding GoBackCommand}" >
                         <Path x:Name="icon_BACK" Style="{DynamicResource path_ARROW_BACK}"
                               Fill="{Binding IconBackFill}"
                         />
@@ -93,6 +91,28 @@
                             HorizontalAlignment="Right"
                             VerticalAlignment="Center"
                             Margin="10 5">
+
+
+
+                    <!-- Update Button -->
+                    <Grid x:Name="grid_UPDATE_AVAILABLE" Margin="0 0 10 0"
+                          Visibility="{Binding UpdaterButtonVisible, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}">
+                        <Button Style="{DynamicResource ACTION}"
+                                Height="auto"
+                                Width="auto"
+                                Background="Transparent"
+                                Command="">
+                            <StackPanel Orientation="Horizontal">
+                                <Path Style="{DynamicResource path_UPDATE_AVAILABLE}" Margin="0 0 12 0" />
+                                <TextBlock Text="Update Available!" Style="{DynamicResource text_LABEL02}"
+                                           FontSize="12"
+                                           FontWeight="Bold"
+                                           Foreground="{DynamicResource PrimaryColour}"
+                                           VerticalAlignment="Center"
+                                           />
+                            </StackPanel>
+                        </Button>
+                    </Grid>
 
                     <!-- MINIMISE -->
                     <Button x:Name="button_MINIMISE" Style="{DynamicResource button_TITLE_bar}"
@@ -230,30 +250,9 @@
                                                    SubChecked="{Binding CodingQtChecked, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
                                                    SubCrew="CODING_SubMenu"
                                                    IsEnabled="False"
-                                                   SubRadioCheck="on_Qt_checked"
-                                                   />
+                                                   SubRadioCheck="on_Qt_checked" />
 
-                    <!-- Qt
                     
-                    <components:SubMENURadioButton x:Name="radio_Qt"
-                                                   SubMENUIcon="{DynamicResource path_Qt}"
-                                                   SubCategory="Qt"
-                                                   SubChecked="{Binding CodingQtChecked, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
-                                                   SubCrew="CODING_SubMenu"
-                                                   IsEnabled="{Binding MenuActivated, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
-                    />
-                    
-                    
-                    <components:SubMENURadioButton x:Name="radio_Android"
-                               SubMENUIcon="{DynamicResource path_AS}"
-                               SubCategory="Android Studio"
-                               SubChecked="{Binding CodingAndroidChecked, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
-                               SubCrew="CODING_SubMenu"
-                               IsEnabled="{Binding MenuActivated, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
-                               />
-
-
-                    -->
 
 
                     <!-- Android Studio -->
@@ -263,8 +262,7 @@
                                                    SubChecked="{Binding CodingAndroidChecked, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
                                                    SubCrew="CODING_SubMenu"
                                                    IsEnabled="False"
-                                                   SubRadioCheck="on_AndroidStudio_checked"
-                                                   />
+                                                   SubRadioCheck="on_AndroidStudio_checked" />
 
                     <!-- Generic CODE Logs -->
                     <components:SubMENURadioButton x:Name="radio_VS"
@@ -293,7 +291,7 @@
                                             Checked="{Binding GraphicsChecked, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
                                             Crew="Menu"
                                             IsEnabled="False"
-                            />
+                                            Visibility="Collapsed"/>
 
                 <!-- FILM -->
                 <components:MENURadioButton Grid.Row="5" x:Name="radio_FILM"
@@ -302,25 +300,8 @@
                                             Checked="{Binding FilmChecked, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
                                             Crew="Menu"
                                             IsEnabled="False"
-                    />
+                                            Visibility="Collapsed"/>
 
-                <!-- 
-                <components:MENURadioButton Grid.Row="4" x:Name="radio_GRAPHICS"
-                                            MENUIcon="{DynamicResource path_GRAPHICS}"
-                                            Category="GRAPHICS"
-                                            Checked="{Binding GraphicsChecked, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
-                                            Crew="Menu"
-                                            IsEnabled="{Binding MenuActivated, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
-                />
-
-                <components:MENURadioButton Grid.Row="5" x:Name="radio_FILM"
-                                            MENUIcon="{DynamicResource path_FILM}"
-                                            Category="FILM"
-                                            Checked="{Binding FilmChecked, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
-                                            Crew="Menu"
-                                            IsEnabled="{Binding MenuActivated, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
-                />
-                -->
 
                 <!-- NOTES -->
                 <components:MENURadioButton Grid.Row="6" x:Name="radio_NOTES"
@@ -364,7 +345,7 @@
                                                    SubChecked="{Binding FlexiChecked, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
                                                    SubCrew="NOTES_SubMenu"
                                                    IsEnabled="False"
-                                    />
+                                                   Visibility="Collapsed"/>
 
                 </StackPanel>
 

@@ -189,7 +189,7 @@ namespace Data_Logger_1._3.Services
         private void AddProjects(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<ProjectClass>().HasData(
-                new ProjectClass { projectID = 1, accountID = 1, appID = 3, Category = LOG.CATEGORY.CODING, Name = "Unknown", IsDefault = true }
+                new ProjectClass { projectID = 1, accountID = 1, appID = 3, Category = LOG.CATEGORY.CODING, Name = "Unnamed Project", IsDefault = true }
             );
         }
 

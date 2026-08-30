@@ -135,7 +135,6 @@ namespace Data_Logger_1._3.Commands.LoggerCommands
                     _viewModel.ApplicationName.Equals("Unknown Application", StringComparison.OrdinalIgnoreCase))
                 {
                     application = new();
-                    application.appID = 3;
                     application.Name = "Unknown";
                 }
                 else
@@ -153,7 +152,6 @@ namespace Data_Logger_1._3.Commands.LoggerCommands
                     _viewModel.ProjectName.Equals("Unknown Project", StringComparison.OrdinalIgnoreCase))
                 {
                     project = new();
-                    project.projectID = 1;
                     project.Name = "Unnamed Project";
                 }
                 else
@@ -270,7 +268,7 @@ namespace Data_Logger_1._3.Commands.LoggerCommands
 
                                 qtvm.CacheItems = list;
 
-                                _navigationService.NavigateToLogCachePage(CacheContext.Qt);
+                                await _navigationService.NavigateToLogCachePage(CacheContext.Qt);
 
                                 break;
                             }

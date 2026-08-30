@@ -42,7 +42,6 @@ namespace Data_Logger_1._3.Services
 
         public readonly string MainFolder;
         public readonly string DepositoryPath;
-        public readonly string ProgramDataPath;
 
         public readonly string ResourceDirectory;
         public readonly string IdentifiersPath;
@@ -53,7 +52,6 @@ namespace Data_Logger_1._3.Services
         {
 
             MainFolder = App.Configuration["Paths:Root"];
-            ProgramDataPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData), "Data Logger");
 
             DepositoryPath = Path.Combine(MainFolder, "Depository");
 
@@ -85,7 +83,6 @@ namespace Data_Logger_1._3.Services
             catch (UnauthorizedAccessException unex)
             {
                 Debug.WriteLine($"UnauthorizedAccessException error occurred in CreateSettingsFile(userId): {unex.Message}");
-                RequestAdminPrivileges();
 
                 return false;
             }
@@ -95,6 +92,7 @@ namespace Data_Logger_1._3.Services
                 return false;
             }
         }
+
 
         /// <summary>
         /// Creates vital resources for the CacheMaster so the class can function correctly.
@@ -113,13 +111,6 @@ namespace Data_Logger_1._3.Services
                 {
                     Directory.CreateDirectory(MainFolder);
                     GrantFolderPermissions(MainFolder);
-                }
-
-                // ProgramData
-                if (!Directory.Exists(ProgramDataPath))
-                {
-                    Directory.CreateDirectory(ProgramDataPath);
-                    GrantFolderPermissions(ProgramDataPath);
                 }
 
                 // Depository
@@ -150,7 +141,6 @@ namespace Data_Logger_1._3.Services
             catch (UnauthorizedAccessException unex)
             {
                 Debug.WriteLine($"An UnauthorizedAccessException error occurred in ResourcesCreated(): {unex.Message}");
-                RequestAdminPrivileges();
 
                 return false;
             }
@@ -183,26 +173,6 @@ namespace Data_Logger_1._3.Services
 
             dirSecurity.AddAccessRule(accessRule);
             dirInfo.SetAccessControl(dirSecurity);
-        }
-
-        // Requests admin privileges if access is denied
-        private static void RequestAdminPrivileges()
-        {
-            System.Diagnostics.ProcessStartInfo procInfo = new System.Diagnostics.ProcessStartInfo
-            {
-                FileName = System.Reflection.Assembly.GetExecutingAssembly().Location,
-                Verb = "runas",
-                UseShellExecute = true
-            };
-
-            try
-            {
-                System.Diagnostics.Process.Start(procInfo);
-            }
-            catch
-            {
-                // Handle failure to restart with admin rights
-            }
         }
 
 

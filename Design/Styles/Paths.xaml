@@ -287,9 +287,18 @@
 
     
     <!--#region LOGO Paths -->
-    
-    
-    
+
+
+
+    <Style x:Key="dataLoggerLogo" TargetType="Path">
+        <Setter Property="Fill" Value="{DynamicResource PrimaryColour}"/>
+        <Setter Property="Data" Value="M15.0267 0H7.81055L5.877 7.21611H13.0931L15.0267 0Z
+        M23.325 0H16.1089L14.1753 7.21611H21.3914L23.325 0Z
+        M24.9998 8.65942H17.7837L15.8501 15.8755H23.0663L24.9998 8.65942Z
+        M22.9632 16.5969H15.7471L13.8135 23.813H21.0296L22.9632 16.5969Z
+        M11.1858 8.65942H3.96973L2.03618 15.8755H9.25229L11.1858 8.65942Z
+        M9.14922 16.5969H1.93311L-0.000446501 23.813H7.21567L9.14922 16.5969Z" />
+    </Style>
     
     <Style x:Key="pathLOGO1" TargetType="Path">
         <Setter Property="Fill" Value="{DynamicResource PrimaryColour}"/>
@@ -541,8 +550,19 @@
     
     
     <!--#endregion-->
+
+
     
-    
+
+
+    <!-- UPDATE AVAILABLE PATH -->
+    <Style x:Key="path_UPDATE_AVAILABLE" TargetType="Path">
+        <Setter Property="Height" Value="18"/>
+        <Setter Property="Width" Value="18"/>
+        <Setter Property="Data" Value="M13.525 14.6517V15.7767H4.51123V14.6517H13.525ZM9.01798 13.5267L4.51123 9.02672H6.78879L6.77501 2.27672H11.268L11.2815 9.02672H13.525L9.01798 13.5267Z"/>
+        <Setter Property="Fill" Value="{DynamicResource PrimaryColour}"/>
+    </Style>
+
     <!-- CLOSE BUTTON Path -->
     <Style x:Key="path_CLOSE" TargetType="Path">
         <Setter Property="Fill" Value="{DynamicResource iconCOLOURAccent01}"/>
