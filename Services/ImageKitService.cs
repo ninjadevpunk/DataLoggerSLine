@@ -1,14 +1,15 @@
-﻿using System.IO;
+﻿using Newtonsoft.Json.Linq;
+using System.IO;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
-using Newtonsoft.Json.Linq;
 
 namespace Data_Logger_1._3.Services
 {
     public class ImageKitService
     {
-        private const string PrivateKey = "IMAGEKIT_API_KEY";
+        private static readonly string PrivateKey = Environment.GetEnvironmentVariable("IMAGEKIT_API_KEY") ?? throw new Exception("IMAGEKIT_API_KEY is not set");
+
         private const string UploadUrl = "https://upload.imagekit.io/api/v1/files/upload";
 
         public static async Task<(string imageUrl, string fileId)> UploadImageAsync(string filePath)
