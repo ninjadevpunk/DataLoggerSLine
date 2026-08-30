@@ -144,7 +144,7 @@ namespace Data_Logger_1._3.Services
 
             return UseReaderAsync<Task>(async reader =>
             {
-                var collection = await reader.ListProjects();
+                var collection = await reader.ListProjects(GetUser().accountID);
 
                 foreach (var pro in collection)
                 {
@@ -170,7 +170,7 @@ namespace Data_Logger_1._3.Services
 
             return UseReaderAsync<Task>(async reader =>
             {
-                var collection = await reader.ListProjects(category);
+                var collection = await reader.ListProjects(category, GetUser().accountID);
 
                 foreach (var pro in collection)
                 {
@@ -194,7 +194,7 @@ namespace Data_Logger_1._3.Services
 
             return UseReaderAsync<Task>(async reader =>
             {
-                var collection = await reader.ListApplications();
+                var collection = await reader.ListApplications(GetUser().accountID);
 
                 foreach (var app in collection)
                 {
@@ -218,7 +218,7 @@ namespace Data_Logger_1._3.Services
 
             return UseReaderAsync<Task>(async reader =>
             {
-                var collection = await reader.ListApplications(category);
+                var collection = await reader.ListApplications(category, GetUser().accountID);
 
                 foreach (var app in collection)
                 {
@@ -243,7 +243,7 @@ namespace Data_Logger_1._3.Services
 
             return UseReaderAsync<Task>(async reader =>
             {
-                var collection = await reader.ListSubjects(category);
+                var collection = await reader.ListSubjects(category, GetUser().accountID);
 
                 foreach (var subject in collection)
                 {
@@ -267,7 +267,7 @@ namespace Data_Logger_1._3.Services
 
             return UseReaderAsync<Task>(async reader =>
             {
-                var collection = await reader.ListSubjects(project);
+                var collection = await reader.ListSubjects(project, GetUser().accountID);
 
                 foreach (var subject in collection)
                 {
@@ -301,7 +301,7 @@ namespace Data_Logger_1._3.Services
             try
             {
                 var reader = scope.ServiceProvider.GetRequiredService<EntityReader>();
-                return await reader.ListSubjects(project);
+                return await reader.ListSubjects(project, GetUser().accountID);
             }
             catch (InvalidOperationException invex)
             {
@@ -660,7 +660,7 @@ namespace Data_Logger_1._3.Services
         /// </summary>
         public Task<SubjectClass?> FindSubject(string subject, LOG.CATEGORY category, int appID, int projectID)
         {
-            return UseReaderAsync(reader => reader.FindSubject(subject, category, appID, projectID));
+            return UseReaderAsync(reader => reader.FindSubject(subject, category, GetUser().accountID, appID, projectID));
         }
 
         /// <summary>
@@ -668,7 +668,7 @@ namespace Data_Logger_1._3.Services
         /// </summary>
         public Task<int> FindSubjectID(SubjectClass subject)
         {
-            return UseReaderAsync(reader => reader.FindSubjectID(subject));
+            return UseReaderAsync(reader => reader.FindSubjectID(subject, GetUser().accountID));
         }
 
 
@@ -703,7 +703,7 @@ namespace Data_Logger_1._3.Services
         /// <returns>Returns true if the log was successfully created; otherwise false.</returns>
         public Task<bool> CreateLOG(LOG log)
         {
-            return UseWriterAsync(writer => writer.CreateLOG(log));
+            return UseWriterAsync(writer => writer.CreateLOG(log, GetUser().accountID));
         }
 
 
@@ -725,28 +725,31 @@ namespace Data_Logger_1._3.Services
         /// Retrieves all logs from the database.
         /// </summary>
         /// <returns>Returns a List of LOG objects, or null if an error occurs.</returns>
-        public Task<List<LOG>?> RetrieveLogs()
+        public Task<List<LOG>?> RetrieveLogs(int userId)
         {
-            return UseReaderAsync(reader => reader.RetrieveLogs());
+            return UseReaderAsync(reader => reader.RetrieveLogs(userId));
         }
 
         /// <summary>
         /// Retrieves logs from the database for a specific cache context.
         /// </summary>
         /// <param name="context">The cache context to filter logs.</param>
+        /// <param name="id">The logged in user's id.</param>
         /// <returns>Returns an IEnumerable of LOG objects, or null if an error occurs.</returns>
         public Task<IEnumerable<LOG>?> RetrieveLogs(CacheContext context)
         {
+            int id = GetUser().accountID;
+
             return UseReaderAsync<IEnumerable<LOG>?>(async reader =>
             {
                 return context switch
                 {
-                    CacheContext.Qt => await reader.RetrieveQtCodingLogs(),
-                    CacheContext.AndroidStudio => await reader.RetrieveAndroidCodingLogs(),
-                    CacheContext.Coding => await reader.RetrieveCodingLogs(),
-                    CacheContext.Graphics => await reader.RetrieveGraphicsLogs(),
-                    CacheContext.Film => await reader.RetrieveFilmLogs(),
-                    CacheContext.Flexi => await reader.RetrieveFlexiNotesLogs(),
+                    CacheContext.Qt => await reader.RetrieveQtCodingLogs(id),
+                    CacheContext.AndroidStudio => await reader.RetrieveAndroidCodingLogs(id),
+                    CacheContext.Coding => await reader.RetrieveCodingLogs(id),
+                    CacheContext.Graphics => await reader.RetrieveGraphicsLogs(id),
+                    CacheContext.Film => await reader.RetrieveFilmLogs(id),
+                    CacheContext.Flexi => await reader.RetrieveFlexiNotesLogs(id),
                     _ => null
                 };
             });
@@ -772,7 +775,7 @@ namespace Data_Logger_1._3.Services
         /// <returns>The count of logs in the specified category, or 0 if an error occurs.</returns>
         public Task<int?> LogCount(LOG.CATEGORY category)
         {
-            return UseReaderAsync(reader => reader.LogCount(category));
+            return UseReaderAsync(reader => reader.LogCount(category, GetUser().accountID));
         }
 
         /// <summary>
@@ -781,7 +784,7 @@ namespace Data_Logger_1._3.Services
         /// <returns>The count of Qt logs, or 0 if an error occurs.</returns>
         public Task<int> QtLogCount()
         {
-            return UseReaderAsync(reader => reader.QtLogCount());
+            return UseReaderAsync(reader => reader.QtLogCount(GetUser().accountID));
         }
 
         /// <summary>
@@ -790,7 +793,7 @@ namespace Data_Logger_1._3.Services
         /// <returns>The count of AS logs, or 0 if an error occurs.</returns>
         public Task<int> ASLogCount()
         {
-            return UseReaderAsync(reader => reader.ASLogCount());
+            return UseReaderAsync(reader => reader.ASLogCount(GetUser().accountID));
         }
 
         /// <summary>
@@ -799,7 +802,7 @@ namespace Data_Logger_1._3.Services
         /// <returns>The count of Flexi Notes logs, or 0 if an error occurs.</returns>
         public Task<int> FlexiLogCountAsync()
         {
-            return UseReaderAsync(reader => reader.FlexiNotesLogCount());
+            return UseReaderAsync(reader => reader.FlexiNotesLogCount(GetUser().accountID));
         }
 
 
@@ -839,19 +842,19 @@ namespace Data_Logger_1._3.Services
         /// Searches coding logs based on a search text.
         /// </summary>
         public Task<List<CodingLOG>?> SearchCodingLogs(string searchBarText) =>
-            UseReaderAsync(reader => reader.SearchCodingLogs(searchBarText));
+            UseReaderAsync(reader => reader.SearchCodingLogs(searchBarText, GetUser().accountID));
 
         /// <summary>
         /// Searches coding logs within a specific project.
         /// </summary>
         public Task<List<CodingLOG>?> SearchCodingLogs(string searchBarText, int projectID) =>
-            UseReaderAsync(reader => reader.SearchCodingLogs(searchBarText, projectID));
+            UseReaderAsync(reader => reader.SearchCodingLogs(searchBarText, projectID, GetUser().accountID));
 
         /// <summary>
         /// Searches coding logs within a specific project and application.
         /// </summary>
         public Task<List<CodingLOG>?> SearchCodingLogs(string searchBarText, int projectID, int appID) =>
-            UseReaderAsync(reader => reader.SearchCodingLogs(searchBarText, projectID, appID));
+            UseReaderAsync(reader => reader.SearchCodingLogs(searchBarText, GetUser().accountID, projectID, appID));
 
 
 

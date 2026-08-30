@@ -91,7 +91,7 @@ namespace Data_Logger_1._3.Services
                 foreach (var u in onlineUsers)
                 {
                     if(u.accountID == account.accountID)
-                    u.IsOnline = false;
+                        u.IsOnline = false;
                 }
 
                 await master.SaveChangesAsync();
@@ -184,7 +184,7 @@ namespace Data_Logger_1._3.Services
         /// Creates a log in the database.
         /// </summary>
         /// <param name="log">The log being stored.</param>
-        public async Task<bool> CreateLOG(LOG log)
+        public async Task<bool> CreateLOG(LOG log, int id)
         {
             await using var scope = _serviceProvider.CreateAsyncScope();
             var master = scope.ServiceProvider.GetRequiredService<EntityMaster>();
@@ -194,8 +194,8 @@ namespace Data_Logger_1._3.Services
             {
                 await using var transaction = await master.Database.BeginTransactionAsync();
                 
-                await PrepareLogDetails(log, scope, master);
-                await PreparePostItDetails(log, scope, master);
+                await PrepareLogDetails(log, scope, master, id);
+                await PreparePostItDetails(log, scope, master, id);
 
                 await InsertSubLogDetails(log, scope, master);
 
@@ -222,20 +222,16 @@ namespace Data_Logger_1._3.Services
         }
 
 
-        private async Task PrepareLogDetails(LOG log, AsyncServiceScope scope, EntityMaster master)
+        private async Task PrepareLogDetails(LOG log, AsyncServiceScope scope, EntityMaster master, int userId)
         {
             var reader = scope.ServiceProvider.GetRequiredService<EntityReader>();
 
-            var onlineUser = await reader.FindAccountByID(scope, master, (int)await reader.GetOnlineAccountIDAsync(scope, master));
-            if (onlineUser == null)
-                onlineUser = new();
-            var userID = onlineUser.accountID;
-
+            var onlineUser = await reader.FindAccountByID(scope, master, userId) ?? new();
             log.Author = onlineUser;
             var app = log.Application;
             app.User = onlineUser;
 
-            var existingApp = await reader.FindApplication(scope, master, userID, app.Name);
+            var existingApp = await reader.FindApplication(scope, master, userId, app.Name);
 
             var project = log.Project;
             project.User = onlineUser;
@@ -248,7 +244,7 @@ namespace Data_Logger_1._3.Services
             {
                 app = existingApp;
 
-                var existingProject = await reader.FindProject(scope, master, userID, project.Name, app.appID);
+                var existingProject = await reader.FindProject(scope, master, userId, project.Name, app.appID);
 
                 if (existingProject != null)
                 {
@@ -256,9 +252,10 @@ namespace Data_Logger_1._3.Services
                 }
 
             }
-            else if (project.Name.Contains("Unnamed Project", StringComparison.OrdinalIgnoreCase))
+            
+            if (project.Name.Contains("Unnamed Project", StringComparison.OrdinalIgnoreCase))
             {
-                var existingProject = await reader.FindProject(scope, master, userID, project.Name, app.appID);
+                var existingProject = await reader.FindProject(scope, master, userId, project.Name, app.appID);
 
                 if (existingProject != null)
                 {
@@ -278,11 +275,11 @@ namespace Data_Logger_1._3.Services
             return regex.IsMatch(input) ? input : string.Empty;
         }
 
-        private async Task PreparePostItDetails(LOG log, AsyncServiceScope scope, EntityMaster master)
+        private async Task PreparePostItDetails(LOG log, AsyncServiceScope scope, EntityMaster master, int id)
         {
             var reader = scope.ServiceProvider.GetRequiredService<EntityReader>();
 
-            var onlineUser = await reader.FindAccountByID(scope, master, (int)await reader.GetOnlineAccountIDAsync(scope, master));
+            var onlineUser = await reader.FindAccountByID(scope, master, id);
 
             if (onlineUser == null)
                 onlineUser = new();
@@ -295,7 +292,7 @@ namespace Data_Logger_1._3.Services
                     var appID = log.Application.appID;
                     var projectID = log.Project.projectID;
 
-                    var existingSubject = await reader.FindSubject(scope, master, postIt.Subject.Subject, log.Category, appID, projectID);
+                    var existingSubject = await reader.FindSubject(scope, master, postIt.Subject.Subject, log.Category, id, appID, projectID);
 
                     if (existingSubject != null)
                     {
