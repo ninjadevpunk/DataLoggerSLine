@@ -1,5 +1,4 @@
-﻿using Data_Logger_1._3.Components;
-using Data_Logger_1._3.Services;
+﻿using Data_Logger_1._3.Services;
 using Data_Logger_1._3.Services.CommandLogic;
 using Data_Logger_1._3.ViewModels;
 using Data_Logger_1._3.ViewModels.Dashboard;
@@ -13,7 +12,9 @@ using Data_Logger_1._3.Views.Account;
 using Data_Logger_1._3.Views.Dialogs;
 using Data_Logger_1._3.Views.LogPages;
 using Data_Logger_1._3.Views.ReportPages;
+#if DEBUG
 using DotNetEnv;
+#endif
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -23,8 +24,10 @@ using Microsoft.Extensions.Logging;
 using System.Diagnostics;
 using System.IO;
 using System.Runtime.CompilerServices;
+#if RELEASE
 using System.Security.Cryptography;
 using System.Text;
+#endif
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media.Animation;
@@ -50,33 +53,26 @@ namespace Data_Logger_1._3
             var host = Host.CreateDefaultBuilder()
                 .ConfigureAppConfiguration((hostingContext, config) =>
                 {
+#if DEBUG
+                    config.AddJsonFile($"appsettings.DevMode.json", optional: true);
+#else
                     config.AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
-
-                    var env = hostingContext.HostingEnvironment.EnvironmentName;
-
-                    if (env == "DevMode")
-                        config.AddJsonFile($"appsettings.{env}.json", optional: true);
+#endif
                 })
                 .ConfigureServices((context, service) =>
                 {
                     service.AddSingleton<UIFactory>(services => new UIFactory(services));
-                    service.AddSingleton((services) => new InitialService(services));
+                    service.AddTransient((services) => new InitialService(services));
                     service.AddTransient<PDFService>();
                     service.AddTransient<ViewModelFactory>(services => new ViewModelFactory(services));
 
 
-                    var env = context.HostingEnvironment.EnvironmentName;
                     string key = string.Empty;
-
-                    if (env == "DevMode")
-                    {
-                        key = Environment.GetEnvironmentVariable("DevMode_SQLCipher_Key");
-                    }
-                    else
-                    {
-                        // Live DB Key Retrieval
-                        key = RetrieveEncryptionKey();
-                    }
+#if DEBUG
+                    key = Environment.GetEnvironmentVariable("DevMode_SQLCipher_Key")!;
+#else
+                    key = RetrieveEncryptionKey();
+#endif
 
                     if (string.IsNullOrWhiteSpace(key))
                         throw new Exception("SQLCipher key is missing!");
@@ -93,10 +89,9 @@ namespace Data_Logger_1._3
                     {
                         options.UseSqlite(connectionString)
                         .LogTo(Console.WriteLine, LogLevel.Information);
-
-
-                        if (env == "DevMode")
-                            options.EnableSensitiveDataLogging();
+#if DEBUG
+                        options.EnableSensitiveDataLogging();
+#endif
                     });
 
                     service.AddSingleton<CacheMaster>();
@@ -106,11 +101,8 @@ namespace Data_Logger_1._3
 
                     service.AddSingleton((services) => new AuthService(services));
 
-                    service.AddSingleton<IDataService>(services => new DataService(
-                        services.GetRequiredService<CacheMaster>(),
-                        services.GetRequiredService<AuthService>(),
-                        services
-                    ));
+                    service.AddSingleton<IDataService>(services => new DataService(services.GetRequiredService<CacheMaster>(),
+                        services.GetRequiredService<AuthService>(), services));
                     service.AddTransient<BitmapService>();
                     service.AddTransient(services => new AppSettingsService(services.GetRequiredService<IConfiguration>()));
                     service.AddTransient<SettingsService>();
@@ -136,10 +128,10 @@ namespace Data_Logger_1._3
 
                     service.AddTransient<ReporterEditPage>();
 
-                    service.AddSingleton((services) => new LoginViewModel(services.GetRequiredService<AuthService>(), services.GetRequiredService<NavigationService>(),
+                    service.AddTransient((services) => new LoginViewModel(services.GetRequiredService<AuthService>(), services.GetRequiredService<NavigationService>(),
                         services.GetRequiredService<UIFactory>()));
-                    service.AddSingleton((services) => new ForgotPasswordViewModel(services.GetRequiredService<AuthService>(), services.GetRequiredService<NavigationService>()));
-                    service.AddSingleton((services) => new SignUpViewModel(services.GetRequiredService<AuthService>(), services.GetRequiredService<NavigationService>(),
+                    service.AddTransient((services) => new ForgotPasswordViewModel(services.GetRequiredService<AuthService>(), services.GetRequiredService<NavigationService>()));
+                    service.AddTransient((services) => new SignUpViewModel(services.GetRequiredService<AuthService>(), services.GetRequiredService<NavigationService>(),
                         services.GetRequiredService<UIFactory>()));
                     service.AddSingleton((services) => new MainWindowViewModel(services.GetRequiredService<NavigationService>(),
                         services.GetRequiredService<IDataService>()));
@@ -218,7 +210,7 @@ namespace Data_Logger_1._3
 
 
                     // Account
-                    service.AddTransient((services) => new SettingsViewModel(services.GetRequiredService<NavigationService>(), services.GetRequiredService<AuthService>(), 
+                    service.AddTransient((services) => new SettingsViewModel(services.GetRequiredService<NavigationService>(), services.GetRequiredService<AuthService>(),
                         services.GetRequiredService<IDataService>(), services.GetRequiredService<SettingsService>(), services.GetRequiredService<MainWindowViewModel>(),
                         services.GetRequiredService<PasswordResetService>()));
                     service.AddTransient<UpdaterViewModel>();
@@ -239,17 +231,6 @@ namespace Data_Logger_1._3
 
 
             var splash = _serviceProvider.GetRequiredService<Splashscreen>();
-            var env = Environment.GetEnvironmentVariable("DOTNET_ENVIRONMENT") ?? "Release";
-
-            switch (env)
-            {
-                case "AlphaBeta":
-                    DeleteDevIcon();
-                    break;
-                case "Release":
-                    DeleteDevIcon();
-                    break;
-            }
 
             splash.Show();
 
@@ -300,7 +281,7 @@ namespace Data_Logger_1._3
 
             await AnimateProgressBar(splash.progressBar_splashscreen, 100, splash.text_progress);
 
-            await navigationService.NavigateToLogin(false);
+            await navigationService.NavigateToLogin();
 
             splash.Close();
 
@@ -321,7 +302,7 @@ namespace Data_Logger_1._3
 
 
 
-
+#if RELEASE
         private string RetrieveEncryptionKey()
         {
             string folder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData), "Data Logger");
@@ -346,13 +327,13 @@ namespace Data_Logger_1._3
             }
             catch (Exception ex)
             {
-#if DEBUG
-                Debug.WriteLine($"An exception occurred in RetrieveEncryptionKey(): {ex.Message}");
-#endif
+                MessageBox.Show($"An unexpected error occurred. We apologize for the inconvenience and cannot run the application at this time.", "Fatal Startup Error",
+                    MessageBoxButton.OK, MessageBoxImage.Error);
+
                 throw;
             }
         }
-
+#endif
 
 
 
@@ -379,30 +360,6 @@ namespace Data_Logger_1._3
             await tcs.Task;
         }
 
-        private void DeleteDevIcon()
-        {
-            string exeFolder = AppDomain.CurrentDomain.BaseDirectory;
-            string devIconPath = Path.Combine(exeFolder, "DevIcon.ico");
-
-            if (File.Exists(devIconPath))
-            {
-                try
-                {
-                    File.Delete(devIconPath);
-
-#if DEBUG
-                    Debug.WriteLine("DevIcon.ico deleted.");
-#endif
-                }
-                catch (Exception ex)
-                {
-#if DEBUG
-                    Debug.WriteLine($"Failed to delete DevIcon.ico: {ex.Message}");
-#endif
-                }
-            }
-        }
-
 
 
 
@@ -418,8 +375,17 @@ namespace Data_Logger_1._3
 
         protected override async void OnExit(ExitEventArgs e)
         {
-            var dataService = _serviceProvider.GetRequiredService<IDataService>();
-            await dataService.SignOutUser();
+            try
+            {
+                await using var scope = _serviceProvider.CreateAsyncScope();
+                var dataService = scope.ServiceProvider.GetRequiredService<IDataService>();
+
+                await dataService.SignOutUser();
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex, "Exception occurred in OnExit");
+            }
 
             base.OnExit(e);
         }
