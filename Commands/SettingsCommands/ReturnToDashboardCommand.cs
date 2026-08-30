@@ -1,28 +1,28 @@
 ﻿using Data_Logger_1._3.Services;
+using Data_Logger_1._3.ViewModels;
 using MVVMEssentials.Commands;
+using static Data_Logger_1._3.Services.CacheMaster;
 
 namespace Data_Logger_1._3.Commands.SettingsCommands
 {
     public class ReturnToDashboardCommand : AsyncCommandBase
     {
 
-        private readonly NavigationService _navigationService;
         private readonly IDataService _dataService;
+        private readonly MainWindowViewModel _mainWindowViewModel;
 
 
-        public ReturnToDashboardCommand(NavigationService navigationService, IDataService dataService)
+        public ReturnToDashboardCommand(MainWindowViewModel mainWindowViewModel, IDataService dataService)
         {
-            _navigationService = navigationService;
+            _mainWindowViewModel = mainWindowViewModel;
             _dataService = dataService;
         }
-
-
 
         protected override async Task ExecuteAsync(object parameter)
         {
             try
             {
-                _navigationService.NavigateToLogCachePage();
+                _mainWindowViewModel.CodingQtChecked = true;
             }
             catch (Exception e)
             {
