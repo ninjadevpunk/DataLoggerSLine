@@ -14,25 +14,26 @@ namespace Data_Logger_1._3
             string version = App.Configuration?["App:Version"] ?? string.Empty;
             AppVersion = FormatVersion(version);
 
-            string env;
-
 #if DEBUG
-            env = "DevMode";
+            Uri iconUri = new Uri("pack://application:,,,/DevIcon.ico");
 #else
-                env = "AlphaBeta";
-#endif
-
-            env = Environment.GetEnvironmentVariable("DOTNET_ENVIRONMENT") ?? env;
-
-            Uri iconUri = env switch
+            string iconFile = version switch
             {
-                "DevMode" => new Uri("pack://application:,,,/DevIcon.ico"),
-                "AlphaBeta" => new Uri("pack://application:,,,/AlphaBetaIcon.ico"),
-                _ => new Uri("pack://application:,,,/ReleaseIcon.ico")
+                var v when v.Contains("-alpha.", StringComparison.OrdinalIgnoreCase)
+                    => "AlphaBetaIcon.ico",
+
+                var v when v.Contains("-beta.", StringComparison.OrdinalIgnoreCase)
+                    => "AlphaBetaIcon.ico",
+
+                _ => "ReleaseIcon.ico"
             };
+
+            Uri iconUri = new Uri($"pack://application:,,,/{iconFile}");
+#endif
 
             this.Icon = BitmapFrame.Create(iconUri);
         }
+
 
 
         private static string FormatVersion(string version)
