@@ -52,7 +52,7 @@ namespace Data_Logger_1._3.Services
             try
             {
                 var writer = scope.ServiceProvider.GetRequiredService<EntityWriter>();
-                currentProfilePicPath = BitmapService.SaveProfilePicture(dp);
+                currentProfilePicPath = dp.Contains("/Assets") ? string.Empty : BitmapService.SaveProfilePicture(dp);
                 BitmapService.DeleteTempProfilePics();
 
                 var account = new ACCOUNT
@@ -75,7 +75,7 @@ namespace Data_Logger_1._3.Services
                 {
                     Account = account;
 
-                    if (string.IsNullOrEmpty(currentProfilePicPath))
+                    if (string.IsNullOrEmpty(currentProfilePicPath) && !dp.Contains("/Assets"))
                     {
                         MessageBox.Show("We couldn't save your profile picture due to a technical issue. Your account has been created and a default profile picture will be used instead.",
                             "Profile Picture", MessageBoxButton.OK, MessageBoxImage.Warning);

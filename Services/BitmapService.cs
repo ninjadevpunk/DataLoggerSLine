@@ -44,6 +44,9 @@ namespace Data_Logger_1._3.Services
 
                 string newPath = Path.Combine(folder, $"{Guid.NewGuid()}.png");
 
+                if (tempPath.Contains("/Assets"))
+                    return string.Empty;
+
                 File.Copy(tempPath, newPath, overwrite: false);
 
                 return newPath;

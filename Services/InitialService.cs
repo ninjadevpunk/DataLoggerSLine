@@ -5,6 +5,7 @@ using Data_Logger_1._3.ViewModels.LogViewModels;
 using Microsoft.Extensions.DependencyInjection;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
+using System.Windows;
 
 namespace Data_Logger_1._3.Services
 {
@@ -211,8 +212,17 @@ namespace Data_Logger_1._3.Services
         private void SetupUserProfile()
         {
             if (_authService.Account != null)
-                _mainWindowViewModel.SignUpImage =  string.IsNullOrEmpty(_authService.Account.ProfilePic) ? null : BitmapService.LoadImage(_authService.Account.ProfilePic);
+            {
+                if (_authService.Account.ProfilePic.Contains("/Assets/"))
+                {
+                    _mainWindowViewModel.SignUpImage = null;
+                    _mainWindowViewModel.ShowDefault = Visibility.Visible;
+                }
+                else
+                    _mainWindowViewModel.SignUpImage = BitmapService.LoadImage(_authService.Account.ProfilePic);
+            }
         }
+
 
         private void SetUpSettings()
         {

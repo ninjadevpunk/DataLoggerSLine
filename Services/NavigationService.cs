@@ -57,7 +57,7 @@ namespace Data_Logger_1._3.Services
         private Frame _loggerFrame;
 
         // LOGGER CREATOR ANDROID STUDIO FRAME
-        private Frame _AndroidStudioFrame;
+        private Frame? _AndroidStudioFrame;
 
 
         public NavContext NavigationContext { get; set; } = NavContext.DASHBOARD;
@@ -204,7 +204,7 @@ namespace Data_Logger_1._3.Services
         /// Set the Android Studio frame.
         /// </summary>
         /// <param name="frame">The Frame UI instance.</param>
-        public void SetAndroidStudioFrame(Frame frame) => _AndroidStudioFrame = frame;
+        public void SetAndroidStudioFrame(Frame? frame) => _AndroidStudioFrame = frame;
 
         /// <summary>
         /// Sets NavigationContext to DASHBOARD specifically.
@@ -284,7 +284,7 @@ namespace Data_Logger_1._3.Services
                 var velopackService = _serviceProvider.GetRequiredService<VelopackService>();
                 var updateInfo = await velopackService.CheckForUpdatesAsync();
 
-                
+
                 if (settings.ShowUpdatePopup)
                 {
                     if (updateInfo != null)
@@ -423,6 +423,7 @@ namespace Data_Logger_1._3.Services
                 async Task ApplyAsync(dynamic vm, bool autoStart = true)
                 {
                     vm.SignUpImage = vm.SignUpImage ?? BitmapService.LoadImage(path);
+                    DisplayPicVisibilityHandler(vm, path);
 
                     if (autoStart)
                         await vm.AutoStartAsync();
@@ -689,8 +690,37 @@ namespace Data_Logger_1._3.Services
 
 
 
+        /// <summary>
+        /// Handles the visibility of a display pic - usually in a logger interface.
+        /// </summary>
+        /// <param name="viewModel">The viewmodel housing the visibility property.</param>
+        /// <param name="path">The profile picture path</param>
+        private void DisplayPicVisibilityHandler(dynamic viewModel, string path = "")
+        {
+            if (path.Contains("/Assets/"))
+            {
+                viewModel.SignUpImage = null;
+                viewModel.DisplayPicVisibility = Visibility.Visible;
+            }
+            else
+                viewModel.SignUpImage = BitmapService.LoadImage(path);
+        }
 
-
+        /// <summary>
+        /// Checks a path and sets ShowDefault to the correct visibility.
+        /// </summary>
+        /// <param name="viewModel">The viewmodel housing the visibility property.</param>
+        /// <param name="path">The profile picture path</param>
+        private void ShowDefaultHandler(dynamic viewModel, string path = "")
+        {
+            if (path.Contains("/Assets/"))
+            {
+                viewModel.SignUpImage = null;
+                viewModel.ShowDefault = Visibility.Visible;
+            }
+            else
+                viewModel.SignUpImage = BitmapService.LoadImage(path);
+        }
 
 
         public async Task NavigateToLoggerCreator()
@@ -723,7 +753,8 @@ namespace Data_Logger_1._3.Services
                         {
                             var qtLogger = viewModelFactory.CreateQtCodeCreateViewModel();
                             await qtLogger.AutoStartAsync(true);
-                            qtLogger.SignUpImage ??= BitmapService.LoadImage(path);
+
+                            DisplayPicVisibilityHandler(qtLogger, path);
 
                             await NavigateToPage(loggerCreatePage, qtLogger, new coding_UserControl());
 
@@ -735,7 +766,7 @@ namespace Data_Logger_1._3.Services
 
                             var androidPage = new androidStudio_UserControl();
                             androidPage.DataContext = _serviceProvider.GetRequiredService<AScodeCreateViewModel>();
-                            _AndroidStudioFrame.Navigate(androidPage);
+                            _AndroidStudioFrame?.Navigate(androidPage);
 
                             break;
                         }
@@ -761,7 +792,8 @@ namespace Data_Logger_1._3.Services
                         {
                             var codingLogger = viewModelFactory.CreateCodeCreateViewModel();
                             await codingLogger.AutoStartAsync();
-                            codingLogger.SignUpImage ??= BitmapService.LoadImage(path);
+
+                            DisplayPicVisibilityHandler(codingLogger, path);
 
                             await NavigateToPage(loggerCreatePage, codingLogger, new coding_UserControl());
 
@@ -815,7 +847,8 @@ namespace Data_Logger_1._3.Services
                             var codingEditor = viewModelFactory.CreateCodeEditViewModel(codingLOGViewModel);
 
                             await codingEditor.AutoStartAsync();
-                            codingEditor.SignUpImage ??= BitmapService.LoadImage(path);
+
+                            DisplayPicVisibilityHandler(codingEditor, path);
 
                             var log = codingLOGViewModel._CodeLOG;
 
@@ -900,7 +933,7 @@ namespace Data_Logger_1._3.Services
 
                             var codeViewerViewModel = _serviceProvider.GetRequiredService<codeViewerViewModel>();
 
-                            codeViewerViewModel.SignUpImage ??= BitmapService.LoadImage(path);
+                            DisplayPicVisibilityHandler(codeViewerViewModel, path);
 
                             var log = codingLOGViewModel?._CodeLOG;
 
@@ -968,7 +1001,7 @@ namespace Data_Logger_1._3.Services
                             var codeViewerViewModel = _serviceProvider.GetRequiredService<codeViewerViewModel>();
                             codeViewerViewModel.OKCommand = new ViewerOKCommand(this, ViewType.Log);
 
-                            codeViewerViewModel.SignUpImage ??= BitmapService.LoadImage(path);
+                            DisplayPicVisibilityHandler(codeViewerViewModel, path);
 
                             var codingLOG = (CodingLOG)log;
 
@@ -1033,7 +1066,7 @@ namespace Data_Logger_1._3.Services
 
                             var codeViewerViewModel = _serviceProvider.GetRequiredService<codeViewerViewModel>();
 
-                            codeViewerViewModel.SignUpImage ??= BitmapService.LoadImage(path);
+                            DisplayPicVisibilityHandler(codeViewerViewModel, path);
 
 
                             codeViewerViewModel.ProjectName = codingLOG.Project.Name;
@@ -1098,7 +1131,7 @@ namespace Data_Logger_1._3.Services
                                 log);
 
                             await codingUpdater.AutoStartAsync();
-                            codingUpdater.SignUpImage ??= BitmapService.LoadImage(path);
+                            DisplayPicVisibilityHandler(codingUpdater, path);
 
 
                             codingUpdater.ProjectName = log.Project.Name;
