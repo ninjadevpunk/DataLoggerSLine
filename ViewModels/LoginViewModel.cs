@@ -28,8 +28,6 @@ namespace Data_Logger_1._3.ViewModels
             _navigationService = navigationService;
             _factory = uiFactory;
 
-            SignUpImage = "";
-            ShowDefault = Visibility.Visible;
             StatusMessage = "";
             StatusMessageColour = _factory.MessageBad;
 
@@ -52,34 +50,6 @@ namespace Data_Logger_1._3.ViewModels
 
         /* Member Variables */
 
-        private string signUpImage;
-        public string SignUpImage
-        {
-            get
-            {
-                return signUpImage;
-            }
-            set
-            {
-                signUpImage = value;
-                OnPropertyChanged(nameof(SignUpImage));
-            }
-        }
-
-        private Visibility showDefault;
-        public Visibility ShowDefault
-        {
-            get
-            {
-                return showDefault;
-            }
-            set
-            {
-                showDefault = value;
-                OnPropertyChanged(nameof(ShowDefault));
-            }
-        }
-
         private string username;
         public string Username
         {
@@ -90,9 +60,6 @@ namespace Data_Logger_1._3.ViewModels
             set
             {
                 username = value;
-
-                // SignUpImage = _navigationService.UpdateProfilePic(username);
-                // ShowDefault = SignUpImage != "" ? Visibility.Collapsed : Visibility.Visible;
 
                 OnPropertyChanged(nameof(Username));
             }
