@@ -1,4 +1,5 @@
-﻿using Velopack;
+﻿using System.Diagnostics;
+using Velopack;
 using Velopack.Sources;
 
 namespace Data_Logger_1._3.Services
@@ -14,7 +15,15 @@ namespace Data_Logger_1._3.Services
 
         public async Task<UpdateInfo?> CheckForUpdatesAsync()
         {
-            return await _updateManager.CheckForUpdatesAsync();
+            try
+            {
+                return await _updateManager.CheckForUpdatesAsync();
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"Failed to check for updates: {ex.Message}");
+                return null;
+            }
         }
 
         public async Task DownloadUpdateAsync(UpdateInfo updateInfo)
