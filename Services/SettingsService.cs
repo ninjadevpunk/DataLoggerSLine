@@ -99,6 +99,26 @@ namespace Data_Logger_1._3.Services
             }
         }
 
+        public bool Delete(int userId)
+        {
+            try
+            {
+                var userPath = Path.Combine(BasePath, userId.ToString());
+
+                if (!Directory.Exists(userPath))
+                    return true;
+
+                Directory.Delete(userPath, recursive: true);
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"Exception occurred in Delete(userId): {ex.Message}");
+                return false;
+            }
+        }
+
         public static bool FieldsAcceptable(string email, bool isCompanyEmployee, string? companyName)
         {
             if (string.IsNullOrEmpty(email))
