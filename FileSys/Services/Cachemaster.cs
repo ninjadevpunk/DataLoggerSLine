@@ -3,6 +3,7 @@ using FileSys.Interfaces;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System.Diagnostics;
+using System.Reflection;
 using System.Security.AccessControl;
 using System.Security.Principal;
 
@@ -35,27 +36,39 @@ namespace FileSys.Services
             ReferenceLoopHandling = ReferenceLoopHandling.Ignore
         };
 
-        public readonly string MainFolder;
-        public readonly string DepositoryPath;
-        public readonly string ProgramDataPath;
+        public readonly string? MainFolder;
+        public readonly string? DepositoryPath;
+        public readonly string? ProgramDataPath;
 
-        public readonly string ResourceDirectory;
-        public readonly string IdentifiersPath;
-        public readonly string SubjectIdsPath;
-        public readonly string PostitIdsPath;
+        public readonly string? ResourceDirectory;
+        public readonly string? IdentifiersPath;
+        public readonly string? SubjectIdsPath;
+        public readonly string? PostitIdsPath;
 
         public CacheMaster()
         {
+
+        }
+
+        public CacheMaster(bool mustDefer = false)
+        {
 #if DEBUG
-            string configPath = Path.Combine(AppContext.BaseDirectory, "appsettings.DevMode.json");
+            string configFileName = "appsettings.DevMode.json";
 #else
-            string configPath = Path.Combine(AppContext.BaseDirectory, "appsettings.json");
+            string configFileName = "appsettings.json";
 #endif
 
-            if (!File.Exists(configPath))
-                throw new FileNotFoundException("Configuration file not found.", configPath);
+            var installerAssembly = Assembly.GetEntryAssembly() ?? throw new InvalidOperationException("Could not determine the entry assembly.");
 
-            JObject config = JObject.Parse(File.ReadAllText(configPath));
+            string resourceName = installerAssembly.GetManifestResourceNames()
+                .First(name => name.EndsWith(configFileName, StringComparison.OrdinalIgnoreCase));
+
+            using Stream stream = installerAssembly.GetManifestResourceStream(resourceName)
+                ?? throw new FileNotFoundException("Configuration resource not found.", resourceName);
+
+            using StreamReader reader = new StreamReader(stream);
+
+            JObject config = JObject.Parse(reader.ReadToEnd());
 
             MainFolder = config["Paths"]?["Root"]?.ToString() ?? throw new InvalidOperationException("Paths:Root is missing from configuration.");
             ProgramDataPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData), "Data Logger");
@@ -68,9 +81,12 @@ namespace FileSys.Services
             SubjectIdsPath = Path.Combine(ResourceDirectory, "subject.index");
             PostitIdsPath = Path.Combine(ResourceDirectory, "postit.index");
 
-            if (ResourcesCreated())
+            if (!mustDefer)
             {
-                IdentifiersChecked();
+                if (ResourcesCreated())
+                {
+                    IdentifiersChecked();
+                }
             }
         }
 
@@ -90,7 +106,7 @@ namespace FileSys.Services
             }
         }
 
-        
+
 
         public string? ReadAllText(string path)
         {
@@ -460,7 +476,7 @@ namespace FileSys.Services
             }
         }
 
-        
+
 
         /*
          #region Coding
