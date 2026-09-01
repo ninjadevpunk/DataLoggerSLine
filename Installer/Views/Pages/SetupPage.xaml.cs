@@ -3,6 +3,7 @@ using FileSys.Services;
 using Microsoft.Win32;
 using System.Diagnostics;
 using System.IO;
+using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Controls;
@@ -21,7 +22,7 @@ namespace Installer.Views.Pages
         public readonly string _programDataPath;
         string installPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
                 "Data Logger");
-        const int APP_SIZE = 170;
+        const int APP_SIZE = 330;
         public bool ShortcutIsCreated { get; set; } = false;
         private readonly bool _isReinstall;
 
@@ -32,7 +33,7 @@ namespace Installer.Views.Pages
             _mainWindow = mainWindow;
             _isReinstall = isReinstall;
 
-            _cacheService = new CacheMaster();
+            _cacheService = new CacheMaster(true);
             _installationRegistry = new InstallationRegistry();
 
             _programDataPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData), "Data Logger");
@@ -118,11 +119,29 @@ namespace Installer.Views.Pages
             }
         }
 
+        private string ExtractDlsIcon()
+        {
+            string iconPath = Path.Combine(_programDataPath, "dls_icon.ico");
+
+            using Stream? resource = Assembly.GetExecutingAssembly()
+                .GetManifestResourceStream(Assembly.GetExecutingAssembly().GetManifestResourceNames()
+                        .First(name => name.EndsWith("dls_icon.ico", StringComparison.OrdinalIgnoreCase)));
+
+            if (resource == null)
+                throw new InvalidOperationException("Embedded dls_icon.ico was not found.");
+
+            using FileStream file = new FileStream(iconPath, FileMode.Create, FileAccess.Write, FileShare.None);
+
+            resource.CopyTo(file);
+
+            return iconPath;
+        }
+
         private bool AssociateDlsFiles()
         {
             string progId = "DataLogger.File";
             string exePath = Path.Combine(installPath, "Data Logger.exe");
-            string iconPath = Path.Combine(AppContext.BaseDirectory, "Assets", "dls_icon.ico");
+            string iconPath = ExtractDlsIcon();
 
             try
             {
@@ -182,15 +201,24 @@ namespace Installer.Views.Pages
 
 
 
-        private void on_CREATE_SHORTCUT_Checked(object sender, RoutedEventArgs e)
-        {
-            this.grid_SETUP_TASKBAR_PIN.Visibility = Visibility.Visible;
-        }
 
-        private void on_CREATE_SHORTCUT_Unchecked(object sender, RoutedEventArgs e)
+        private string ExtractSetup()
         {
-            this.grid_SETUP_TASKBAR_PIN.Visibility = Visibility.Collapsed;
-            this.checkBox_PIN_TASKBAR.IsChecked = false;
+            string resourceName = Assembly.GetExecutingAssembly().GetManifestResourceNames()
+                .First(name => name.EndsWith("Setup.exe", StringComparison.OrdinalIgnoreCase));
+
+            string setupPath = Path.Combine(Path.GetTempPath(), "Setup.exe");
+
+            using Stream? resource = Assembly.GetExecutingAssembly().GetManifestResourceStream(resourceName);
+
+            if (resource == null)
+                throw new InvalidOperationException("Embedded Setup.exe was not found.");
+
+            using FileStream file = new FileStream(setupPath, FileMode.Create, FileAccess.Write, FileShare.None);
+
+            resource.CopyTo(file);
+
+            return setupPath;
         }
 
         private async void on_INSTALL_ClickedAsync(object sender, RoutedEventArgs e)
@@ -207,8 +235,11 @@ namespace Installer.Views.Pages
                     return;
                 }
 
-                // Create ProgramData folder
-                if (!_cacheService.CreateDirectory(_programDataPath))
+                // Create ProgramData and Resources folder
+                bool programDataCreated = _cacheService.CreateDirectory(_programDataPath);
+                bool resourcesCreated = _cacheService.ResourcesCreated();
+
+                if (!programDataCreated || !resourcesCreated)
                 {
                     if (!_isReinstall)
                         _mainWindow.ShowFailedPage("Failed to create required folders.");
@@ -218,10 +249,11 @@ namespace Installer.Views.Pages
                     return;
                 }
 
-                // Run installer
+                string setupPath = ExtractSetup();
+
                 ProcessStartInfo processInfo = new ProcessStartInfo
                 {
-                    FileName = Path.Combine(AppContext.BaseDirectory, "Setup.exe"),
+                    FileName = setupPath,
                     Arguments = $"--silent --installto \"{installPath}\"",
                     UseShellExecute = true
                 };
@@ -230,6 +262,7 @@ namespace Installer.Views.Pages
 
                 if (process == null)
                     throw new InvalidOperationException("Process failed to start.");
+
 
                 using (process)
                 {
@@ -242,6 +275,11 @@ namespace Installer.Views.Pages
                     }
                 }
 
+                File.Delete(setupPath);
+
+
+
+
                 /* POST-INSTALLATION SETUP */
 
                 // Register Data Logger instance
@@ -251,13 +289,6 @@ namespace Installer.Views.Pages
                 if (this.checkBox_CREATE_SHORTCUT.IsChecked ?? false)
                 {
                     ShortcutIsCreated = CreateDesktopShortcut();
-                }
-
-                // Taskbar
-                if (this.checkBox_PIN_TASKBAR.IsChecked ?? false)
-                {
-                    if (ShortcutIsCreated)
-                        PinToTaskbar();
                 }
 
                 // .dls file association
