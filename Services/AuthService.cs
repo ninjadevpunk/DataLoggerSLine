@@ -17,36 +17,26 @@ namespace Data_Logger_1._3.Services
             _serviceProvider = serviceProvider;
         }
 
-        public async Task<bool> SignUp(string dp, string email, string password, string displayName, string surname,
-            bool isEmployee, string companyName, string companyAddress, string companyLogo)
+        public async Task<bool> SignUp(string dp, string email, string password, string displayName, string surname, bool isEmployee, 
+            string companyName, string companyAddress, string companyLogo)
         {
             await using var scope = _serviceProvider.CreateAsyncScope();
             string currentProfilePicPath = string.Empty;
 
-            // Validate input
-            // TODO
-            if (string.IsNullOrWhiteSpace(email) || password is null || password.Length <= 5)
+            if (string.IsNullOrWhiteSpace(email) || string.IsNullOrWhiteSpace(password) || password.Length <= 5)
             {
-                try
-                {
-                    if (password.Length <= 5)
-                    {
-                        throw new InvalidOperationException();
-                    }
-                }
-                catch (InvalidOperationException)
-                {
-                    MessageBox.Show("Your password is too short! Please enter a password that is at least 6 characters long.",
-                        "Password Too Short", MessageBoxButton.OK, MessageBoxImage.Information, MessageBoxResult.OK);
-                }
-                catch (Exception ex)
-                {
-                    var writer = scope.ServiceProvider.GetRequiredService<EntityWriter>();
-                    await writer.HandleExceptionAsync(ex, "SignUp(dp,email,password,displayName,surname,isEmployee,companyName,companyAddress,companyLogo)");
-                }
+                if (string.IsNullOrWhiteSpace(email))
+                    return false;
 
+                if (string.IsNullOrWhiteSpace(password))
+                    return false;
 
-                return false;
+                if (password.Length <= 5)
+                {
+                    MessageBox.Show("Your password is too short! Please enter a password that is at least 6 characters long.", "Password Too Short", 
+                        MessageBoxButton.OK, MessageBoxImage.Information);
+                    return false;
+                }
             }
 
             try

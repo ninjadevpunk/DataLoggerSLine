@@ -150,12 +150,12 @@ namespace Data_Logger_1._3.Services
             }
             catch (EmailConflictException mailex)
             {
-                await HandleExceptionAsync("AddAccount(account)", mailex, "Error", "The email you entered has been taken. Please use a different one.", "EmailConflictException");
+                await HandleExceptionAsync("AddAccount(account)", mailex, "Error", "The email you entered has been taken. Please use a different one.", 
+                    "EmailConflictException");
             }
             catch (ArgumentNullException nullex)
             {
-                await HandleExceptionAsync("AddAccount(account)", nullex, "Error", "A problem occurred on our end so please try again later. We " +
-                    "apologise for any inconvenience caused. Feedback will automatically be sent to us.", "ArgumentNullException");
+                await HandleExceptionAsync("AddAccount(account)", nullex, "Error", exceptionType: "ArgumentNullException");
             }
             catch (Exception ex)
             {
