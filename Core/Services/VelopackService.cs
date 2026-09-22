@@ -1,10 +1,12 @@
-﻿using System.Diagnostics;
+﻿using Core.Interfaces;
+using System.Diagnostics;
 using Velopack;
+using Velopack.Locators;
 using Velopack.Sources;
 
-namespace Data_Logger_1._3.Services
+namespace Core.Services
 {
-    public class VelopackService
+    public class VelopackService : IVelopackService
     {
         private readonly UpdateManager _updateManager;
 
@@ -36,6 +38,17 @@ namespace Data_Logger_1._3.Services
             _updateManager.ApplyUpdatesAndRestart(updateInfo);
         }
 
-        
+        public SemanticVersion? GetCurrentVersion()
+        {
+            try
+            {
+                return _updateManager.CurrentVersion;
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"Getting current version failed: {ex.Message}.");
+                return null;
+            }
+        }
     }
 }

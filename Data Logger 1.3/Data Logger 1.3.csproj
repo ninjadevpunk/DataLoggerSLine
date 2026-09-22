@@ -57,6 +57,16 @@
 		<EmbeddedResource Remove="Core\**" />
 		<None Remove="Core\**" />
 		<Page Remove="Core\**" />
+
+		<Compile Remove="Migration\**" />
+		<EmbeddedResource Remove="Migration\**" />
+		<None Remove="Migration\**" />
+		<Page Remove="Migration\**" />
+
+		<Compile Remove="Data\**" />
+		<EmbeddedResource Remove="Data\**" />
+		<None Remove="Data\**" />
+		<Page Remove="Data\**" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -134,7 +144,6 @@
 		<PackageReference Include="System.Drawing.Common" Version="8.0.22" />
 		<PackageReference Include="System.Net.Http" Version="4.3.4" />
 		<PackageReference Include="System.Text.RegularExpressions" Version="4.3.1" />
-		<PackageReference Include="Velopack" Version="1.2.0" />
 		<PackageReference Include="WPFTransitionals" Version="1.1.0" />
 	</ItemGroup>
 
