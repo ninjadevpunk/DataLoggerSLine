@@ -38,35 +38,6 @@
 		<Page Remove="DLSTests\**" />
 		<Page Remove="Resources\Converters\**" />
 		
-		<Compile Remove="Installer\**" />
-		<EmbeddedResource Remove="Installer\**" />
-		<None Remove="Installer\**" />
-		<Page Remove="Installer\**" />
-
-		<Compile Remove="Design\**" />
-		<EmbeddedResource Remove="Design\**" />
-		<None Remove="Design\**" />
-		<Page Remove="Design\**" />
-
-		<Compile Remove="FileSys\**" />
-		<EmbeddedResource Remove="FileSys\**" />
-		<None Remove="FileSys\**" />
-		<Page Remove="FileSys\**" />
-
-		<Compile Remove="Core\**" />
-		<EmbeddedResource Remove="Core\**" />
-		<None Remove="Core\**" />
-		<Page Remove="Core\**" />
-
-		<Compile Remove="Migration\**" />
-		<EmbeddedResource Remove="Migration\**" />
-		<None Remove="Migration\**" />
-		<Page Remove="Migration\**" />
-
-		<Compile Remove="Data\**" />
-		<EmbeddedResource Remove="Data\**" />
-		<None Remove="Data\**" />
-		<Page Remove="Data\**" />
 	</ItemGroup>
 
 	<ItemGroup>
