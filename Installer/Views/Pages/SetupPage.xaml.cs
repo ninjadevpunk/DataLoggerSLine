@@ -1,6 +1,7 @@
 ﻿using FileSys.Interfaces;
 using FileSys.Services;
 using Microsoft.Win32;
+using Migration;
 using System.Diagnostics;
 using System.IO;
 using System.Reflection;
@@ -18,6 +19,7 @@ namespace Installer.Views.Pages
         private readonly MainWindow _mainWindow;
         private readonly ICacheService _cacheService;
         private readonly IInstallationRegistry _installationRegistry;
+        private readonly DbMigrationService _databaseMigration;
 
         public readonly string _programDataPath;
         string installPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
@@ -35,6 +37,7 @@ namespace Installer.Views.Pages
 
             _cacheService = new CacheMaster(true);
             _installationRegistry = new InstallationRegistry();
+            _databaseMigration = new DbMigrationService();
 
             _programDataPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData), "Data Logger");
 
@@ -199,6 +202,31 @@ namespace Installer.Views.Pages
             SHChangeNotify(SHCNE_ASSOCCHANGED, SHCNF_IDLIST, IntPtr.Zero, IntPtr.Zero);
         }
 
+        private bool BackupDatabase(string databasePath, string backupPath)
+        {
+            try
+            {
+                string? backupDirectory = Path.GetDirectoryName(backupPath);
+
+                if (string.IsNullOrWhiteSpace(backupDirectory))
+                    return false;
+
+                _cacheService.CreateDirectory(backupDirectory);
+
+                if (File.Exists(backupPath))
+                    File.Delete(backupPath);
+
+                File.Move(databasePath, backupPath);
+
+                return File.Exists(backupPath) && !File.Exists(databasePath);
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"Failed to backup database: {ex.Message}");
+                return false;
+            }
+        }
+
 
 
 
@@ -249,6 +277,21 @@ namespace Installer.Views.Pages
                     return;
                 }
 
+                // Capture the currently installed version
+                string previousVersion = string.Empty;
+
+                string currentExePath = Path.Combine(installPath, "current", "Data Logger.exe");
+
+                if (File.Exists(currentExePath))
+                {
+                    previousVersion = FileVersionInfo.GetVersionInfo(currentExePath).ProductVersion ?? string.Empty;
+                }
+
+                // Database paths
+                string alpha5DatabasePath = @"C:\DLS\Depository\LOGS.db";
+                string alpha5BackupPath = @"C:\DLS\Depository\_backup\LOGS_OLD_1.3-alpha.5.db";
+                string alpha6DatabasePath = alpha5DatabasePath;
+
                 string setupPath = ExtractSetup();
 
                 ProcessStartInfo processInfo = new ProcessStartInfo
@@ -278,6 +321,36 @@ namespace Installer.Views.Pages
                 File.Delete(setupPath);
 
 
+                /* DATABASE MIGRATION */
+
+                if (previousVersion == "1.3.0-alpha.5")
+                {
+                    // Verify the Alpha 5 database exists
+                    if (File.Exists(alpha5DatabasePath))
+                    {
+                        // Move Alpha 5 database to its backup location
+                        bool backupSuccessful = BackupDatabase(alpha5DatabasePath, alpha5BackupPath);
+
+                        if (!backupSuccessful)
+                        {
+                            _mainWindow.ShowFailedPage(isSecondFailure: _isReinstall);
+                            return;
+                        }
+
+                        try
+                        {
+                            // Create the encrypted Alpha 6 database from the Alpha 5 backup
+                            await _databaseMigration.MigrateAsync(alpha5BackupPath, alpha6DatabasePath);
+                        }
+                        catch (Exception ex)
+                        {
+                            Debug.WriteLine($"Database migration failed: {ex}");
+
+                            _mainWindow.ShowFailedPage(isSecondFailure: _isReinstall);
+                            return;
+                        }
+                    }
+                }
 
 
                 /* POST-INSTALLATION SETUP */

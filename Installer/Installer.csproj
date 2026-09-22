@@ -39,6 +39,7 @@
 	<ItemGroup>
 		<ProjectReference Include="..\Design\Design.csproj" />
 		<ProjectReference Include="..\FileSys\FileSys.csproj" />
+		<ProjectReference Include="..\Migration\Migration.csproj" />
 	</ItemGroup>
 
 	<ItemGroup>
